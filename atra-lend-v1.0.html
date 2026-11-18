@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atra Lend — Internal Register</title>
+<style>
+:root{
+  --bg:#F9F9FB; --panel:#FFFFFF; --panel2:#F1F2F6; --inset:#ECEEF3;
+  --ink:#191726; --mut:#5A5E73; --faint:#8B90A5;
+  --accent:#13316C; --accent-ink:#13316C; --accent-tint:#E3EAF6;
+  --blob1:rgba(207,212,225,.55); --blob2:rgba(204,224,224,.5);
+  --line:#D8DBE4; --line2:#E6E8EE;
+  --amber:#D97706; --hold:#9A3B12; --hold-tint:#F9E9DF;
+  --chip:#ECEEF3; --shadow:0 1px 3px rgba(25,23,38,.12);
+  --head-bg:#191726; --head-ink:#E2E8F0;
+  --banner-bg:#191726; --banner-ink:#E2E8F0;
+}
+html[data-theme="dark"]{
+  --bg:#020305; --panel:#090A0F; --panel2:#0E1017; --inset:#11141D;
+  --ink:#E2E8F0; --mut:#9AA3B8; --faint:#6B7690;
+  --accent:#13316C; --accent-ink:#9DB8E8; --accent-tint:#131C30;
+  --blob1:rgba(19,49,108,.20); --blob2:rgba(9,10,15,.0);
+  --line:#1E2432; --line2:#171C28;
+  --amber:#D97706; --hold:#E08A5A; --hold-tint:#2A1A10;
+  --chip:#11141D; --shadow:0 1px 3px rgba(0,0,0,.55);
+  --head-bg:#05060A; --head-ink:#E2E8F0;
+  --banner-bg:#05060A; --banner-ink:#E2E8F0;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; color:var(--ink);
+  font:14px/1.45 "Segoe UI",-apple-system,BlinkMacSystemFont,Arial,Helvetica,sans-serif;
+  background:
+    radial-gradient(560px 340px at 88% -60px, var(--blob2), transparent 70%),
+    radial-gradient(720px 420px at -120px 108%, var(--blob1), transparent 70%),
+    var(--bg);
+  display:flex; flex-direction:column; overflow:hidden;
+}
+button{font:inherit; cursor:pointer}
+input,select,textarea{font:inherit; color:var(--ink); background:var(--panel); border:1px solid var(--line); border-radius:4px; padding:7px 9px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent); outline-offset:0}
+a{color:var(--accent-ink)}
+h1,h2,h3{margin:0; font-weight:650; letter-spacing:.01em}
+.small{font-size:12px} .mut{color:var(--mut)} .tiny{font-size:11px}
+/* ---------- opening ---------- */
+#opening{position:fixed; inset:0; z-index:60; background:#05060A; color:#E2E8F0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; cursor:pointer; transition:opacity .1s linear}
+#opening .ocard{background:#F7F4EC; border-radius:8px; padding:18px 22px; box-shadow:0 2px 14px rgba(0,0,0,.5); opacity:0; transition:opacity .1s linear}
+#opening.show .ocard{opacity:1}
+#opening .ocard img{display:block; width:230px; height:auto}
+#opening .oname{font-size:26px; letter-spacing:.3em; font-weight:650; color:#E2E8F0; text-indent:.3em}
+#opening .osub{color:#9AA3B8; letter-spacing:.18em; font-size:11px; text-transform:uppercase}
+#opening .oskip{color:#9AA3B8; font-size:12px; border:1px solid #1E2432; padding:5px 14px; border-radius:20px; background:transparent}
+#opening.gone{display:none}
+/* ---------- header ---------- */
+header{background:var(--head-bg); color:var(--head-ink); display:flex; align-items:center; gap:13px; padding:8px 16px; flex:0 0 auto}
+header .markchip{background:#F7F4EC; border-radius:5px; padding:3px 7px; display:flex; align-items:center}
+header .markchip img{height:26px; width:auto; display:block}
+header .brand{font-size:17px; font-weight:700; letter-spacing:.22em}
+header .hsub{font-size:11px; color:#9AA3B8; letter-spacing:.14em; text-transform:uppercase}
+header .sp{flex:1}
+.hbtn{background:transparent; color:var(--head-ink); border:1px solid #2A3040; border-radius:4px; padding:6px 11px; font-size:12.5px; transition:border-color .1s linear}
+.hbtn:hover{border-color:var(--amber)}
+#switcher{position:relative}
+#switchPanel{position:absolute; right:0; top:calc(100% + 8px); background:var(--panel); color:var(--ink); border:1px solid var(--line); border-radius:6px; box-shadow:var(--shadow); width:280px; padding:10px; z-index:40; display:none}
+#switchPanel.open{display:block}
+#switchPanel h3{font-size:12px; text-transform:uppercase; letter-spacing:.12em; color:var(--mut); margin-bottom:8px}
+#switchPanel .peer{display:flex; justify-content:space-between; align-items:center; width:100%; text-align:left; background:var(--panel2); border:1px solid var(--line2); border-radius:4px; padding:7px 10px; margin-bottom:6px; color:var(--ink)}
+#switchPanel .peer.cur{border-color:var(--accent); font-weight:650}
+/* ---------- internal banner ---------- */
+#banner{flex:0 0 auto; background:var(--banner-bg); color:var(--banner-ink); border-top:1px solid var(--amber); border-bottom:1px solid var(--amber);
+  font-size:11.5px; font-weight:700; letter-spacing:.14em; text-align:center; padding:6px 14px; text-transform:uppercase}
+/* ---------- layout ---------- */
+#shell{flex:1; display:flex; min-height:0}
+nav#rail{flex:0 0 178px; background:var(--panel); border-right:1px solid var(--line); padding:12px 10px; display:flex; flex-direction:column; gap:4px; overflow-y:auto}
+nav#rail button{display:flex; align-items:center; gap:9px; text-align:left; background:transparent; border:1px solid transparent; border-radius:4px; padding:8px 10px; color:var(--ink); font-size:13.5px; transition:border-color .1s linear, background .1s linear}
+nav#rail button .seam{width:8px; height:2px; background:var(--amber); flex:0 0 auto}
+nav#rail button.active{background:var(--inset); border-color:var(--accent); font-weight:650}
+nav#rail .railnote{margin-top:auto; font-size:11px; color:var(--mut); border-top:1px dashed var(--line); padding-top:9px}
+main{flex:1; min-width:0; overflow-y:auto; padding:16px 18px 22px}
+section.view{display:none; max-width:1180px; margin:0 auto}
+section.view.active{display:block}
+.vhead{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:4px}
+.vhead h2{font-size:20px}
+.kicker{font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--accent-ink); font-weight:700}
+.rule{height:1px; background:linear-gradient(90deg,var(--amber),var(--line2) 55%,transparent); margin:9px 0 14px}
+/* ---------- register ---------- */
+.filters{display:flex; flex-wrap:wrap; gap:6px; margin:0 0 12px}
+.fchip{background:var(--panel); border:1px solid var(--line); border-radius:20px; padding:4px 12px; font-size:12.5px; color:var(--ink)}
+.fchip.on{border-color:var(--accent); background:var(--accent-tint); font-weight:650}
+.fchip .n{color:var(--mut); font-weight:400}
+table{width:100%; border-collapse:collapse; font-size:13px}
+th,td{text-align:left; padding:7px 8px; border-bottom:1px solid var(--line2); vertical-align:top}
+th{font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--mut)}
+tr.recrow{cursor:pointer}
+tr.recrow:hover td{background:var(--panel2)}
+tr.recrow.sel td{background:var(--accent-tint)}
+.card{background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:13px 14px; box-shadow:var(--shadow)}
+.grid{display:grid; gap:12px}
+.badge{display:inline-block; font-size:10.5px; font-weight:700; letter-spacing:.06em; padding:1.5px 7px; border-radius:9px; vertical-align:1px}
+.b-sample{background:#F3D34A; color:#4A3A00; border:1px solid #C9A227}
+html[data-theme="dark"] .b-sample{background:#5C4B00; color:#F3D34A; border-color:#8A6D1F}
+.b-nc{background:var(--inset); color:var(--mut); border:1px solid var(--line)}
+.st{display:inline-block; font-size:11px; font-weight:700; letter-spacing:.03em; padding:2px 8px; border-radius:9px; border:1px solid var(--line); white-space:nowrap}
+.st-RecordReceived{background:var(--inset); color:var(--mut)}
+.st-EntityReview,.st-RelationshipReview,.st-ScopeConfirmation{background:var(--accent-tint); color:var(--accent-ink); border-color:var(--accent)}
+.st-Confirmed{background:var(--accent); color:#E2E8F0; border-color:var(--accent)}
+.st-OnHold{background:var(--hold-tint); color:var(--hold); border-color:var(--hold)}
+.chip{display:inline-block; background:var(--chip); border:1px solid var(--line2); border-radius:4px; padding:2px 8px; font-size:12px; margin:0 4px 4px 0}
+.btn{background:var(--accent); color:#E2E8F0; border:1px solid var(--accent); border-radius:4px; padding:8px 14px; font-weight:600}
+.btn.ghost{background:transparent; color:var(--ink); border-color:var(--line)}
+.btn.sm{padding:5px 10px; font-size:12.5px}
+.rowbtns button{background:transparent; border:1px solid var(--line); border-radius:4px; padding:3px 8px; font-size:12px; margin-right:4px}
+form.f{display:grid; gap:9px; background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:13px 14px; margin:12px 0}
+form.f .cols{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:9px}
+form.f label{font-size:12px; color:var(--mut); display:grid; gap:4px}
+.notice{border:1px solid var(--accent); background:var(--panel2); border-radius:6px; padding:11px 13px; font-size:13px}
+.notice.open-item{border-color:var(--amber)}
+.kv{display:grid; grid-template-columns:150px 1fr; gap:4px 12px; font-size:13px}
+.kv dt{color:var(--mut)} .kv dd{margin:0}
+.log{border-top:1px dashed var(--line); margin-top:10px; padding-top:8px}
+.log .li{padding:6px 0; border-bottom:1px solid var(--line2); font-size:12.5px}
+.log .li:last-child{border-bottom:none}
+/* calendar */
+.calwrap{display:grid; grid-template-columns:minmax(300px,430px) 1fr; gap:14px; align-items:start}
+.calgrid{display:grid; grid-template-columns:repeat(7,1fr); gap:3px}
+.calgrid .dow{font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--mut); text-align:center; padding:3px 0}
+.calgrid .day{min-height:46px; border:1px solid var(--line2); border-radius:4px; padding:3px 4px; font-size:11.5px; background:var(--panel)}
+.calgrid .day.dim{opacity:.38} .calgrid .day.today{border-color:var(--amber); border-width:1.5px}
+.calgrid .day .ev{display:block; width:100%; background:var(--accent-tint); border-left:2px solid var(--amber); border-radius:2px; padding:1px 4px; margin-top:2px; font-size:10px; line-height:1.3; white-space:normal; overflow-wrap:break-word}
+/* doors */
+.doors{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:12px}
+.door{display:block; text-decoration:none; color:var(--ink); background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:13px 14px}
+.door:hover{border-color:var(--amber)}
+.door h3{font-size:14.5px; color:var(--accent-ink)}
+.door p{margin:5px 0 0; font-size:12.5px; color:var(--mut)}
+/* footer */
+footer{flex:0 0 auto; display:flex; align-items:center; gap:16px; padding:6px 16px; border-top:1px solid var(--line); background:var(--panel); font-size:12px; color:var(--mut)}
+#statusline{flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.memorial{display:flex; align-items:center; gap:6px; font-size:11px; font-weight:500; color:var(--mut); white-space:nowrap}
+.memorial svg{width:15px; height:15px}
+@media (max-width:760px){
+  header{flex-wrap:wrap; row-gap:6px}
+  nav#rail{flex-basis:58px; padding:12px 6px}
+  nav#rail button span.lbl, nav#rail .railnote{display:none}
+  .calwrap{grid-template-columns:1fr}
+  header .hsub{display:none}
+  main{padding:12px}
+  .kv{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div id="opening" role="button" aria-label="Skip opening" title="Tap to skip">
+  <div class="ocard"><img src="data:image/jpeg;base64,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" alt="ATRALEND logo"></div>
+  <div class="oname">ATRALEND</div>
+  <div class="osub">Internal workspace — records-received register</div>
+  <button class="oskip" id="skipBtn">Skip</button>
+</div>
+
+<header>
+  <div class="markchip"><img src="data:image/jpeg;base64,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" alt="ATRALEND mark"></div>
+  <div>
+    <div class="brand">ATRALEND</div>
+    <div class="hsub">Records-received register</div>
+  </div>
+  <div class="sp"></div>
+  <div id="switcher">
+    <button class="hbtn" id="switchBtn">Workbench ▾</button>
+    <div id="switchPanel" aria-label="Workbench switcher"></div>
+  </div>
+  <button class="hbtn" id="deckBtn">⌂ Command Deck</button>
+  <button class="hbtn" id="themeBtn">Dark</button>
+</header>
+
+<div id="banner">INTERNAL WORKSPACE ONLY — BUSINESS IDENTITY AND PERMITTED WORK SCOPE TO BE CONFIRMED BY JOHNNY</div>
+
+<div id="shell">
+  <nav id="rail" aria-label="Views">
+    <button data-view="register" class="active"><i class="seam"></i><span class="lbl">Register</span></button>
+    <button data-view="reviews"><i class="seam"></i><span class="lbl">Review Log</span></button>
+    <button data-view="calendar"><i class="seam"></i><span class="lbl">Calendar</span></button>
+    <button data-view="email"><i class="seam"></i><span class="lbl">Email</span></button>
+    <button data-view="social"><i class="seam"></i><span class="lbl">Social</span></button>
+    <button data-view="assistant"><i class="seam"></i><span class="lbl">Assistant</span></button>
+    <button data-view="reference"><i class="seam"></i><span class="lbl">Reference</span></button>
+    <button data-view="accounts"><i class="seam"></i><span class="lbl">Accounts</span></button>
+    <button data-view="about"><i class="seam"></i><span class="lbl">About</span></button>
+    <div class="railnote">Internal workspace. Records are saved on this device only — nothing here is live, synced, or sent anywhere.</div>
+  </nav>
+
+  <main id="main">
+    <section class="view active" id="view-register"></section>
+    <section class="view" id="view-reviews"></section>
+    <section class="view" id="view-calendar"></section>
+    <section class="view" id="view-email"></section>
+    <section class="view" id="view-social"></section>
+    <section class="view" id="view-assistant"></section>
+    <section class="view" id="view-reference"></section>
+    <section class="view" id="view-accounts"></section>
+    <section class="view" id="view-about"></section>
+  </main>
+</div>
+
+<footer>
+  <div id="statusline">Ready.</div>
+  <div class="memorial"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><ellipse cx="12" cy="15.5" rx="4.6" ry="3.9"/><circle cx="5.2" cy="10.6" r="1.9"/><circle cx="8.7" cy="7.6" r="2.05"/><circle cx="12.9" cy="6.9" r="2.05"/><circle cx="16.9" cy="8.6" r="1.9"/><circle cx="19" cy="12" r="1.65"/></svg><span>In memory of Oakley</span></div>
+</footer>
+
+<script>
+'use strict';
+/* ================= Atra Lend — internal records-received register =================
+   Storage: atraLend.entries.v1 (register) · atraLend.social.v1 (social drafts)
+            atraLend.theme.v1 (theme choice)
+   Rules set for THIS app (Brief 8): timestamps are stored ISO and shown in words
+   with the time ("Nov 18, 2026 · 09:41"). This app holds no money amounts, no
+   lending content, and no client data. Received is NOT processed — the register
+   keeps the two visibly separate at all times.
+   Email is DRAFT-ONLY and internal-only: the app never sends, keeps no sent log,
+   and holds no client addresses to compose to. */
+var STORE_KEY='atraLend.entries.v1';
+var SOCIAL_KEY='atraLend.social.v1';
+var THEME_KEY='atraLend.theme.v1';
+var APP_VERSION='1.0';
+var BANNER='INTERNAL WORKSPACE ONLY — BUSINESS IDENTITY AND PERMITTED WORK SCOPE TO BE CONFIRMED BY JOHNNY';
+var STATES=['Record Received','Entity Review','Relationship Review','Scope Confirmation','Confirmed','On Hold'];
+
+var store=null, social=null, seedWriteFailed=false, socialWriteFailed=false;
+var selectedRecordId=null, stateFilter='All', calCursor=null, editingDraftId=null;
+
+function pad2(n){return String(n).padStart(2,'0');}
+function todayStr(){var d=new Date();return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());}
+function nowLocal(){var d=new Date();return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate())+'T'+pad2(d.getHours())+':'+pad2(d.getMinutes());}
+function uid(p){return p+'-'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+var MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function fmtDate(iso){if(!iso){return '—';}var p=String(iso).split('T')[0].split('-');if(p.length!==3){return esc(iso);}return MONTHS[Number(p[1])-1]+' '+Number(p[2])+', '+p[0];}
+function fmtDT(iso){if(!iso){return '—';}var parts=String(iso).split('T');var d=fmtDate(parts[0]);return parts[1]?d+' · '+parts[1].slice(0,5):d;}
+function sampleTag(r){return r&&r.sample?' <span class="badge b-sample">Sample</span>':'';}
+function stClass(s){return 'st st-'+String(s||'').replace(/\s/g,'');}
+function stHtml(s){return '<span class="'+stClass(s)+'">'+esc(s||'Not recorded')+'</span>';}
+
+/* ---------------- seeds: SAMPLE internal records only — no real record exists ---------------- */
+function seedData(){
+  return {
+    version:APP_VERSION,
+    nextAcc:6,
+    records:[
+      {id:'r1', acc:'ATR-0001', title:'Document package — six pages, itemised at receipt', sample:true,
+       source:'Internal forward — email attachment (SAMPLE)', receivedAt:'2026-11-17T09:24',
+       state:'Record Received', prevState:'',
+       receipts:[{v:1, at:'2026-11-17T09:24', by:'Internal reviewer (SAMPLE)', note:'Receipt as first logged.'}],
+       reviews:[], notes:''},
+      {id:'r2', acc:'ATR-0002', title:'Printed correspondence — single letter, two pages', sample:true,
+       source:'Hand-delivered envelope (SAMPLE)', receivedAt:'2026-11-14T15:02',
+       state:'Entity Review', prevState:'',
+       receipts:[{v:1, at:'2026-11-14T15:02', by:'Internal reviewer (SAMPLE)', note:'Receipt as first logged.'}],
+       reviews:[{id:'rv21', kind:'Entity Review', date:'2026-11-15', reviewer:'Internal reviewer (SAMPLE)', note:'Entity review opened. The entity named in the record is being checked against the record exactly as received — nothing added.'}],
+       notes:''},
+      {id:'r3', acc:'ATR-0003', title:'Courier package — sealed, contents listed on the waybill copy', sample:true,
+       source:'Courier — afternoon delivery (SAMPLE)', receivedAt:'2026-11-12T13:40',
+       state:'Relationship Review', prevState:'',
+       receipts:[
+         {v:1, at:'2026-11-12T09:15', by:'Internal reviewer (SAMPLE)', note:'Receipt as first logged — source detail read "Courier — morning delivery (SAMPLE)", received time 09:15.'},
+         {v:2, at:'2026-11-13T10:05', by:'Internal reviewer (SAMPLE)', note:'CORRECTED RECEIPT — source detail corrected to "Courier — afternoon delivery (SAMPLE)" and received time corrected to 13:40. Reason: the waybill copy shows the afternoon run; the morning entry was a logging error. The v1 entry above is kept — a correction adds a version, it does not rewrite the first receipt.'}
+       ],
+       reviews:[
+         {id:'rv31', kind:'Entity Review', date:'2026-11-13', reviewer:'Internal reviewer (SAMPLE)', note:'Entity review recorded against receipt v2 (the corrected receipt), not v1.'},
+         {id:'rv32', kind:'Relationship Review', date:'2026-11-16', reviewer:'Internal reviewer (SAMPLE)', note:'Relationship review opened.'}
+       ],
+       notes:'Work from receipt v2. v1 is retained for the record only.'},
+      {id:'r4', acc:'ATR-0004', title:'Records bundle — three folders, listed at receipt', sample:true,
+       source:'Internal transfer — office drop (SAMPLE)', receivedAt:'2026-11-10T11:08',
+       state:'On Hold', prevState:'Scope Confirmation',
+       receipts:[{v:1, at:'2026-11-10T11:08', by:'Internal reviewer (SAMPLE)', note:'Receipt as first logged.'}],
+       reviews:[
+         {id:'rv41', kind:'Entity Review', date:'2026-11-11', reviewer:'Internal reviewer (SAMPLE)', note:'Entity review recorded.'},
+         {id:'rv42', kind:'Relationship Review', date:'2026-11-12', reviewer:'Internal reviewer (SAMPLE)', note:'Relationship review recorded.'},
+         {id:'rv43', kind:'Scope Confirmation', date:'2026-11-14', reviewer:'Internal reviewer (SAMPLE)', note:'Scope confirmation opened for this record.'},
+         {id:'rv44', kind:'Place On Hold', date:'2026-11-17', reviewer:'Internal reviewer (SAMPLE)', note:'Held pending Johnny\u2019s confirmation of permitted work scope — see the workspace banner. The hold is recorded here; nothing about the record has been assessed.'}
+       ],
+       notes:''},
+      {id:'r5', acc:'ATR-0005', title:'Single document — one page, received flat', sample:true,
+       source:'Mail — post (SAMPLE)', receivedAt:'2026-11-06T10:31',
+       state:'Confirmed', prevState:'',
+       receipts:[{v:1, at:'2026-11-06T10:31', by:'Internal reviewer (SAMPLE)', note:'Receipt as first logged.'}],
+       reviews:[
+         {id:'rv51', kind:'Entity Review', date:'2026-11-06', reviewer:'Internal reviewer (SAMPLE)', note:'Entity review recorded.'},
+         {id:'rv52', kind:'Relationship Review', date:'2026-11-07', reviewer:'Internal reviewer (SAMPLE)', note:'Relationship review recorded.'},
+         {id:'rv53', kind:'Scope Confirmation', date:'2026-11-08', reviewer:'Internal reviewer (SAMPLE)', note:'Scope confirmation opened for this record.'},
+         {id:'rv54', kind:'Scope Confirmed', date:'2026-11-09', reviewer:'Internal reviewer (SAMPLE)', note:'Scope confirmation recorded for this record only. "Confirmed" here is an internal record state — it is not an assessment, an approval, or an outcome for anything outside this register.'}
+       ],
+       notes:''}
+    ],
+    appointments:[
+      {id:'a1', date:'2026-11-21', title:'Review deadline — entity review for ATR-0002', kind:'Review deadline', recordId:'r2', note:'Internal deadline against a register record.', sample:true},
+      {id:'a2', date:'2026-11-25', title:'Internal deadline — hold review for ATR-0004', kind:'Internal deadline', recordId:'r4', note:'Re-read the hold note on ATR-0004 by this date.', sample:true}
+    ],
+    drafts:[
+      {id:'m1', date:'2026-11-17', recordId:'r4', subject:'Internal note — hold recorded on ATR-0004', body:'Draft example, stored in this workspace only. ATR-0004 sits On Hold until the scope question in the workspace banner is answered. Nothing is sent from this app.', sample:true}
+    ],
+    settings:{provider:'', accountLabel:''}
+  };
+}
+function seedSocial(){
+  return {posts:[
+    {id:'p1', date:'2026-11-12', body:'SAMPLE — placeholder draft. This workspace keeps social drafts only: no account is connected, and nothing is published from here.', sample:true}
+  ]};
+}
+
+/* ---------------- persistence discipline (BOOT write + catch-branch persist) ---------------- */
+function updateStatus(msg){var el=document.getElementById('statusline');if(el){el.textContent=msg;}}
+function persist(){
+  try{localStorage.setItem(STORE_KEY,JSON.stringify(store));}
+  catch(e){updateStatus('NOT SAVED — the write to local storage failed ('+(e&&e.name?e.name:'storage error')+'). Records are kept in memory only; download a backup from Accounts before relying on them.');return false;}
+  updateStatus('Saved locally under '+STORE_KEY+' — '+store.records.length+' register records · '+store.appointments.length+' calendar items · '+store.drafts.length+' internal drafts.');
+  return true;
+}
+function loadStore(){
+  var raw=null;
+  try{raw=localStorage.getItem(STORE_KEY);}catch(e){raw=null;}
+  if(raw){
+    try{store=JSON.parse(raw);if(!store||typeof store!=='object'||!Array.isArray(store.records)){throw new Error('not a store');}}
+    catch(e){
+      try{localStorage.setItem(STORE_KEY+'.unreadable-'+todayStr(),raw);}catch(e2){}
+      store=seedData();
+      if(!persist()){seedWriteFailed=true;}
+      updateStatus('Saved records could not be read — a copy was kept aside and the SAMPLE examples were restored. '+(seedWriteFailed?'The restore could not be saved either; see Accounts.':''));
+      return store;
+    }
+  }else{
+    store=seedData();
+    if(!persist()){seedWriteFailed=true;}
+  }
+  var seed=seedData();
+  ['records','appointments','drafts'].forEach(function(k){if(!Array.isArray(store[k])){store[k]=seed[k];}});
+  if(typeof store.nextAcc!=='number'){store.nextAcc=seed.nextAcc;}
+  if(!store.settings||typeof store.settings!=='object'){store.settings=seed.settings;}
+  return store;
+}
+function persistSocial(){
+  try{localStorage.setItem(SOCIAL_KEY,JSON.stringify(social));}
+  catch(e){updateStatus('NOT SAVED — the social draft write failed ('+(e&&e.name?e.name:'storage error')+').');return false;}
+  return true;
+}
+function loadSocial(){
+  var raw=null;
+  try{raw=localStorage.getItem(SOCIAL_KEY);}catch(e){raw=null;}
+  if(raw){
+    try{social=JSON.parse(raw);if(!social||!Array.isArray(social.posts)){throw new Error('not a store');}}
+    catch(e){social=seedSocial();if(!persistSocial()){socialWriteFailed=true;}return social;}
+  }else{social=seedSocial();if(!persistSocial()){socialWriteFailed=true;}}
+  return social;
+}
+
+/* ---------------- theme ---------------- */
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  document.getElementById('themeBtn').textContent=(t==='dark')?'Light':'Dark';
+  try{localStorage.setItem(THEME_KEY,t);}catch(e){}
+}
+function initTheme(){
+  var t='light';
+  try{t=localStorage.getItem(THEME_KEY)||'light';}catch(e){}
+  applyTheme(t==='dark'?'dark':'light');
+}
+
+/* ---------------- navigation ---------------- */
+function switchView(name){
+  document.querySelectorAll('section.view').forEach(function(s){s.classList.toggle('active',s.id==='view-'+name);});
+  document.querySelectorAll('nav#rail button').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-view')===name);});
+  document.getElementById('main').scrollTop=0;
+}
+function recordById(id){return store.records.find(function(r){return r.id===id;})||null;}
+function accLabel(r){return r?r.acc+' — '+r.title:'—';}
+
+/* ---------------- Register — the governing object, and the first screen ---------------- */
+function renderRegister(){
+  var el=document.getElementById('view-register');
+  var counts={All:store.records.length};
+  STATES.forEach(function(s){counts[s]=store.records.filter(function(r){return r.state===s;}).length;});
+  var filters='<button type="button" class="fchip'+(stateFilter==='All'?' on':'')+'" data-filter="All">All records <span class="n">'+counts.All+'</span></button>'
+    +STATES.map(function(s){return '<button type="button" class="fchip'+(stateFilter===s?' on':'')+'" data-filter="'+esc(s)+'">'+esc(s)+' <span class="n">'+counts[s]+'</span></button>';}).join('');
+  var rows=store.records.filter(function(r){return stateFilter==='All'||r.state===stateFilter;}).map(function(r){
+    return '<tr class="recrow'+(selectedRecordId===r.id?' sel':'')+'" data-open="'+r.id+'"><td><b>'+esc(r.acc)+'</b>'+sampleTag(r)+'</td>'
+      +'<td>'+esc(r.title)+'</td><td>'+esc(r.source)+'</td><td style="white-space:nowrap">'+fmtDT(r.receivedAt)+'</td>'
+      +'<td>'+stHtml(r.state)+'</td><td>'+r.reviews.length+' recorded</td></tr>';
+  }).join('');
+  el.innerHTML='<div class="kicker">Atra Lend — internal workspace</div>'
+    +'<div class="vhead"><h2>Records-Received Register</h2></div>'
+    +'<p class="mut" style="margin:0">One row per record received. <b>Received is not processed</b> — a record sitting in this register has been received and logged, nothing more. Its state moves only when a review is recorded against it, and every review is a plain record with a date and a reviewer. Select a row to open its details pane.</p>'
+    +'<div class="rule"></div>'
+    +'<div class="filters">'+filters+'</div>'
+    +'<div class="card" style="padding:6px 12px"><table><thead><tr><th>Accession</th><th>Record received</th><th>Source</th><th>Received</th><th>State</th><th>Reviews</th></tr></thead><tbody>'
+    +(rows||'<tr><td colspan="6" class="mut">No records in this state.</td></tr>')+'</tbody></table></div>'
+    +'<div id="detailSlot"></div>'
+    +'<form class="f" id="newRecordForm"><h3 style="font-size:14px">Log a received record</h3><div class="cols">'
+    +'<label>Record — what was received, as itemised at receipt<input name="title" placeholder="e.g. Document package — four pages, itemised at receipt" required></label>'
+    +'<label>Source — precise<input name="source" placeholder="e.g. Hand-delivered envelope" required></label>'
+    +'<label>Received — date &amp; time<input name="receivedAt" type="datetime-local" value="'+nowLocal()+'" required></label></div>'
+    +'<button class="btn sm" type="submit">Add to register</button>'
+    +'<p class="tiny mut" style="margin:0">A new record enters at <b>Record Received</b>. Logging a receipt records that something arrived — it does not process, assess, or act on it.</p></form>'
+    +'<div class="notice open-item"><b>Open item — unresolved, kept visible on purpose.</b> This app\u2019s content list exists in two filed versions that differ: one includes <i>follow-ups</i> and <i>contacts with intake</i>; the other ends at <i>review notes</i>. The register above is the core both versions agree on. The differing items are <b>not built</b>, because "contacts with intake" presses directly on this workspace\u2019s wall — no client data in or out. Resolution belongs to Johnny and Grant; until they rule, this note stays here and in About.</div>';
+  el.querySelectorAll('[data-filter]').forEach(function(b){b.addEventListener('click',function(){stateFilter=b.getAttribute('data-filter');renderRegister();});});
+  el.querySelectorAll('[data-open]').forEach(function(tr){tr.addEventListener('click',function(){selectedRecordId=tr.getAttribute('data-open');renderRegister();});});
+  document.getElementById('newRecordForm').addEventListener('submit',function(ev){
+    ev.preventDefault();var f=ev.target;
+    var acc='ATR-'+String(store.nextAcc).padStart(4,'0');store.nextAcc+=1;
+    var r={id:uid('r'),acc:acc,title:f.title.value.trim(),source:f.source.value.trim(),receivedAt:f.receivedAt.value||nowLocal(),
+      sample:false,state:'Record Received',prevState:'',
+      receipts:[{v:1,at:nowLocal(),by:'Logged in this workspace',note:'Receipt as first logged.'}],reviews:[],notes:''};
+    store.records.push(r);persist();selectedRecordId=r.id;renderRegister();
+    var slot=document.getElementById('detailSlot');if(slot){slot.scrollIntoView({behavior:'smooth',block:'start'});}
+  });
+  renderDetail();
+}
+
+function renderDetail(){
+  var slot=document.getElementById('detailSlot');
+  if(!slot){return;}
+  var r=selectedRecordId?recordById(selectedRecordId):null;
+  if(!r){slot.innerHTML='<div class="notice" style="margin-top:12px">No record selected — select a row in the register to see its source metadata, accession timestamps, receipt history and review log.</div>';return;}
+  var receipts=r.receipts.slice().sort(function(a,b){return b.v-a.v;}).map(function(v){
+    return '<div class="li"><b>Receipt v'+v.v+'</b> · logged '+fmtDT(v.at)+' · by '+esc(v.by)+'<br><span class="mut">'+esc(v.note)+'</span></div>';
+  }).join('');
+  var reviews=r.reviews.map(function(rv){
+    return '<div class="li"><b>'+esc(rv.kind)+'</b> · '+fmtDate(rv.date)+' · '+esc(rv.reviewer)+(rv.note?'<br><span class="mut">'+esc(rv.note)+'</span>':'')+'</div>';
+  }).join('');
+  slot.innerHTML='<div class="card" style="margin-top:12px"><div class="vhead"><h3 style="font-size:16px">'+esc(r.acc)+' — '+esc(r.title)+'</h3>'+sampleTag(r)+'</div>'
+    +'<dl class="kv"><dt>State</dt><dd>'+stHtml(r.state)+(r.state==='Confirmed'?' <span class="small mut">— an internal record state (a scope confirmation is on record for this record). It is not an assessment, an approval, or an outcome for anything outside this register.</span>':'')+(r.state==='On Hold'&&r.prevState?' <span class="small mut">— held from '+esc(r.prevState)+'.</span>':'')+'</dd>'
+    +'<dt>Source</dt><dd>'+esc(r.source)+'</dd>'
+    +'<dt>Received (accession)</dt><dd>'+fmtDT(r.receivedAt)+'</dd>'
+    +'<dt>Receipt version</dt><dd>v'+r.receipts.length+' of '+r.receipts.length+' — full history below</dd></dl>'
+    +'<div class="log"><h4 style="margin:0 0 2px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut)">Receipt history — versions are kept, never rewritten</h4>'+receipts+'</div>'
+    +'<div class="log"><h4 style="margin:0 0 2px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut)">Review log — plain records, each with a date and a reviewer</h4>'
+    +(reviews||'<p class="small mut" style="margin:4px 0">No reviews recorded. This record has been received — it has not been processed.</p>')+'</div>'
+    +'<form class="f" id="reviewForm"><h3 style="font-size:14px">Record a review</h3><div class="cols">'
+    +'<label>Review kind<select name="kind"><option>Entity Review</option><option>Relationship Review</option><option>Scope Confirmation</option><option>Scope Confirmed</option><option>Place On Hold</option><option>Release Hold</option><option>Note Only</option></select></label>'
+    +'<label>Date<input name="date" type="date" value="'+todayStr()+'" required></label>'
+    +'<label>Reviewer<input name="reviewer" placeholder="Who recorded this review" required></label></div>'
+    +'<label>Note<textarea name="note" rows="2" placeholder="What the review record says — plain words"></textarea></label>'
+    +'<button class="btn sm" type="submit">Add review record</button>'
+    +'<p class="tiny mut" style="margin:0">Recording a review moves the record\u2019s state to match the review kind (a hold remembers the state it was held from). The review itself is the record — there is no separate processing step.</p></form>'
+    +'<form class="f" id="correctForm"><h3 style="font-size:14px">Correct this receipt</h3><div class="cols">'
+    +'<label>Field to correct<select name="field"><option value="source">Source detail</option><option value="receivedAt">Received date &amp; time</option><option value="title">Record title</option></select></label>'
+    +'<label>Corrected value<input name="newval" placeholder="The value as it should read" required></label>'
+    +'<label>Corrected by<input name="by" placeholder="Who made the correction" required></label></div>'
+    +'<label>Reason for the correction<input name="reason" placeholder="Why the first receipt was wrong" required></label>'
+    +'<button class="btn sm ghost" type="submit">Add corrected receipt (new version)</button>'
+    +'<p class="tiny mut" style="margin:0">A correction adds a new receipt version and keeps the old one in the history above — the first receipt is never edited in place.</p></form>'
+    +'<form class="f" id="notesForm"><h3 style="font-size:14px">Review notes</h3>'
+    +'<label>Notes on this record<textarea name="notes" rows="2">'+esc(r.notes||'')+'</textarea></label>'
+    +'<button class="btn sm ghost" type="submit">Save notes</button></form>'
+    +'<div class="rowbtns"><button type="button" id="delRecordBtn">Delete this record</button></div></div>';
+  document.getElementById('reviewForm').addEventListener('submit',function(ev){
+    ev.preventDefault();var f=ev.target;var kind=f.kind.value;
+    r.reviews.push({id:uid('rv'),kind:kind,date:f.date.value,reviewer:f.reviewer.value.trim(),note:f.note.value.trim()});
+    if(kind==='Entity Review'){r.state='Entity Review';}
+    else if(kind==='Relationship Review'){r.state='Relationship Review';}
+    else if(kind==='Scope Confirmation'){r.state='Scope Confirmation';}
+    else if(kind==='Scope Confirmed'){r.state='Confirmed';}
+    else if(kind==='Place On Hold'){if(r.state!=='On Hold'){r.prevState=r.state;}r.state='On Hold';}
+    else if(kind==='Release Hold'){r.state=r.prevState||'Record Received';r.prevState='';}
+    persist();renderRegister();renderReviews();
+  });
+  document.getElementById('correctForm').addEventListener('submit',function(ev){
+    ev.preventDefault();var f=ev.target;var field=f.field.value;var nv=f.newval.value.trim();
+    var labels={source:'Source detail',receivedAt:'Received date & time',title:'Record title'};
+    var old=(field==='receivedAt')?fmtDT(r.receivedAt):String(r[field]||'');
+    var shown=(field==='receivedAt')?fmtDT(nv):nv;
+    if(field==='receivedAt'){r.receivedAt=nv;}else{r[field]=nv;}
+    r.receipts.push({v:r.receipts.length+1,at:nowLocal(),by:f.by.value.trim(),
+      note:'CORRECTED RECEIPT — '+labels[field]+' corrected from "'+old+'" to "'+shown+'". Reason: '+f.reason.value.trim()+'. The earlier version is kept above — a correction adds a version, it does not rewrite the first receipt.'});
+    persist();renderRegister();
+  });
+  document.getElementById('notesForm').addEventListener('submit',function(ev){
+    ev.preventDefault();r.notes=ev.target.notes.value;persist();renderRegister();
+  });
+  document.getElementById('delRecordBtn').addEventListener('click',function(){
+    if(!confirm('Delete record '+r.acc+' from this register on this device? Its receipt history and review log go with it.')){return;}
+    store.records=store.records.filter(function(x){return x.id!==r.id;});
+    store.appointments.forEach(function(a){if(a.recordId===r.id){a.recordId='';}});
+    persist();selectedRecordId=null;renderRegister();renderReviews();renderCalendar();
+  });
+}
+
+/* ---------------- Review Log — every review record, flat ---------------- */
+function renderReviews(){
+  var el=document.getElementById('view-reviews');
+  var all=[];
+  store.records.forEach(function(r){r.reviews.forEach(function(rv){all.push({r:r,rv:rv});});});
+  all.sort(function(a,b){return a.rv.date<b.rv.date?1:-1;});
+  var rows=all.map(function(x){
+    return '<tr><td>'+fmtDate(x.rv.date)+'</td><td><b>'+esc(x.r.acc)+'</b>'+sampleTag(x.r)+'<br><span class="small mut">'+esc(x.r.title)+'</span></td>'
+      +'<td>'+esc(x.rv.kind)+'</td><td>'+esc(x.rv.reviewer)+'</td><td class="small mut">'+esc(x.rv.note||'')+'</td>'
+      +'<td class="rowbtns"><button type="button" data-openrec="'+x.r.id+'">Open record</button></td></tr>';
+  }).join('');
+  el.innerHTML='<div class="kicker">Internal review state logs</div><div class="vhead"><h2>Review Log</h2></div>'
+    +'<p class="mut" style="margin:0">Every review recorded against the register, newest first — entity, relationship and scope reviews as plain records with a date and a reviewer. A review records that a review happened; it is not a score, a percentage, or a verdict on anything outside this register.</p>'
+    +'<div class="rule"></div>'
+    +'<div class="card" style="padding:6px 12px"><table><thead><tr><th>Date</th><th>Record</th><th>Review</th><th>Reviewer</th><th>Note</th><th></th></tr></thead><tbody>'
+    +(rows||'<tr><td colspan="6" class="mut">No reviews recorded yet.</td></tr>')+'</tbody></table></div>';
+  el.querySelectorAll('[data-openrec]').forEach(function(b){b.addEventListener('click',function(){
+    selectedRecordId=b.getAttribute('data-openrec');stateFilter='All';renderRegister();switchView('register');
+  });});
+}
+
+/* ---------------- Calendar — internal review deadlines only ---------------- */
+function renderCalendar(){
+  var el=document.getElementById('view-calendar');
+  if(!calCursor){calCursor=new Date();calCursor.setDate(1);}
+  var y=calCursor.getFullYear(),m=calCursor.getMonth();
+  var M=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var first=new Date(y,m,1),startDay=first.getDay(),days=new Date(y,m+1,0).getDate(),prevDays=new Date(y,m,0).getDate();
+  var cells='';
+  ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(function(d){cells+='<div class="dow">'+d+'</div>';});
+  for(var i=0;i<42;i++){
+    var dayNum,dim=false,iso='';
+    if(i<startDay){dayNum=prevDays-startDay+1+i;dim=true;}
+    else if(i>=startDay+days){dayNum=i-startDay-days+1;dim=true;}
+    else{dayNum=i-startDay+1;iso=y+'-'+pad2(m+1)+'-'+pad2(dayNum);}
+    var evs=iso?store.appointments.filter(function(a){return a.date===iso;}):[];
+    cells+='<div class="day'+(dim?' dim':'')+(iso===todayStr()?' today':'')+'">'+dayNum
+      +evs.map(function(a){return '<span class="ev" title="'+esc(a.title)+'">'+esc(a.title)+'</span>';}).join('')+'</div>';
+    if(i>=startDay+days+6&&i>34){break;}
+  }
+  var list=store.appointments.slice().sort(function(a,b){return a.date<b.date?-1:1;}).map(function(a){
+    var r=a.recordId?recordById(a.recordId):null;
+    return '<tr><td>'+fmtDate(a.date)+'</td><td>'+esc(a.title)+sampleTag(a)+'</td><td>'+esc(a.kind)+'</td><td>'+(r?esc(r.acc):'—')+'</td>'
+      +'<td class="small mut">'+esc(a.note||'')+'</td><td class="rowbtns"><button type="button" data-delappt="'+a.id+'">Delete</button></td></tr>';
+  }).join('');
+  var ropts='<option value="">— none —</option>'+store.records.map(function(r){return '<option value="'+r.id+'">'+esc(r.acc)+' — '+esc(r.title)+'</option>';}).join('');
+  el.innerHTML='<div class="kicker">Internal deadlines</div><div class="vhead"><h2>Calendar</h2></div>'
+    +'<p class="mut" style="margin:0">A month and list over this workspace\u2019s own internal review deadlines, each tied to a register record. There are no customers to book here — this calendar holds internal dates only, and nothing is pulled from any outside calendar in this standalone app.</p>'
+    +'<div class="rule"></div><div class="calwrap"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'
+    +'<button class="btn sm ghost" id="calPrev">‹</button><b>'+M[m]+' '+y+'</b><button class="btn sm ghost" id="calNext">›</button></div>'
+    +'<div class="calgrid">'+cells+'</div></div>'
+    +'<div><div class="card" style="padding:6px 12px"><table><thead><tr><th>Date</th><th>Item</th><th>Kind</th><th>Record</th><th>Note</th><th></th></tr></thead><tbody>'
+    +(list||'<tr><td colspan="6" class="mut">No deadlines recorded.</td></tr>')+'</tbody></table></div>'
+    +'<form class="f" id="apptForm"><h3 style="font-size:14px">Add an internal deadline</h3><div class="cols">'
+    +'<label>Date<input name="date" type="date" required></label>'
+    +'<label>Title<input name="title" required></label>'
+    +'<label>Kind<select name="kind"><option>Review deadline</option><option>Internal deadline</option></select></label>'
+    +'<label>Linked record<select name="recordId">'+ropts+'</select></label></div>'
+    +'<label>Note<input name="note"></label><button class="btn sm" type="submit">Add</button></form></div></div>';
+  document.getElementById('calPrev').addEventListener('click',function(){calCursor=new Date(y,m-1,1);renderCalendar();});
+  document.getElementById('calNext').addEventListener('click',function(){calCursor=new Date(y,m+1,1);renderCalendar();});
+  el.querySelectorAll('[data-delappt]').forEach(function(b){b.addEventListener('click',function(){
+    store.appointments=store.appointments.filter(function(x){return x.id!==b.getAttribute('data-delappt');});persist();renderCalendar();
+  });});
+  document.getElementById('apptForm').addEventListener('submit',function(ev){
+    ev.preventDefault();var f=ev.target;
+    store.appointments.push({id:uid('a'),date:f.date.value,title:f.title.value.trim(),kind:f.kind.value,recordId:f.recordId.value,note:f.note.value.trim(),sample:false});
+    persist();renderCalendar();
+  });
+}
+
+/* ---------------- Email — DRAFT-ONLY, internal-only ---------------- */
+function renderEmail(){
+  var el=document.getElementById('view-email');
+  var cards=store.drafts.map(function(m){
+    var r=m.recordId?recordById(m.recordId):null;
+    return '<div class="card" style="margin-bottom:10px"><h3 style="font-size:14px">'+esc(m.subject||'(no subject)')+sampleTag(m)+'</h3>'
+      +'<div class="small mut">Internal draft · '+fmtDate(m.date)+(r?' · Linked record: '+esc(r.acc):'')+'</div>'
+      +'<p class="small" style="white-space:pre-wrap;margin:8px 0">'+esc(m.body)+'</p>'
+      +'<div class="rowbtns"><button type="button" data-editdraft="'+m.id+'">Edit draft</button><button type="button" data-deldraft="'+m.id+'">Delete draft</button></div></div>';
+  }).join('');
+  var ropts='<option value="">— none —</option>'+store.records.map(function(r){return '<option value="'+r.id+'">'+esc(r.acc)+' — '+esc(r.title)+'</option>';}).join('');
+  var ed=editingDraftId?store.drafts.find(function(x){return x.id===editingDraftId;}):null;
+  el.innerHTML='<div class="kicker">Email workspace</div><div class="vhead"><h2>Email — drafts only, internal only</h2></div>'
+    +'<div class="notice"><b>This app never sends email, and there is no one in this workspace to send it to.</b> The register holds internal records, not clients, so there is no compose-to-a-client function here. What this area keeps is internal drafts — notes over register records, written and stored on this device. Johnny reviews everything and sends anything external himself, from his own mailbox. There is no sent log, because the app has sent nothing. No mailbox of record exists for Atra Lend, so no address is pre-filled or suggested anywhere in this app.</div>'
+    +'<div class="rule"></div>'
+    +'<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(330px,100%),1fr))"><div>'
+    +'<div class="card"><h3>Inbox</h3><p class="small mut">No mailbox is linked to Atra Lend in this standalone app, so no messages are shown and none are claimed. When an account is linked in the full Canopy shell, its inbox appears here. See Accounts.</p></div>'
+    +'<h3 style="margin:14px 0 8px;font-size:15px">Stored internal drafts ('+store.drafts.length+')</h3>'
+    +(cards||'<p class="mut small">No drafts stored yet.</p>')+'</div>'
+    +'<form class="f" id="draftForm" style="margin:0"><h3 style="font-size:14px">'+(ed?'Edit draft':'Write an internal draft')+'</h3>'
+    +'<label>Subject<input name="subject" value="'+esc(ed?ed.subject:'')+'"></label>'
+    +'<label>Body<textarea name="body" rows="7">'+esc(ed?ed.body:'')+'</textarea></label>'
+    +'<label>Linked register record<select name="recordId">'+ropts+'</select></label>'
+    +'<button class="btn sm" type="submit">Save draft</button>'
+    +(ed?'<button class="btn sm ghost" type="button" id="cancelEditDraft">Cancel edit</button>':'')
+    +'<p class="tiny mut" style="margin:0">Saving stores the draft on this device only. It is addressed to no one — sending is always done by Johnny, from his own mailbox, outside this app.</p></form></div>';
+  var sel=el.querySelector('#draftForm select[name="recordId"]');
+  if(ed&&ed.recordId){sel.value=ed.recordId;}
+  document.getElementById('draftForm').addEventListener('submit',function(ev){
+    ev.preventDefault();var f=ev.target;
+    if(ed){ed.subject=f.subject.value.trim();ed.body=f.body.value;ed.recordId=f.recordId.value;editingDraftId=null;}
+    else{store.drafts.push({id:uid('m'),date:todayStr(),subject:f.subject.value.trim(),body:f.body.value,recordId:f.recordId.value,sample:false});}
+    persist();renderEmail();
+  });
+  var ce=document.getElementById('cancelEditDraft');
+  if(ce){ce.addEventListener('click',function(){editingDraftId=null;renderEmail();});}
+  el.querySelectorAll('[data-editdraft]').forEach(function(b){b.addEventListener('click',function(){editingDraftId=b.getAttribute('data-editdraft');renderEmail();});});
+  el.querySelectorAll('[data-deldraft]').forEach(function(b){b.addEventListener('click',function(){
+    store.drafts=store.drafts.filter(function(x){return x.id!==b.getAttribute('data-deldraft');});persist();renderEmail();
+  });});
+}
+
+/* ---------------- Social ---------------- */
+function renderSocial(){
+  var el=document.getElementById('view-social');
+  var accts=[
+    {name:'Facebook Page', state:'No Facebook Page for Atra Lend is on record — not connected.'},
+    {name:'Instagram', state:'No account on record — not connected.'},
+    {name:'LinkedIn', state:'No account on record — not connected.'}
+  ];
+  var posts=social.posts.slice().sort(function(a,b){return a.date<b.date?1:-1;}).map(function(p){
+    return '<div class="card" style="margin-bottom:10px"><div class="small mut">'+fmtDate(p.date)+' · Post draft'+sampleTag(p)+'</div>'
+      +'<p class="small" style="white-space:pre-wrap;margin:6px 0">'+esc(p.body)+'</p>'
+      +'<div class="rowbtns"><button type="button" data-delpost="'+p.id+'">Delete draft</button></div></div>';
+  }).join('');
+  el.innerHTML='<div class="kicker">Social accounts</div><div class="vhead"><h2>Social</h2></div>'
+    +'<p class="mut" style="margin:0">Accounts link inside the full Canopy shell. In this standalone app nothing is connected, and posts are drafts saved on this device — nothing is published from here.</p><div class="rule"></div>'
+    +'<div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(min(330px,100%),1fr))">'+accts.map(function(a){return '<div class="card"><h3 style="font-size:14.5px">'+a.name+'</h3><p class="small mut">'+a.state+'</p><span class="badge b-nc">Not connected</span></div>';}).join('')+'</div>'
+    +'<form class="f" id="postForm"><h3 style="font-size:14px">New post draft</h3><label>Post text<textarea name="body" rows="3" required></textarea></label>'
+    +'<button class="btn sm" type="submit">Save post draft</button></form>'
+    +'<h3 style="margin:14px 0 8px;font-size:15px">Post drafts ('+social.posts.length+')</h3>'+(posts||'<p class="mut small">No post drafts yet.</p>');
+  document.getElementById('postForm').addEventListener('submit',function(ev){
+    ev.preventDefault();social.posts.push({id:uid('p'),date:todayStr(),body:ev.target.body.value,sample:false});persistSocial();renderSocial();
+  });
+  el.querySelectorAll('[data-delpost]').forEach(function(b){b.addEventListener('click',function(){
+    social.posts=social.posts.filter(function(x){return x.id!==b.getAttribute('data-delpost');});persistSocial();renderSocial();
+  });});
+}
+
+/* ---------------- Assistant — Records Search (register records only) ---------------- */
+function renderAssistant(){
+  var el=document.getElementById('view-assistant');
+  el.innerHTML='<div class="kicker">Assistant</div><div class="vhead"><h2>Assistant — Records Search</h2></div>'
+    +'<p class="mut" style="margin:0">Searches the records saved in this app only — register records, their receipt histories and review logs, calendar deadlines and internal drafts. It never reaches outside this register or this device.</p><div class="rule"></div>'
+    +'<form class="f" id="searchForm" style="margin-top:0"><label>Search records<input name="q" placeholder="Try an accession like ATR-0003, a word like courier, or a review kind" autocomplete="off"></label>'
+    +'<button class="btn sm" type="submit">Search</button></form><div id="searchResults"></div>';
+  document.getElementById('searchForm').addEventListener('submit',function(ev){
+    ev.preventDefault();
+    var q=ev.target.q.value.trim().toLowerCase(),out=[];
+    if(q){
+      store.records.forEach(function(r){
+        if((r.acc+' '+r.title+' '+r.source+' '+r.state+' '+(r.notes||'')).toLowerCase().indexOf(q)>=0){out.push({t:'Register record',h:r.acc+' — '+r.title,s:r.state+' · received '+fmtDT(r.receivedAt),v:'register',id:r.id,sample:r.sample});}
+        r.receipts.forEach(function(v){if(v.note.toLowerCase().indexOf(q)>=0){out.push({t:'Receipt history',h:r.acc+' — receipt v'+v.v,s:v.note,v:'register',id:r.id,sample:r.sample});}});
+        r.reviews.forEach(function(rv){if((rv.kind+' '+rv.reviewer+' '+(rv.note||'')).toLowerCase().indexOf(q)>=0){out.push({t:'Review record',h:rv.kind+' — '+r.acc,s:fmtDate(rv.date)+' · '+rv.reviewer,v:'register',id:r.id,sample:r.sample});}});
+      });
+      store.appointments.forEach(function(a){if((a.title+' '+a.note).toLowerCase().indexOf(q)>=0){out.push({t:'Calendar',h:a.title,s:fmtDate(a.date)+' · '+a.kind,v:'calendar',sample:a.sample});}});
+      store.drafts.forEach(function(m){if((m.subject+' '+m.body).toLowerCase().indexOf(q)>=0){out.push({t:'Internal draft',h:m.subject||'(no subject)',s:fmtDate(m.date),v:'email',sample:m.sample});}});
+    }
+    document.getElementById('searchResults').innerHTML=q
+      ?(out.length?out.map(function(x){return '<div class="card" style="margin-bottom:8px"><span class="badge b-nc">'+x.t+'</span> <b>'+esc(x.h)+'</b>'+sampleTag(x)+'<div class="small mut">'+esc(x.s)+'</div>'
+        +(x.v?'<div class="rowbtns" style="margin-top:6px"><button type="button" data-goto="'+x.v+'" data-gid="'+(x.id||'')+'">Open</button></div>':'')+'</div>';}).join('')
+        :'<div class="notice">No records match \u201C'+esc(q)+'\u201D.</div>')
+      :'<div class="notice">Type a word and search — results come only from records saved in this app.</div>';
+    el.querySelectorAll('[data-goto]').forEach(function(b){b.addEventListener('click',function(){
+      var v=b.getAttribute('data-goto');
+      if(v==='register'&&b.getAttribute('data-gid')){selectedRecordId=b.getAttribute('data-gid');stateFilter='All';renderRegister();}
+      switchView(v);
+    });});
+  });
+}
+
+/* ---------------- Reference doors — FSRA / FCAC, reference links only ---------------- */
+function renderReference(){
+  var el=document.getElementById('view-reference');
+  var doors=[
+    {t:'FSRA — Financial Services Regulatory Authority of Ontario', u:'https://www.fsrao.ca', p:'The regulator\u2019s own site. Reference link only — nothing is embedded, and nothing here claims Atra Lend is licensed, registered, endorsed, or affiliated with FSRA.'},
+    {t:'FCAC — Financial Consumer Agency of Canada', u:'https://www.canada.ca/en/financial-consumer-agency.html', p:'The federal agency\u2019s own page. Reference link only — nothing is embedded, and nothing here claims any relationship between Atra Lend and FCAC.'}
+  ];
+  el.innerHTML='<div class="kicker">Reference doors</div><div class="vhead"><h2>Reference</h2></div>'
+    +'<p class="mut" style="margin:0">Two labelled doors to regulator references, kept here because this workspace sits near a regulated field. They open in a new tab; nothing is embedded and nothing about this register is sent anywhere.</p><div class="rule"></div>'
+    +'<div class="doors">'+doors.map(function(d){return '<a class="door" href="'+d.u+'" target="_blank" rel="noopener"><h3>'+esc(d.t)+' ↗</h3><p>'+esc(d.p)+'</p></a>';}).join('')+'</div>';
+}
+
+/* ---------------- Accounts ---------------- */
+function storeBytes(){try{return new Blob([JSON.stringify(store)]).size;}catch(e){return JSON.stringify(store).length;}}
+function renderAccounts(){
+  var el=document.getElementById('view-accounts');
+  var s=store.settings||{provider:'',accountLabel:''};
+  el.innerHTML='<div class="kicker">Accounts &amp; data</div><div class="vhead"><h2>Accounts</h2></div><div class="rule"></div>'
+    +'<div class="card"><h3>Link an email + calendar account</h3>'
+    +'<p class="small mut">Link a Microsoft account or a Gmail account to Atra Lend. <b>No mailbox of record exists for Atra Lend</b>, so nothing is pre-filled and no address is suggested — the guard is deliberate. (A published contact address exists on the company\u2019s website; a published contact is not a confirmed linkable mailbox, so it is not printed here as one.) What you save here — provider plus your own label — is recorded on this device only. The live link activates in the full Canopy shell; this standalone app claims no sync, no inbox, and no sending.</p>'
+    +'<form class="f" id="acctForm" style="margin-bottom:0"><div class="cols">'
+    +'<label>Provider<select name="provider"><option value="">— not linked —</option><option value="Microsoft"'+(s.provider==='Microsoft'?' selected':'')+'>Microsoft</option><option value="Gmail"'+(s.provider==='Gmail'?' selected':'')+'>Gmail</option></select></label>'
+    +'<label>Account label — your words, not an address<input name="label" value="'+esc(s.accountLabel||'')+'" placeholder="e.g. Johnny\u2019s work account"></label></div>'
+    +'<button class="btn sm" type="submit">Save account record</button></form>'
+    +(s.provider?'<p class="small" style="margin:10px 0 0">On record: <b>'+esc(s.provider)+'</b>'+(s.accountLabel?' · '+esc(s.accountLabel):'')+' — recorded locally; live link activates in the full shell.</p>':'<p class="small mut" style="margin:10px 0 0">No account is recorded yet.</p>')
+    +'</div>'
+    +'<div class="card" style="margin-top:12px"><h3>Your records on this device</h3>'
+    +'<p class="small mut">Records are stored in this browser under <b>'+STORE_KEY+'</b> (about '+Math.max(1,Math.round(storeBytes()/102.4)/10)+' KB). Social drafts live under <b>'+SOCIAL_KEY+'</b>. Download an Atra Lend register backup (JSON) to keep or move your records; restoring a backup replaces the records on this device.</p>'
+    +(seedWriteFailed?'<div class="notice warn" style="margin-bottom:10px">The first save of the sample records failed on this device — storage may be unavailable or full. Your changes this session are in memory only; download a backup before closing.</div>':'')
+    +'<div class="rowbtns"><button type="button" id="exportBtn">Download backup (JSON)</button> '
+    +'<label class="btn sm ghost" style="display:inline-block;padding:5px 10px">Restore from backup<input type="file" id="importFile" accept="application/json" style="display:none"></label></div>'
+    +'<div id="importMsg" class="small" style="margin-top:8px"></div></div>';
+  document.getElementById('acctForm').addEventListener('submit',function(ev){
+    ev.preventDefault();var f=ev.target;
+    store.settings={provider:f.provider.value,accountLabel:f.label.value.trim()};persist();renderAccounts();
+  });
+  document.getElementById('exportBtn').addEventListener('click',function(){
+    var blob=new Blob([JSON.stringify(store,null,2)],{type:'application/json'});
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='atra-lend-register-backup-'+todayStr()+'.json';a.click();
+    setTimeout(function(){URL.revokeObjectURL(a.href);},4000);
+  });
+  document.getElementById('importFile').addEventListener('change',function(ev){
+    var file=ev.target.files[0];if(!file){return;}
+    var rd=new FileReader();
+    rd.onload=function(){
+      try{
+        var obj=JSON.parse(rd.result);
+        if(!obj||!Array.isArray(obj.records)){throw new Error('shape');}
+        store=obj;['appointments','drafts'].forEach(function(k){if(!Array.isArray(store[k])){store[k]=[];}});
+        if(typeof store.nextAcc!=='number'){store.nextAcc=store.records.length+1;}
+        if(!store.settings){store.settings={provider:'',accountLabel:''};}
+        persist();selectedRecordId=null;renderAll();
+        document.getElementById('importMsg').textContent='Backup restored — records on this device now match the file.';
+      }catch(e){document.getElementById('importMsg').textContent='That file could not be restored — it is not an Atra Lend register backup in the expected shape. Nothing was changed.';}
+    };
+    rd.readAsText(file);
+  });
+}
+
+/* ---------------- About — company facts of record ONLY ---------------- */
+function renderAbout(){
+  var el=document.getElementById('view-about');
+  el.innerHTML='<div class="kicker">About this app</div><div class="vhead"><h2>About — Atra Lend</h2></div><div class="rule"></div>'
+    +'<div style="text-align:center;margin:6px 0 14px"><img src="data:image/jpeg;base64,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" alt="ATRALEND logo" style="width:210px;max-width:70%;height:auto;border-radius:6px"></div>'
+    +'<div class="card"><h3>Company facts — only what is on record</h3>'
+    +'<p class="small"><b>ATRALEND</b> (one word) · atralend.com · one of Johnny Kulwartian\u2019s eight businesses. That, plus the internal-workspace status stated in the banner, is the whole of the confirmed record. This business\u2019s identity and permitted work scope are <b>to be confirmed by Johnny</b> — his own operations document records nothing further about Atra Lend, and this app invents nothing in the meantime: no services, no products, no rates, no terms, and no description of the published website\u2019s content appears here as app content.</p>'
+    +'<p class="small"><b>The banner:</b> \u201C'+BANNER+'\u201D It sits over every view because it governs every view.</p>'
+    +'<p class="small"><b>Received is not processed:</b> this register records that records arrived, when, and from what source — and keeps the reviews recorded against them. A state name (including \u201CConfirmed\u201D) is an internal record state only. Nothing in this app assesses, approves, or completes anything outside itself.</p>'
+    +'<p class="small"><b>Open item — unresolved variance, flagged on purpose:</b> this app\u2019s filed content list exists in two versions. One ends at <i>review notes</i>; the other adds <i>follow-ups</i> and <i>contacts with intake</i>. The build carries the register core both versions agree on and does <b>not</b> silently pick a side — \u201Ccontacts with intake\u201D presses directly on this workspace\u2019s wall (no client data in or out), so the differing items wait for Johnny and Grant to rule. This note stays visible until they do.</p>'
+    +'<p class="small"><b>Logo:</b> the mark above is the company\u2019s own verified logo, published on its own domain and used here as-is. <b>Palette:</b> the light skin borrows the published site\u2019s tone — off-white ground, near-black headlines, deep navy — and the dark skin is an onyx material treatment (pure onyx, dark slate, platinum, with a filament-amber seam) laid over the same neutral register. The amber seam is a material detail only; it tracks nothing. <b>Type:</b> a clean grotesque system stack (Segoe UI, Arial, Helvetica) — no webfont is claimed.</p>'
+    +'<p class="small"><b>Email:</b> drafts only, internal only; this app never sends and keeps no sent log. <b>Timestamps</b> are stored as ISO date-times and shown in words with the time (e.g. '+fmtDT('2026-11-18T09:41')+'). <b>Money:</b> this app records no amounts of any kind.</p>'
+    +'<p class="small mut">Version '+APP_VERSION+'</p></div>';
+}
+
+/* ---------------- Workbench switcher ---------------- */
+var PEERS=['KÜL Real Estate','Lions Gate Yachts','Brand My Aqua','CMS Construction','purEnzyme','StructureIQ Modular','8Twelve Mortgages','Atra Lend'];
+function renderSwitcher(){
+  var p=document.getElementById('switchPanel');
+  p.innerHTML='<h3>Workbench — businesses</h3>'
+    +PEERS.map(function(n){var cur=(n==='Atra Lend');return '<button type="button" class="peer'+(cur?' cur':'')+'" data-peer="'+esc(n)+'"><span>'+esc(n)+'</span><span class="small mut">'+(cur?'You are here':'Peer app')+'</span></button>';}).join('')
+    +'<p class="small mut" style="margin:4px 0 0">The eight businesses are peers, not subsidiaries. Atra Lend appears in the Workbench as a business node only — no register data flows to or from any peer. In the full Canopy shell each door opens that business\u2019s own app.</p>';
+  p.querySelectorAll('[data-peer]').forEach(function(b){b.addEventListener('click',function(){
+    if(b.getAttribute('data-peer')==='Atra Lend'){p.classList.remove('open');return;}
+    updateStatus(b.getAttribute('data-peer')+' opens in the full Workbench shell — this standalone file stays on Atra Lend.');
+    p.classList.remove('open');
+  });});
+}
+
+/* ---------------- boot ---------------- */
+function renderAll(){renderRegister();renderReviews();renderCalendar();renderEmail();renderSocial();renderAssistant();renderReference();renderAccounts();renderAbout();}
+function boot(){
+  initTheme();
+  loadStore();loadSocial();
+  if(store.records.length){selectedRecordId=store.records[0].id;}
+  calCursor=new Date();calCursor.setDate(1);
+  renderAll();renderSwitcher();
+  if(seedWriteFailed){updateStatus('NOT SAVED — the first write of the sample records failed on this device. Changes are in memory only; see Accounts for a backup.');}
+  document.querySelectorAll('nav#rail button').forEach(function(b){b.addEventListener('click',function(){switchView(b.getAttribute('data-view'));});});
+  document.getElementById('themeBtn').addEventListener('click',function(){
+    applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+  });
+  document.getElementById('switchBtn').addEventListener('click',function(){document.getElementById('switchPanel').classList.toggle('open');});
+  document.addEventListener('click',function(e){
+    var sw=document.getElementById('switcher');
+    if(sw&&!sw.contains(e.target)){document.getElementById('switchPanel').classList.remove('open');}
+  });
+  document.getElementById('deckBtn').addEventListener('click',function(){
+    updateStatus('The Command Deck is the return door in the full Canopy shell — this standalone file has nowhere to send you yet.');
+  });
+  var opening=document.getElementById('opening');
+  requestAnimationFrame(function(){opening.classList.add('show');});
+  var closeOpening=function(){opening.classList.add('gone');};
+  opening.addEventListener('click',closeOpening);
+  document.getElementById('skipBtn').addEventListener('click',function(e){e.stopPropagation();closeOpening();});
+  setTimeout(closeOpening,3600);
+}
+document.addEventListener('DOMContentLoaded',boot);
+</script>
+</body>
+</html>

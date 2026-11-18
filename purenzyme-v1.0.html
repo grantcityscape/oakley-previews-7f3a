@@ -130,7 +130,10 @@ html[data-theme="dark"] .rec .code{color:var(--em)}
 .cal .day{min-height:64px;border:1px solid var(--line);border-radius:6px;padding:5px 6px;background:var(--panel);font-size:12px;overflow:hidden;min-width:0}
 .cal .day.off{opacity:.38}
 .cal .day.today{border-color:var(--em);box-shadow:0 0 0 1px var(--em)}
-.cal .ev{background:var(--soft);border-left:3px solid var(--em);border-radius:3px;padding:1px 5px;margin-top:3px;font-size:11px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cal .ev{background:var(--soft);border-left:3px solid var(--em);border-radius:3px;padding:1px 5px;margin-top:3px;font-size:11px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer}
+.split.flip{grid-template-columns:1fr 330px}
+.cal .day{cursor:pointer}
+.cal .day.sel{border-color:var(--em);box-shadow:0 0 0 1px var(--em);background:var(--soft)}
 .hero{border-radius:8px;overflow:hidden;border:1px solid var(--line);margin-bottom:12px;position:relative}
 .hero img{width:100%;height:180px;object-fit:cover;display:block}
 .hero figcaption{position:absolute;left:0;right:0;bottom:0;background:rgba(5,51,39,.78);color:#DFF3E7;font-size:11.5px;padding:5px 10px}
@@ -167,6 +170,7 @@ footer{background:var(--foot-bg);color:var(--foot-ink);display:flex;justify-cont
   nav.tabs button{padding:7px 9px;font-size:12.5px}
   nav.tabs button .nd{display:none}
   .split{grid-template-columns:1fr}
+  .split.flip{grid-template-columns:1fr}
   .g2,.g3,.g4{grid-template-columns:1fr}
   main{padding:12px 10px 18px}
   .hero img{height:120px}
@@ -329,10 +333,10 @@ footer{background:var(--foot-bg);color:var(--foot-ink);display:flex;justify-cont
     <button class="btn ghost sm" id="cal-next">Next →</button>
     <span class="tiny mut">In the full Canopy shell, Home and Daybook gather this calendar together with the personal and other business calendars. Here it is this app's own records only.</span>
   </div>
-  <div class="split">
+  <div class="split flip">
     <div class="card" style="grid-column:span 1"><div class="cal" id="cal-grid"></div></div>
     <div>
-      <div class="card"><h3>Appointments &amp; deadlines</h3><div id="cal-list"></div></div>
+      <div class="card"><div class="row" style="justify-content:space-between;flex-wrap:nowrap"><h3 id="cal-list-title" style="margin:0">Appointments &amp; deadlines</h3><button class="btn ghost sm" id="cal-clear" type="button" style="display:none">Show all</button></div><div id="cal-list" style="margin-top:8px"></div></div>
       <div class="card" style="margin-top:12px"><h3>New appointment</h3>
         <form id="form-appt">
           <div class="f"><label>Title</label><input name="title" required placeholder="e.g. Technical review call — PE-001"></div>
@@ -489,7 +493,7 @@ var STAGES=[
 ];
 var PEERS=['KÜL Real Estate','Lions Gate Yachts','Brand My Aqua','CMS Construction','purEnzyme','StructureIQ Modular','8Twelve Mortgages','Atra Lend'];
 var store=null,social=null,seedWriteFailed=false,loadRecovery=null;
-var selPartnership=null,selReview=null,mailTab='in',calCursor=null;
+var selPartnership=null,selReview=null,mailTab='in',calCursor=null,calSel=null;
 
 function uid(p){return p+'-'+Math.random().toString(36).slice(2,9);}
 function todayStr(d){d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
@@ -728,17 +732,24 @@ function renderCalendar(){
   var first=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate(),prevDays=new Date(y,m,0).getDate();
   var cells=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(function(d){return '<div class="dow">'+d+'</div>';}).join('');
   var i,d,ds;
-  for(i=0;i<first;i++){cells+='<div class="day off">'+(prevDays-first+1+i)+'</div>';}
+  function dsOf(dt){return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');}
+  function dayCell(dnum,dsStr,off){
+    var evs=store.appointments.filter(function(a){return a.date===dsStr;});
+    return '<div class="day'+(off?' off':'')+(dsStr===todayStr()?' today':'')+(calSel===dsStr?' sel':'')+'" data-ds="'+dsStr+'"><b>'+dnum+'</b>'+evs.map(function(a){return '<div class="ev" title="'+esc(a.date+(a.time?' '+a.time:'')+' — '+a.title+' · '+a.kind)+'">'+esc(a.title)+'</div>';}).join('')+'</div>';
+  }
+  for(i=0;i<first;i++){d=prevDays-first+1+i;cells+=dayCell(d,dsOf(new Date(y,m-1,d)),true);}
   for(d=1;d<=days;d++){
     ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-    var evs=store.appointments.filter(function(a){return a.date===ds;});
-    cells+='<div class="day'+(ds===todayStr()?' today':'')+'"><b>'+d+'</b>'+evs.map(function(a){return '<div class="ev">'+esc(a.title)+'</div>';}).join('')+'</div>';
+    cells+=dayCell(d,ds,false);
   }
-  var tail=(first+days)%7;if(tail)for(i=1;i<=7-tail;i++){cells+='<div class="day off">'+i+'</div>';}
+  var tail=(first+days)%7;if(tail)for(i=1;i<=7-tail;i++){cells+=dayCell(i,dsOf(new Date(y,m+1,i)),true);}
   document.getElementById('cal-grid').innerHTML=cells;
   var sorted=store.appointments.slice().sort(function(a,b){return (a.date+(a.time||''))<(b.date+(b.time||''))?-1:1;});
+  if(calSel)sorted=sorted.filter(function(a){return a.date===calSel;});
+  document.getElementById('cal-list-title').textContent=calSel?('Appointments & deadlines — '+calSel):'Appointments & deadlines';
+  document.getElementById('cal-clear').style.display=calSel?'':'none';
   document.getElementById('cal-list').innerHTML=sorted.length?sorted.map(function(a){
-    return '<div class="chk"><div><b>'+esc(a.date)+(a.time?' '+esc(a.time):'')+'</b> — '+esc(a.title)+samplePill(a)+'<div class="tiny mut">'+esc(a.kind)+' · '+esc(partnershipCode(a.partnershipId))+(a.note?' · '+esc(a.note):'')+'</div></div></div>';}).join(''):'<p class="mut">Nothing on the calendar.</p>';
+    return '<div class="chk"><div><b>'+esc(a.date)+(a.time?' '+esc(a.time):'')+'</b> — '+esc(a.title)+samplePill(a)+'<div class="tiny mut">'+esc(a.kind)+' · '+esc(partnershipCode(a.partnershipId))+(a.note?' · '+esc(a.note):'')+'</div></div></div>';}).join(''):(calSel?'<p class="mut">Nothing on this day.</p>':'<p class="mut">Nothing on the calendar.</p>');
   fillPartnershipSelect(document.getElementById('na-partnership'),true);
 }
 /* ---------- EMAIL (draft-only) ---------- */
@@ -838,7 +849,7 @@ document.addEventListener('DOMContentLoaded',function(){
     persist();renderProposals();});
   bind('form-appt',function(fd){
     store.appointments.push({id:uid('ap'),title:fd.get('title'),date:fd.get('date'),time:fd.get('time')||'',kind:fd.get('kind'),partnershipId:fd.get('partnershipId')||'',note:fd.get('note')||'',sample:false});
-    persist();renderCalendar();});
+    persist();calSel=null;renderCalendar();});
   bind('form-mail',function(fd){
     var s=findStakeholder(fd.get('stakeholderId'));
     store.messages.unshift({id:uid('m'),dir:'draft',from:'purEnzyme (draft)',to:s?s.name:'',subject:fd.get('subject'),body:fd.get('body')||'',date:todayStr(),stakeholderId:fd.get('stakeholderId'),partnershipId:'',sample:false});
@@ -854,8 +865,10 @@ document.addEventListener('DOMContentLoaded',function(){
   /* calendar + mail tabs */
   document.getElementById('mail-tab-in').addEventListener('click',function(){mailTab='in';renderEmail();});
   document.getElementById('mail-tab-draft').addEventListener('click',function(){mailTab='draft';renderEmail();});
-  document.getElementById('cal-prev').addEventListener('click',function(){calCursor.setMonth(calCursor.getMonth()-1);renderCalendar();});
-  document.getElementById('cal-next').addEventListener('click',function(){calCursor.setMonth(calCursor.getMonth()+1);renderCalendar();});
+  document.getElementById('cal-prev').addEventListener('click',function(){calSel=null;calCursor.setMonth(calCursor.getMonth()-1);renderCalendar();});
+  document.getElementById('cal-next').addEventListener('click',function(){calSel=null;calCursor.setMonth(calCursor.getMonth()+1);renderCalendar();});
+  document.getElementById('cal-grid').addEventListener('click',function(e){var cell=e.target&&e.target.closest?e.target.closest('.day'):null;if(!cell)return;var ds=cell.getAttribute('data-ds');if(!ds)return;calSel=(calSel===ds?null:ds);renderCalendar();});
+  document.getElementById('cal-clear').addEventListener('click',function(){calSel=null;renderCalendar();});
   /* accounts: export / import / samples / clear */
   document.getElementById('btn-export').addEventListener('click',function(){
     var blob=new Blob([JSON.stringify({app:'purEnzyme',key:STORE_KEY,exported:todayStr(),store:store,social:social},null,2)],{type:'application/json'});

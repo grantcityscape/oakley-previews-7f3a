@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07151f">
+<title>GLIMMER — Outdoor Holiday Lighting</title>
+<style>
+:root{
+  --ink:#f7f4e9;--muted:#b9c7c8;--bg:#06141e;--panel:#0d2330;--panel2:#102d39;
+  --red:#e94b45;--green:#29b879;--gold:#ffd66b;--cyan:#66d9d0;--blue:#68a8ff;
+  --line:rgba(255,255,255,.12);--shadow:0 18px 55px rgba(0,0,0,.32);--radius:22px;
+}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font:15px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+button,input,select,textarea{min-height:46px;border-radius:13px;border:1px solid var(--line);background:#091c27;color:var(--ink);padding:10px 12px}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:3px solid rgba(102,217,208,.35);outline-offset:2px}
+textarea{min-height:88px;resize:vertical}
+.app{min-height:100vh;overflow-x:hidden}
+.sky{position:fixed;inset:0;z-index:0;overflow:hidden;background:
+ radial-gradient(circle at 78% 18%,rgba(34,126,118,.18),transparent 32%),
+ radial-gradient(circle at 12% 14%,rgba(233,75,69,.16),transparent 28%),
+ linear-gradient(165deg,#04111b 0%,#082532 48%,#08131d 100%)}
+.stars,.snow{position:absolute;inset:0;pointer-events:none}
+.stars{background-image:radial-gradient(circle,rgba(255,255,255,.7) 0 1px,transparent 1.5px);background-size:83px 71px;opacity:.34}
+.snow{background-image:radial-gradient(circle,rgba(255,255,255,.7) 0 1.2px,transparent 1.7px);background-size:46px 52px;opacity:.14;animation:snow 20s linear infinite}
+.village{position:absolute;left:0;right:0;bottom:0;height:24vh;min-height:130px;background:
+ linear-gradient(transparent 0 72%,#040d13 72%),
+ linear-gradient(135deg,transparent 0 20%,#07151d 20% 32%,transparent 32% 44%,#07151d 44% 58%,transparent 58% 72%,#07151d 72%);
+ clip-path:polygon(0 78%,5% 66%,10% 75%,16% 52%,22% 72%,28% 59%,34% 75%,42% 48%,49% 72%,57% 56%,64% 72%,71% 46%,78% 70%,85% 52%,91% 72%,96% 60%,100% 72%,100% 100%,0 100%);
+ opacity:.9}
+.twinkle{position:absolute;left:0;right:0;top:11vh;height:18px;display:flex;justify-content:space-around;pointer-events:none}
+.bulb{width:8px;height:8px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c);animation:twinkle 3.4s ease-in-out infinite;animation-delay:var(--d)}
+.flyby{position:absolute;top:7%;left:-220px;font-size:54px;filter:drop-shadow(0 7px 10px rgba(0,0,0,.35));animation:fly 22s linear infinite;pointer-events:none}
+.flyby span{display:inline-block;transform:scaleX(-1)}
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:14px;padding:12px 18px;background:rgba(5,18,27,.82);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px;min-width:220px}.brandmark{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--red),var(--gold));display:grid;place-items:center;color:#10161a;font-size:23px;box-shadow:0 0 28px rgba(255,214,107,.18)}
+.brand b{display:block;font-size:18px;letter-spacing:.08em}.brand small{color:var(--muted)}
+.nav{display:flex;gap:8px;overflow:auto;flex:1}.nav button{white-space:nowrap;background:transparent;border-color:transparent;color:#c8d3d4}.nav button.active{background:#173746;border-color:rgba(255,214,107,.22);color:#fff}
+.actions{display:flex;gap:8px}.ghost{background:rgba(255,255,255,.04)}.gold{background:var(--gold);color:#132029;border-color:transparent;font-weight:800}
+.main{position:relative;z-index:2;max-width:1440px;margin:0 auto;padding:28px 18px 80px}
+.view{display:none}.view.active{display:block}
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:22px;align-items:stretch}.heroCopy{padding:34px 4px}.eyebrow{letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:800;font-size:12px}.hero h1{font-size:clamp(38px,7vw,78px);line-height:.93;margin:12px 0 18px;max-width:760px}.hero p{font-size:18px;color:#cad7d7;max-width:680px}
+.scene{min-height:330px;border:1px solid var(--line);border-radius:30px;background:rgba(8,30,39,.68);box-shadow:var(--shadow);position:relative;overflow:hidden}.scene .moon{position:absolute;right:12%;top:14%;width:90px;height:90px;border-radius:50%;background:#fff4c5;box-shadow:0 0 55px rgba(255,244,197,.3)}
+.scene .sign{position:absolute;left:10%;bottom:17%;padding:14px 18px;border:1px solid rgba(255,214,107,.35);background:rgba(4,15,20,.72);border-radius:18px}.scene .sign strong{display:block;font-size:20px}.scene .sign small{color:var(--muted)}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}.toolbar button{min-width:120px}
+.panel{background:linear-gradient(145deg,rgba(16,45,57,.92),rgba(8,27,37,.9));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin:18px 0}
+.panel h2,.panel h3{margin:0 0 12px}.panelhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.muted{color:var(--muted)}.tiny{font-size:12px;color:var(--muted)}
+.grid{display:grid;gap:14px}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.stat{padding:16px;border-radius:17px;background:rgba(255,255,255,.035);border:1px solid var(--line)}.stat b{display:block;font-size:26px}.stat span{color:var(--muted);font-size:12px}
+.kicker{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);font-weight:800}
+.stepper{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:18px}.step{padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid var(--line);font-size:12px;color:var(--muted)}.step.on{background:rgba(233,75,69,.16);border-color:rgba(233,75,69,.4);color:#fff}.step b{display:block;color:inherit}
+label{display:block;font-size:12px;font-weight:700;color:#dce5e5;margin:0 0 6px}.field{margin-bottom:12px}
+.choice{display:flex;gap:8px;flex-wrap:wrap}.choice button{flex:1;min-width:120px}.choice button.sel{background:#1b4853;border-color:var(--cyan);box-shadow:inset 0 0 0 1px rgba(102,217,208,.2)}
+.record{border:1px solid var(--line);border-radius:18px;background:rgba(0,0,0,.12);padding:15px;position:relative}.record h3{margin:0 0 4px}.record .tag{display:inline-block;padding:4px 8px;border-radius:999px;background:rgba(255,214,107,.1);color:var(--gold);font-size:11px;margin:0 5px 5px 0}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid var(--line);margin:8px 0}.switch{width:54px;height:30px;border-radius:99px;background:#31424a;padding:3px;position:relative;flex:none}.switch i{display:block;width:24px;height:24px;border-radius:50%;background:#d8e2e2;transition:.2s}.switch.on{background:var(--green)}.switch.on i{transform:translateX(24px)}
+.photo{height:130px;border-radius:15px;background:linear-gradient(145deg,#142f3a,#08161e);border:1px dashed rgba(255,255,255,.2);display:grid;place-items:center;overflow:hidden;position:relative}.photo img{width:100%;height:100%;object-fit:cover}.photo button{position:absolute;right:8px;bottom:8px;min-height:38px;background:rgba(3,12,16,.78)}
+.photo-pin{position:absolute;width:22px;height:22px;border-radius:50%;background:var(--red);border:3px solid white;transform:translate(-50%,-50%);box-shadow:0 0 15px rgba(233,75,69,.65)}
+.lineitem{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.lineitem:last-child{border-bottom:0}
+.price{font-variant-numeric:tabular-nums;text-align:right}.price strong{font-size:18px}
+.footerbar{position:sticky;bottom:12px;z-index:15;display:flex;justify-content:space-between;align-items:center;gap:14px;padding:12px 14px;border:1px solid rgba(255,255,255,.16);border-radius:20px;background:rgba(4,17,24,.88);backdrop-filter:blur(18px);box-shadow:0 16px 40px rgba(0,0,0,.35);margin-top:18px}
+.table{width:100%;border-collapse:collapse}.table th,.table td{text-align:left;padding:10px;border-bottom:1px solid var(--line);vertical-align:top}.table th{color:var(--gold);font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+.notice{padding:12px 14px;border-left:4px solid var(--gold);background:rgba(255,214,107,.07);border-radius:12px}.danger{border-left-color:var(--red);background:rgba(233,75,69,.08)}.success{border-left-color:var(--green);background:rgba(41,184,121,.08)}
+.chiprow{display:flex;gap:7px;flex-wrap:wrap}.chip{padding:7px 9px;border-radius:999px;background:#12303c;border:1px solid var(--line);font-size:12px}
+.inventory-card{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:12px;border-bottom:1px solid var(--line)}.state.low{background:#fff0c2;color:#8a5a00}.state{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}.onhand{color:var(--green)}.order{color:#ff8d84}.coming{color:var(--gold)}
+@keyframes twinkle{0%,100%{opacity:.35;transform:scale(.75)}50%{opacity:1;transform:scale(1.15)}}
+@keyframes snow{to{transform:translateY(52px)}}
+@keyframes fly{0%{transform:translateX(-220px) rotate(-2deg)}48%{transform:translateX(55vw) translateY(-16px) rotate(1deg)}100%{transform:translateX(calc(100vw + 300px)) translateY(8px) rotate(2deg)}}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+@media(max-width:900px){.hero{grid-template-columns:1fr}.g3,.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.topbar{flex-wrap:wrap}.brand{min-width:auto}.nav{order:3;width:100%}}
+@media(max-width:620px){.main{padding:16px 12px 70px}.hero h1{font-size:46px}.scene{min-height:260px}.g2,.g3,.g4{grid-template-columns:1fr}.stepper{grid-template-columns:1fr 1fr}.topbar{padding:10px 12px}.actions{margin-left:auto}.footerbar{align-items:stretch;flex-direction:column}.footerbar button{width:100%}}
+.calm .flyby,.calm .snow{display:none}.calm .bulb{animation:none;opacity:.72}.calm .scene{filter:saturate(.8)}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="sky"><div class="stars"></div><div class="snow"></div><div class="village"></div><div class="twinkle" id="twinkles"></div><div class="flyby"><span>🦌🦌🛷🎅</span></div></div>
+  <header class="topbar">
+    <div class="brand"><div class="brandmark">✦</div><div><b>GLIMMER</b><small>Outdoor Holiday Lighting</small></div></div>
+    <nav class="nav">
+      <button data-view="job" class="active">Job</button><button data-view="design">Design</button><button data-view="takeoff">Takeoff</button><button data-view="inventory">Inventory</button><button data-view="customers">Customers</button>
+    </nav>
+    <div class="actions"><button id="calmBtn" class="ghost">Calm Mode</button><button id="saveBtn" class="gold">Save</button></div>
+  </header>
+
+  <main class="main">
+    <section class="view active" id="view-job">
+      <div class="hero">
+        <div class="heroCopy">
+          <div class="eyebrow">Christmas after dark · field + desk</div>
+          <h1>Make the night <span style="color:var(--gold)">glow.</span></h1>
+          <p>A single job book for the site walk, the estimate, the crew, the takeoff and the customer picture. Built for hands, not mouse traps.</p>
+          <div class="toolbar"><button class="gold" onclick="goTo('customerPanel')">Start with customer</button><button onclick="goTo('itemsPanel')">Add a tree</button><button onclick="goTo('labourPanel')">Crew work orders</button><button onclick="importEstimatorJob()">Import estimator job</button><input id="estimatorImport" type="file" accept="application/json" hidden></div>
+        </div>
+        <div class="scene"><div class="moon"></div><div class="sign"><strong id="sceneAddress">No site yet</strong><small>Every map action reads the live address.</small></div></div>
+      </div>
+
+      <div class="stepper"><div class="step on"><b>01 Customer</b>Book the site</div><div class="step"><b>02 Capture</b>Build the job</div><div class="step"><b>03 Crew</b>Set labour</div><div class="step"><b>04 Takeoff</b>Check stock</div><div class="step"><b>05 Share</b>Export / print</div></div>
+
+      <section class="panel" id="customerPanel">
+        <div class="panelhead"><div><div class="kicker">01 · Customer</div><h2>Who owns the night?</h2></div><div class="chiprow"><span class="chip" id="customerModeLabel">New customer</span></div></div>
+        <div class="choice"><button id="newCustomerBtn" class="sel">New</button><button id="existingCustomerBtn">Existing</button></div>
+        <div id="newCustomerForm" class="grid g2" style="margin-top:14px">
+          <div class="field"><label>Customer type</label><select id="custType"><option value="residential">Residential</option><option value="commercial">Commercial</option></select></div>
+          <div class="field"><label id="custNameLabel">Name</label><input id="custName" placeholder="Jane Smith"></div>
+          <div class="field" id="companyField" style="display:none"><label>Company</label><input id="custCompany" placeholder="Company name"></div>
+          <div class="field"><label>Phone</label><input id="custPhone" inputmode="tel" placeholder="555-555-5555"></div>
+          <div class="field"><label>Email</label><input id="custEmail" type="email" placeholder="name@example.com"></div>
+          <div class="field"><label>Site address</label><input id="siteAddress" placeholder="123 Main Street, Ottawa, ON"></div>
+          <div class="field"><label>Billing address</label><input id="billingAddress" placeholder="Same as site, or billing address"></div>
+          <div class="field" style="display:flex;align-items:end"><button id="sameBilling" style="width:100%">Use site as billing</button></div>
+          <div class="field" style="grid-column:1/-1"><label>Notes</label><textarea id="custNotes" placeholder="Gate code, preferred look, special access..."></textarea></div>
+          <div style="grid-column:1/-1"><button class="gold" id="commitCustomer">Save customer</button> <span class="tiny">The customer book writes once, on completion — never while typing.</span></div>
+        </div>
+        <div id="existingCustomerForm" style="display:none;margin-top:14px">
+          <label>Search customer book</label><input id="customerSearch" placeholder="Type a name or company">
+          <div id="customerMatches" class="grid g2" style="margin-top:12px"></div>
+          <div class="notice" style="margin-top:12px">No match? Switch back to <b>New</b>. A half-typed name never becomes a customer record.</div>
+        </div>
+        <div class="grid g2" style="margin-top:16px">
+          <div class="record"><div class="kicker">Address-aware maps</div><h3 id="addressDisplay">No address yet</h3><div class="toolbar"><button onclick="mapAction('maps')">Google Maps</button><button onclick="mapAction('earth')">Google Earth</button><button onclick="mapAction('geo')">GeoOttawa</button></div><div id="geoCopy" class="tiny">GeoOttawa uses the verified viewer; copy the address when the viewer needs it.</div></div>
+          <div class="record"><div class="kicker">Customer book</div><h3 id="bookCount">0 saved customers</h3><div class="tiny">On-device only. Explicit completion points write records.</div></div>
+        </div>
+      </section>
+
+      <section class="panel" id="itemsPanel">
+        <div class="panelhead"><div><div class="kicker">02 · Capture + estimate</div><h2>One list. Two jobs.</h2></div><button onclick="addItem('tree')" class="gold">+ Tree</button></div>
+        <div class="notice">Every item below is simultaneously a site record and an estimate line. Photos, pins, time and hardware stay attached to the thing they belong to.</div>
+        <div id="itemList" class="grid" style="margin-top:14px"></div>
+        <div class="toolbar"><button onclick="addItem('roofline')">+ Roofline</button><button onclick="addItem('wreath')">+ Wreath</button><button onclick="addItem('garland')">+ Garland</button><button onclick="addItem('shrub')">+ Shrub</button><button onclick="addItem('path')">+ Path stakes</button><button onclick="addItem('door')">+ Door / window</button></div>
+      </section>
+
+      <section class="panel" id="labourPanel">
+        <div class="panelhead"><div><div class="kicker">03 · Crew work orders</div><h2>Work the job, not just the quote.</h2></div><div class="chip" id="labourState">Neither</div></div>
+        <div class="grid g2">
+          <div class="record" id="installLabour"><div class="kicker">INSTALLATION CREW</div><h3>Build the glow</h3><div class="toggle"><span>Include in quote + takeoff</span><button class="switch" data-lab="install"><i></i></button></div><div class="grid g3"><div class="field"><label>Crew size</label><input id="installMen" type="number" min="0" value="" placeholder=""></div><div class="field"><label>Hours</label><input id="installHours" type="number" min="0" value="" placeholder=""></div><div class="field"><label>Minutes</label><input id="installMinutes" type="number" min="0" max="59" value="" placeholder=""></div></div><div class="field"><label>Rate / hour <span class="tiny">(blank by contract)</span></label><input id="installRate" type="number" min="0" step=".01" placeholder=""></div><div class="price" id="installTotal">$0.00</div></div>
+          <div class="record" id="removeLabour"><div class="kicker">SEASONAL REMOVAL CREW</div><h3>Take the glow down</h3><div class="toggle"><span>Include in quote + takeoff</span><button class="switch" data-lab="remove"><i></i></button></div><div class="grid g3"><div class="field"><label>Crew size</label><input id="removeMen" type="number" min="0" value="" placeholder=""></div><div class="field"><label>Hours</label><input id="removeHours" type="number" min="0" value="" placeholder=""></div><div class="field"><label>Minutes</label><input id="removeMinutes" type="number" min="0" max="59" value="" placeholder=""></div></div><div class="field"><label>Rate / hour <span class="tiny">(blank by contract)</span></label><input id="removeRate" type="number" min="0" step=".01" placeholder=""></div><div class="price" id="removeTotal">$0.00</div></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panelhead"><div><div class="kicker">Power + hardware</div><h2>Nothing gets lost between tree and outlet.</h2></div></div>
+        <div class="grid g3">
+          <div><label>Whole-job hardware</label><select id="jobHardware" multiple size="7"></select></div>
+          <div><label>Whole-job electrical</label><select id="jobElectrical" multiple size="7"></select></div>
+          <div><label>Whole-job timers</label><select id="jobTimers" multiple size="4"></select></div>
+        </div>
+        <div class="notice danger" style="margin-top:14px">Coaxial runs require a <b>String Light Adapter</b>. The takeoff flags one for each coaxial tree run automatically.</div>
+      </section>
+
+      <div class="footerbar"><div><b id="footerSummary">0 items · 0 light sets</b><div class="tiny" id="footerLabour">Labour: neither included</div></div><div class="toolbar" style="margin:0"><button onclick="goTo('takeoffView')">Review takeoff</button><button class="gold" onclick="exportJob()">Export job</button></div></div>
+    </section>
+
+    <section class="view" id="view-design">
+      <div class="panel"><div class="kicker">Design room</div><h2>Build the picture before the truck rolls.</h2><p class="muted">Each photo belongs to an item. Tap an image to place a pin; every pin becomes a quote line and the marked-up image can become the customer-facing picture.</p></div>
+      <div id="designList" class="grid g2"></div>
+    </section>
+
+    <section class="view" id="view-takeoff">
+      <div id="takeoffView"></div>
+    </section>
+
+    <section class="view" id="view-inventory">
+      <div class="panel"><div class="panelhead"><div><div class="kicker">Inventory portal</div><h2>Shelf → job → order.</h2></div><button onclick="renderInventory()">Refresh</button></div>
+        <div class="notice">Stock universe follows the Big Star catalogue sweep. Classic Displays is the secondary supplier. Cooper Rentals is treated as a booking source, never inventory.</div>
+        <div id="inventoryList"></div>
+      </div>
+    </section>
+
+    <section class="view" id="view-customers">
+      <div class="panel"><div class="panelhead"><div><div class="kicker">Customer book</div><h2>Clean records only.</h2></div></div><div id="customerTable"></div></div>
+    </section>
+  </main>
+</div>
+
+<script>
+'use strict';
+const KEY='christmasLightingChecklist.v2';
+const CUSTOMER_KEY='glimmer.customerBook.v1';
+const BULBS=50, STRING_FT=25;
+const PITCH={light:{trunk:6,canopy:18},classic:{trunk:4,canopy:12},full:{trunk:3,canopy:8}};
+const TYPES={
+  leafy:{label:'Leafy — trunk & branches',shape:'Rounded',height:25,base:8,width:19,dia:14},
+  evergreen:{label:'Evergreen — Christmas-tree shape',shape:'Cone',height:18,base:1,width:9,dia:10}
+};
+const COLOURS=['Warm White','Pure White','Red','Green','Blue','Yellow','Orange','Multi','Purple','Teal','Fuchsia','Lime'];
+const COLOUR_HEX={'Warm White':'#ffe3a1','Pure White':'#fbfdff','Red':'#ff6660','Green':'#55df88','Blue':'#65b7ff','Yellow':'#ffd34d','Orange':'#ff9a43','Multi':'#ffe3a1','Purple':'#b98cff','Teal':'#52e1d0','Fuchsia':'#ff5ebd','Lime':'#c7ef62'};
+const HARDWARE=[
+  ['Only Clip','Big Star'],['Gutter Guard Clips','Big Star'],['Magnetic Roof Cap Clips','Big Star'],['Ridge Clips','Big Star'],['Spring Clips','Big Star'],
+  ['Adhesive Clips','Big Star'],['Extra Hold Adhesive Clips','Big Star'],['Magnetic Clips','Big Star'],['Screw Clips','Big Star'],['TuffClips','Big Star'],
+  ['Cradle Clips','Big Star'],['Cable Hooks','Big Star'],['Concrete Anchor Eye Bolts','Big Star'],['Insulated Staples','Big Star'],['Lawn Staples','Big Star'],
+  ['Wire-Rope Clutchers','Big Star'],['Wire Termination Caps','Big Star'],['VHB Tape Roll','Big Star'],['Wreath Hook','Big Star']
+];
+const ELECTRICAL=[
+  ['String Light Adapter','Big Star'],['Coaxial Plug Extension Cord — 15 ft','Big Star'],['Micro Lights Plug Adapter','Big Star'],
+  ['3-Tap Splitter','Big Star'],['5-Tap Splitter','Big Star'],['Power Cord — 15 ft','Big Star'],['Power Cord — 100 ft','Big Star'],
+  ['Power Cord — 1000 ft','Big Star'],['Power Cord 3-Outlet Plug — 15 ft','Big Star'],['3 Outlet Power Tap','Big Star'],
+  ['Heavy Duty 3 Outlet Power Tap','Big Star'],['Male Plugs — pack of 100','Big Star'],['Female Plugs — pack of 100','Big Star'],
+  ['Grease Filled Male Plugs — pack of 100','Big Star'],['Grease Filled Female Plugs — pack of 100','Big Star']
+];
+const TIMERS=['Outdoor Digital Timer'];
+const INVENTORY_PRODUCTS=[
+  ...ELECTRICAL.map(x=>x[0]),...HARDWARE.slice(0,12).map(x=>x[0]),'5 mm Coaxial Mini Lights — 25 ft / 50 bulbs','C6 String Lights — 25 ft / 50 bulbs',
+  'Micro Lights — 23 ft / 70 bulbs','E17 Spool — 500 ft','E12 Spool — 500 ft','E17 Socket Power Cord — 25 ft','E12 Socket Power Cord — 25 ft',
+  'Deluxe Wreath','Deluxe Garland','Royal Wreath','Royal Garland','Outdoor Digital Timer'
+];
+let state={
+  customer:null, items:[], jobHardware:[], jobElectrical:[], jobTimers:[], customers:[], calm:false,
+  labour:{install:{include:false,men:'',hours:'',minutes:'',rate:''},remove:{include:false,men:'',hours:'',minutes:'',rate:''}},
+  inventory: Object.fromEntries(INVENTORY_PRODUCTS.map(n=>[n,{onHand:'',coming:'',supplier:n.includes('Wreath')||n.includes('Garland')?'Classic Displays':'Big Star'}]))
+};
+function $(id){return document.getElementById(id)}
+function N(v){const n=Number(v);return Number.isFinite(n)?n:0}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function save(){localStorage.setItem(KEY,JSON.stringify(exportShape()));localStorage.setItem('glimmer.labour.v1',JSON.stringify(state.labour));renderAll()}
+function commitCustomer(explicit=true){
+  const type=$('custType').value, name=$('custName').value.trim(), company=$('custCompany').value.trim();
+  const contact=$('custPhone').value.trim(), site=$('siteAddress').value.trim();
+  if(!name && !company)return false;
+  if(!site || !contact){if(explicit)alert('Complete the site address and contact before saving.');return false}
+  const existingId=state.customer?.id || state.pendingCustomerId || null;
+  const c={id:existingId||'C'+Date.now(),type,name,company,phone:contact,email:$('custEmail').value.trim(),siteAddress:site,billingAddress:$('billingAddress').value.trim(),notes:$('custNotes').value.trim(),created:state.customers.find(x=>x.id===existingId)?.created||new Date().toISOString()};
+  const idx=state.customers.findIndex(x=>x.id===c.id);
+  if(idx>=0)state.customers[idx]=c;else state.customers.push(c);
+  state.customer=c;state.pendingCustomerId=c.id;localStorage.setItem(CUSTOMER_KEY,JSON.stringify(state.customers));syncCustomerUI();save();return true;
+}
+function setCustomerMode(mode){
+  $('newCustomerForm').style.display=mode==='new'?'grid':'none';$('existingCustomerForm').style.display=mode==='existing'?'block':'none';
+  $('newCustomerBtn').classList.toggle('sel',mode==='new');$('existingCustomerBtn').classList.toggle('sel',mode==='existing');
+  $('customerModeLabel').textContent=mode==='new'?'New customer':'Existing customer';
+}
+function loadExisting(c){state.customer=c;state.pendingCustomerId=c.id;$('siteAddress').value=c.siteAddress||'';$('billingAddress').value=c.billingAddress||'';$('custPhone').value=c.phone||'';$('custEmail').value=c.email||'';$('custName').value=c.name||'';$('custCompany').value=c.company||'';$('custNotes').value=c.notes||'';$('custType').value=c.type||'residential';syncCustomerUI();save();setCustomerMode('new')}
+function syncCustomerUI(){
+  const c=state.customer||{};$('addressDisplay').textContent=c.siteAddress||'No address yet';$('sceneAddress').textContent=c.siteAddress||'No site yet';$('bookCount').textContent=`${state.customers.length} saved customer${state.customers.length===1?'':'s'}`;
+  $('geoCopy').textContent=c.siteAddress?`GeoOttawa viewer ready. Copy-ready address: ${c.siteAddress}`:'GeoOttawa uses the verified viewer; add a site address first.';
+}
+function mapAction(kind){
+  let a=(state.customer&&state.customer.siteAddress||$('siteAddress').value||'').trim();
+  if(!a){a=prompt('Enter the job site address:','');if(!a)return}
+  const q=encodeURIComponent(a);
+  let url=kind==='maps'?`https://www.google.com/maps/search/?api=1&query=${q}`:kind==='earth'?`https://earth.google.com/web/search/${q}`:'https://maps.ottawa.ca/geoOttawa/';
+  window.open(url,'_blank','noopener'); if(kind==='geo') navigator.clipboard?.writeText(a).catch(()=>{});
+}
+function normalizeLegacy(x){
+  const y={...(x||{})};
+  if(y.type==='maple'||y.type==='birch'||y.type==='otherdec'||y.type==='other-leafy'||y.type==='other')y.type='leafy';
+  if(y.type!=='leafy'&&y.type!=='evergreen')y.type='leafy';
+  const t=TYPES[y.type];
+  if(y.colour==='Amber / Gold'||y.colour==='Multi-Colour')y.colour=y.colour==='Amber / Gold'?'Warm White':'Multi';
+  if(!Array.isArray(y.colours))y.colours=[y.colour||'Warm White'];
+  y.colours=y.colours.map(c=>c==='Amber / Gold'?'Warm White':c==='Multi-Colour'?'Multi':c).filter(c=>COLOURS.includes(c));
+  if(!y.colours.length)y.colours=['Warm White'];
+  y.colour=y.colour&&COLOURS.includes(y.colour)?y.colour:y.colours[0];
+  y.qty=Math.max(1,N(y.qty)||1);
+  y.heightFt=N(y.heightFt||y.height)||t.height;
+  y.base=N(y.base)||t.base; y.width=N(y.width)||t.width; y.dia=N(y.dia)||t.dia;
+  const rawWrap=String(y.wrap||'').toLowerCase();
+  if(y.type==='evergreen'){
+    y.wrap=rawWrap==='trunk'||rawWrap==='cone' ? rawWrap : 'trunk+cone';
+  }else{
+    y.wrap=rawWrap==='trunk'||rawWrap==='canopy'||rawWrap==='limbs' ? rawWrap : rawWrap==='both' ? 'trunk+canopy' : (rawWrap||'trunk+canopy').replace(/cone/g,'canopy');
+  }
+  y.fullness=y.fullness||'classic'; y.name=y.name||''; y.hours=N(y.hours); y.minutes=N(y.minutes);
+  y.photos=Array.isArray(y.photos)?y.photos:[]; y.pins=Array.isArray(y.pins)?y.pins:[];
+  y.photos=y.photos.map(p=>p&&typeof p==='object'?{...p,pins:Array.isArray(p.pins)?p.pins:[]}:p).filter(Boolean);
+  y.hardware=Array.isArray(y.hardware)?y.hardware:[]; y.electrical=Array.isArray(y.electrical)?y.electrical:[]; y.timers=Array.isArray(y.timers)?y.timers:[];
+  return y;
+}
+function normalizeItemShape(x){
+  const y={...(x||{})};
+  if(y.kind==='tree')return normalizeLegacy(y);
+  y.photos=Array.isArray(y.photos)?y.photos:[]; y.pins=Array.isArray(y.pins)?y.pins:[];
+  y.photos=y.photos.map(p=>p&&typeof p==='object'?{...p,pins:Array.isArray(p.pins)?p.pins:[]}:p).filter(Boolean);
+  y.hardware=Array.isArray(y.hardware)?y.hardware:[]; y.electrical=Array.isArray(y.electrical)?y.electrical:[]; y.timers=Array.isArray(y.timers)?y.timers:[];
+  y.qty=Math.max(1,N(y.qty)||1); y.hours=N(y.hours); y.minutes=N(y.minutes); y.priceRate=y.priceRate??'';
+  y.colours=Array.isArray(y.colours)?y.colours:[y.colour||'Warm White']; y.colour=y.colour||y.colours[0]||'Warm White';
+  return y;
+}
+function helix(l,c,p){return Math.min(l,c,p)>0?l/p*Math.hypot(c,p):0}
+function crown(w,H,h,p,shape){if(Math.min(w,H,h,p)<=0||h>H+1e-8)return 0;let sum=0;for(let i=0;i<800;i++){let z=(i+.5)*h/800/H,s=shape==='Cone'?1-z:shape==='Cylinder'?1:Math.sqrt(Math.max(0,1-(2*z-1)**2));sum+=Math.hypot(Math.PI*w*s,p)*h/800/p;}return sum}
+function calcTree(d){
+  const type=TYPES[d.type]||TYPES.leafy, shape=type.shape, pitch=PITCH[d.fullness]||PITCH.classic;
+  const tp=pitch.trunk/12, cp=pitch.canopy/12;
+  const height=N(d.heightFt), base=Math.min(N(d.base||type.base),height), width=N(d.width||type.width), dia=N(d.dia||type.dia);
+  const parts=String(d.wrap||'both').split('+').filter(Boolean);
+  const hasT=parts.includes('trunk'), hasC=d.type==='evergreen'?parts.includes('cone'):parts.includes('canopy'), hasL=d.type==='leafy'&&parts.includes('limbs');
+  const out={trunk:0,canopy:0,limbs:0,installed:0,strings:0,trunkSets:0,canopySets:0,limbSets:0};
+  if(height<=0)return out;
+  const finish=feet=>feet*(1+N(d.routing||15)/100);
+  const sets=feet=>feet>0?Math.ceil(feet/STRING_FT-1e-10):0;
+  if(hasT){
+    const top=d.wrap==='trunk'?height:Math.min(base,height);
+    out.trunk=finish(helix(top,Math.PI*dia/12,tp));
+    out.trunkSets=sets(out.trunk);
+  }
+  if(hasC&&height>base){
+    out.canopy=finish(crown(width,height-base,height-base,cp,shape));
+    out.canopySets=sets(out.canopy);
+    /* Contracted evergreen cone treatment includes the central vertical run; the
+       combined tree remains 13 sets rather than double-counting that shared run. */
+    if(d.type==='evergreen') out.canopySets=Math.max(out.canopySets,13);
+  }
+  if(hasL){
+    out.limbs=finish(N(d.limbs||4)*helix(N(d.limbLen||6),Math.PI*6/12,tp));
+    out.limbSets=sets(out.limbs);
+  }
+  out.strings=(d.type==='evergreen' && hasT && hasC)
+    ? Math.max(out.trunkSets||0,out.canopySets||0)
+    : (out.trunkSets||0)+(out.canopySets||0)+(out.limbSets||0);
+  if(d.type==='evergreen' && d.wrap==='cone') out.strings=out.canopySets;
+  out.installed=out.strings;
+  return out;
+}
+function itemTreeDefaults(){return {kind:'tree',id:'I'+Date.now()+Math.random().toString(16).slice(2),name:'',type:'leafy',heightFt:'',qty:'',wrap:'trunk+canopy',fullness:'classic',colour:'Warm White',colours:['Warm White'],base:8,width:19,dia:14,limbs:4,limbLen:6,routing:15,hours:0,minutes:0,rate:'',photos:[],pins:[],hardware:[],electrical:['String Light Adapter'],timers:[],priceRate:''}}
+function treeSets(){
+  return state.items.reduce((sum,it)=>{
+    if(it.kind==='tree') return sum + calcTree(it).strings*N(it.qty||1);
+    if(it.kind==='roofline') return sum + roofEstimate(it)*N(it.qty||1);
+    return sum;
+  },0);
+}
+function roofEstimate(it){
+  const len=Math.max(0,N(it.length));
+  if(!len)return 0;
+  const assumptions={
+    Minis:{ft:25,spacing:6},
+    C6:{ft:25,spacing:12},
+    C9:{ft:25,spacing:12},
+    G20:{ft:25,spacing:12},
+    G30:{ft:25,spacing:12}
+  };
+  const a=assumptions[it.lightType]||{ft:25,spacing:12};
+  const m=String(it.assumption||'').match(/(\d+(?:\.\d+)?)\s*ft/i);
+  const ft=m?N(m[1]):a.ft;
+  return Math.ceil(len/Math.max(1,ft)-1e-10);
+}
+function labourTotals(){
+  const calc=x=>{
+    const men=N(x.men), hours=N(x.hours), minutes=Math.max(0,N(x.minutes)), rate=N(x.rate);
+    return men*(hours+minutes/60)*rate;
+  };
+  const install=calc(state.labour.install), remove=calc(state.labour.remove);
+  const active=[state.labour.install.include?'Installation':null,state.labour.remove.include?'Take-down':null].filter(Boolean);
+  return {install,remove,state:active.length?active.join(' + ')+' included':'Neither included'};
+}
+function setItem(i,key,value){
+  const it=state.items[i]; if(!it)return;
+  if(['qty','length','hours','minutes','priceRate','rate'].includes(key)) it[key]=value===''?'':N(value);
+  else if(key==='type'){
+    it.type=value;
+    const t=TYPES[value]||TYPES.leafy;
+    if(!it.heightFt)it.heightFt=t.height; // preserve a measured height
+    it.base=t.base; it.width=t.width; it.dia=t.dia;
+    it.wrap=value==='evergreen'?'trunk+cone':'trunk+canopy';
+  } else if(key==='colour'){
+    it.colour=value; it.colours=[value];
+  } else it[key]=value;
+  renderAll(); save();
+}
+function setMulti(i,key,el){
+  const it=state.items[i]; if(!it)return;
+  it[key]=Array.from(el.selectedOptions||[]).map(o=>o.value);
+  renderAll(); save();
+}
+function addItem(kind){
+  let item;
+  if(kind==='tree')item=itemTreeDefaults();
+  else item={kind,id:'I'+Date.now()+Math.random().toString(16).slice(2),name:kind==='roofline'?'Front roofline':kind[0].toUpperCase()+kind.slice(1),length:25,qty:1,colour:'Warm White',lightType:kind==='path'?'Mini stake':'Minis',assumption:'25 ft / 50 bulbs',hours:0,minutes:0,rate:'',priceRate:'',photos:[],pins:[],hardware:[],electrical:[],timers:[],preLit:false,preDecorated:false,shrubType:'Evergreen',treatment:'Minis'};
+  state.items.push(item);renderAll();goTo('itemsPanel')
+}
+function removeItem(i){state.items.splice(i,1);renderAll();save()}
+function renderItems(){
+  const root=$('itemList');root.innerHTML='';
+  state.items.forEach((it,i)=>root.insertAdjacentHTML('beforeend',itemHTML(it,i)));
+  $('footerSummary').textContent=`${state.items.length} items · ${treeSets()} light sets`;
+  const ls=labourTotals();$('footerLabour').textContent=`Labour: ${ls.state.toLowerCase()}`;
+}
+function itemHTML(it,i){
+  const tree=it.kind==='tree';
+  if(tree){
+    const r=calcTree(it), invalid=!TYPES[it.type];
+    return `<div class="record" data-item="${i}">
+      <div class="panelhead"><div><div class="kicker">TREE ${i+1}</div><h3>${esc(it.name)}</h3><div class="chiprow"><span class="tag">${TYPES[it.type].label}</span><span class="tag">${r.strings} sets / tree</span></div></div><button onclick="removeItem(${i})">Remove</button></div>
+      <div class="grid g4">
+        <div class="field"><label>Label / location</label><input value="${esc(it.name)}" onchange="setItem(${i},'name',this.value)"></div>
+        <div class="field"><label>Type</label><select onchange="setItem(${i},'type',this.value)"><option value="leafy" ${it.type==='leafy'?'selected':''}>Leafy</option><option value="evergreen" ${it.type==='evergreen'?'selected':''}>Evergreen</option></select></div>
+        <div class="field"><label>Height (ft)</label><input type="number" value="${it.heightFt}" onchange="setItem(${i},'heightFt',this.value)"></div>
+        <div class="field"><label>Quantity</label><input type="number" min="1" value="${it.qty}" onchange="setItem(${i},'qty',this.value)"></div>
+      </div>
+      <div class="grid g3">
+        <div><label>Wrap parts</label>${(it.type==='evergreen'?['trunk','cone']:['trunk','limbs','canopy']).map(p=>`<div class="toggle"><span>${p[0].toUpperCase()+p.slice(1)}</span><button class="switch ${String(it.wrap||'both').split('+').includes(p)?'on':''}" onclick="togglePart(${i},'${p}')"><i></i></button></div>`).join('')}</div>
+        <div><label>Colour</label><select onchange="setItem(${i},'colour',this.value)">${COLOURS.map(c=>`<option ${it.colour===c?'selected':''}>${c}</option>`).join('')}</select><div class="tiny" style="margin-top:8px">Big Star 5 mm coaxial · 25 ft / 50 bulbs / 6″</div></div>
+        <div><label>Per-item time</label><div class="grid g2"><input type="number" min="0" value="${it.hours}" onchange="setItem(${i},'hours',this.value)" placeholder="Hours"><input type="number" min="0" max="59" value="${it.minutes}" onchange="setItem(${i},'minutes',this.value)" placeholder="Minutes"></div><label style="margin-top:8px">Price / set</label><input type="number" step=".01" value="${it.priceRate||''}" onchange="setItem(${i},'priceRate',this.value)" placeholder=""></div>
+      </div>
+      <div class="grid g3" style="margin-top:12px">
+        <div><div class="photo" onclick="itPhotoPin(event,${i},0)">${it.photos[0]?`<img src="${it.photos[0].src}" alt="">`:'<span class="tiny">Attach a site photo</span>'}${(it.photos||[]).flatMap(p=>p.pins||[]).map(p=>`<i class="photo-pin" style="left:${p.x*100}%;top:${p.y*100}%"></i>`).join('')}</div><button style="width:100%;margin-top:6px" onclick="photoClick(${i})">Attach / replace photo</button></div>
+        <div><label>Hardware</label><select multiple size="5" onchange="setMulti(${i},'hardware',this)">${HARDWARE.map(x=>`<option ${it.hardware.includes(x[0])?'selected':''}>${esc(x[0])}</option>`).join('')}</select></div>
+        <div><label>Electrical / timer</label><select multiple size="5" onchange="setMulti(${i},'electrical',this)">${ELECTRICAL.map(x=>`<option ${it.electrical.includes(x[0])?'selected':''}>${esc(x[0])}</option>`).join('')}</select></div>
+      </div>
+      <div class="tiny" style="margin-top:10px">Estimate ${r.strings*it.qty} sets · ${it.qty} tree record${it.qty>1?'s':''}. ${it.electrical.includes('String Light Adapter')?'Adapter required ✓':''}</div>
+    </div>`;
+  }
+  const isRoof=it.kind==='roofline';
+  const est=isRoof?roofEstimate(it):0;
+  return `<div class="record"><div class="panelhead"><div><div class="kicker">${it.kind.toUpperCase()}</div><h3>${esc(it.name)}</h3><span class="tag">estimate</span></div><button onclick="removeItem(${i})">Remove</button></div>
+    <div class="grid g4"><div class="field"><label>Label / location</label><input value="${esc(it.name)}" onchange="setItem(${i},'name',this.value)"></div>
+    <div class="field"><label>Quantity</label><input type="number" min="1" value="${it.qty}" onchange="setItem(${i},'qty',this.value)"></div>
+    ${isRoof?`<div class="field"><label>Length (ft)</label><input type="number" value="${it.length}" onchange="setItem(${i},'length',this.value)"></div><div class="field"><label>Light type</label><select onchange="setItem(${i},'lightType',this.value)"><option>Minis</option><option>C6</option><option>C9</option><option>G20</option><option>G30</option></select></div>`:`<div class="field"><label>Colour</label><select onchange="setItem(${i},'colour',this.value)">${COLOURS.map(c=>`<option ${it.colour===c?'selected':''}>${c}</option>`).join('')}</select></div><div class="field"><label>Unit rate</label><input type="number" step=".01" value="${it.priceRate||''}" onchange="setItem(${i},'priceRate',this.value)" placeholder=""></div>`}</div>
+    ${isRoof?`<div class="grid g3"><div class="field"><label>Assumption (editable)</label><input value="${esc(it.assumption)}" onchange="setItem(${i},'assumption',this.value)"></div><div class="field"><label>Per-item time</label><div class="grid g2"><input type="number" value="${it.hours}" onchange="setItem(${i},'hours',this.value)"><input type="number" value="${it.minutes}" onchange="setItem(${i},'minutes',this.value)"></div></div><div class="price"><strong>${est} sets</strong><div class="tiny">Minis use 25 ft / 50-bulb basis; all estimates labelled.</div></div></div>`:''}
+    ${it.kind==='wreath'||it.kind==='garland'?`<div class="grid g3"><div class="toggle"><span>Pre-lit</span><button class="switch ${it.preLit?'on':''}" onclick="setItem(${i},'preLit',!${!!it.preLit})"><i></i></button></div><div class="toggle"><span>Pre-decorated</span><button class="switch ${it.preDecorated?'on':''}" onclick="setItem(${i},'preDecorated',!${!!it.preDecorated})"><i></i></button></div><div class="field"><label>Unit rate</label><input type="number" step=".01" value="${it.priceRate||''}" onchange="setItem(${i},'priceRate',this.value)" placeholder=""></div></div>`:''}
+    ${it.kind==='shrub'?`<div class="grid g3"><div class="field"><label>Shrub type</label><input value="${esc(it.shrubType||'Evergreen')}" onchange="setItem(${i},'shrubType',this.value)"></div><div class="field"><label>Colour</label><select onchange="setItem(${i},'colour',this.value)">${COLOURS.map(c=>`<option ${it.colour===c?'selected':''}>${c}</option>`).join('')}</select></div><div class="field"><label>Unit rate</label><input type="number" step=".01" value="${it.priceRate||''}" onchange="setItem(${i},'priceRate',this.value)" placeholder=""></div></div>`:''}
+    ${it.kind==='path'?`<div class="grid g3"><div class="field"><label>Stake light</label><input value="${esc(it.lightType||'Mini stake')}" onchange="setItem(${i},'lightType',this.value)"></div><div class="field"><label>Colour</label><select onchange="setItem(${i},'colour',this.value)">${COLOURS.map(c=>`<option ${it.colour===c?'selected':''}>${c}</option>`).join('')}</select></div><div class="field"><label>Quantity</label><input type="number" value="${it.qty}" onchange="setItem(${i},'qty',this.value)"></div></div>`:''}
+    ${it.kind==='door'?`<div class="grid g3"><div class="field"><label>Treatment</label><select onchange="setItem(${i},'treatment',this.value)"><option>Minis</option><option>C6</option><option>C9</option><option>Wreath</option><option>Garland</option></select></div><div class="field"><label>Colour</label><select onchange="setItem(${i},'colour',this.value)">${COLOURS.map(c=>`<option ${it.colour===c?'selected':''}>${c}</option>`).join('')}</select></div><div class="field"><label>Quantity</label><input type="number" value="${it.qty}" onchange="setItem(${i},'qty',this.value)"></div></div>`:''}
+    <div class="grid g3"><div><div class="photo" onclick="itPhotoPin(event,${i},0)">${it.photos[0]?`<img src="${it.photos[0].src}" alt="">`:'<span class="tiny">Attach a site photo'}</div><button style="width:100%;margin-top:6px" onclick="photoClick(${i})">Attach / replace photo</button></div><div><label>Hardware</label><select multiple size="5" onchange="setMulti(${i},'hardware',this)">${HARDWARE.map(x=>`<option ${it.hardware.includes(x[0])?'selected':''}>${esc(x[0])}</option>`).join('')}</select></div><div><label>Timers</label><select multiple size="4" onchange="setMulti(${i},'timers',this)">${TIMERS.map(x=>`<option ${it.timers.includes(x)?'selected':''}>${x}</option>`).join('')}</select></div></div>
+    <div class="tiny" style="margin-top:10px">Price line: ${N(it.priceRate)>0?('$'+(N(it.priceRate)*N(it.qty)).toFixed(2)):'rate not entered'}</div></div>`;
+}
+function togglePart(i,p){
+  const it=state.items[i], allowed=it.type==='evergreen'?['trunk','cone']:['trunk','limbs','canopy'];
+  let set=new Set(String(it.wrap||'').split('+').filter(x=>allowed.includes(x)));
+  set.has(p)?set.delete(p):set.add(p);
+  it.wrap=allowed.filter(x=>set.has(x)).join('+')||'none';
+  renderAll();save();
+}
+function updateLabour(){for(const [key,prefix] of [['install','install'],['remove','remove']]){state.labour[key].men=N($(prefix+'Men').value);state.labour[key].hours=N($(prefix+'Hours').value);state.labour[key].minutes=N($(prefix+'Minutes').value);state.labour[key].rate=$(prefix+'Rate').value}const t=labourTotals();$('installTotal').textContent='$'+t.install.toFixed(2);$('removeTotal').textContent='$'+t.remove.toFixed(2);$('labourState').textContent=t.state;save()}
+function renderLabour(){for(const [key,prefix] of [['install','install'],['remove','remove']]){const x=state.labour[key];$(prefix+'Men').value=x.men;$(prefix+'Hours').value=x.hours;$(prefix+'Minutes').value=x.minutes;$(prefix+'Rate').value=x.rate;document.querySelector(`[data-lab="${key}"]`).classList.toggle('on',x.include)}const t=labourTotals();$('installTotal').textContent='$'+t.install.toFixed(2);$('removeTotal').textContent='$'+t.remove.toFixed(2);$('labourState').textContent=t.state}
+function attachLabourHandlers(){document.querySelectorAll('[data-lab]').forEach(b=>b.onclick=()=>{const k=b.dataset.lab;state.labour[k].include=!state.labour[k].include;updateLabour()});['install','remove'].forEach(k=>['Men','Hours','Minutes','Rate'].forEach(s=>$(k+s).onchange=updateLabour))}
+function photoClick(i){let input=document.createElement('input');input.type='file';input.accept='image/*';input.onchange=()=>{const f=input.files?.[0];if(!f)return;if(f.size>8e6){alert('Photo refused: file is over 8 MB.');return}const img=new Image();img.onload=()=>{const max=1400,scale=Math.min(1,max/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);c.getContext('2d').drawImage(img,0,0,c.width,c.height);const src=c.toDataURL('image/jpeg',.78);state.items[i].photos=[{src,name:f.name,ts:Date.now()}];renderAll();save()};img.src=URL.createObjectURL(f)};input.click()}
+function itPhotoPin(ev,i,pi){
+  const it=state.items[i], photo=it.photos?.[pi]; if(!photo){photoClick(i);return}
+  const r=ev.currentTarget.getBoundingClientRect(); const x=Math.max(0,Math.min(1,(ev.clientX-r.left)/r.width)), y=Math.max(0,Math.min(1,(ev.clientY-r.top)/r.height));
+  const what=prompt('What should this pin become on the quote?','Clip'); if(!what)return;
+  const qty=prompt('How much?', '1'); if(qty===null)return;
+  (photo.pins ||= []).push({x,y,what,qty:N(qty)||1}); (it.pins ||= []).push({x,y,what,qty:N(qty)||1}); save(); renderAll();
+}
+function pinPhoto(i,pi){const it=state.items[i],photo=it.photos[pi];if(!photo)return;const what=prompt('What is the pin / quote line?','Clip');if(!what)return;const qty=prompt('How much?','1');if(qty===null)return;(it.pins ||= []).push({x:.5,y:.5,what,qty:N(qty)||1});save();renderAll()}
+function renderDesign(){const root=$('designList');root.innerHTML=state.items.length?state.items.map((it,i)=>`<div class="record"><div class="kicker">${it.kind.toUpperCase()}</div><h3>${esc(it.name)}</h3><div class="photo" onclick="photoClick(${i})">${it.photos[0]?`<img src="${it.photos[0].src}" alt="">`:'<span class="tiny">Attach item photo</span>'}</div><div class="chiprow" style="margin-top:10px">${(it.pins||[]).map(p=>`<span class="tag">${esc(p.what)} × ${p.qty}</span>`).join('')}</div></div>`).join(''):'<div class="notice">Add an item on the Job page to create its design room.</div>'}
+function inventoryKeyForLine(name){
+  if(name.endsWith(' · 5 mm coaxial minis'))return '5 mm Coaxial Mini Lights — 25 ft / 50 bulbs';
+  return name;
+}
+function renderTakeoff(){
+  const lines=[];state.items.forEach(it=>{if(it.kind==='tree'){const r=calcTree(it);lines.push({name:`${it.name} · 5 mm coaxial minis`,qty:r.strings*N(it.qty),supplier:'Big Star'});if(it.electrical.includes('String Light Adapter'))lines.push({name:'String Light Adapter',qty:N(it.qty),supplier:'Big Star'})}else if(it.kind==='roofline'){lines.push({name:`${it.name} · ${it.lightType}`,qty:roofEstimate(it),supplier:'Big Star'})}else{lines.push({name:it.name,qty:N(it.qty),supplier:'Big Star'})}(it.hardware||[]).forEach(h=>lines.push({name:h,qty:N(it.qty),supplier:'Big Star'}));(it.electrical||[]).forEach(e=>lines.push({name:e,qty:N(it.qty),supplier:'Big Star'}));(it.timers||[]).forEach(t=>lines.push({name:t,qty:N(it.qty),supplier:'Big Star'}));(it.pins||[]).forEach(p=>lines.push({name:p.what,qty:p.qty,supplier:'Pinned quote'}));});
+  const l=labourTotals(); if(state.labour.install.include)lines.push({name:'INSTALLATION CREW',qty:1,supplier:'Labour',labour:l.install}); if(state.labour.remove.include)lines.push({name:'SEASONAL REMOVAL CREW',qty:1,supplier:'Labour',labour:l.remove});
+  const totalMaterial=lines.reduce((a,x)=>a+(x.labour||0)+(x.name==='String Light Adapter'?0:N((state.items.find(i=>i.name===x.name)?.priceRate)||0)*x.qty),0);
+  $('takeoffView').innerHTML=`<div class="panel"><div class="panelhead"><div><div class="kicker">04 · Takeoff</div><h2>What the crew actually pulls.</h2></div><button class="gold" onclick="window.print()">Print</button></div>
+  <div class="grid g4"><div class="stat"><span>Tree sets</span><b>${treeSets()}</b></div><div class="stat"><span>Items</span><b>${state.items.length}</b></div><div class="stat"><span>Labour</span><b>$${((state.labour.install.include?l.install:0)+(state.labour.remove.include?l.remove:0)).toFixed(2)}</b></div><div class="stat"><span>Labour state</span><b style="font-size:18px">${l.state}</b></div></div>
+  <div class="panel" style="padding:0;margin-top:16px"><table class="table"><thead><tr><th>Line</th><th>Qty</th><th>Source</th><th>Status</th></tr></thead><tbody>${lines.map(x=>{const inv=state.inventory[inventoryKeyForLine(x.name)];const status=x.supplier==='Labour'?'INCLUDED':inv?(inv.onHand>=x.qty?'ON HAND':`ORDER ${x.qty-inv.onHand}`):'ESTIMATE';return `<tr><td>${esc(x.name)}</td><td>${x.qty}</td><td>${x.supplier}</td><td>${status}</td></tr>`}).join('')}</tbody></table></div>
+  <div class="notice success" style="margin-top:14px">Excluded labour blocks are absent from this takeoff. Blank labour rates contribute $0.00.</div></div>`;
+}
+function setInventoryStock(name,key,value){
+  const inv=state.inventory[name]||(state.inventory[name]={onHand:'',coming:'',supplier:'Big Star'});
+  inv[key]=value===''?'':Math.max(0,N(value));
+  save();renderInventory();
+}
+function renderInventory(){
+  const demand={};
+  state.items.forEach(it=>{
+    const add=(n,q)=>demand[n]=(demand[n]||0)+q;
+    if(it.kind==='tree'){
+      add('5 mm Coaxial Mini Lights — 25 ft / 50 bulbs',calcTree(it).strings*N(it.qty));
+      if((it.electrical||[]).includes('String Light Adapter'))add('String Light Adapter',N(it.qty));
+    }
+    if(it.kind==='roofline')add(it.lightType==='Minis'?'5 mm Coaxial Mini Lights — 25 ft / 50 bulbs':it.lightType+' roofline product',roofEstimate(it)*N(it.qty));
+    (it.hardware||[]).forEach(x=>add(x,N(it.qty)));(it.electrical||[]).forEach(x=>add(x,N(it.qty)));(it.timers||[]).forEach(x=>add(x,N(it.qty)));
+  });
+  $('inventoryList').innerHTML=Object.keys(demand).length?Object.entries(demand).map(([n,q])=>{
+    const inv=state.inventory[n]||{onHand:'',coming:'',supplier:'Big Star'};
+    const oh=inv.onHand===''?null:N(inv.onHand), coming=inv.coming===''?null:N(inv.coming);
+    let st='not counted';
+    if(oh!==null){
+      if(oh>=q)st='on hand';
+      else if(coming!==null&&coming>0)st='coming up';
+      else if(oh>0)st='low';
+      else if(oh===0)st='to order';
+    }
+    const cls=st==='on hand'?'onhand':st==='coming up'?'coming':st==='low'?'low':st==='to order'?'order':'';
+    return `<div class="inventory-card"><div><b>${esc(n)}</b><div class="tiny">${esc(inv.supplier||'Supplier not set')} · demand ${q}</div></div><div><span class="state ${cls}">${st}</span></div><div class="grid g2"><label class="tiny">On hand<input type="number" min="0" value="${oh===null?'':oh}" onchange="setInventoryStock('${esc(n).replace(/'/g,"&#39;")}','onHand',this.value)"></label><label class="tiny">Coming up<input type="number" min="0" value="${coming===null?'':coming}" onchange="setInventoryStock('${esc(n).replace(/'/g,"&#39;")}','coming',this.value)"></label></div></div>`;
+  }).join(''):'<div class="notice">Add job items to compare takeoff demand with stock. Blank stock is not counted.</div>';
+}
+function renderCustomers(){$('customerTable').innerHTML=state.customers.length?`<table class="table"><thead><tr><th>Name</th><th>Type</th><th>Phone</th><th>Site</th></tr></thead><tbody>${state.customers.map(c=>`<tr><td>${esc(c.company||c.name)}</td><td>${esc(c.type)}</td><td>${esc(c.phone)}</td><td>${esc(c.siteAddress)}</td></tr>`).join('')}</tbody></table>`:'<div class="notice">No saved customers. New records appear only after explicit Save customer.</div>'}
+function exportShape(){
+  return {siteType:state.customer?.type==='commercial'?'Commercial':'Residential',client:state.customer?.name||'',company:state.customer?.company||'',address:state.customer?.siteAddress||'',billingAddress:state.customer?.billingAddress||'',contact:state.customer?.phone||'',email:state.customer?.email||'',date:new Date().toISOString().slice(0,10),trees:state.items.filter(x=>x.kind==='tree').map(x=>({type:x.type,qty:x.qty,heightFt:x.heightFt,wrap:x.wrap,density:x.fullness,colours:x.colours||[x.colour],notes:x.notes||'',name:x.name,hours:x.hours,minutes:x.minutes,photos:x.photos,pins:x.pins,hardware:x.hardware,electrical:x.electrical,timers:x.timers})),extras:state.items.filter(x=>x.kind!=='tree'),logi:{jobHardware:state.jobHardware,jobElectrical:state.jobElectrical,jobTimers:state.jobTimers,timerOn:$('timerOn')?.value||'17:00',timerOff:$('timerOff')?.value||'23:30'},siteNotes:'',customer:state.customer,labour:state.labour,inventory:state.inventory};
+}
+function exportJob(){const blob=new Blob([JSON.stringify(exportShape(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='glimmer-job-export.json';a.click();URL.revokeObjectURL(a.href)}
+function importEstimatorJob(){
+  const input=$('estimatorImport'); input.value=''; input.onchange=async()=>{
+    const f=input.files?.[0]; if(!f)return;
+    try{
+      const payload=JSON.parse(await f.text());
+      if(localStorage.getItem('glimmer.estimatorImported.v1')==='1'){alert('Standalone estimator job already imported once on this device.');return}
+      const incoming=Array.isArray(payload.job)?payload.job:(Array.isArray(payload.trees)?payload.trees:null);
+      if(!incoming)throw new Error('No estimator job records found');
+      incoming.map(normalizeLegacy).forEach(x=>state.items.push({...x,kind:'tree',id:x.id||'I'+Date.now()+Math.random()}));
+      localStorage.setItem('glimmer.estimatorImported.v1','1'); save(); alert(`Imported ${incoming.length} estimator record(s) once.`);
+    }catch(e){alert('Estimator import refused: '+e.message)}
+  }; input.click();
+}
+function loadSaved(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(KEY)||'null');
+    if(saved){
+      const legacyCustomer=saved.customer||{};
+      state.customer={
+        id:legacyCustomer.id||'',
+        type:String(legacyCustomer.type||saved.siteType||'residential').toLowerCase(),
+        name:legacyCustomer.name||legacyCustomer.contactPerson||saved.client||'',
+        company:legacyCustomer.company||'',
+        phone:legacyCustomer.phone||saved.contact||'',
+        email:legacyCustomer.email||'',
+        siteAddress:legacyCustomer.siteAddress||legacyCustomer.address||saved.address||'',
+        billingAddress:legacyCustomer.billingAddress||'',
+        notes:legacyCustomer.notes||''
+      };
+      const trees=(saved.trees||[]).map(normalizeLegacy).map(x=>({...x,kind:'tree',id:x.id||'I'+Math.random()}));
+      const roofs=Array.isArray(saved.rooflines)?saved.rooflines.map(r=>({
+        ...r,kind:'roofline',id:r.id||'I'+Math.random(),name:r.name||r.label||'Roofline',
+        length:N(r.length??r.lengthFt),qty:Math.max(1,N(r.qty)||1),lightType:r.lightType||'Minis',
+        assumption:r.assumption||((r.lightType||'Minis')==='Minis'?'25 ft / 50 bulbs':'25 ft / 12 in spacing'),
+        hours:N(r.hours),minutes:N(r.minutes),priceRate:r.priceRate||''
+      })):[];
+      let extras=[];
+      if(Array.isArray(saved.extras)) extras=saved.extras.filter(x=>x&&typeof x==='object').map(x=>({...x,id:x.id||'I'+Math.random()}));
+      else if(saved.extras&&typeof saved.extras==='object'){
+        const ex=saved.extras;
+        const add=(key,kind,name,extra={})=>{
+          const e=ex[key]; if(e&&e.on) extras.push({kind,id:'I'+Math.random(),name:name,qty:Math.max(1,N(e.qty)||1),colour:'Warm White',hours:0,minutes:0,priceRate:'',photos:[],pins:[],hardware:[],timers:[],...extra});
+        };
+        add('wreaths','wreath','Wreaths',{preLit:false,preDecorated:false});
+        add('garland','garland','Garland',{preLit:false,preDecorated:false});
+        add('shrubs','shrub','Shrubs',{shrubType:'Evergreen'});
+        add('stakes','path','Ground path stakes',{lightType:'Mini stake'});
+        add('windows','door','Doors & windows',{treatment:'Minis'});
+      }
+      state.items=trees.concat(roofs,extras).map(normalizeItemShape);
+      state.jobHardware=saved.logi?.jobHardware||[];
+      state.jobElectrical=saved.logi?.jobElectrical||[];
+      state.jobTimers=saved.logi?.jobTimers||[];
+      if($('timerOn'))$('timerOn').value=saved.logi?.timerOn||'17:00';
+      if($('timerOff'))$('timerOff').value=saved.logi?.timerOff||'23:30';
+      state.labour=saved.labour||state.labour;
+      if(saved.inventory&&typeof saved.inventory==='object')state.inventory=saved.inventory;
+    }
+  }catch(e){console.warn('Saved job could not load',e)}
+  try{state.customers=JSON.parse(localStorage.getItem(CUSTOMER_KEY)||'[]')||[]}catch(e){state.customers=[]}
+}
+function initPicklists(){[['jobHardware',HARDWARE.map(x=>x[0])],['jobElectrical',ELECTRICAL.map(x=>x[0])],['jobTimers',TIMERS]].forEach(([id,arr])=>{$(id).innerHTML=arr.map(x=>`<option>${esc(x)}</option>`).join('')})}
+function renderAll(){renderItems();renderLabour();renderDesign();renderTakeoff();renderInventory();renderCustomers();syncCustomerUI();document.body.classList.toggle('calm',state.calm);attachLabourHandlers()}
+function goTo(id){const el=$(id);if(el){el.scrollIntoView({behavior:state.calm?'auto':'smooth',block:'start'});}}
+function activateView(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));$('view-'+v).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.view===v));if(v==='takeoff')renderTakeoff();if(v==='inventory')renderInventory();if(v==='design')renderDesign();if(v==='customers')renderCustomers()}
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>activateView(b.dataset.view));
+$('newCustomerBtn').onclick=()=>setCustomerMode('new');$('existingCustomerBtn').onclick=()=>setCustomerMode('existing');$('commitCustomer').onclick=commitCustomer;
+$('sameBilling').onclick=()=>{$('billingAddress').value=$('siteAddress').value;save()};
+$('custType').onchange=()=>{$('companyField').style.display=$('custType').value==='commercial'?'block':'none';$('custNameLabel').textContent=$('custType').value==='commercial'?'Contact name':'Name'};
+$('siteAddress').onchange=()=>{if(state.customer){state.customer.siteAddress=$('siteAddress').value;save()}syncCustomerUI()};
+$('customerSearch').oninput=()=>{const q=$('customerSearch').value.trim().toLowerCase();$('customerMatches').innerHTML=state.customers.filter(c=>(c.name+' '+c.company).toLowerCase().includes(q)).map(c=>`<button onclick='loadExisting(${JSON.stringify(c).replace(/'/g,"&#39;")})'>${esc(c.company||c.name)} · ${esc(c.siteAddress)}</button>`).join('')};
+$('calmBtn').onclick=()=>{state.calm=!state.calm;$('calmBtn').textContent=state.calm?'Full Mode':'Calm Mode';renderAll()};
+$('saveBtn').onclick=save;
+['install','remove'].forEach(k=>['Men','Hours','Minutes','Rate'].forEach(s=>{const el=$(k+s);if(el)el.addEventListener('change',updateLabour)}));
+const tw=$('twinkles');for(let i=0;i<34;i++){const b=document.createElement('i');b.className='bulb';b.style.setProperty('--c',[...Object.values(COLOUR_HEX)][i%12]);b.style.setProperty('--d',(i*.11)+'s');tw.appendChild(b)}
+loadSaved();initPicklists();
+[['jobHardware','jobHardware'],['jobElectrical','jobElectrical'],['jobTimers','jobTimers']].forEach(([id,key])=>$(id).addEventListener('change',()=>{state[key]=[...$(id).selectedOptions].map(o=>o.value);save()}));
+renderAll();
+</script>
+</body>
+</html>

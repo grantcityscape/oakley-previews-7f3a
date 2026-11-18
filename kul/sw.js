@@ -1,6 +1,6 @@
 /* KÜL Real Estate — service worker. Cache version tracks the app version:
    bump the version (and the app) together; old caches are deleted on activate. */
-const CACHE = 'kul-cache-v1.4.3';
+const CACHE = 'kul-cache-v1.4.4';
 const PRECACHE = [
   './',
   './index.html',

@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- CSP: connect-src is https: because the hub may point the feed and talk addresses at its own host at packaging (same posture as Home). Tighten to those hosts when known. This file loads no external styles, scripts, fonts, images or frames. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; connect-src https:">
+<title>Command Deck v1.2.1</title>
+<link rel="icon" href="data:,">
+<style>
+/* ===== COMMAND DECK v1.1 — green · black · silver. Northbirch green is the Deck identity: --r-db is the lit accent, --r-nb / --r-nbs the door and deep tone. WORKING lamp is green-lit; FLAGGED red and NEEDS GRANT amber keep their meanings. ===== */
+:root{--void:#03060b;--hull:#070c14;--cell:#0c131d;--well:#121b28;--ld:#1a2535;--lh:#2b394d;
+--tmax:#f4f8ff;--tp:#e0e7f1;--ts:#a8b4c5;--tm:#7f8da1;
+--silver:#c5cdd8;--silver2:#97a4b6;--steel:#5d6b7e;--blue:#34b060;--ice:#a9efc3;
+--amber:#ff9f1c;--gold:#facc15;--cr:#ef4444;--cr2:#f87171;
+--r-db:52 176 96;--r-ice:169 239 195;--r-silver:197 205 216;--r-amber:255 159 28;--r-gold:250 204 21;--r-cr:239 68 68;
+--r-nb:30 77 43;--r-nbs:108 133 116;--r-cb:59 130 246;
+--ct:2.75rem;--s:1;--a:var(--r-db);
+--fd:"Chakra Petch","Segoe UI",system-ui,-apple-system,sans-serif;
+--fm:ui-monospace,SFMono-Regular,"JetBrains Mono","DejaVu Sans Mono",Menlo,Consolas,monospace;
+--fs:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:var(--tp);font:400 .75rem/1.25 var(--fs);font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html{font-size:16px}
+button,input{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer;text-align:inherit}a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid rgb(var(--r-ice));outline-offset:-2px}[hidden]{display:none!important}
+.num{font-family:var(--fm)}.am{color:var(--amber)}.dm{color:var(--ts)}.mt{color:var(--tm)}
+/* ---------- frame ---------- */
+.bridge{display:grid;width:100%;height:100%;padding:.3rem;gap:.3rem;grid-template-rows:2.8rem minmax(0,1fr) var(--ct);
+ background:radial-gradient(ellipse 65% 38% at 50% -8%,rgb(var(--r-db) / .10),transparent 70%),radial-gradient(ellipse 130% 95% at 50% 50%,transparent 58%,rgb(0 0 0 / .6) 100%),repeating-linear-gradient(0deg,rgb(197 205 216 / .012) 0 .0625rem,transparent .0625rem .25rem),linear-gradient(180deg,#060b13,#02050a)}
+.top{display:grid;grid-template-columns:2.8rem 12.6rem minmax(0,1fr);gap:.4rem;min-width:0}
+.chrono{display:flex;align-items:center;justify-content:space-between;gap:.3rem;padding:0 .4rem;border-radius:.3rem;overflow:hidden;white-space:nowrap;border:1px solid #1a2535;border-left:3px solid rgb(var(--r-db));
+ background:linear-gradient(90deg,rgb(var(--r-db) / .15),transparent 60%),linear-gradient(180deg,#0d1521,#070c14);box-shadow:inset 0 1px 0 rgb(197 205 216 / .06),0 0 0 1px rgb(0 0 0 / .6),-.2rem 0 1rem rgb(var(--r-db) / .14)}
+.chrono b{font:700 1.3rem/1.2 var(--fd);letter-spacing:0;color:var(--tmax);text-shadow:0 0 .9rem rgb(var(--r-db) / .55)}
+.chrono span{display:flex;flex-direction:column;font:.7rem/1.15 var(--fm);color:var(--ts)}.chrono i{font-style:normal}
+.doors{display:grid;gap:.4rem}
+.door{--d:var(--r-silver);position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:.4rem;padding:0 .7rem;border-radius:.3rem;min-width:0;overflow:hidden;transition:box-shadow .15s,filter .15s;
+ background:radial-gradient(120% 170% at 0% 0%,rgb(var(--d) / .32),transparent 55%),radial-gradient(80% 120% at 100% 100%,rgb(var(--d) / .10),transparent 60%),linear-gradient(180deg,#0f1722,#080d15);
+ border:1px solid rgb(var(--d) / .38);border-bottom:2px solid rgb(var(--d));box-shadow:inset 0 1px 0 rgb(255 255 255 / .07),0 0 0 1px rgb(0 0 0 / .55),0 .25rem 1.2rem rgb(var(--d) / .14)}
+.door::after{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(115deg,rgb(255 255 255 / .022) 0 .08rem,transparent .08rem .5rem)}
+.door:hover{filter:brightness(1.12);box-shadow:inset 0 1px 0 rgb(255 255 255 / .08),0 0 0 1px rgb(0 0 0 / .55),0 .25rem 1.4rem rgb(var(--d) / .3)}
+#d-home{--d:var(--r-silver)}#d-deck{--d:var(--r-nb)}#d-day{--d:var(--r-cr);border-bottom-color:var(--gold)}#d-wb{--d:var(--r-cb)}
+.door .in{min-width:0;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:1}
+.door .nm{font:700 .9rem/1.2 var(--fd);letter-spacing:.1em;color:#fff;white-space:nowrap;text-shadow:0 0 .8rem rgb(var(--d) / .65)}
+#d-day .nm{color:#fde68a;text-shadow:0 0 .8rem rgb(var(--r-gold) / .45)}#d-wb .nm{color:#dbeafe}
+.door .ln{font:.72rem/1.25 var(--fs);color:var(--ts);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.door .ln .nc{color:rgb(var(--d));margin-right:.15rem}#d-day .ln .nc{color:var(--gold)}
+.door .go{font:700 .95rem var(--fm);color:rgb(var(--d));position:relative;z-index:1;text-shadow:0 0 .6rem rgb(var(--d) / .7)}#d-day .go{color:var(--gold)}
+/* current surface: lit, marked, always returns to the Deck's primary screen */
+.door.on{cursor:default;background:radial-gradient(120% 190% at 0% 0%,rgb(var(--d) / .62),transparent 62%),radial-gradient(80% 120% at 100% 100%,rgb(var(--d) / .22),transparent 60%),linear-gradient(180deg,#101a24,#08100f);border-color:rgb(var(--r-nbs) / .8);border-bottom:3px solid rgb(var(--r-nbs));box-shadow:inset 0 1px 0 rgb(255 255 255 / .1),0 0 0 1px rgb(0 0 0 / .55),0 .25rem 1.6rem rgb(var(--d) / .45)}
+.door.on .ln{color:#D4E8DB}
+.deck{position:relative;min-height:0;min-width:0;display:grid}
+.view{display:grid;gap:.3rem;min-height:0;min-width:0}
+.view.in{animation:grow .16s ease-out}
+@keyframes grow{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:none}}
+/* ---------- card ---------- */
+.card{position:relative;display:flex;flex-direction:column;overflow:hidden;min-height:0;min-width:0;border-radius:.3rem;border:1px solid #17222f;
+ background:linear-gradient(180deg,rgb(197 205 216 / .03),transparent 3rem),var(--hull);box-shadow:inset 0 1px 0 rgb(197 205 216 / .07),0 0 0 1px rgb(0 0 0 / .7),0 .5rem 1.2rem rgb(0 0 0 / .45)}
+.card::before{content:'';position:absolute;left:0;right:0;top:0;height:2px;z-index:6;pointer-events:none;background:linear-gradient(90deg,rgb(var(--a)),rgb(var(--a) / .5) 38%,transparent 88%);box-shadow:0 0 .7rem rgb(var(--a) / .55)}
+.hdw{flex:none}
+.hd{display:flex;align-items:center;justify-content:space-between;gap:.4rem;height:1.4rem;min-height:1.4rem;padding:0 .5rem;
+ background:linear-gradient(90deg,rgb(var(--a) / .15),rgb(var(--a) / .04) 45%,transparent 78%),linear-gradient(180deg,#0e1622,#09101a);border-bottom:1px solid rgb(var(--a) / .28)}
+.hd.tall{height:3rem;min-height:3rem}
+.ttl{display:flex;align-items:center;gap:.4rem;font:700 .72rem/1.15 var(--fd);letter-spacing:.09em;color:var(--silver);text-transform:uppercase;white-space:nowrap;min-width:0;overflow:hidden}
+.led{width:.42rem;height:.42rem;border-radius:1px;flex:none;background:rgb(var(--a));box-shadow:0 0 .4rem rgb(var(--a) / .95),0 0 .12rem rgb(var(--a))}
+.hr{display:flex;align-items:center;gap:.3rem;min-width:0;flex:none}
+.bd{flex:1;min-height:0;min-width:0;padding:.25rem .45rem;display:flex;flex-direction:column;gap:.2rem;overflow:hidden;background-image:radial-gradient(rgb(197 205 216 / .045) .03rem,transparent .05rem);background-size:.5rem .5rem}
+/* ---------- pills / buttons ---------- */
+.pill{font:600 .7rem/1.1 var(--fm);padding:.06rem .38rem;border-radius:2px;white-space:nowrap;flex:none;letter-spacing:.02em}
+.p-live{color:var(--ice);background:linear-gradient(180deg,rgb(var(--r-db) / .26),rgb(var(--r-db) / .10));border:1px solid rgb(var(--r-db) / .6);box-shadow:0 0 .55rem rgb(var(--r-db) / .22);text-shadow:0 0 .45rem rgb(var(--r-db) / .55)}
+.p-warn{color:#ffb547;background:linear-gradient(180deg,rgb(var(--r-amber) / .24),rgb(var(--r-amber) / .10));border:1px solid rgb(var(--r-amber) / .6);box-shadow:0 0 .55rem rgb(var(--r-amber) / .16)}
+.p-crit{color:#fff;background:repeating-linear-gradient(-45deg,rgb(var(--r-cr) / .5) 0 .22rem,rgb(var(--r-cr) / .3) .22rem .44rem);border:1px solid var(--cr);box-shadow:0 0 .6rem rgb(var(--r-cr) / .3)}
+.p-off{color:var(--ts);background:repeating-linear-gradient(-45deg,#131c28 0 .22rem,#0c131d .22rem .44rem);border:1px dashed #4a586b}
+.p-ice{color:var(--silver);background:rgb(var(--r-silver) / .1);border:1px solid rgb(var(--r-silver) / .45)}
+.btn{min-width:var(--ct);min-height:var(--ct);display:inline-flex;align-items:center;justify-content:center;padding:0 .55rem;font:700 .72rem var(--fm);color:var(--ts);white-space:nowrap;border-radius:.22rem;
+ background:linear-gradient(180deg,#151f2d,#0d141e);border:1px solid #2b394d;box-shadow:inset 0 1px 0 rgb(197 205 216 / .07),0 1px 0 rgb(0 0 0 / .6);transition:color .12s,border-color .12s,box-shadow .12s}
+.btn:hover{color:var(--tmax);border-color:#5d6b7e}
+.btn[aria-pressed=true]{color:#fff;border-color:rgb(var(--a));background:linear-gradient(180deg,rgb(var(--a) / .3),rgb(var(--a) / .12));box-shadow:inset 0 0 .7rem rgb(var(--a) / .22),0 0 .8rem rgb(var(--a) / .32);text-shadow:0 0 .5rem rgb(var(--a) / .6)}
+.btn.bk{color:var(--ice);border-color:rgb(var(--r-ice) / .6)}
+.btn.sm{min-height:2.5rem;min-width:2.5rem;padding:0 .5rem}
+/* ---------- station lamps ---------- */
+.lamp{width:.8rem;height:.8rem;border-radius:50%;flex:none;position:relative;background:transparent;border:1px dashed var(--steel)}
+.lamp.s-working{background:radial-gradient(circle at 35% 30%,#e6fbee,rgb(var(--r-db)) 55%,#14522c);border:1px solid rgb(var(--r-ice));box-shadow:0 0 .6rem rgb(var(--r-db) / .9),0 0 .12rem #fff;animation:pulse 1.8s ease-in-out infinite}
+.lamp.s-idle{background:radial-gradient(circle at 35% 30%,#fff,#c5cdd8 55%,#7d8796);border:1px solid #e6ebf2;box-shadow:0 0 .35rem rgb(197 205 216 / .5)}
+.lamp.s-parked{background:transparent;border:2px solid var(--steel);box-shadow:none}
+.lamp.s-flagged{background:radial-gradient(circle at 35% 30%,#ffd9d9,#ef4444 55%,#7f1d1d);border:1px solid #fca5a5;box-shadow:0 0 .6rem rgb(var(--r-cr) / .85)}
+.lamp.s-grant{background:radial-gradient(circle at 35% 30%,#fff1d4,#ff9f1c 55%,#7a4a00);border:1px solid #ffd08a;box-shadow:0 0 .6rem rgb(var(--r-amber) / .85);animation:blink 1.2s ease-in-out infinite}
+.lamp.s-nc{background:transparent;border:1px dashed #6a788c}
+.lamp.stl{opacity:.55}
+@keyframes pulse{0%,100%{box-shadow:0 0 .35rem rgb(var(--r-db) / .6),0 0 .12rem #fff}50%{box-shadow:0 0 .9rem rgb(var(--r-db)),0 0 .12rem #fff}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+/* ---------- primary screen ---------- */
+#v-home{grid-template-rows:1.5rem minmax(0,1.17fr) minmax(0,1fr)}
+.stkey{display:flex;align-items:center;gap:.8rem;padding:0 .6rem;border-radius:.3rem;border:1px solid #17222f;background:linear-gradient(180deg,#0b121c,#060a11);overflow:hidden;white-space:nowrap;font:.7rem/1 var(--fm);color:var(--ts);box-shadow:inset 0 1px 0 rgb(197 205 216 / .05)}
+.stkey .lab{font:700 .7rem var(--fd);letter-spacing:.12em;color:var(--silver)}
+.stkey .ki{display:flex;align-items:center;gap:.3rem}.stkey .ki b{color:var(--tmax);font-weight:700}.stkey .ki .lamp{width:.62rem;height:.62rem}
+.stkey .sp{flex:1}
+.mrow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.3rem;min-height:0}
+.mbox{cursor:pointer;transition:box-shadow .15s,filter .15s}.mbox:hover,.mbox:focus-visible{filter:brightness(1.1);box-shadow:inset 0 1px 0 rgb(197 205 216 / .1),0 0 0 1px rgb(var(--r-db) / .5),0 0 1.2rem rgb(var(--r-db) / .28)}
+.hd.mh{display:flex;flex-direction:column;align-items:stretch;justify-content:center;gap:.1rem;height:2.2rem;min-height:2.2rem;padding:0 .5rem}.mbox .bd{gap:.15rem}
+.mt1{display:flex;align-items:center;gap:.4rem;min-width:0}
+.mnm{font:700 .95rem/1.1 var(--fd);letter-spacing:.09em;color:var(--tmax);white-space:nowrap;display:flex;align-items:baseline;gap:.35rem}
+.mnm em{font:700 .7rem var(--fm);font-style:normal;letter-spacing:.06em;color:var(--ice);border:1px solid rgb(var(--r-ice) / .5);border-radius:2px;padding:0 .25rem}
+.mt2{display:flex;justify-content:space-between;align-items:center;gap:.3rem;font:.7rem/1.1 var(--fm);padding-left:1.2rem}
+.stw{color:var(--tp);white-space:nowrap}.opn{color:var(--ice);white-space:nowrap}
+.sec{flex:none;display:flex;justify-content:space-between;align-items:center;gap:.3rem;height:1rem;font:700 .7rem/1 var(--fm);letter-spacing:.09em;color:var(--silver2)}
+.pane{flex:1;min-height:0;min-width:0;display:flex;flex-direction:column;gap:.1rem;border:1px dashed #2b394d;border-radius:.2rem;padding:.2rem .3rem;font:.7rem/1.3 var(--fm);color:var(--tm);overflow:hidden;background:rgb(3 6 11 / .5)}
+.pane .ph{color:var(--silver2);letter-spacing:.06em;font-weight:700}.pane .ph2{color:var(--tm)}
+.pane.pcode{flex-direction:row;gap:.4rem;border-style:solid;border-color:#1f2c3d;background:#050a11}
+.pane .gut{flex:none;color:#3c4a5e;text-align:right;white-space:pre;user-select:none}.pane .cd{flex:1;min-width:0;display:flex;flex-direction:column;gap:.1rem;overflow:hidden}
+.ml{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ts)}.ml b{color:var(--silver);font-weight:700;margin-right:.3rem}
+.cur{display:inline-block;width:.45rem;height:.8rem;vertical-align:-.12rem;background:rgb(var(--r-ice) / .55);margin-right:.2rem}
+/* meters — hatched fill = snapshot (never claimed live); solid green = live */
+.bar{position:relative;height:.7rem;border-radius:2px;background:#060b12;border:1px solid #243246;overflow:hidden}
+.bar i{position:absolute;left:0;top:0;bottom:0;background:repeating-linear-gradient(-45deg,#93a6c0 0 .22rem,#697d98 .22rem .44rem)}
+.bar.hi i{background:repeating-linear-gradient(-45deg,#ffb547 0 .22rem,#c9801a .22rem .44rem)}
+.bar.cx i{background:repeating-linear-gradient(-45deg,#f87171 0 .22rem,#b02a2a .22rem .44rem)}
+.bar.lv i{background:linear-gradient(90deg,#1c6b3c,rgb(var(--r-db)) 70%,#8be0ab);box-shadow:0 0 .6rem rgb(var(--r-db) / .6)}
+.bar.na{background:repeating-linear-gradient(-45deg,#0b121c 0 .22rem,#080d15 .22rem .44rem);border-style:dashed}
+.bar u{position:absolute;top:0;bottom:0;width:1px;background:rgb(3 6 11 / .85)}
+.brow{display:grid;grid-template-columns:1.95fr .95fr 1.2fr 1.15fr;gap:.3rem;min-height:0}
+/* big usage meter */
+#usage{--a:var(--r-db)}.ul{flex:1;min-height:0;display:flex;flex-direction:column;gap:.1rem}
+.ur{flex:1;min-height:0;display:grid;grid-template-columns:7.9rem minmax(0,1fr);grid-template-rows:1fr 1fr;grid-template-areas:"h a" "h b";column-gap:.4rem;align-items:center;overflow:hidden;padding:.05rem .35rem;border-radius:.2rem;background:var(--cell);border:1px solid #1a2535;border-left:3px solid var(--steel)}
+.ur.hi{border-left-color:var(--amber)}.ur.cx{border-left-color:var(--cr)}
+.ur .uh{grid-area:h;display:flex;flex-direction:column;justify-content:center;gap:.05rem;min-width:0}
+.ur .un{font:700 .8rem/1.1 var(--fd);letter-spacing:.05em;color:var(--tmax);white-space:nowrap}.ur .ua{font:.7rem/1.15 var(--fs);color:var(--ts);white-space:nowrap}.ur .snp{letter-spacing:0}
+.ur .uw{display:grid;grid-template-columns:1.7rem minmax(1rem,1fr) 2.2rem auto;align-items:center;column-gap:.25rem;min-width:0;white-space:nowrap}.ur .uh+.uw{grid-area:a}.ur .uh+.uw+.uw{grid-area:b}
+.ur .ul2{font:700 .7rem/1.1 var(--fm);letter-spacing:.04em;color:var(--silver2)}
+.ur .bar{height:.6rem}.ur .up{text-align:right;font:700 .8rem/1.1 var(--fm);color:var(--tmax)}
+.ur .rs{font:.7rem/1.15 var(--fs);color:var(--ts)}
+.ur .uw.na{grid-template-columns:auto minmax(0,1fr)}.ur .nr{font:.7rem/1.15 var(--fs);color:var(--tm);font-style:italic;overflow:hidden}
+.ur .uw.ct2{display:block;line-height:1.05;white-space:nowrap;overflow:hidden}.ur .uw.ct2{font:700 .7rem/1.1 var(--fm);color:var(--silver2)}.ur .cnt{font:700 .8rem/1.1 var(--fm);color:var(--tmax)}.ur .uw.ct2 .rs{overflow:hidden}
+.tnote{flex:none;font:.7rem/1.3 var(--fs);color:var(--ts);padding:.1rem .15rem 0}
+.tnote b{color:var(--silver)}
+/* not-connected block + list columns */
+.ncb{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.25rem;text-align:center;border:1px dashed #2b394d;border-radius:.25rem;padding:.4rem;background:repeating-linear-gradient(-45deg,rgb(197 205 216 / .028) 0 .3rem,transparent .3rem .6rem)}
+.ncb b{font:700 .8rem var(--fm);letter-spacing:.08em;color:var(--silver)}.ncb span{font:.72rem/1.3 var(--fs);color:var(--ts);max-width:100%}.ncb i{width:1.1rem;height:1.1rem;border:2px dashed var(--steel);border-radius:50%}
+.cols{flex:none;display:grid;grid-template-columns:3.4rem minmax(0,1fr) auto;gap:.4rem;height:1.05rem;white-space:nowrap;align-items:center;padding:0 .3rem;font:700 .7rem var(--fm);letter-spacing:.08em;color:var(--silver2);border-bottom:1px solid #243246}
+.cols.f{grid-template-columns:minmax(0,1fr) auto}.cols .ct{color:var(--ice)}.cols>span{min-width:0;overflow:hidden}
+.rows{flex:1;min-height:0;display:flex;flex-direction:column;gap:.15rem;overflow-x:hidden;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#2b394d transparent}
+.rw{flex:none;display:grid;grid-template-columns:3.4rem minmax(0,1fr);gap:.4rem;align-items:center;padding:.1rem .3rem;border-radius:.2rem;background:var(--cell);border:1px solid #1a2535;border-left:2px solid rgb(var(--a));min-width:0}
+.rw .ow{font:700 .7rem var(--fm);color:var(--ice);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rw .tt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--tp)}
+.rw.fl{grid-template-columns:minmax(0,1fr) auto;border-left-color:var(--cr)}.rw.fl .rs{grid-column:1/-1;font:.7rem/1.2 var(--fm);color:var(--ts);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lnk{font:700 .7rem var(--fm);color:var(--ice);border:1px solid rgb(var(--r-ice) / .45);border-radius:2px;padding:0 .3rem;white-space:nowrap}
+.lnk.nc{color:var(--ts);border:1px dashed #4a586b}
+#tasks{--a:var(--r-silver)}#flags{--a:var(--r-cr)}
+/* portal doors */
+.pcol{display:grid;grid-template-rows:1fr 1fr;gap:.3rem;min-height:0;min-width:0}
+.portal{position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:.2rem;min-height:0;min-width:0;overflow:hidden;padding:.3rem .5rem .35rem;border-radius:.3rem;border:1px solid rgb(var(--r-db) / .4);border-bottom:2px solid rgb(var(--r-db));cursor:pointer;
+ background:radial-gradient(120% 160% at 0% 0%,rgb(var(--r-db) / .26),transparent 58%),radial-gradient(80% 120% at 100% 100%,rgb(var(--r-silver) / .08),transparent 60%),linear-gradient(180deg,#0f1722,#080d15);box-shadow:inset 0 1px 0 rgb(255 255 255 / .07),0 0 0 1px rgb(0 0 0 / .55),0 .25rem 1.2rem rgb(var(--r-db) / .14);transition:box-shadow .15s,filter .15s}
+.portal:hover,.portal:focus-visible{filter:brightness(1.12);box-shadow:inset 0 1px 0 rgb(255 255 255 / .08),0 0 0 1px rgb(0 0 0 / .55),0 .25rem 1.4rem rgb(var(--r-db) / .32)}
+.phd{display:flex;align-items:center;gap:.4rem;min-width:0}.phd svg{width:1.15rem;height:1.15rem;flex:none;color:rgb(var(--r-ice))}
+.phd b{font:700 .8rem/1.1 var(--fd);letter-spacing:.09em;color:var(--tmax);white-space:nowrap}.phd .go{margin-left:auto;font:700 .9rem var(--fm);color:var(--ice);white-space:nowrap}
+.pkv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.2rem}
+.pkv span{display:flex;flex-direction:column;padding:.08rem .25rem;border-radius:.2rem;background:var(--cell);border:1px solid #1a2535;min-width:0}
+.pkv i{font:normal .7rem/1.15 var(--fm);color:var(--tm);white-space:nowrap}.pkv b{font:700 .85rem/1.15 var(--fm);color:var(--tmax);white-space:nowrap}
+.chain{display:flex;align-items:center;gap:.2rem;font:700 .7rem/1.15 var(--fm);color:var(--silver2);white-space:nowrap;min-width:0}.chain s{text-decoration:none;color:var(--steel)}.chain span{border:1px dashed #3a4a60;border-radius:2px;padding:0 .2rem}
+.pn{font:.7rem/1.2 var(--fs);color:var(--ts);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* ---------- talk dock ---------- */
+.dock{display:grid;grid-template-columns:auto auto minmax(0,1fr) auto auto;gap:.5rem;align-items:center;padding:0 .5rem;border-radius:.3rem;border:1px solid #1a2535;border-top:1px solid rgb(var(--r-db) / .5);background:linear-gradient(180deg,#0b121c,#060a11);box-shadow:inset 0 1px 0 rgb(197 205 216 / .05),0 -.1rem 1rem rgb(var(--r-db) / .1);min-width:0}
+.dock.hasret{grid-template-columns:auto auto auto minmax(0,1fr) auto auto}.btn.nc{color:var(--ts);border-style:dashed;cursor:default}.btn.bk{min-height:calc(var(--ct) - .25rem)}
+.tkl{display:flex;align-items:center;gap:.4rem;font:700 .8rem var(--fd);letter-spacing:.1em;color:var(--tmax);white-space:nowrap;min-height:var(--ct);padding-right:.2rem}
+.ctx{font:.7rem/1.1 var(--fm);color:var(--ts);white-space:nowrap;padding:.1rem .4rem;border:1px solid #243246;border-radius:2px;background:var(--cell)}.ctx b{color:var(--ice);font-weight:700}
+.fin{height:2.5rem;min-width:0;width:100%;padding:0 .6rem;border-radius:.25rem;background:#03070d;border:1px solid #2b394d;color:var(--tp);font:.8rem var(--fm);box-shadow:inset 0 .1rem .4rem rgb(0 0 0 / .6)}
+.fin::placeholder{color:var(--tm)}.fin:focus{outline:none;border-color:rgb(var(--r-db));box-shadow:inset 0 .1rem .4rem rgb(0 0 0 / .6),0 0 .7rem rgb(var(--r-db) / .4)}
+.dock .btn,.cin .btn{min-height:2.5rem;min-width:4.6rem}
+.tst{font:600 .7rem/1.1 var(--fm);white-space:nowrap}
+#toast{pointer-events:none;position:fixed;left:50%;top:3.5rem;transform:translateX(-50%);z-index:300;max-width:46rem;padding:.4rem .8rem;border-radius:.3rem;font:.8rem/1.3 var(--fm);color:var(--tp);background:#0a1018;border:1px dashed #6a788c;box-shadow:0 .5rem 1.6rem rgb(0 0 0 / .7)}
+#toast b{color:var(--ice)}
+/* ---------- member view / portal views ---------- */
+.vh{display:flex;align-items:center;gap:.4rem;min-width:0}
+.vh .tbs{display:flex;gap:.3rem;min-width:0}.vh .tbs .btn{gap:.4rem;padding:0 .6rem}
+.vh .tbs .lamp{width:.62rem;height:.62rem}
+.vh .vt{display:flex;flex-direction:column;justify-content:center;min-width:0;padding:0 .4rem}
+.vh .vt b{font:700 1rem/1.15 var(--fd);letter-spacing:.1em;color:var(--tmax);white-space:nowrap}.vh .vt span{font:.7rem/1.2 var(--fm);color:var(--ts);white-space:nowrap}
+.vh .sp{flex:1}
+#v-member{grid-template-rows:var(--ct) minmax(0,1fr) 5.4rem}
+.mvb{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.3rem;min-height:0}
+.mvf{display:grid;grid-template-columns:1fr 1.5fr 1.5fr;gap:.3rem;min-height:0}
+.vs{display:flex;align-items:center;gap:.5rem;padding:0 .6rem;height:var(--ct);border-radius:.3rem;border:1px solid #17222f;background:var(--cell);min-width:0;flex:1;overflow:hidden}
+.vs .lamp{width:1rem;height:1rem}.vs b{font:700 .85rem var(--fd);letter-spacing:.09em;color:var(--tmax);white-space:nowrap}
+#mv-stn .bd{gap:.25rem}.stn{flex:1;min-height:0;display:flex;align-items:center;gap:.6rem}.stn .lamp{width:1.5rem;height:1.5rem}.stn div{display:flex;flex-direction:column;min-width:0}.stn b{font:700 .9rem var(--fd);letter-spacing:.09em;color:var(--tmax)}.stn span{font:.72rem/1.25 var(--fs);color:var(--ts)}
+
+.msgs{gap:.3rem;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#2b394d transparent}
+.msg{display:flex;flex-direction:column;gap:.05rem;padding:.2rem .4rem;border-radius:.2rem;background:var(--cell);border:1px solid #1a2535;flex:none}.msg .mh2{font:700 .7rem var(--fm);color:var(--ice)}.msg .mh2 i{font-style:normal;color:var(--tm);font-weight:400;margin-left:.4rem}.msg .mb{color:var(--tp);overflow-wrap:anywhere}
+.cin{flex:none;display:flex;align-items:center;gap:.4rem;padding:.3rem .45rem;border-top:1px solid #1a2535;background:#070c14}
+.cst{font:600 .7rem/1.1 var(--fm);color:var(--ts);white-space:nowrap}
+.codep{overflow:auto;scrollbar-width:thin;scrollbar-color:#2b394d transparent;font:.75rem/1.45 var(--fm);background:#050a11;padding:.3rem .5rem;gap:0}
+.codep .cl{display:flex;gap:.6rem;white-space:pre}.codep .cl i{font-style:normal;color:#3c4a5e;flex:none;width:2rem;text-align:right;user-select:none}.codep .cl span{color:var(--tp)}
+.codeh{flex:none;display:flex;justify-content:space-between;gap:.5rem;padding:.2rem .5rem;font:.7rem/1.2 var(--fm);color:var(--ts);background:#08101a;border-bottom:1px solid #1a2535}
+.kvs{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:space-between;gap:.15rem}
+.kv{flex:1;display:grid;grid-template-columns:4.6rem minmax(0,1fr);align-items:center;gap:.4rem;min-width:0;padding:0 .35rem;border-radius:.2rem;background:var(--cell);border:1px solid #1a2535}.kv .k{font:.7rem/1.15 var(--fm);color:var(--tm);white-space:nowrap}.kv .v{font:700 .72rem/1.2 var(--fs);color:var(--tmax);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kv .v.n{font-weight:400;color:var(--ts)}
+/* portals */
+#v-eng,#v-media{grid-template-rows:var(--ct) minmax(0,1fr)}
+.pvb{display:grid;grid-template-columns:13.2rem minmax(0,1fr) 14.2rem;gap:.3rem;min-height:0}
+.lcol{display:flex;flex-direction:column;gap:.3rem;min-height:0;min-width:0}
+#eng-list,#media-list{flex:1;min-height:0}
+.spine{position:relative;flex:1;min-height:0;display:flex;flex-direction:column;gap:.15rem;padding:.3rem .4rem .3rem .45rem}
+.spine::before{content:'';position:absolute;left:1.08rem;top:.9rem;bottom:.9rem;width:2px;background:linear-gradient(180deg,rgb(var(--r-db) / .7),rgb(var(--r-silver) / .35));box-shadow:0 0 .5rem rgb(var(--r-db) / .4)}
+.sp1{position:relative;flex:1;min-height:0;display:flex;align-items:center;gap:.5rem;padding:0 .3rem 0 0}
+.sp1 .nd{position:relative;z-index:1;width:1.25rem;height:1.25rem;flex:none;display:grid;place-items:center;font:700 .7rem var(--fm);color:var(--tmax);border-radius:.25rem;background:#0a1626;border:1px solid rgb(var(--r-db) / .7);box-shadow:0 0 .5rem rgb(var(--r-db) / .35)}
+.sp1 .sn{flex:1;min-width:0;padding:.12rem .35rem;border-radius:.2rem;border:1px dashed #2b394d;background:var(--cell);font:.7rem/1.2 var(--fm);color:var(--tm);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp1 .sn.set{border-style:solid;color:var(--tp)}
+.wscr{--a:var(--r-db)}
+.chain2{flex:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.25rem;padding:.25rem .45rem;border-bottom:1px solid #1a2535;background:#08101a}
+.cn{position:relative;display:flex;flex-direction:column;padding:.1rem .45rem .1rem .35rem;border-radius:.2rem;background:var(--cell);border:1px solid #1a2535;border-left:2px solid var(--steel);min-width:0}
+.cn b{font:700 .72rem/1.2 var(--fd);letter-spacing:.07em;color:var(--tp);white-space:nowrap}.cn span{font:.7rem/1.2 var(--fm);color:var(--tm);white-space:nowrap}
+.cn::after{content:'▸';position:absolute;right:-.42rem;top:50%;transform:translateY(-50%);color:var(--steel);z-index:2;font:700 .8rem var(--fm)}.cn:last-child::after{display:none}
+.stage{position:relative;flex:1;min-height:0;min-width:0;background:radial-gradient(ellipse at 50% 55%,#0a1626,#03070d 75%);overflow:hidden}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab;touch-action:none}.stage canvas:active{cursor:grabbing}
+.ovl{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:.25rem;text-align:center;pointer-events:none;padding:.5rem .9rem;border-radius:.3rem;background:rgb(3 7 13 / .72);border:1px dashed #3a4a60}
+.ovl b{font:700 .85rem var(--fm);letter-spacing:.1em;color:var(--silver)}.ovl span{font:.72rem/1.3 var(--fs);color:var(--ts)}
+.hud{flex:none;display:flex;justify-content:space-between;gap:.6rem;padding:.2rem .5rem;font:.7rem/1.2 var(--fm);color:var(--ts);border-top:1px solid #1a2535;background:#08101a;white-space:nowrap}.hud b{color:var(--ice)}
+.stage.med{display:flex;flex-direction:column;gap:.3rem;padding:.4rem;background:radial-gradient(ellipse at 50% 40%,#0a1626,#03070d 75%)}
+.mon{position:relative;flex:1;min-height:0;border:1px solid #243246;border-radius:.2rem;background:repeating-linear-gradient(-45deg,#07101a 0 .4rem,#09131f .4rem .8rem);box-shadow:inset 0 0 2rem rgb(0 0 0 / .7);display:grid;place-items:center}
+.mon::before,.mon::after{content:'';position:absolute;inset:.45rem;pointer-events:none;border:1px solid rgb(var(--r-silver) / .13)}.mon::after{inset:1.2rem;border-style:dashed}
+.tl{flex:none;display:flex;flex-direction:column;gap:.15rem}
+.tr1{display:grid;grid-template-columns:4.4rem minmax(0,1fr);gap:.4rem;align-items:center}.tr1 i{font:700 .7rem var(--fm);font-style:normal;color:var(--silver2);letter-spacing:.06em}
+.lane{height:1rem;border-radius:.15rem;border:1px dashed #2b394d;background:repeating-linear-gradient(90deg,transparent 0 3.9rem,rgb(var(--r-silver) / .12) 3.9rem calc(3.9rem + 1px))}
+.ruler{height:.9rem;border-radius:.15rem;background:repeating-linear-gradient(90deg,rgb(var(--r-silver) / .5) 0 1px,transparent 1px .8rem);border-bottom:1px solid #243246;opacity:.7}
+.xport{flex:none;display:flex;align-items:center;gap:.4rem;font:700 .8rem var(--fm);color:var(--tm)}
+.xport .tb{display:inline-grid;place-items:center;width:1.7rem;height:1.5rem;border:1px dashed #3a4a60;border-radius:.2rem;color:var(--tm)}
+.pop{position:absolute;right:0;top:calc(100% + .3rem);z-index:50;width:24rem;padding:.4rem;border-radius:.3rem;border:1px solid rgb(var(--r-db) / .5);background:#08101a;box-shadow:0 .6rem 1.6rem rgb(0 0 0 / .75),0 0 1.2rem rgb(var(--r-db) / .2);display:flex;flex-direction:column;gap:.3rem}
+.pop .ph3{font:700 .72rem var(--fd);letter-spacing:.09em;color:var(--silver)}.pop .pn2{font:.7rem/1.3 var(--fs);color:var(--ts)}
+.pop .ag{display:grid;grid-template-columns:1fr 1fr;gap:.25rem}.pop .ag .lnk{display:flex;justify-content:space-between;gap:.4rem;padding:.2rem .4rem}
+.vh{position:relative}
+/* ---------- stacked fallback (below 1024x600 — the five locked sizes never use it) ---------- */
+@media (prefers-reduced-motion:reduce){.door,.btn,.mbox,.portal{transition:none}.lamp{animation:none!important}.view.in{animation:none}}
+html.stk,html.stk body{height:auto;min-height:100%;overflow-x:hidden;overflow-y:auto}
+html.stk .bridge{height:auto;min-height:100vh;grid-template-rows:auto auto auto}
+html.stk .top{grid-template-columns:1fr}html.stk .chrono{height:3rem}html.stk .doors{grid-template-columns:1fr!important;grid-auto-rows:3rem}
+html.stk .view{display:flex;flex-direction:column}
+html.stk .mrow{display:grid;grid-template-columns:1fr}html.stk.c2 .mrow{grid-template-columns:1fr 1fr}
+html.stk .mbox{min-height:15rem}html.stk .brow{display:flex;flex-direction:column}html.stk .brow>*{min-height:13rem}
+html.stk .stkey{height:auto;min-height:1.5rem;flex-wrap:wrap;padding:.3rem .6rem;gap:.3rem .8rem}
+html.stk .mvb,html.stk .mvf,html.stk .pvb{display:flex;flex-direction:column}html.stk .mvb>*,html.stk .pvb>*{min-height:18rem}
+html.stk .vh{flex-wrap:wrap}html.stk .dock{grid-template-columns:1fr;padding:.3rem .5rem}
+
+/* ---------- home controls (app-wide pattern): northbirch logo + clock both return Home; there is no HOME door ---------- */
+.hlogo{display:flex;align-items:center;justify-content:center;border-radius:.3rem;border:1px solid rgb(var(--r-nbs) / .6);background:linear-gradient(180deg,#0f1a14,#08100c);cursor:pointer;min-width:0}
+.hlogo svg{width:2rem;height:2rem}.hlogo:hover,.chrono:hover{filter:brightness(1.25)}.chrono{cursor:pointer}
+/* ---------- true-code look: black editor ground, green base text, colourful tokens ---------- */
+.pane.pcode,.codep,#mv-code .codeh{background:#000;border-color:#17402a;font-family:var(--fm)}
+.pane.pcode{color:#7ee787}.pane.pcode .gut,.codep .cl i{color:#2f6b45}
+.pane.pcode .ph,.pane.pcode .ph2,.pane.pcode .cd,.pane.pcode .ml{color:#7ee787}.pane.pcode .ph{font-weight:700;letter-spacing:.06em}.pane.pcode .ph2{color:#4fae68}
+.pane.pcode .cur{background:#7ee787;animation:blink 1.1s steps(1) infinite}@keyframes blink{50%{opacity:0}}
+.codep .cl span,.pane.pcode .ml{color:#7ee787}
+.xk{color:#ff7b9c;font-weight:700}.xs{color:#f2cc60}.xn{color:#79c0ff}.xf{color:#d2a8ff}.xt{color:#56d4dd}.xq{color:#ffa657}.xv{color:#7ee787}.xo{color:#ff9bce}.xp{color:#8fbf9f}.xc{color:#5f8f6e;font-style:italic}
+#mv-code .codeh{color:#4fae68}
+@media (prefers-reduced-motion:reduce){.pane.pcode .cur{animation:none}}
+
+/* member-box code rows: each row carries its own line number */
+.pane.pcode .cd{gap:0}.pane.pcode .cn1{display:flex;gap:.4rem;align-items:baseline}.pane.pcode .ln{flex:none;width:1.1rem;text-align:right;font-style:normal;color:#2f6b45;user-select:none}
+.ukb{flex:none;display:flex;align-items:center;gap:.4rem;min-width:0;overflow:hidden;white-space:nowrap;font:.7rem/1.2 var(--fs);color:var(--ts)}.ukb span{min-width:0;overflow:hidden}
+.ukb .pill{letter-spacing:0;padding:.06rem .25rem}
+.pane .ml,.pane .ukb,.pane .cn1{flex:none}
+</style></head><body>
+<div class="bridge" id="bridge">
+ <header class="top"><a class="hlogo" id="hm-logo" aria-label="Northbirch — return to Home" title="Home"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="1.5" y="1.5" width="29" height="29" rx="5" fill="#1E4D2B" stroke="#6C8574"/><path d="M13 27V12M19 27V8" stroke="#e8f1ea" stroke-width="3" stroke-linecap="round"/><path d="M13 15l-4-3M13 21l4-2M19 12l4-3M19 19l-3-2M19 23l4-1" stroke="#a9efc3" stroke-width="1.6" stroke-linecap="round"/><path d="M13 19v.01M19 15v.01" stroke="#1E4D2B" stroke-width="2" stroke-linecap="round"/></svg></a><a class="chrono" id="hm-clock" aria-label="Clock — return to Home" title="Home"><b id="ck" class="num">--:--:--</b><span><i id="dt">---</i><i id="ut">---</i></span></a><nav class="doors" id="doors" aria-label="Sections"></nav></header>
+ <main class="deck" id="deck">
+  <section class="view" id="v-home" aria-label="Command Deck — primary screen">
+   <div class="stkey" id="stkey"></div>
+   <div class="mrow" id="mrow"></div>
+   <div class="brow">
+    <section class="card" id="usage"><div class="hdw"></div><div class="bd" id="usage-bd"></div></section>
+    <section class="card" id="tasks"><div class="hdw"></div><div class="bd" id="tasks-bd"></div></section>
+    <section class="card" id="flags"><div class="hdw"></div><div class="bd" id="flags-bd"></div></section>
+    <div class="pcol" id="pcol"></div>
+   </div>
+  </section>
+  <section class="view" id="v-member" hidden aria-label="Member — full chat room and code box"></section>
+  <section class="view" id="v-eng" hidden aria-label="Engineering portal"></section>
+  <section class="view" id="v-media" hidden aria-label="Media portal"></section>
+ </main>
+ <footer class="dock" id="dock" aria-label="Talk to Oakley">
+  <span id="tk-retw" style="display:contents"></span>
+  <button class="tkl" id="tk-open" data-a="m:oakley" aria-label="Open the Oakley chat room"><i class="lamp s-nc" id="tk-lamp"></i>TALK TO OAKLEY</button>
+  <span class="ctx" id="tk-ctx">CONTEXT <b>COMMAND DECK</b></span>
+  <form id="tk-form" style="display:contents" autocomplete="off"><input class="fin" id="tk-in" type="text" maxlength="500" placeholder="Ask Oakley…   ( press / to jump here )" aria-label="Talk to Oakley"><button class="btn" type="submit">SEND ▸</button></form>
+  <span class="tst" id="tk-st"></span>
+ </footer>
+</div>
+<div id="toast" role="status" aria-live="polite" hidden></div>
+<script>
+'use strict';
+/* ============================ DECK CONFIG — fill at integration ============================
+   NEVER put credentials/keys/certs in this file. Anything secret lives behind a hub endpoint.
+   Every address below is EMPTY on purpose: an empty address renders an honest NOT CONNECTED state — nothing in this file is a made-up task, flag, message, count or status.
+   PROPOSED feed shapes (hub to confirm — they are used only when an address is set):
+     stations  {asOf,source,stations:[{id,state,note}]}        id = claude|chatgpt|perplexity|gemini|oakley · state = WORKING|IDLE|PARKED|FLAGGED|NEEDS GRANT
+     tasks     {asOf,source,tasks:[{id,title,owner,due}]}       the team's open task list
+     flags     {asOf,source,flags:[{id,project,raisedBy,reason,app}]}   open flags raised by any lane or the checker, one-line reason
+     chat:<room>  {asOf,source,messages:[{who,at,text}]}        room = claude|chatgpt|perplexity|gemini|oakley|eng|media
+     code:<id> {asOf,source,title,file,lines:[text]}            the member's current work / build pane
+     eng       {asOf,source,projects:[{id,name,app,state}],chain:{freecad,blender,preview}}
+     mvid | mpic | mads  {asOf,source,items:[{id,name,app,note}]}   Media portal: videos · pictures · advertising projects
+     hubfeed   the SAME team feed Home reads {asOf,lanes:[{name,state,ms,pct,resetAt}]} — when live it replaces the usage snapshot
+     talk[room]  POST {to,text,ctx} → any 2xx = accepted
+   project.app = an id from CFG.apps (a link/reference to the Workbench company app the project belongs to — never a copy).
+   ------------------------------------------------------------------------------------------- */
+const MEMBERS=[{id:'claude',n:'CLAUDE',nm:'Claude'},{id:'chatgpt',n:'CHATGPT',nm:'ChatGPT'},{id:'perplexity',n:'PERPLEXITY',nm:'Perplexity'},{id:'gemini',n:'GEMINI',nm:'Gemini'},{id:'oakley',n:'OAKLEY',nm:'Oakley',hub:true}];
+const ROOMS=MEMBERS.map(m=>m.id).concat(['eng','media']);
+const CFG={
+  doors:{home:'./home-wall-v4.3.8.html',day:'',wb:''},   // Home = the current (closed) Home wall file; Daybook / Workbench are not built yet → honest NOT CONNECTED until their addresses land
+  feeds:{},
+  talk:{claude:'',chatgpt:'',perplexity:'',gemini:'',oakley:'',eng:'',media:''},
+  /* project spine: six folder slots per portal. The names were not in the rulings — an empty slot reads "name not set". */
+  spine:{eng:['','','','','',''],media:['','','','','','']},
+  /* Workbench company apps a Deck project can link back to. Names only for now — addresses land at integration (empty = NOT CONNECTED). */
+  apps:[{id:'blueprint',n:'BluePrint',url:''},{id:'northbirch',n:'Northbirch app',url:''},{id:'kul',n:'KÜL',url:''},{id:'lionsgate',n:'Lions Gate',url:''},{id:'brandmyaqua',n:'Brand My Aqua',url:''},{id:'cms',n:'CMS',url:''},{id:'purenzyme',n:'purEnzyme',url:''},{id:'structureiq',n:'StructureIQ',url:''},{id:'8twelve',n:'8Twelve',url:''},{id:'atralend',n:'Atra Lend',url:''}],
+  /* TEAM USAGE — the SAME honest SNAPSHOT record Home carries (transcribed from Grant's own usage screens on 2026-11-05); the hub team feed (feeds.hubfeed) overrides it when connected. */
+  team:{asOf:'2026-11-05',members:[
+    /* s = short window (5h / current), w = weekly. null = NOT RECORDED in the Nov 5 snapshot (never filled in). */
+    {n:'CLAUDE',nm:'Claude',pri:'w',s:null,w:{pct:0,rl:'Thu 11:00',resetAt:'2026-11-12T11:00'},src:'Settings → Usage',as:'11-05 11:03'},
+    {n:'CHATGPT',nm:'ChatGPT',pri:'s',s:{k:'5H',pct:82,rl:'~19:40',resetAt:'2026-11-05T19:40'},w:{pct:13,rl:'Wed 16:56',resetAt:'2026-11-11T16:56'},src:'Settings → Usage (agentic)',as:'11-05 15:54'},
+    {n:'PERPLEXITY',nm:'Perplexity',pri:'',s:null,w:null,cnt:'400',cntl:'PRO left',lab:'400 PRO · 50 RESEARCH · 50 LABS left',src:'rate-limit feed (no cap published)',as:'11-05 11:48'},
+    {n:'GEMINI',nm:'Gemini',pri:'w',s:{k:'NOW',pct:0,rl:'',resetAt:null},w:{pct:25,rl:'Fri 11:45',resetAt:'2026-11-06T11:45'},src:'Settings → Usage limits',as:'11-05 11:50'},
+    {n:'OAKLEY',nm:'Oakley',pri:'w',s:null,w:{pct:59,rl:'Sat 09:03',resetAt:'2026-11-08T09:03'},src:'Muse subscription status',as:'11-05 11:50'}]}
+};
+(function(){const F=(every,stale)=>({url:'',every,stale});
+  CFG.feeds.hubfeed=F(15000,60000);CFG.feeds.stations=F(15000,120000);CFG.feeds.tasks=F(30000,300000);CFG.feeds.flags=F(30000,300000);
+  CFG.feeds.eng=F(30000,300000);CFG.feeds.mvid=F(30000,300000);CFG.feeds.mpic=F(30000,300000);CFG.feeds.mads=F(30000,300000);
+  ROOMS.forEach(r=>CFG.feeds['chat:'+r]=F(10000,60000));MEMBERS.forEach(m=>CFG.feeds['code:'+m.id]=F(10000,60000))})();
+
+/* station lamp vocabulary (ruled): one of these five, or NOT CONNECTED when no station feed exists */
+const LAMPS={'WORKING':{c:'s-working',d:'on an active job'},'IDLE':{c:'s-idle',d:'clocked in, no active job'},'PARKED':{c:'s-parked',d:'clocked out or stood down'},'FLAGGED':{c:'s-flagged',d:'blocked, or a checker flag is open on it'},'NEEDS GRANT':{c:'s-grant',d:'waiting on Grant'}};
+const COLLS={videos:{k:'mvid',n:'VIDEOS'},pictures:{k:'mpic',n:'PICTURES'},ads:{k:'mads',n:'ADVERTISING PROJECTS'}};
+const CHAIN=[['eng','ENGINEERING'],['freecad','FREECAD'],['blender','BLENDER'],['preview','3D PREVIEW']];
+
+/* ---------- helpers ---------- */
+const $=(s,r)=>(r||document).querySelector(s),$$=(s,r)=>[...(r||document).querySelectorAll(s)];
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad=n=>String(n).padStart(2,'0'),hm=t=>{const d=new Date(t);return pad(d.getHours())+':'+pad(d.getMinutes())};
+const setH=(e,h)=>{if(e&&e._h!==h){e._h=h;e.innerHTML=h}};
+const okUrl=u=>typeof u==='string'&&/^(https?:\/\/|\/|#|\.\/)/.test(u.trim());
+const clip=(s,n)=>String(s==null?'':s).slice(0,n);
+const hdr=(t,pill,tall)=>'<div class="hd'+(tall?' tall':'')+'"><span class="ttl"><i class="led"></i><span>'+t+'</span></span><span class="hr">'+(pill||'')+'</span></div>';
+const bdg=s=>'<span'+(s[2]?' title="'+esc(s[2])+'"':'')+' class="pill '+({live:'p-live',stale:'p-warn',err:'p-crit',pend:'p-off',ice:'p-ice'}[s[1]]||'p-off')+'">'+esc(s[0])+'</span>';
+const NC='<span class="nc">○</span> ';
+const unkTxt=f=>'Shown as UNKNOWN, not live: '+(f.why==='NO SOURCE'?'the feed names no source':'its timestamp is missing or invalid, so its age is unknown')+'. It currently lists nothing.';
+const ncb=(msg,t)=>'<div class="ncb"><i></i><b>'+(t||'NOT CONNECTED')+'</b><span>'+msg+'</span></div>';
+
+/* ---------- feeds: empty address = NOT CONNECTED; fetched = LIVE / STALE by its own asOf; failed = OFFLINE ---------- */
+const D={};
+function fs(key){const f=CFG.feeds[key];if(!f||!okUrl(f.url))return{s:'NC'};const d=D[key];if(!d)return{s:'WAIT'};if(!d.ok)return{s:'OFFLINE'};if(d.bad)return{s:'UNKNOWN',why:d.bad,src:fsrc(key)};return{s:Date.now()-d.at>f.stale?'STALE':'LIVE',at:d.at,src:fsrc(key)}}
+async function pull(key){const f=CFG.feeds[key];if(!f||!okUrl(f.url))return;
+  try{const c=new AbortController(),t=setTimeout(()=>c.abort(),8000);const r=await fetch(f.url,{cache:'no-store',signal:c.signal});clearTimeout(t);
+    if(!r.ok)throw new Error('HTTP '+r.status);const j=await r.json();const at=j&&typeof j.asOf==='string'&&j.asOf.trim()?Date.parse(j.asOf):NaN;
+    /* NO DROPPED FEEDS, NO BLANK SPOTS: a feed with no usable asOf, or no source, is SHOWN under an UNKNOWN badge. It is never stamped with a time we made up (at stays 0), so it can never compute as fresh or LIVE. */
+    const badT=!isFinite(at)||at>Date.now()+3e5,badS=key!=='hubfeed'&&!(j&&typeof j.source==='string'&&j.source.trim());
+    D[key]={ok:true,j,at:badT?0:at,bad:badT?'NO TIMESTAMP':badS?'NO SOURCE':''}}
+  catch(e){D[key]={ok:false,err:String(e&&e.message||e),at:Date.now()}}
+  paint()}
+const arr=(k,p)=>{const d=D[k];return d&&d.ok&&d.j&&Array.isArray(d.j[p])?d.j[p].slice(0,60):[]};
+const fsrc=k=>{const d=D[k];return d&&d.ok&&d.j&&typeof d.j.source==='string'?clip(d.j.source,60):''};
+
+/* ---------- doors (same row, order and labels as Home; Home first; this surface lit) ---------- */
+const DOORS=[
+  {k:'deck',n:'COMMAND DECK',cur:true},
+  {k:'day',n:'DAYBOOK',ln:'',url:()=>CFG.doors.day},
+  {k:'wb',n:'WORKBENCH',ln:'',url:()=>CFG.doors.wb}
+  /* THE LOOKOUT is deliberately NOT a door: Amendment A1 / Grant's ruling — its only way in is the grown yellow Home boxes. To add a row door later: {k:'lk',n:'THE LOOKOUT',url:()=>CFG.doors.lk}. */
+];
+const ctxUrl=(u,x)=>{if(!okUrl(u))return null;u=u.trim();const p=new URLSearchParams(Object.assign({from:'deck'},x||{}));return u+(u.indexOf('?')<0?'?':'&')+p.toString()};
+function doorHTML(d){const id='d-'+d.k,u=d.cur?null:ctxUrl(d.url&&d.url());
+  const body='<span class="in"><span class="nm">'+d.n+'</span><span class="ln">'+(d.cur?'you are here':u?d.ln:NC+'not connected')+'</span></span><span class="go">'+(d.cur?'●':'▸')+'</span>';
+  if(d.cur)return '<button id="'+id+'" class="door on" data-a="go:deck" aria-current="page" aria-label="Command Deck — this surface; returns to its primary screen">'+body+'</button>';
+  return u?'<a id="'+id+'" class="door" href="'+esc(u)+'" aria-label="'+d.n+'">'+body+'</a>':'<button id="'+id+'" class="door" data-a="door:'+d.k+'" aria-label="'+d.n+' — not connected">'+body+'</button>'}
+function rHome(){const u=ctxUrl(CFG.doors.home);['hm-logo','hm-clock'].forEach(id=>{const e=$('#'+id);if(!e)return;if(u){e.setAttribute('href',u);e.removeAttribute('data-a')}else{e.removeAttribute('href');e.setAttribute('data-a','homenc:1');e.setAttribute('role','button');e.setAttribute('tabindex','0')}})}
+function rDoors(){rHome();const el=$('#doors');el.style.gridTemplateColumns='repeat('+DOORS.length+',minmax(0,1fr))';setH(el,DOORS.map(doorHTML).join(''))}
+
+/* ---------- team usage rows (same logic as Home's teamRows: snapshot unless the hub feed is live) ---------- */
+const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const asShort=ts=>{const d=new Date(ts);return d.toDateString()===new Date().toDateString()?'as '+hm(ts):pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+hm(ts)};
+const rsShort=ts=>{const d=new Date(ts),dt=ts-Date.now();return '⟲ '+(dt>0&&dt<864e5?hm(ts):DOW[d.getDay()]+' '+hm(ts))};
+const clsOf=p=>p==null?'':p>=80?'cx':p>=60?'hi':'';
+function winOf(w,asTs){if(!w)return null;const ra=w.resetAt?Date.parse(w.resetAt):null;return Object.assign({},w,{passed:!!(ra&&ra<Date.now()),rsT:ra?rsShort(ra).replace('⟲ ',''):(w.rl||'no reset'),cls:clsOf(w.pct)})}
+function teamRows(){const f=fs('hubfeed'),o=D.hubfeed&&D.hubfeed.j,live=(f.s==='LIVE'||f.s==='UNKNOWN')&&o&&Array.isArray(o.lanes),unk=f.s==='UNKNOWN';
+  return CFG.team.members.map(m=>{let r=Object.assign({},m,{snap:true,asTs:Date.parse(CFG.team.asOf.slice(0,4)+'-'+m.as.replace(' ','T'))}),s=m.s,w=m.w;
+    if(live){const l=o.lanes.find(z=>String(z&&z.name||'').toUpperCase().indexOf(m.n)===0);
+      if(l){const ra=l.resetAt?Date.parse(l.resetAt):null,at=D.hubfeed.at,x={pct:l.pct!=null?+l.pct:null,rl:ra?DOW[new Date(ra).getDay()]+' '+hm(ra):'',resetAt:l.resetAt||null};
+        /* the hub feed carries ONE window per lane: it fills the member's primary window, the other is not in the feed */
+        s=m.pri==='s'?Object.assign({k:'5H'},x):null;w=m.pri==='w'||!m.pri?x:null;
+        r=Object.assign(r,{snap:false,unk,src:'hub team feed',as:unk?'age unknown':hm(at),asTs:unk?NaN:at,lab:clip(l.state,20)})}}
+    r.sw=winOf(s),r.ww=winOf(w);const mx=Math.max(r.sw&&r.sw.pct!=null?r.sw.pct:-1,r.ww&&r.ww.pct!=null?r.ww.pct:-1);
+    return Object.assign(r,{asD:isFinite(r.asTs)?asShort(r.asTs):(r.unk?'age unknown':r.as),cls:mx<0?'':clsOf(mx),mx})})}
+const ageDays=()=>Math.max(0,Math.floor((Date.now()-Date.parse(CFG.team.asOf+'T00:00'))/864e5));
+
+/* ---------- station lamps ---------- */
+function lampOf(m){const f=fs('stations'),r=arr('stations','stations').find(s=>s&&String(s.id||'').toLowerCase()===m.id),st=r?String(r.state||'').toUpperCase():'';
+  if(f.s==='NC'||!r||!LAMPS[st])return{cls:'s-nc',word:f.s==='NC'?'NOT CONNECTED':f.s==='OFFLINE'?'FEED OFFLINE':f.s==='WAIT'?'WAITING':r?'UNKNOWN STATE':'NO STATION DATA',key:'NC',note:'',def:'',f};
+  const stl=f.s==='STALE',unk=f.s==='UNKNOWN';return{cls:LAMPS[st].c+(stl||unk?' stl':''),word:st+(stl?' · STALE':''),key:st,note:clip(r.note,200),def:LAMPS[st].d,f}}
+const lampCounts=()=>{const c={WORKING:0,IDLE:0,PARKED:0,FLAGGED:0,'NEEDS GRANT':0,NC:0};MEMBERS.forEach(m=>{c[lampOf(m).key]++});return c};
+function rStations(){const c=lampCounts(),it=(k,cls,w)=>'<span class="ki" title="'+esc(w+(LAMPS[w]?' — '+LAMPS[w].d:''))+'"><i class="lamp '+cls+'"></i><b>'+c[k]+'</b>'+w+'</span>';
+  const on=FEEDKEYS.filter(k=>{const s=fs(k).s;return s==='LIVE'||s==='STALE'||s==='UNKNOWN'}).length;
+  setH($('#stkey'),'<span class="lab">STATION LAMPS</span>'+it('WORKING','s-working','WORKING')+it('IDLE','s-idle','IDLE')+it('PARKED','s-parked','PARKED')+it('FLAGGED','s-flagged','FLAGGED')+it('NEEDS GRANT','s-grant','NEEDS GRANT')+it('NC','s-nc','NOT CONNECTED')+'<span class="sp"></span><span class="ki" title="Feeds with an address that are currently answering">FEEDS <b>'+on+'/'+FEEDKEYS.length+'</b></span>')}
+
+/* UNKNOWN feeds: the full 'UNKNOWN · <why>' badge sits as a strip at the top of the panel (headers are too narrow for it), content stays visible below */
+const ukHTML=f=>'<div class="ukb">'+bdg(['UNKNOWN · '+f.why,'err',ptt(f)])+'</div>';
+const STRIPS=[['#mv-codep',()=>codeF(V.member)],['#tasks-bd',()=>fs('tasks')],['#flags-bd',()=>fs('flags')],['#mv-tasks .bd',()=>fs('tasks')],['#mv-flags .bd',()=>fs('flags')],['#eng-list .bd',()=>fs('eng')],['#media-list .bd',()=>fs((COLLS[V.coll]||COLLS.videos).k)],['#mv-stn .bd',()=>lampOf(MEMBERS.find(x=>x.id===V.member)||MEMBERS[0]).f],['#eng-chat .bd',()=>fs('chat:eng')],['#media-chat .bd',()=>fs('chat:media')],['#mv-msgs',()=>fs('chat:'+V.member)]];
+function placeStrips(){STRIPS.forEach(([sel,get])=>{const e=$(sel);if(!e)return;const f=get(),has=e.firstElementChild&&e.firstElementChild.classList.contains('ukb');
+  if(f.s==='UNKNOWN'){const h=ukHTML(f);if(has){if(e.firstElementChild._h!==h){e.firstElementChild.outerHTML=h;e.firstElementChild._h=h}}else{e.insertAdjacentHTML('afterbegin',h);e.firstElementChild._h=h}}
+  else if(has)e.firstElementChild.remove()})}
+/* ---------- member boxes ---------- */
+const chatF=id=>fs('chat:'+id),codeF=id=>fs('code:'+id);
+const ptt=f=>f.s==='UNKNOWN'?'Shown, not live: '+(f.why==='NO SOURCE'?'the feed names no source':'its asOf is missing or invalid, so its age is unknown')+'. It is never badged fresh or LIVE.':f.src?'source: '+f.src+' · as of '+hm(f.at):'as of '+hm(f.at);
+const pillFor=f=>f.s==='NC'?bdg(['NOT CONNECTED','pend']):f.s==='LIVE'?bdg(['LIVE','live',ptt(f)]):f.s==='STALE'?bdg(['STALE '+hm(f.at),'stale',ptt(f)]):f.s==='UNKNOWN'?'':f.s==='OFFLINE'?bdg(['OFFLINE','err']):bdg(['WAITING','pend']);
+const pillS=f=>f.s==='NC'?'':f.s==='LIVE'?bdg(['LIVE','live',ptt(f)]):f.s==='STALE'?bdg(['STALE','stale',ptt(f)]):f.s==='UNKNOWN'?'':f.s==='OFFLINE'?bdg(['OFFLINE','err']):bdg(['WAITING','pend']);
+const cnote=(f,n,w)=>f.s==='NC'?'':'<span class="ct">'+(f.s==='LIVE'||f.s==='STALE'||f.s==='UNKNOWN'?n+' '+w+(f.s==='STALE'?' · '+hm(f.at):''):'')+'</span>';
+/* ---------- true-code look: a small generic syntax highlighter (display only; the text is exactly what the feed sent) ---------- */
+const KW=new Set('const let var function return if else for while do switch case break continue new class extends import export from default async await try catch finally throw typeof instanceof in of def elif lambda pass raise with as yield self this None True False null true false undefined void static public private protected int string bool float double struct enum interface type fn pub use mod impl match mut package func go defer chan select begin end then fi done echo'.split(' '));
+function hl(line){const s=String(line);let o='',i=0;const n=s.length,w=(c,t)=>{o+='<span class="'+c+'">'+esc(t)+'</span>'};
+  while(i<n){const c=s[i],r=s.slice(i);let m;
+    if((m=/^(\/\/.*|#.*|--\s.*)/.exec(r))&&!(c==='#'&&/^#[0-9a-fA-F]{3,8}\b/.test(r))){w('xc',m[0]);i+=m[0].length}
+    else if((m=/^\/\*.*?(\*\/|$)/.exec(r))){w('xc',m[0]);i+=m[0].length}
+    else if((m=/^("(?:[^"\\]|\\.)*"?|'(?:[^'\\]|\\.)*'?|`(?:[^`\\]|\\.)*`?)/.exec(r))){w('xs',m[0]);i+=m[0].length}
+    else if((m=/^(0x[0-9a-fA-F]+|\d+(?:\.\d+)?)\b/.exec(r))){w('xn',m[0]);i+=m[0].length}
+    else if((m=/^[A-Za-z_$][\w$]*/.exec(r))){const id=m[0],nx=s[i+id.length];
+      w(KW.has(id)?'xk':nx==='('?'xf':/^[A-Z][A-Z0-9_]+$/.test(id)?'xq':/^[A-Z]/.test(id)?'xt':'xv',id);i+=id.length}
+    else if((m=/^[{}()\[\];,.:]+/.exec(r))){w('xp',m[0]);i+=m[0].length}
+    else if((m=/^[=+\-*\/%<>!&|?^~]+/.exec(r))){w('xo',m[0]);i+=m[0].length}
+    else{o+=esc(c);i++}}
+  return o}
+const msgs=id=>arr('chat:'+id,'messages');
+const codeJ=id=>{const d=D['code:'+id];return d&&d.ok&&d.j?d.j:null};
+const laneName=id=>id==='oakley'?'GRANT ↔ OAKLEY':'OAKLEY ↔ '+(MEMBERS.find(m=>m.id===id)||{n:id.toUpperCase()}).n;
+function chatOv(id){const f=chatF(id);if(f.s==='NC')return '<span class="ph">'+laneName(id)+'</span><span class="ph2">no lane feed set</span>';
+  const l=msgs(id).slice(-6);if(!l.length)return (f.s==='UNKNOWN'?ukHTML(f):'')+'<span class="ph">'+laneName(id)+'</span><span class="ph2">'+(f.s==='UNKNOWN'?'age unknown · feed lists nothing':f.s==='OFFLINE'?'feed not answering':f.s==='WAIT'?'waiting for the feed':'no messages in the feed')+'</span>';
+  return (f.s==='UNKNOWN'?ukHTML(f):'')+l.map(x=>'<div class="ml"><b>'+esc(clip(x.who,14))+'</b>'+esc(clip(x.text,160))+'</div>').join('')}
+function codeOv(id){const f=codeF(id),j=codeJ(id),R=(n,h,c)=>'<div class="ml cn1'+(c?' '+c:'')+'"><i class="ln">'+n+'</i>'+h+'</div>';
+  /* every row carries its own line number: header row = 1, code rows follow; the empty state numbers its two rows the same way */
+  if(f.s==='NC'||!j)return '<div class="cd">'+(f.s==='UNKNOWN'?ukHTML(f):'')+R(1,'<span class="ph">WORK PANE</span>')+R(2,'<span class="ph2"><i class="cur"></i>'+(f.s==='NC'?'no work-pane feed set':f.s==='UNKNOWN'?'age unknown · feed lists nothing':f.s==='OFFLINE'?'feed not answering':'waiting for the feed')+'</span>')+'</div>';
+  const ls=(Array.isArray(j.lines)?j.lines:[]).slice(0,6).map((x,k)=>R(k+2,hl(clip(x,120)))).join('');
+  return '<div class="cd">'+(f.s==='UNKNOWN'?ukHTML(f):'')+R(1,'<span class="ph">'+esc(clip(j.title||j.file||'current work',60))+'</span>')+ls+'</div>'}
+function boxHTML(m){const L=lampOf(m);
+  return '<article class="card mbox" tabindex="0" role="button" data-a="m:'+m.id+'" aria-label="Open '+esc(m.nm)+' — full chat room and code box. Station '+esc(L.word)+'">'
+   +'<div class="hd mh"><span class="mt1"><i class="lamp '+L.cls+'"></i><span class="mnm">'+m.n+(m.hub?'<em>HUB</em>':'')+'</span></span><span class="mt2"><span class="stw">'+esc(L.word)+'</span><span class="opn">OPEN ▸</span></span></div>'
+   +'<div class="bd"><div class="sec"><span>'+(chatF(m.id).s==='UNKNOWN'?'LANE':'HUB LANE')+'</span>'+pillFor(chatF(m.id))+'</div><div class="pane pchat">'+chatOv(m.id)+'</div>'
+   +'<div class="sec"><span>CODE</span>'+pillFor(codeF(m.id))+'</div><div class="pane pcode">'+codeOv(m.id)+'</div></div></article>'}
+function rMembers(){setH($('#mrow'),MEMBERS.map(m=>boxHTML(m)).join(''))}
+
+/* ---------- big usage meter / team information ---------- */
+function uw(w,lb,r){if(!w)return '<div class="uw na"><span class="ul2">'+lb+'</span><span class="nr">not recorded</span></div>';
+  const p=w.pct,bar='<span class="bar '+w.cls+(r.snap||r.unk?'':' lv')+'"><i style="width:'+Math.min(100,p==null?0:p)+'%"></i><u style="left:25%"></u><u style="left:50%"></u><u style="left:75%"></u></span>';
+  return '<div class="uw"><span class="ul2">'+esc(w.k||lb)+'</span>'+bar+'<b class="up">'+(p==null?'—':p+'%')+'</b><span class="rs">'+(w.resetAt||w.rl?esc(w.rsT)+(w.passed?' <b class="am">PASSED</b>':''):'no reset')+'</span></div>'}
+function ur(r){const asl=r.unk?'<span class="snp">UNKNOWN AGE</span>':'<span class="'+(r.snap?'snp':'snp lv')+'">'+(r.snap?'SNAPSHOT':'LIVE')+'</span> '+esc(r.asD);
+  const tip=esc(r.nm+' · source: '+r.src+' · as of '+r.as+(r.unk?' (feed shown, age unknown — not live)':r.snap?' (snapshot — never live)':' (live)')+(r.lab?' · '+r.lab:'')+' · short window '+(r.sw?(r.sw.pct==null?'—':r.sw.pct+'%')+(r.sw.passed?' (reset passed — re-capture)':''):'not recorded')+' · weekly '+(r.ww?(r.ww.pct==null?'—':r.ww.pct+'%')+(r.ww.passed?' (reset passed — re-capture)':''):'not recorded'));
+  if(!r.sw&&!r.ww&&r.cnt)return '<div class="ur" title="'+tip+'"><div class="uh"><span class="un">'+esc(r.n)+'</span><span class="ua">'+asl+'</span></div><div class="uw ct2"><b class="cnt">'+esc(r.cnt)+'</b> '+esc(r.cntl||'')+'</div><div class="uw na"><span class="ul2">DAY·WK</span><span class="nr">not recorded · no cap</span></div></div>';
+  return '<div class="ur '+r.cls+'" title="'+tip+'"><div class="uh"><span class="un">'+esc(r.n)+'</span><span class="ua">'+asl+'</span></div>'+uw(r.sw,'DAY',r)+uw(r.ww,'WK',r)+'</div>'}
+function rUsage(){const rows=teamRows(),snap=rows.some(r=>r.snap),d=ageDays();
+  setH($('#usage .hdw'),hdr('TEAM USAGE',rows.some(r=>r.unk)?bdg(['UNKNOWN · '+fs('hubfeed').why,'err',ptt(fs('hubfeed'))]):snap?'<span class="pill p-warn" title="Copied from each service’s own usage screen on '+esc(CFG.team.asOf)+' — never shown as live. PASSED = the reset has gone by, so the number needs re-capturing.">SNAPSHOT'+(d>0?' · '+d+(d===1?' DAY':' DAYS')+' OLD':'')+'</span>':bdg(['LIVE','live'])));
+  setH($('#usage-bd'),'<div class="ul">'+rows.map(ur).join('')+'</div>')}
+
+/* ---------- open tasks / flagged projects ---------- */
+function rTasks(){const f=fs('tasks'),l=arr('tasks','tasks');
+  setH($('#tasks .hdw'),hdr('OPEN TASKS',pillS(f)));
+  setH($('#tasks-bd'),'<div class="cols"><span>OWNER</span><span>TASK</span>'+cnote(f,l.length,'OPEN')+'</div>'+(l.length?'<div class="rows">'+l.map(t=>'<div class="rw"><span class="ow">'+esc(clip(t.owner,12).toUpperCase())+'</span><span class="tt" title="'+esc(clip(t.title,200))+'">'+esc(clip(t.title,120))+'</span></div>').join('')+'</div>':f.s==='NC'?ncb('No task feed is set. The team’s open tasks show here once the hub feed is connected.'):f.s==='OFFLINE'?ncb('The task feed is not answering.','OFFLINE'):f.s==='UNKNOWN'?ncb(unkTxt(f),'UNKNOWN · '+f.why):f.s==='WAIT'?ncb('Waiting for the task feed.','WAITING'):ncb('The feed reports no open tasks.','NONE OPEN')))}
+const appOf=id=>CFG.apps.find(a=>a.id===id);
+function appLink(id,x){const a=appOf(id);if(!a)return '';const u=ctxUrl(a.url,x);return u?'<a class="lnk" href="'+esc(u)+'" title="Opens the '+esc(a.n)+' app — it offers the way back">↗ '+esc(a.n)+'</a>':'<span class="lnk nc" title="'+esc(a.n)+' — address not supplied yet">↗ '+esc(a.n)+' · NC</span>'}
+function flagRow(x){return '<div class="rw fl"><span class="tt" title="'+esc(clip(x.project,120))+'">'+esc(clip(x.project,80))+'</span><span class="ow">'+esc(clip(x.raisedBy,14).toUpperCase())+'</span><span class="rs" title="'+esc(clip(x.reason,300))+'">'+esc(clip(x.reason,160))+'</span></div>'}
+function rFlags(){const f=fs('flags'),l=arr('flags','flags');
+  setH($('#flags .hdw'),hdr('FLAGGED PROJECTS',pillS(f)));
+  setH($('#flags-bd'),'<div class="cols f"><span>PROJECT · REASON</span><span>'+(f.s==='NC'?'RAISED BY':cnote(f,l.length,'OPEN').replace('class="ct"','class="ct"'))+'</span></div>'+(l.length?'<div class="rows">'+l.map(flagRow).join('')+'</div>':f.s==='NC'?ncb('No flag feed is set. Projects carrying an open flag — raised by any lane or the checker — show here with a one-line reason once the hub feed is connected.'):f.s==='OFFLINE'?ncb('The flag feed is not answering.','OFFLINE'):f.s==='UNKNOWN'?ncb(unkTxt(f),'UNKNOWN · '+f.why):f.s==='WAIT'?ncb('Waiting for the flag feed.','WAITING'):ncb('The feed reports no open flags.','NONE OPEN')))}
+
+/* ---------- portal doors (summary data on the primary screen) ---------- */
+const ICON={eng:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 3.5 7.2v9.6l8.5 4.7 8.5-4.7V7.2zM3.5 7.2 12 12l8.5-4.8M12 12v9.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',media:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 9.2v5.6l4.8-2.8z" fill="currentColor"/></svg>'};
+const cnt=k=>{const f=fs(k);return f.s==='LIVE'||f.s==='STALE'||f.s==='UNKNOWN'?String(k==='eng'?arr('eng','projects').length:arr(k,'items').length):'—'};
+function chainState(id){if(id==='eng')return null;const d=D.eng,c=d&&d.ok&&d.j&&d.j.chain;return c&&c[id]?clip(c[id],14):null}
+function rPortals(){const fe=fs('eng');
+  const chain=['ENG','FREECAD','BLENDER','3D'].map(x=>'<span>'+x+'</span>').join('<s>▸</s>');
+  setH($('#pcol'),'<div class="portal" id="p-eng" tabindex="0" role="button" data-a="portal:eng" aria-label="Enter the Engineering portal — a whole area"><div class="phd">'+ICON.eng+'<b>ENGINEERING PORTAL</b><span class="go">▸</span></div>'
+   +'<div class="pkv"><span><i>PROJECTS</i><b>'+cnt('eng')+'</b></span><span><i>FOLDERS</i><b>'+CFG.spine.eng.length+'</b></span><span><i>APPS</i><b>'+CFG.apps.length+'</b></span></div>'
+   +'<div class="chain">'+chain+'</div><div class="pn">'+(fe.s==='NC'?NC+'not connected':'projects '+esc(fe.s.toLowerCase()))+'</div></div>'
+   +'<div class="portal" id="p-media" tabindex="0" role="button" data-a="portal:media" aria-label="Enter the Media portal — a whole area"><div class="phd">'+ICON.media+'<b>MEDIA PORTAL</b><span class="go">▸</span></div>'
+   +'<div class="pkv"><span><i>VIDEOS</i><b>'+cnt('mvid')+'</b></span><span><i>PICTURES</i><b>'+cnt('mpic')+'</b></span><span><i>AD PROJ.</i><b>'+cnt('mads')+'</b></span></div>'
+   +'<div class="pn">'+(['mvid','mpic','mads'].every(k=>fs(k).s==='NC')?NC+'not connected':'videos · pictures · ad projects')+'</div></div>')}
+
+/* ---------- view shells ---------- */
+const spineCard=p=>'<section class="card" id="'+p+'-spine" style="flex:none;height:12.2rem"><div class="hdw"></div><div class="spine"></div></section>';
+const chatCard=(room,ttl)=>'<section class="card" id="'+room+'-chat"><div class="hdw"></div><div class="bd msgs" id="'+room+'-msgs"></div><form class="cin" data-room="'+room+'" autocomplete="off"><input class="fin" type="text" maxlength="500" placeholder="Message…" aria-label="'+ttl+'"><button class="btn" type="submit">SEND ▸</button></form><div class="cin" style="border-top:0;padding-top:0;min-height:1.3rem"><span class="cst" id="'+room+'-cst"></span></div></section>';
+function buildShells(){
+  $('#v-member').innerHTML='<div class="vh"><button class="btn bk" data-a="back:" aria-label="Back to the Command Deck primary screen">◂ COMMAND DECK</button><div class="tbs" id="mtabs"></div><div class="vs" id="mv-st"></div></div>'
+   +'<div class="mvb"><section class="card" id="mv-chat"><div class="hdw"></div><div class="bd msgs" id="mv-msgs"></div><form class="cin" data-room="" id="mv-form" autocomplete="off"><input class="fin" type="text" maxlength="500" placeholder="Message…" aria-label="Message this lane"><button class="btn" type="submit">SEND ▸</button></form><div class="cin" style="border-top:0;padding-top:0;min-height:1.3rem"><span class="cst" id="mv-cst"></span></div></section>'
+   +'<section class="card" id="mv-code"><div class="hdw"></div><div class="codeh" id="mv-codeh"></div><div class="bd codep" id="mv-codep"></div></section></div>'
+   +'<div class="mvf"><section class="card" id="mv-stn"><div class="hdw"></div><div class="bd"></div></section><section class="card" id="mv-tasks"><div class="hdw"></div><div class="bd"></div></section><section class="card" id="mv-flags"><div class="hdw"></div><div class="bd"></div></section></div>';
+  const vh=(p,t,sub)=>'<div class="vh"><button class="btn bk" data-a="back:" aria-label="Back to the Command Deck primary screen">◂ COMMAND DECK</button><div class="vt"><b>'+t+'</b><span>'+sub+'</span></div><span class="sp"></span><button class="btn" data-a="apps:'+p+'" id="apps-btn-'+p+'" aria-expanded="false" aria-label="Workbench company apps this portal\'s projects can link back to">↗ WORKBENCH APPS ▾</button><div class="pop" id="pop-'+p+'" hidden></div></div>';
+  $('#v-eng').innerHTML=vh('eng','ENGINEERING PORTAL','whole area · CAD working screen · team chat · folder spine · projects')
+   +'<div class="pvb"><div class="lcol">'+spineCard('eng')+'<section class="card" id="eng-list"><div class="hdw"></div><div class="bd"></div></section></div>'
+   +'<section class="card wscr" id="eng-scr"><div class="hdw"></div><div class="chain2" id="chain2"></div><div class="stage" id="stage"><canvas id="cad" aria-label="Interactive CAD working screen — drag to orbit, shift-drag to pan, wheel to zoom"></canvas><div class="ovl"><b>NO MODEL LOADED</b><span>The viewport works — orbit, pan, zoom — but no geometry feed is connected, so no model is shown.</span></div></div><div class="hud"><span id="cad-hud"></span><span>DRAG orbit · SHIFT+DRAG pan · WHEEL zoom</span></div></section>'
+   +chatCard('eng','Team chat — Engineering')+'</div>';
+  $('#v-media').innerHTML=vh('media','MEDIA PORTAL','whole area · editing screen · team chat · folder spine · videos · pictures · ad projects')
+   +'<div class="pvb"><div class="lcol">'+spineCard('media')+'<section class="card" id="media-list"><div class="hdw"></div><div class="bd"></div></section></div>'
+   +'<section class="card wscr" id="media-scr"><div class="hdw"></div><div class="stage med"><div class="mon"><div class="ovl"><b>NO ITEM LOADED</b><span id="med-note">No media feed is connected.</span></div></div>'
+   +'<div class="xport"><span class="tb">⏮</span><span class="tb">▶</span><span class="tb">⏭</span><span>00:00:00:00</span><span class="pill p-off">EDITING NOT CONNECTED</span></div>'
+   +'<div class="tl"><div class="tr1"><i></i><div class="ruler"></div></div><div class="tr1"><i>VIDEO</i><div class="lane"></div></div><div class="tr1"><i>PICTURE</i><div class="lane"></div></div><div class="tr1"><i>AD</i><div class="lane"></div></div></div></div></section>'
+   +chatCard('media','Team chat — Media')+'</div>';
+  $('#v-home').dataset.ready='1'}
+
+/* ---------- member view (a box opened big, in place) ---------- */
+function msgHTML(x){return '<div class="msg"><div class="mh2">'+esc(clip(x.who,20))+(x.at?'<i>'+esc(clip(x.at,24))+'</i>':'')+'</div><div class="mb">'+esc(clip(x.text,1200))+'</div></div>'}
+function rChat(card,room,title,sub,narrow){const f=fs('chat:'+room),l=msgs(room),el=$('#'+card);
+  setH($('.hdw',el),hdr(title,narrow?pillS(f):pillFor(f)));
+  const bd=$('.msgs',el),near=bd.scrollHeight-bd.scrollTop-bd.clientHeight<40;
+  setH(bd,l.length?l.map(msgHTML).join(''):f.s==='NC'?ncb('No conversation feed is set for '+sub+'. Messages show here once the hub feed is connected — none are invented.'):f.s==='OFFLINE'?ncb('The conversation feed is not answering.','OFFLINE'):f.s==='UNKNOWN'?ncb(unkTxt(f),'UNKNOWN · '+f.why):f.s==='WAIT'?ncb('Waiting for the conversation feed.','WAITING'):ncb('The feed has no messages yet.','EMPTY'));
+  if(near)bd.scrollTop=bd.scrollHeight}
+function rMemberView(){const m=MEMBERS.find(x=>x.id===V.member)||MEMBERS[0],L=lampOf(m);
+  setH($('#mtabs'),MEMBERS.map(x=>'<button class="btn" data-a="m:'+x.id+'" aria-pressed="'+(x.id===m.id)+'"><i class="lamp '+lampOf(x).cls+'"></i>'+x.n+'</button>').join(''));
+  setH($('#mv-st'),'<i class="lamp '+L.cls+'"></i><b>'+esc(m.n)+' · STATION · '+esc(L.word)+'</b>');
+  setH($('#mv-stn .hdw'),hdr('STATION LAMP',pillS(L.f)));
+  setH($('#mv-stn .bd'),'<div class="stn"><i class="lamp '+L.cls+'"></i><div><b>'+esc(L.word)+'</b><span>'+esc(L.def?L.def+(L.note?' — '+L.note:''):L.f.s==='NC'?'No station feed is set, so this lamp cannot show a state yet.':'No state for this station in the feed.')+'</span></div></div>');
+  $('#mv-form').dataset.room=m.id;$('#mv-form input').placeholder=m.hub?'Grant → Oakley…':'Grant, in the Oakley ↔ '+m.nm+' lane…';
+  rChat('mv-chat',m.id,'LANE · '+laneName(m.id),m.nm+'’s lane with Oakley');
+  const j=codeJ(m.id),cf=codeF(m.id);
+  setH($('#mv-code .hdw'),hdr('CODE BOX · '+m.n+' CURRENT WORK / BUILD',pillFor(cf)));
+  setH($('#mv-codeh'),j?'<span>'+esc(clip(j.title||'current work',80))+'</span><span>'+esc(clip(j.file||'',80))+'</span>':'<span>WORK PANE</span><span>'+(cf.s==='NC'?'no work-pane feed set':cf.s==='UNKNOWN'?'age unknown · feed lists nothing':cf.s==='OFFLINE'?'feed not answering':'waiting for the feed')+'</span>');
+  const ls=j&&Array.isArray(j.lines)?j.lines.slice(0,400):[];
+  setH($('#mv-codep'),ls.length?ls.map((x,i)=>'<div class="cl"><i>'+(i+1)+'</i><span>'+hl(clip(x,300))+'</span></div>').join(''):ncb('No work-pane feed is set for '+m.nm+'. The member’s current work / build shows here in a code box once the hub feed is connected.',cf.s==='UNKNOWN'?'UNKNOWN · '+cf.why:cf.s==='OFFLINE'?'OFFLINE':'NOT CONNECTED'));
+  const tl=arr('tasks','tasks').filter(t=>String(t.owner||'').toLowerCase()===m.id),tf=fs('tasks');
+  setH($('#mv-tasks .hdw'),hdr('OPEN TASKS',pillS(tf)));
+  setH($('#mv-tasks .bd'),tl.length?'<div class="rows">'+tl.map(t=>'<div class="rw" style="grid-template-columns:minmax(0,1fr)"><span class="tt">'+esc(clip(t.title,120))+'</span></div>').join('')+'</div>':tf.s==='NC'?ncb('No task feed is set.'):tf.s==='OFFLINE'?ncb('The task feed is not answering.','OFFLINE'):tf.s==='UNKNOWN'?ncb(unkTxt(tf),'UNKNOWN · '+tf.why):ncb('No open tasks for '+m.nm+' in the feed.','NONE OPEN'));
+  const fl=arr('flags','flags').filter(x=>String(x.raisedBy||'').toLowerCase()===m.id),ff=fs('flags');
+  setH($('#mv-flags .hdw'),hdr('FLAGS RAISED',pillS(ff)));
+  setH($('#mv-flags .bd'),fl.length?'<div class="rows">'+fl.map(flagRow).join('')+'</div>':ff.s==='NC'?ncb('No flag feed is set.'):ff.s==='OFFLINE'?ncb('The flag feed is not answering.','OFFLINE'):ff.s==='UNKNOWN'?ncb(unkTxt(ff),'UNKNOWN · '+ff.why):ncb('No open flags raised by '+m.nm+'.','NONE OPEN'))}
+
+/* ---------- portals (whole areas) ---------- */
+function rSpine(p){const names=CFG.spine[p],el=$('#'+p+'-spine'),set=names.filter(Boolean).length;
+  setH($('.hdw',el),hdr('FOLDER SPINE',set?bdg([set+'/'+names.length,'ice']):''));
+  setH($('.spine',el),names.map((n,i)=>'<div class="sp1"><i class="nd">'+(i+1)+'</i><span class="sn'+(n?' set':'')+'">'+(n?esc(n):'name not set')+'</span></div>').join(''))}
+function projRows(items,portal){return '<div class="rows">'+items.map(x=>'<div class="rw fl" style="--a:var(--r-db);border-left-color:rgb(var(--r-db))"><span class="tt" title="'+esc(clip(x.name,120))+'">'+esc(clip(x.name,80))+'</span>'+(x.app?appLink(x.app,{portal:portal,project:clip(x.id,40)}):'<span class="lnk nc" title="not linked to a Workbench app">NO APP</span>')+(x.state||x.note?'<span class="rs">'+esc(clip(x.state||x.note,120))+'</span>':'')+'</div>').join('')+'</div>'}
+function rEng(){const f=fs('eng'),l=arr('eng','projects'),dj=D.eng&&D.eng.ok&&D.eng.j;
+  rSpine('eng');
+  setH($('#eng-list .hdw'),hdr('CAD PROJECTS',pillS(f)));
+  setH($('#eng-list .bd'),l.length?'<div class="cols f"><span>PROJECT</span>'+cnote(f,l.length,'LISTED')+'</div>'+projRows(l,'eng'):f.s==='NC'?ncb('No engineering / CAD project feed is set. Each project can link back to the Workbench app it belongs to — a link, never a copy.'):f.s==='OFFLINE'?ncb('The project feed is not answering.','OFFLINE'):f.s==='UNKNOWN'?ncb(unkTxt(f),'UNKNOWN · '+f.why):f.s==='WAIT'?ncb('Waiting for the project feed.','WAITING'):ncb('The feed lists no engineering projects.','NONE'));
+  setH($('#eng-scr .hdw'),'<div class="hd tall"><span class="ttl"><i class="led"></i><span>CAD WORKING SCREEN</span></span><span class="hr"><button class="btn sm" data-a="cad:iso">ISO</button><button class="btn sm" data-a="cad:top">TOP</button><button class="btn sm" data-a="cad:front">FRONT</button><button class="btn sm" data-a="cad:right">RIGHT</button><button class="btn sm" data-a="cad:reset">RESET</button></span></div>');
+  setH($('#chain2'),CHAIN.map((c,i)=>{const st=chainState(c[0]);return '<div class="cn"><b>'+(i+1)+' · '+c[1]+'</b><span>'+(st?esc(st):NC+(c[0]==='eng'?'no model':'not connected'))+'</span></div>'}).join(''));
+  rChat('eng-chat','eng','TEAM CHAT','the Engineering portal',true)}
+function rMedia(){const c=COLLS[V.coll]||COLLS.videos,k=c.k,f=fs(k),l=arr(k,'items');rSpine('media');
+  setH($('#media-list .hdw'),hdr(c.n.replace('ADVERTISING PROJECTS','AD PROJECTS'),pillS(f)));
+  setH($('#media-list .bd'),l.length?'<div class="cols f"><span>ITEM</span>'+cnote(f,l.length,'LISTED')+'</div>'+projRows(l,'media'):f.s==='NC'?ncb('No '+c.n.toLowerCase()+' feed is set. Items can link back to the Workbench app they belong to — a link, never a copy.'):f.s==='OFFLINE'?ncb('The feed is not answering.','OFFLINE'):f.s==='UNKNOWN'?ncb(unkTxt(f),'UNKNOWN · '+f.why):f.s==='WAIT'?ncb('Waiting for the feed.','WAITING'):ncb('The feed lists no '+c.n.toLowerCase()+'.','NONE'));
+  setH($('#media-scr .hdw'),'<div class="hd tall"><span class="ttl"><i class="led"></i><span>WORKING / EDITING SCREEN</span></span><span class="hr">'+Object.keys(COLLS).map(q=>'<button class="btn sm" data-a="coll:'+q+'" aria-pressed="'+(q===V.coll)+'">'+COLLS[q].n+'</button>').join('')+'</span></div>');
+  setH($('#med-note'),'The '+c.n.toLowerCase()+' feed is '+(f.s==='NC'?'not connected':f.s==='UNKNOWN'?'age unknown · feed lists nothing':f.s==='OFFLINE'?'not answering':f.s==='WAIT'?'loading':'connected, but editing is not connected — no item is loaded')+'.');
+  rChat('media-chat','media','TEAM CHAT','the Media portal',true)}
+function rApps(){const el=$('#pop-'+V.view);if(!el)return;setH(el,'<span class="ph3">WORKBENCH COMPANY APPS</span><span class="pn2">A Deck project links back to the app it belongs to — a labelled door with a return door, never a copy. Addresses are not supplied yet.</span><div class="ag">'+CFG.apps.map(a=>appLink(a.id,{portal:V.view==='media'?'media':'eng'})).join('')+'</div>')}
+
+/* ---------- talk (one app-wide control; the main person is OAKLEY) ---------- */
+const CTXN={home:'COMMAND DECK',member:null,eng:'ENGINEERING',media:'MEDIA'};
+const ctxName=()=>V.view==='member'?(MEMBERS.find(m=>m.id===V.member)||MEMBERS[0]).n:CTXN[V.view]||'COMMAND DECK';
+const ctxNow=()=>({surface:'deck',view:V.view,member:V.view==='member'?V.member:undefined,collection:V.view==='media'?V.coll:undefined,at:new Date().toISOString()});
+const flashT={};function flash(id,txt,bad){const e=$('#'+id);if(!e)return;e._h=null;e.textContent=txt;e.style.color=bad?'#f87171':'';clearTimeout(flashT[id]);flashT[id]=setTimeout(()=>{flashT[id]=0;e.textContent='';e.style.color='';e._h=null;paint()},5000)}
+async function sendMsg(room,text,stId){text=String(text||'').trim();if(!text)return false;const u=CFG.talk[room];
+  if(!okUrl(u)){flash(stId,'NOT SENT · talk address not set',true);return false}
+  try{const r=await fetch(u,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({to:room,text,ctx:ctxNow()}),cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);
+    flash(stId,'SENT '+hm(Date.now()));pull('chat:'+room);return true}catch(e){flash(stId,'NOT SENT · endpoint error',true);return false}}
+function rDock(){const L=lampOf(MEMBERS[4]);$('#dock').classList.toggle('hasret',!!RET);setH($('#tk-retw'),RET?retHTML('btn bk'):'');$('#tk-lamp').className='lamp '+L.cls;
+  setH($('#tk-ctx'),'CONTEXT <b>'+esc(ctxName())+'</b>');
+  if(!flashT['tk-st'])setH($('#tk-st'),okUrl(CFG.talk.oakley)?bdg(['READY','live']):bdg(['OAKLEY · NOT CONNECTED','pend']))}
+function rTalkRoomSt(){const nc='talk address not set';
+  [['eng-cst','eng'],['media-cst','media'],['mv-cst',V.member]].forEach(a=>{const e=$('#'+a[0]);if(e&&!flashT[a[0]])setH(e,okUrl(CFG.talk[a[1]])?'':nc)})}
+
+/* ---------- return door (doors carry context; the owner offers the way back) ---------- */
+const QS=new URLSearchParams(location.search);
+const RET=(function(){const f=QS.get('from');if(!f||f.indexOf('app:')!==0)return null;const a=appOf(f.slice(4));return a?{n:a.n,u:()=>a.url}:null})();
+function retHTML(c){if(!RET)return '';const u=okUrl(RET.u())?RET.u().trim():null;return u?'<a class="'+c+'" href="'+esc(u)+'" title="Back to the '+esc(RET.n)+' app you came from">◂ BACK TO '+esc(RET.n.toUpperCase())+'</a>':'<span class="'+c+' nc" title="The return address for the '+esc(RET.n)+' app is not supplied yet">◂ '+esc(RET.n.toUpperCase())+' · NC</span>'}
+
+/* ---------- CAD working screen: an interactive empty viewport (orbit / pan / zoom). It draws no model — none is loaded. ---------- */
+const CAD0={yaw:-38,pitch:26,dist:15,px:0,py:0},CAD=Object.assign({},CAD0);let cadRaf=0;
+function cadProj(x,y,z,w,h){const r=Math.PI/180,cy=Math.cos(CAD.yaw*r),sy=Math.sin(CAD.yaw*r),cp=Math.cos(CAD.pitch*r),sp=Math.sin(CAD.pitch*r);
+  const x1=x*cy-y*sy,y1=x*sy+y*cy,y2=y1*cp-z*sp,z2=y1*sp+z*cp,dep=y2+CAD.dist;if(dep<.4)return null;const f=Math.min(w*.9,h*1.5)*1.05;return[w/2+CAD.px+x1*f/dep,h*.52+CAD.py-z2*f/dep]}
+function cadDraw(){cadRaf=0;const c=$('#cad');if(!c||!c.clientWidth)return;const dpr=window.devicePixelRatio||1,w=c.clientWidth,h=c.clientHeight;
+  if(c.width!==Math.round(w*dpr)||c.height!==Math.round(h*dpr)){c.width=Math.round(w*dpr);c.height=Math.round(h*dpr)}
+  const g=c.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,w,h);const N=8;
+  const line=(a,b,col,lw)=>{const p=cadProj(a[0],a[1],a[2],w,h),q=cadProj(b[0],b[1],b[2],w,h);if(!p||!q)return;g.strokeStyle=col;g.lineWidth=lw;g.beginPath();g.moveTo(p[0],p[1]);g.lineTo(q[0],q[1]);g.stroke()};
+  for(let i=-N;i<=N;i++){const maj=i%4===0;const col=i===0?'rgba(156,216,255,.55)':maj?'rgba(156,216,255,.30)':'rgba(156,216,255,.12)',lw=i===0?1.4:maj?1.1:.8;line([i,-N,0],[i,N,0],col,lw);line([-N,i,0],[N,i,0],col,lw)}
+  line([-N,-N,0],[N,-N,0],'rgba(197,205,216,.5)',1.2);line([N,-N,0],[N,N,0],'rgba(197,205,216,.5)',1.2);line([N,N,0],[-N,N,0],'rgba(197,205,216,.5)',1.2);line([-N,N,0],[-N,-N,0],'rgba(197,205,216,.5)',1.2);
+  [[[4,0,0],'X','#e6ebf2'],[[0,4,0],'Y','#a9efc3'],[[0,0,4],'Z','#34b060']].forEach(a=>{line([0,0,0],a[0],a[2],2.2);const p=cadProj(a[0][0]*1.12,a[0][1]*1.12,a[0][2]*1.12,w,h);if(p){g.fillStyle=a[2];g.font='700 '+Math.max(11,Math.round(w/60))+'px ui-monospace,monospace';g.fillText(a[1],p[0]-4,p[1]+4)}});
+  const hud=$('#cad-hud');if(hud)hud.innerHTML='AZ <b>'+Math.round(CAD.yaw)+'°</b> · EL <b>'+Math.round(CAD.pitch)+'°</b> · ZOOM <b>'+(CAD0.dist/CAD.dist).toFixed(2)+'×</b>'}
+const cadAsk=()=>{if(!cadRaf)cadRaf=requestAnimationFrame(cadDraw)};
+function cadPreset(k){const p={iso:[-38,26],top:[0,89],front:[0,0],right:[90,0]}[k];if(k==='reset')Object.assign(CAD,CAD0);else if(p){CAD.yaw=p[0];CAD.pitch=p[1];CAD.px=0;CAD.py=0}cadAsk()}
+function cadInit(){const c=$('#cad');let m=null;
+  c.addEventListener('pointerdown',e=>{m={x:e.clientX,y:e.clientY,pan:e.shiftKey||e.button===2||e.button===1};c.setPointerCapture(e.pointerId)});
+  c.addEventListener('pointermove',e=>{if(!m)return;const dx=e.clientX-m.x,dy=e.clientY-m.y;m.x=e.clientX;m.y=e.clientY;if(m.pan){CAD.px+=dx;CAD.py+=dy}else{CAD.yaw+=dx*.4;CAD.pitch=Math.max(-10,Math.min(89,CAD.pitch+dy*.3))}cadAsk()});
+  const up=()=>{m=null};c.addEventListener('pointerup',up);c.addEventListener('pointercancel',up);c.addEventListener('contextmenu',e=>e.preventDefault());
+  c.addEventListener('wheel',e=>{e.preventDefault();CAD.dist=Math.max(6,Math.min(40,CAD.dist*(1+e.deltaY*.0012)));cadAsk()},{passive:false});
+  c.addEventListener('dblclick',()=>cadPreset('reset'))}
+
+/* ---------- router / paint ---------- */
+const V={view:'home',member:'claude',coll:'videos'};
+function parseHash(){const p=(location.hash||'').replace(/^#\/?/,'').split('/');
+  if(p[0]==='member'&&MEMBERS.some(m=>m.id===p[1])){V.view='member';V.member=p[1]}
+  else if(p[0]==='eng')V.view='eng';
+  else if(p[0]==='media'){V.view='media';if(COLLS[p[1]])V.coll=p[1]}
+  else V.view='home'}
+const go=h=>{if(location.hash===h)route();else location.hash=h};
+let lastView=null;
+function route(){parseHash();closeApps();$$('.view').forEach(e=>{e.hidden=e.id!=='v-'+V.view});
+  const el=$('#v-'+V.view);if(lastView!==V.view){el.classList.remove('in');void el.offsetWidth;el.classList.add('in')}lastView=V.view;paint();if(V.view==='eng')cadAsk()}
+function paint(){rDoors();rStations();rMembers();rUsage();rTasks();rFlags();rPortals();
+  if(V.view==='member')rMemberView();else if(V.view==='eng')rEng();else if(V.view==='media')rMedia();
+  rDock();rTalkRoomSt();placeStrips()}
+function closeApps(){['eng','media'].forEach(p=>{const e=$('#pop-'+p),b=$('#apps-btn-'+p);if(e&&!e.hidden){e.hidden=true;if(b)b.setAttribute('aria-expanded','false')}})}
+function toggleApps(){const p=$('#pop-'+V.view),b=$('#apps-btn-'+V.view);if(!p||!b)return;const open=p.hidden;closeApps();if(open){rApps();p.hidden=false;b.setAttribute('aria-expanded','true')}}
+let toastT=0;function toast(h){const t=$('#toast');t.innerHTML=h;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{t.hidden=true},5200)}
+
+/* ---------- fit (same scaling system as Home: rem is scaled from a 1024x600 base; below that the page stacks and scrolls) ---------- */
+function fit(){const w=innerWidth,h=innerHeight,stk=w<1024||h<600,R=document.documentElement;R.classList.toggle('stk',stk);R.classList.toggle('c2',stk&&w>=700);
+  const s=stk?1:Math.min(w/1024,h/600);R.style.fontSize=(16*s)+'px';R.style.setProperty('--s',s);cadAsk()}
+let fitT=0;addEventListener('resize',()=>{clearTimeout(fitT);fitT=setTimeout(fit,120)});
+function clock(){const d=new Date();$('#ck').textContent=pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());$('#dt').textContent=d.toLocaleDateString('en-CA',{weekday:'short',day:'2-digit',month:'short'}).toUpperCase().replace(/\./g,'');$('#ut').textContent=pad(d.getUTCHours())+':'+pad(d.getUTCMinutes())+'Z'}
+
+/* ---------- events ---------- */
+document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');
+  if(!e.target.closest('.pop')&&!e.target.closest('[id^=apps-btn]'))closeApps();
+  if(!b)return;const a=b.dataset.a,i=a.indexOf(':'),k=a.slice(0,i),v=a.slice(i+1);
+  if(k==='m')go('#/member/'+v);else if(k==='go'||k==='back')go('#/deck');else if(k==='portal')go('#/'+v);
+  else if(k==='coll'){V.coll=v;go('#/media/'+v)}
+  else if(k==='cad')cadPreset(v);else if(k==='apps')toggleApps();
+  else if(k==='homenc'){toast('<b>HOME</b> · NOT CONNECTED — the Home wall address is not set, so nothing is simulated.')}
+  else if(k==='door'){const d=DOORS.find(x=>x.k===v);toast('<b>'+esc(d?d.n:v)+'</b> · NOT CONNECTED — this surface is not part of this file and its address is not supplied yet, so nothing is simulated. It lands at integration.')}});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){const p=$('#pop-'+V.view);if(p&&!p.hidden){closeApps();return}if(V.view!=='home')go('#/deck')}
+  else if(e.key==='/'&&!/^(INPUT|TEXTAREA)$/.test((document.activeElement||{}).tagName||'')){e.preventDefault();$('#tk-in').focus()}
+  else if((e.key==='Enter'||e.key===' ')&&e.target&&e.target.matches&&e.target.matches('[role=button]')){e.preventDefault();e.target.click()}});
+document.addEventListener('submit',e=>{e.preventDefault();const f=e.target,inp=$('.fin',f);if(f.id==='tk-form'){sendMsg('oakley',inp.value,'tk-st').then(ok=>{if(ok)inp.value=''});return}
+  const room=f.dataset.room;if(!room)return;const st=f.id==='mv-form'?'mv-cst':room+'-cst';sendMsg(room,inp.value,st).then(ok=>{if(ok)inp.value=''})});
+
+/* ---------- boot ---------- */
+const FEEDKEYS=Object.keys(CFG.feeds);
+function boot(){buildShells();cadInit();fit();clock();setInterval(clock,1000);addEventListener('hashchange',route);
+  FEEDKEYS.forEach(k=>{const f=CFG.feeds[k];if(okUrl(f.url)){pull(k);setInterval(()=>pull(k),f.every)}});
+  setInterval(()=>{paint()},30000);                 // re-evaluates STALE / PASSED / age without any fetch
+  const o=QS.get('open');if(!location.hash&&o){if(o.indexOf('member:')===0&&MEMBERS.some(m=>m.id===o.slice(7)))location.hash='#/member/'+o.slice(7);else if(o==='eng'||o==='media')location.hash='#/'+o}
+  route()}
+
+boot();
+</script></body></html>

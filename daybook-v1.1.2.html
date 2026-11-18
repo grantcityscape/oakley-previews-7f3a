@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; connect-src https:">
+<title>Daybook v1.1.2</title>
+<style>
+:root{
+  --void:#050506; --hull:#0b0b0d; --cell:#111114; --well:#18181c;
+  --ink:#f7f5f2; --ink2:#e6e3de; --mut:#aba69f; --line:#2a2a30;
+  --red:#ef4444; --red-dk:#7f1d1d; --gold:#c9a227; --gold2:#facc15;
+  --grn:#1e4d2b; --grn2:#14532d; --cream:#f5efe0; --cream2:#e9dfc8;
+  --blue:rgb(59 130 246); --deck:#6c8574;
+  --carbon: repeating-linear-gradient(45deg,#17110d 0 6px,#1d1510 6px 12px), repeating-linear-gradient(-45deg,#17110d 0 6px,#140f0b 6px 12px);
+}
+*{box-sizing:border-box} html,body{height:100%}
+body{margin:0;background:var(--void);color:var(--ink);font-family:"Chakra Petch","Segoe UI",system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+a{color:inherit}
+/* ---------- header: doors + home controls (app-wide pattern) ---------- */
+header{display:flex;align-items:stretch;gap:.5rem;padding:.45rem .6rem;background:var(--hull);border-bottom:1px solid var(--line)}
+.hctl{display:flex;align-items:center;gap:.5rem;padding:.15rem .4rem}
+#hm-logo{display:flex;align-items:center;gap:.45rem;text-decoration:none}
+.logo-mark{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#2c5a3a,#12291a 70%);border:1px solid var(--deck);display:flex;align-items:center;justify-content:center;font-size:.62rem;color:#d4e8db;letter-spacing:.04em}
+.logo-word{font-weight:700;letter-spacing:.14em;font-size:.8rem;color:var(--ink2)}
+.logo-word small{display:block;font-weight:400;letter-spacing:.08em;font-size:.56rem;color:var(--mut)}
+#hm-clock{text-align:right;text-decoration:none;line-height:1.05}
+#hm-clock .t{font-size:1.02rem;font-weight:700;color:var(--ink)}
+#hm-clock .d{font-size:.6rem;color:var(--mut);letter-spacing:.08em}
+nav#doors{flex:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem}
+.door{display:flex;align-items:center;justify-content:space-between;gap:.5rem;background:var(--cell);border:1px solid var(--line);border-top:3px solid var(--dc,#444);border-radius:.45rem;padding:.42rem .7rem;text-align:left;min-width:0}
+.door .nm{font-weight:700;letter-spacing:.1em;font-size:.82rem;white-space:nowrap}
+.door .ln{font-size:.6rem;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.door.on{background:linear-gradient(160deg,#8c1d28,#571016);border-color:#b03a44;box-shadow:inset 0 2px 10px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.07)}
+.door.on .nm{font-size:.95rem}
+.door.on .ln{color:#f3cdd0}
+.door.on .go{color:#f3cdd0}
+.door .go{color:var(--mut)}
+/* ---------- layout ---------- */
+main{flex:1;min-height:0;display:flex;flex-direction:column;padding:.55rem .6rem;gap:.55rem}
+.view{display:none;flex:1;min-height:0;flex-direction:column;gap:.55rem}
+.view.on{display:flex}
+.card{background:var(--cell);border:1px solid var(--line);border-radius:.55rem;padding:.6rem .75rem;min-width:0}
+.card h3{margin:0 0 .45rem;font-size:.72rem;letter-spacing:.14em;color:var(--ink2);display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.pill{font-size:.56rem;letter-spacing:.1em;padding:.1rem .42rem;border-radius:1rem;border:1px solid var(--gold);color:var(--gold2)}
+.pill.red{border-color:var(--red);color:var(--red)}
+.pill.grn{border-color:#3f7a52;color:#9fd3ae}
+.nc{color:var(--mut);font-size:.78rem}
+.nc b{color:var(--ink2)}
+.ukb{display:block;background:#2a1215;border:1px solid var(--red-dk);color:#f3b4b4;font-size:.62rem;letter-spacing:.1em;padding:.22rem .5rem;border-radius:.35rem;margin-bottom:.45rem}
+/* ---------- day page ---------- */
+#v-day .pagehead{display:flex;align-items:baseline;gap:.8rem;flex-wrap:wrap}
+#v-day .pagehead .dt{font-size:1.28rem;font-weight:700;letter-spacing:.02em}
+#v-day .pagehead .sub{color:var(--mut);font-size:.74rem}
+.carbon{background:var(--carbon);border:1px solid #3a2a18;border-top:3px solid var(--red);border-radius:.55rem;padding:.55rem .75rem}
+.capture{display:flex;gap:.5rem}
+.capture input{flex:1;background:#0d0b09;border:1px solid #3a2a18;border-radius:.4rem;color:var(--ink);padding:.5rem .65rem;font:inherit;font-size:.85rem;min-width:0}
+.capture input::placeholder{color:#8a7a5f}
+.seg{display:flex;gap:.3rem;flex:none}
+.seg button{background:#171310;border:1px solid #3a2a18;color:var(--mut);border-radius:.4rem;padding:.42rem .6rem;font:inherit;font-size:.72rem;cursor:pointer;white-space:nowrap}
+.seg button.on{background:#571016;border-color:#b03a44;color:#f6d9db;font-weight:700}
+.btn{background:var(--red-dk);border:1px solid var(--red);color:#fff;border-radius:.4rem;padding:.45rem .8rem;font-weight:600;letter-spacing:.05em}
+.btn.ghost{background:transparent;border-color:var(--line);color:var(--ink2)}
+.daygrid{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:.55rem}
+.daylower{min-height:0}
+.stream{display:flex;flex-direction:column;gap:.55rem;min-height:0;overflow:hidden}
+.stream .card{flex:1;display:flex;flex-direction:column;min-height:0}
+.entries{overflow:auto;min-height:0;display:flex;flex-direction:column;gap:.3rem;padding-right:.2rem}
+.ent{display:flex;gap:.55rem;align-items:baseline;font-size:.84rem;padding:.34rem .45rem;border-radius:.35rem;background:var(--well)}
+.ent .tag{font-size:.56rem;letter-spacing:.1em;padding:.08rem .4rem;border-radius:1rem;flex:none}
+.ent.rec .tag{border:1px solid #3f7a52;color:#9fd3ae}
+.ent.plan .tag{border:1px solid var(--gold);color:var(--gold2)}
+.ent .tm{color:var(--mut);font-size:.72rem;flex:none;min-width:3.1rem}
+.ent .prov{color:var(--mut);font-size:.68rem;font-style:italic}
+.ent.done{opacity:.55}.ent.done .tx{text-decoration:line-through}
+.secttl{font-size:.62rem;letter-spacing:.14em;color:var(--mut);margin:.15rem 0 -.1rem}
+.rail{display:flex;flex-direction:column;gap:.55rem;min-height:0;overflow:hidden}
+.marg{background:#161310;border:1px dashed #6b5518;border-radius:.5rem;padding:.55rem .7rem;font-size:.8rem}
+.marg h4{margin:0 0 .3rem;font-size:.64rem;letter-spacing:.13em;color:var(--gold2)}
+.marg .x{float:right;color:var(--mut)}
+.carry .ent{background:transparent;border:1px solid var(--line)}
+.wall{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:.5rem}
+.box{display:flex;flex-direction:column;gap:.22rem;background:var(--cell);border:1px solid var(--line);border-top:3px solid var(--pc,var(--red));border-radius:.5rem;padding:.5rem .65rem;text-align:left;min-width:0}
+.box .pn{font-weight:700;letter-spacing:.07em;font-size:.82rem;color:var(--ink)}
+.box .pd{font-size:.7rem;color:var(--mut);line-height:1.35}
+.box .pd b{color:var(--ink2)}
+.box.big{grid-column:span 2;border-top-color:var(--red)}
+.box.fin{background:linear-gradient(160deg,#12291a,#0d1f13);border-color:#274d33}
+.box.fin .pn{color:var(--cream)}
+.secttl{color:#e8a0a0}
+.fin{background:linear-gradient(160deg,#12291a,#0d1f13);border-color:#274d33}
+.fin .pn{color:var(--cream)} .fin .pd{color:var(--cream2)}
+/* ---------- portal views ---------- */
+.backrow{display:flex;align-items:center;gap:.6rem}
+.backrow .bk{color:var(--gold2);font-size:.8rem;letter-spacing:.06em}
+.backrow h2{margin:0;font-size:1.05rem;letter-spacing:.08em}
+.cols{flex:1;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem}
+.cols4{flex:1;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:1fr 1fr;gap:.55rem}
+.cols4 .card{overflow:auto}
+.cols .card{overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+td,th{padding:.32rem .4rem;border-bottom:1px solid var(--line);text-align:left}
+th{font-size:.62rem;letter-spacing:.12em;color:var(--mut)}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.camgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem}
+@media (max-width:700px){ .camgrid{grid-template-columns:1fr 1fr} }
+.cam{background:#000;border:1px solid var(--line);border-radius:.45rem;aspect-ratio:16/8.2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.25rem;color:var(--mut)}
+.cam .cl{font-size:.68rem;letter-spacing:.12em;color:var(--ink2)}
+.cam .cs{font-size:.58rem;letter-spacing:.14em;border:1px solid var(--mut);padding:.06rem .4rem;border-radius:1rem}
+.flip{display:flex;gap:.45rem}
+.flip button{border:1px solid var(--line);border-radius:1rem;padding:.25rem .8rem;font-size:.72rem;letter-spacing:.08em;color:var(--mut)}
+.flip button.on{border-color:var(--red);color:#fff;background:var(--red-dk)}
+.horiz{display:flex;gap:.45rem;margin-bottom:.45rem}
+.horiz button{border:1px solid var(--line);border-radius:1rem;padding:.25rem .8rem;font-size:.72rem;letter-spacing:.08em;color:var(--mut)}
+.horiz button.on{border-color:var(--gold);color:var(--gold2)}
+footer{display:flex;justify-content:space-between;gap:1rem;padding:.32rem .65rem;background:var(--hull);border-top:1px solid var(--line);font-size:.62rem;color:var(--mut);letter-spacing:.05em}
+#talkbar{display:flex;gap:.5rem;align-items:center}
+#talkbar input{flex:1;background:var(--well);border:1px solid var(--line);border-radius:.4rem;color:var(--ink);padding:.42rem .6rem;font:inherit;font-size:.8rem;min-width:0}
+@media (max-width:1100px){ .daygrid{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr)} .logo-word{display:none} }
+/* short screens: the rail re-flows into a bottom band — nothing clips, type never shrinks */
+@media (max-height:700px){
+  .daygrid{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto}
+  .rail{flex-direction:row;align-items:stretch}
+  .rail .marg{flex:1.15}
+  .rail .carry{flex:1.3}
+  .wall{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .box{padding:.38rem .55rem}
+  .box .pd{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+  main{padding:.4rem .5rem;gap:.4rem}
+  .carbon{padding:.4rem .6rem}
+  #v-budget td,#v-budget th{padding:.2rem .4rem}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="hctl">
+    <a id="hm-logo" href="./home-wall-v4.3.8.html" aria-label="Home">
+      <span class="logo-mark">NB</span>
+      <span class="logo-word">NORTHBIRCH<small>DAYBOOK</small></span>
+    </a>
+    <a id="hm-clock" href="./home-wall-v4.3.8.html" aria-label="Home">
+      <span class="t" id="clock-t">--:--</span><br><span class="d" id="clock-d"></span>
+    </a>
+  </div>
+  <nav id="doors" aria-label="Sections"></nav>
+</header>
+<main>
+  <!-- ============ DAY TO DAY (the dated page) ============ -->
+  <section class="view on" id="v-day">
+    <div class="carbon">
+      <div class="pagehead">
+        <span class="dt" id="page-date">Today</span>
+        <span class="sub">Day to Day — the dated page. What happened and what's planned stay in separate ink.</span>
+        <span class="pill">SAMPLE CONTENT</span>
+      </div>
+      <form class="capture" id="capture-f">
+        <input id="capture-i" type="text" placeholder="Capture it now, organise it later — a task, a note, a spend, a plan…" aria-label="Capture an entry">
+        <span class="seg" role="group" aria-label="Did it happen, or is it planned?"><button type="button" id="cap-rec" class="on">It happened</button><button type="button" id="cap-plan">It’s planned</button></span>
+        <button class="btn" type="submit">Add to today</button>
+      </form>
+    </div>
+    <div class="daygrid">
+      <div class="stream">
+        <div class="card">
+          <h3>THE DAY'S STREAM</h3>
+          <div class="secttl">RECORDED — it happened</div>
+          <div class="entries" id="stream-rec"></div>
+          <div class="secttl">PLANNED — it hasn't yet</div>
+          <div class="entries" id="stream-plan"></div>
+        </div>
+      </div>
+      <div class="rail">
+        <div class="marg" id="marg-opt">
+          <button class="x" id="marg-x" aria-label="Dismiss note">✕</button>
+          <h4>MARGIN NOTE — OPTIMIZER · SAMPLE</h4>
+          <div>Winter tire swap is booking up at two local shops. Review this option — flyer checked <span id="marg-date"></span>, prices as listed there. A suggestion, not an instruction.</div>
+        </div>
+        <div class="card carry">
+          <h3>CARRIED FORWARD</h3>
+          <div class="entries" id="carry-list"></div>
+        </div>
+      </div>
+    </div>
+    <div class="wall" id="portal-grid"></div>
+  </section>
+  <!-- ============ BUDGETING ============ -->
+  <section class="view" id="v-budget">
+    <div class="backrow"><button class="bk" data-go="day">◂ DAY TO DAY</button><h2>BUDGETING — THE MONEY BOOK</h2><span class="pill grn">SAMPLE FIGURES ONLY</span><span class="pill">RECORDS ONLY · NO MONEY MOVES</span></div>
+    <div class="horiz" id="fin-tabs"><button data-f="book" class="on">THE MONEY BOOK</button><button data-f="pot">TEAM POT</button></div>
+    <div id="fin-book">
+    <div class="cols4">
+      <div class="card"><h3>PAYDAY &amp; RECURRING</h3>
+        <p class="nc">Payday cycle: <b>day 9 of 14</b> — next payday <b>Friday</b> (every second Friday). <span class="pill">SAMPLE</span></p>
+        <div class="ent plan"><span class="tag">RECURRING</span><span class="tx">Rent — due on payday</span><span class="prov">set up once, repeats</span></div>
+        <div class="ent plan"><span class="tag">RECURRING</span><span class="tx">Savings transfer — payday</span><span class="prov">set up once, repeats</span></div>
+        <div class="ent plan"><span class="tag">RECURRING</span><span class="tx">Mileage claim — submit on payday</span><span class="prov">from Truck → mileage</span></div></div>
+      <div class="card"><h3>ACCOUNTS — WHERE THE MONEY SITS</h3>
+        <div class="ent rec"><span class="tag">ACCOUNT</span><span class="tx">Chequing — the working account</span><span class="prov">sample balance ••••</span></div>
+        <div class="ent rec"><span class="tag">ACCOUNT</span><span class="tx">Savings — the cushion</span><span class="prov">sample balance ••••</span></div>
+        <div class="ent rec"><span class="tag">ACCOUNT</span><span class="tx">Investing fund — the $10K project</span><span class="prov">detail lives in Investments</span></div></div>
+      <div class="card"><h3>BILLS — PAID AND DUE STAY APART</h3><div id="budget-book"></div><p class="nc">Auto-debit clears at the bank; the rest need your action.</p></div>
+      <div class="card"><h3>LOANS &amp; FINANCING</h3>
+        <div class="ent plan"><span class="tag">LOAN</span><span class="tx">Truck financing — bank-known, feed-owned</span><span class="prov">dates yours</span></div>
+        <div class="ent plan"><span class="tag">LOAN</span><span class="tx">Off-bank loan — the bank can't know this one</span><span class="prov">amount + dates yours</span></div>
+        <div class="secttl" style="margin-top:.55rem">INTAKE &amp; DOORS</div>
+        <p class="nc" style="margin:.25rem 0 0">Statements arrive by <b>bank feed · edit here · tell Oakley · the Drive intake folder · email</b>. Six stages: received → pulled → matched → ready → filed → stored. Hand-typed wins; a disagreeing feed is <b>flagged for review</b>, never silently replaced. Real figures: Oakley's entries only, at integration — none here.</p></div>
+    </div>
+    </div>
+    <div id="fin-pot" hidden>
+      <div class="cols">
+        <div class="card"><h3>TEAM POT — CARD LEDGER</h3><div id="pot-list"></div>
+          <form id="pot-f" style="display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.5rem">
+            <input id="pot-item" type="text" placeholder="What was it?" aria-label="Ledger item" style="flex:2;min-width:8rem;background:var(--well);border:1px solid var(--line);border-radius:.4rem;color:var(--ink);padding:.42rem .6rem;font:inherit;font-size:.8rem">
+            <input id="pot-amt" type="number" step="0.01" min="0" placeholder="$" aria-label="Amount" style="width:6rem;background:var(--well);border:1px solid var(--line);border-radius:.4rem;color:var(--ink);padding:.42rem .6rem;font:inherit;font-size:.8rem">
+            <select id="pot-dir" aria-label="In or out" style="background:var(--well);border:1px solid var(--line);border-radius:.4rem;color:var(--ink);padding:.42rem;font:inherit;font-size:.8rem"><option value="out">out</option><option value="in">in</option></select>
+            <label style="font-size:.75rem;color:var(--mut);display:flex;align-items:center;gap:.3rem"><input type="checkbox" id="pot-rcpt"> receipt</label>
+            <button class="btn" type="submit">Add</button>
+          </form></div>
+        <div class="card"><h3>BALANCES — CALCULATED VS CONFIRMED</h3>
+          <p class="nc">The ledger adds itself up: <b id="pot-calc">—</b>. The confirmed balance is what the card itself says, typed in by hand:</p>
+          <p style="display:flex;gap:.5rem;align-items:center"><input id="pot-conf" type="number" step="0.01" placeholder="Confirmed $" aria-label="Confirmed balance" style="width:8rem;background:var(--well);border:1px solid var(--line);border-radius:.4rem;color:var(--ink);padding:.42rem .6rem;font:inherit;font-size:.85rem"><span class="nc">← the card's own number</span></p>
+          <p class="nc" id="pot-warn" style="color:#f0b44c"></p>
+          <p class="nc">The two numbers are kept apart on purpose. When they disagree, the pot reads <b>BALANCE UNVERIFIED</b> until someone finds the difference — it never quietly picks one. Every entry carries its receipt state: ATTACHED or MISSING. Sample entries; the pot holds team money only, never personal accounts.</p></div>
+      </div>
+    </div>
+    </section>
+  <!-- ============ INVESTMENTS ============ -->
+  <section class="view" id="v-invest">
+    <div class="backrow"><button class="bk" data-go="day">◂ DAY TO DAY</button><h2>INVESTMENTS</h2><span class="pill grn">SAMPLE ONLY</span></div>
+    <div class="cols">
+      <div class="card"><h3>REVIEW NOTES — NOT A SCOREBOARD</h3><div id="invest-notes"></div>
+        <p class="nc">Investments live here as review appointments and notes — never as a performance banner.</p></div>
+      <div class="card"><h3>NEXT REVIEW</h3>
+        <p class="nc"><b>Feed:</b> NOT CONNECTED — holdings and prices appear when an account is linked. Nothing on this page is live, and nothing here is advice.</p>
+        <div class="ent plan"><span class="tag">PLANNED</span><span class="tx">Quarterly review — sit down with the statements and the plan</span></div></div>
+    </div>
+  </section>
+  <!-- ============ SECURITY / HOME ============ -->
+  <section class="view" id="v-security">
+    <div class="backrow"><button class="bk" data-go="day">◂ DAY TO DAY</button><h2>SECURITY &amp; HOME</h2><span class="pill red">DAYBOOK OWNS THIS FACE</span></div>
+    <div class="card" style="flex:1;display:flex;flex-direction:column;min-height:0">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap">
+        <h3 style="margin:0">ONE BOX, TWO VIEWS</h3>
+        <div class="flip"><button id="flip-cam" class="on">CAMERAS</button><button id="flip-mon">HOME MONITORING</button></div>
+      </div>
+      <div id="sec-cams" style="margin-top:.55rem">
+        <span class="ukb">UNKNOWN · NO SOURCE — camera feed not linked; frames shown are placeholders, never presented as live</span>
+        <div class="camgrid">
+          <div class="cam"><span class="cl">FRONT</span><span class="cs">SNAPSHOT</span><span class="nc">no frame — feed not connected</span></div>
+          <div class="cam"><span class="cl">GARAGE</span><span class="cs">SNAPSHOT</span><span class="nc">no frame — feed not connected</span></div>
+          <div class="cam"><span class="cl">BACK</span><span class="cs">SNAPSHOT</span><span class="nc">no frame — feed not connected</span></div>
+          <div class="cam"><span class="cl">BASEMENT</span><span class="cs">SNAPSHOT</span><span class="nc">no frame — feed not connected</span></div>
+        </div>
+      </div>
+      <div id="sec-mon" style="margin-top:.55rem;display:none">
+        <p class="nc"><b>Home monitoring:</b> NOT CONNECTED — door, motion and environment sensors report here when the home system is linked. Nothing is inferred in the meantime.</p>
+        <div class="ent rec"><span class="tag">RECORDED</span><span class="tx">Automation placeholder — no devices linked yet</span><span class="pill">SAMPLE</span></div>
+      </div>
+    </div>
+  </section>
+  <!-- ============ CALENDAR ============ -->
+  <section class="view" id="v-calendar">
+    <div class="backrow"><button class="bk" data-go="day">◂ DAY TO DAY</button><h2>CALENDAR</h2><span class="pill red">THE ONLY PLACE THE DAY IS EDITED</span></div>
+    <div class="card" style="flex:1;min-height:0;overflow:auto">
+      <div class="horiz"><button data-h="day" class="on">DAY</button><button data-h="week">WEEK</button><button data-h="month">MONTH</button></div>
+      <div id="cal-body"></div>
+      <p class="nc" style="margin-top:.5rem"><b>Aggregation:</b> this calendar gathers the personal calendar plus every linked Workbench business calendar. <b>Feeds:</b> NOT CONNECTED — events appear when calendars are linked; the sample below is illustrative only.</p>
+    </div>
+  </section>
+  <!-- ============ NOTES & TO-DO ============ -->
+  <section class="view" id="v-notes">
+    <div class="backrow"><button class="bk" data-go="day">◂ DAY TO DAY</button><h2>NOTES &amp; TO-DO</h2><span class="pill">SAMPLE CONTENT</span></div>
+    <div class="cols">
+      <div class="card"><h3>TO-DO — KEPT, MOVED, OR DONE. NEVER PUNISHED.</h3><div id="todo-list"></div></div>
+      <div class="card"><h3>NOTES — COLLECTIONS POINT BACK TO THEIR DAY</h3><div id="note-list"></div></div>
+    </div>
+  </section>
+  <!-- ============ SHOPPING ============ -->
+  <section class="view" id="v-shopping">
+    <div class="backrow"><button class="bk" data-go="day">◂ DAY TO DAY</button><h2>SHOPPING</h2><span class="pill">SAMPLE CONTENT</span></div>
+    <div class="cols">
+      <div class="card"><h3>THE LIST</h3><div id="shop-list"></div></div>
+      <div class="card"><h3>BOUGHT — RECORDED, WITH THE DAY IT HAPPENED</h3><div id="shop-done"></div></div>
+    </div>
+  </section>
+  <!-- ============ HOME AUTOMATION ============ -->
+  <section class="view" id="v-automation">
+    <div class="backrow"><button class="bk" data-go="day">◂ DAY TO DAY</button><h2>HOME AUTOMATION</h2><span class="pill red">ITS OWN BOX — SEPARATE FROM SECURITY</span></div>
+    <div class="cols">
+      <div class="card"><h3>DEVICES</h3>
+        <p class="nc"><b>Feed:</b> NOT CONNECTED — lights, thermostat, locks and plugs report here when the home system is linked.</p>
+        <div class="ent rec"><span class="tag">SAMPLE</span><span class="tx">Living-room lights — off</span><span class="prov">placeholder state</span></div>
+        <div class="ent rec"><span class="tag">SAMPLE</span><span class="tx">Thermostat — holding</span><span class="prov">placeholder state</span></div>
+        <div class="ent rec"><span class="tag">SAMPLE</span><span class="tx">Front door lock — locked</span><span class="prov">placeholder state</span></div></div>
+      <div class="card"><h3>SCENES &amp; ROUTINES</h3>
+        <div class="ent plan"><span class="tag">SCENE</span><span class="tx">Leaving home — lights off, lock checked, cameras armed</span></div>
+        <div class="ent plan"><span class="tag">SCENE</span><span class="tx">Evening — porch on, living room low</span></div>
+        <p class="nc">Scenes are set here; Security next door keeps the watching.</p></div>
+    </div>
+  </section>
+  <!-- ============ COMMUTE ============ -->
+  <section class="view" id="v-commute">
+    <div class="backrow"><button class="bk" data-go="day">◂ DAY TO DAY</button><h2>COMMUTE</h2><span class="pill">SAMPLE CONTENT</span></div>
+    <div class="cols">
+      <div class="card"><h3>TODAY'S GETTING-AROUND</h3>
+        <div id="commute-legs"></div>
+        <p class="nc">Drawn from today's calendar, not typed twice: change the calendar and the commute redraws itself. A work day draws the work run; a plow shift would draw the route instead.</p></div>
+      <div class="card"><h3>ROADS</h3>
+        <p class="nc"><b>Feed:</b> NOT CONNECTED — live traffic and road conditions appear when a roads feed is linked. In snow season this box carries the plow layer.</p></div>
+    </div>
+  </section>
+  <!-- ============ TRUCK ============ -->
+  <section class="view" id="v-truck">
+    <div class="backrow"><button class="bk" data-go="day">◂ DAY TO DAY</button><h2>TRUCK</h2><span class="pill">SAMPLE CONTENT</span></div>
+    <div class="cols">
+      <div class="card"><h3>2026 FORD RANGER — 2.3L ECOBOOST</h3>
+        <div class="ent rec"><span class="tag">RECORD</span><span class="tx">The truck's own page: service, mileage, and its paperwork</span></div>
+        <div class="ent plan"><span class="tag">PLANNED</span><span class="tx">Winter tire swap — booked through the tire shop</span><span class="prov">from today's margin note</span></div>
+        <div class="ent plan"><span class="tag">MILEAGE</span><span class="tx">Work mileage → the payday claim in Budgeting</span><span class="prov">a door, not a copy</span></div></div>
+      <div class="card"><h3>FORDPASS</h3>
+        <p class="nc"><b>Feed:</b> NOT CONNECTED — fuel, odometer and health land here when FordPass is linked in the full shell. Plain limit, stated once: FordPass on the web can't remote-start the truck; that lives in Ford's own app.</p></div>
+    </div>
+  </section>
+  <!-- ============ SOCIAL ============ -->
+  <section class="view" id="v-social">
+    <div class="backrow"><button class="bk" data-go="day">◂ DAY TO DAY</button><h2>SOCIAL — MESSAGES &amp; NOTIFICATIONS</h2><span class="pill">SAMPLE CONTENT</span></div>
+    <div class="cols">
+      <div class="card"><h3>LINKED ACCOUNTS</h3>
+        <div class="ent plan"><span class="tag">LINK</span><span class="tx">Messenger — messages land here</span><span class="prov">not connected in this surface</span></div>
+        <div class="ent plan"><span class="tag">LINK</span><span class="tx">Instagram — messages + notifications</span><span class="prov">not connected in this surface</span></div>
+        <div class="ent plan"><span class="tag">LINK</span><span class="tx">Facebook — notifications</span><span class="prov">not connected in this surface</span></div>
+        <div class="ent plan"><span class="tag">LINK</span><span class="tx">Threads — notifications</span><span class="prov">not connected in this surface</span></div></div>
+      <div class="card"><h3>THE INBOX IDEA</h3>
+        <p class="nc">Link an account and its messages and notifications join the day — read them here, answer from here in the full shell, and let the day page's Social box show what's waiting. Nothing is linked yet, and nothing is inferred in the meantime.</p></div>
+    </div>
+  </section>
+</main>
+<footer>
+  <span id="integ">Archival integrity: entries are kept as written; corrections are new entries, never silent rewrites.</span>
+  <span id="talkbar"><span>TALK TO OAKLEY</span><input id="talk-i" type="text" placeholder="Ask from anywhere — answers cite their source (Daybook · this page)"><button class="btn ghost" id="talk-b">Ask</button></span>
+</footer>
+<script>
+'use strict';
+const $=(s,r)=>(r||document).querySelector(s), $$=(s,r)=>[...(r||document).querySelectorAll(s)];
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const KEY='daybook.entries.v1';
+let store={captures:[]};
+try{const raw=localStorage.getItem(KEY); if(raw){const p=JSON.parse(raw); if(p&&Array.isArray(p.captures)) store=p;}}catch(e){}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(store));}catch(e){}}
+/* ---------- doors (same row, order and labels as Home/Deck; current surface lit; no HOME door) ---------- */
+const DOORS=[
+ {k:'deck',n:'COMMAND DECK',ln:'Team on · meters watched · Deck closed',href:'./command-deck-v1.2.1.html',c:'var(--deck)'},
+ {k:'day',n:'DAYBOOK',ln:'you are here',cur:true,c:'var(--red)'},
+ {k:'wb',n:'WORKBENCH',ln:'BluePrint · Northbirch · apps in build',href:'',c:'var(--blue)'}];
+$('#doors').innerHTML=DOORS.map(d=>{
+  const body='<span><span class="nm">'+d.n+'</span><br><span class="ln">'+d.ln+'</span></span><span class="go">'+(d.cur?'●':'▸')+'</span>';
+  return d.cur?'<button class="door on" style="--dc:'+d.c+'" aria-current="page">'+body+'</button>'
+    : d.href?'<a class="door" style="--dc:'+d.c+';text-decoration:none" href="'+d.href+'">'+body+'</a>'
+    : '<button class="door" style="--dc:'+d.c+'" aria-label="'+d.n+' — opens in the full app">'+body+'</button>'}).join('');
+/* ---------- clock + dated page ---------- */
+const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MON=['January','February','March','April','May','June','July','August','September','October','November','December'];
+function tick(){const n=new Date();
+  $('#clock-t').textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');
+  $('#clock-d').textContent=(DAYS[n.getDay()]+' '+MON[n.getMonth()]+' '+n.getDate()).toUpperCase();
+  $('#page-date').textContent=DAYS[n.getDay()]+', '+MON[n.getMonth()]+' '+n.getDate()+', '+n.getFullYear();
+  $('#marg-date').textContent=MON[n.getMonth()]+' '+n.getDate();}
+tick(); setInterval(tick,20000);
+/* ---------- sample day (internally consistent, clearly labelled) ---------- */
+const REC=[
+ {tm:'07:10',tx:'Coffee on, truck warmed up',tag:'RECORDED'},
+ {tm:'09:25',tx:'Paid — hydro bill, $86.40 (money book → Budgeting)',tag:'RECORDED'},
+ {tm:'12:40',tx:'Note captured: “gate latch at the side door is sticking”',tag:'RECORDED'}];
+const PLAN=[
+ {tm:'15:00',tx:'Call the tire shop about the winter swap',tag:'PLANNED'},
+ {tm:'18:30',tx:'Groceries — the list is in Shopping',tag:'PLANNED'},
+ {tm:'—',tx:'Lottery ticket check — a private record, kept in Notes',tag:'PLANNED'}];
+const CARRY=[
+ {tx:'Measure the basement hatch for the water shut-off',prov:'carried from Saturday — kept, not forgotten'},
+ {tx:'Return the borrowed extension ladder',prov:'carried from last week'}];
+function entHTML(e,cls){return '<div class="ent '+(cls||'')+'"><span class="tag">'+esc(e.tag||'ENTRY')+'</span>'+(e.tm?'<span class="tm">'+esc(e.tm)+'</span>':'')+'<span class="tx">'+esc(e.tx)+'</span>'+(e.prov?'<span class="prov">'+esc(e.prov)+'</span>':'')+'</div>'}
+function renderDay(){
+  $('#stream-rec').innerHTML=REC.map(e=>entHTML(e,'rec')).join('')||'<span class="nc">Nothing recorded yet today.</span>';
+  const rc=store.captures.filter(c=>c.kind==='rec').map(c=>({tm:'✎',tx:c.text,tag:'CAPTURED'}));
+  const pc=store.captures.filter(c=>c.kind!=='rec').map(c=>({tm:'✎',tx:c.text,tag:'CAPTURED'}));
+  if(rc.length) $('#stream-rec').innerHTML+=rc.map(e=>entHTML(e,'rec')).join('');
+  $('#stream-plan').innerHTML=pc.map(e=>entHTML(e,'plan')).join('')+PLAN.map(e=>entHTML(e,'plan')).join('');
+  $('#carry-list').innerHTML=CARRY.map(e=>entHTML(e,'')).join('');}
+renderDay();
+let capKind='rec';
+$('#cap-rec').addEventListener('click',()=>{capKind='rec';$('#cap-rec').classList.add('on');$('#cap-plan').classList.remove('on');});
+$('#cap-plan').addEventListener('click',()=>{capKind='plan';$('#cap-plan').classList.add('on');$('#cap-rec').classList.remove('on');});
+$('#capture-f').addEventListener('submit',ev=>{ev.preventDefault();const v=$('#capture-i').value.trim();if(!v)return;
+  store.captures.unshift({text:v,kind:capKind,at:new Date().toISOString()}); persist(); $('#capture-i').value=''; renderDay();});
+$('#marg-x').addEventListener('click',()=>{$('#marg-opt').style.display='none';});
+/* ---------- portals ---------- */
+const PORTALS=[
+ {v:'budget',n:'BUDGETING',cls:'fin big',pc:'var(--red)',d:'<b>Day 9 of 14</b> in the pay cycle · next payday <b>Friday</b><br>In this cycle: <b>$1,940 in</b> · <b>$612 out</b> (sample figures)<br>Due: truck payment (Fri) · phone plan (next week) — paid stays listed apart<br>Balances at a glance: chequing •••• · savings •••• · investing fund ••••'},
+ {v:'invest',n:'INVESTMENTS',cls:'fin',pc:'#3f7a52',d:'Review notes, not a scoreboard.<br>Next review: <b>the quarterly sit-down</b>.'},
+ {v:'security',n:'SECURITY',pc:'var(--red)',d:'Cameras ⇄ monitoring.<br>Frames: <b>SNAPSHOT</b> · feed not connected.'},
+ {v:'automation',n:'HOME AUTOMATION',pc:'var(--red)',d:'Lights · thermostat · locks.<br>Feed: <b>not connected</b>.'},
+ {v:'calendar',n:'CALENDAR',pc:'var(--red)',d:'Today: <b>2 planned</b> · personal + every business calendar.'},
+ {v:'commute',n:'COMMUTE',pc:'var(--gold)',d:'First leg <b>08:10</b> → Cityscape office · home by <b>17:50</b>.<br>Drawn straight from the calendar.'},
+ {v:'truck',n:'TRUCK',pc:'var(--gold)',d:'<b>2026 Ranger</b> · 2.3L EcoBoost.<br>FordPass: not connected.'},
+ {v:'social',n:'SOCIAL',pc:'var(--gold)',d:'Messages + notifications land here.<br><b>4 accounts</b> ready to link.'},
+ {v:'notes',n:'NOTES & TO-DO',pc:'var(--gold)',d:'<b>3 open</b> · collections point back to their day.'},
+ {v:'shopping',n:'SHOPPING',pc:'var(--gold)',d:'<b>4 on the list</b> · spending lands in Budgeting.'}];
+$('#portal-grid').innerHTML=PORTALS.map(p=>'<button class="box '+(p.cls||'')+'" style="--pc:'+p.pc+'" data-go="'+p.v+'"><span class="pn">'+p.n+'</span><span class="pd">'+p.d+'</span></button>').join('');
+/* ---------- views ---------- */
+function go(v){$$('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v)); window.scrollTo(0,0);}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-go]'); if(b) go(b.dataset.go);});
+/* ---------- budgeting (sample) ---------- */
+$('#budget-book').innerHTML='<table><tr><th>ITEM</th><th>STATE</th><th class="num">AMOUNT</th></tr>'+
+ [['Hydro bill','PAID','$86.40'],['Groceries — weekly','PAID','$132.18'],['Truck payment','DUE FRI','$—'],['Phone plan','DUE NEXT WEEK','$—']]
+ .map(r=>'<tr><td>'+r[0]+'</td><td>'+(r[1]==='PAID'?'<span style="color:#9fd3ae">'+r[1]+'</span>':'<span style="color:var(--gold2)">'+r[1]+'</span>')+'</td><td class="num">'+r[2]+'</td></tr>').join('')+'</table>';
+if($('#budget-due'))$('#budget-due').innerHTML=[['Truck payment','Friday'],['Phone plan','Next week'],['Insurance','Monthly']]
+ .map(r=>'<div class="ent plan"><span class="tag">DUE</span><span class="tx">'+r[0]+'</span><span class="prov">'+r[1]+'</span></div>').join('');
+/* ---------- investments (review notes only) ---------- */
+$('#invest-notes').innerHTML=[
+ {tm:'NOTE',tx:'Review the drip contributions at the quarterly sit-down — no changes until then.'},
+ {tm:'NOTE',tx:'Rebalance question parked for the review: keep it written, decide it there.'},
+ {tm:'NOTE',tx:'Statements for the quarter are filed under Notes → Finance.'}]
+ .map(e=>entHTML({tag:e.tm,tx:e.tx},'plan')).join('');
+/* ---------- security flip ---------- */
+$('#flip-cam').addEventListener('click',()=>{$('#flip-cam').classList.add('on');$('#flip-mon').classList.remove('on');$('#sec-cams').style.display='';$('#sec-mon').style.display='none';});
+$('#flip-mon').addEventListener('click',()=>{$('#flip-mon').classList.add('on');$('#flip-cam').classList.remove('on');$('#sec-mon').style.display='';$('#sec-cams').style.display='none';});
+/* ---------- calendar horizons: three readings, not one rescaled card ---------- */
+const EVENTS=[
+ {start:'09:00',end:'17:00',title:'Work — Cityscape office',place:'Cityscape office',travel:50,cal:'Workbench · Cityscape'},
+ {start:'15:00',end:'',title:'Call the tire shop',place:'Home',travel:0,cal:'Personal'},
+ {start:'18:30',end:'',title:'Groceries',place:'The store',travel:15,cal:'Personal'}];
+function t2m(t){const a=t.split(':');return (+a[0])*60+(+a[1]);}
+function m2t(m){return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');}
+function commuteLegs(){
+  const legs=[]; let here='Home';
+  EVENTS.filter(e=>e.place&&e.place!=='Home').forEach(e=>{
+    const back=e.end?t2m(e.end):t2m(e.start)+45;
+    legs.push({tm:m2t(t2m(e.start)-e.travel),tx:here+' → '+e.place+' — leave in time for '+e.start});
+    legs.push({tm:m2t(back),tx:e.place+' → Home — back by '+m2t(back+e.travel)});
+  });
+  return legs;
+}
+const CAL={
+ day:EVENTS.map(e=>'<div class="ent plan"><span class="tag">PLANNED</span><span class="tm">'+e.start+'</span><span class="tx">'+e.title+'</span><span class="prov">'+e.cal+'</span></div>').join('')+'<p class="nc">The day reading: what today holds, in order. The Commute page is drawn from this same list.</p>',
+ week:'<div class="ent plan"><span class="tag">WEEK</span><span class="tx">Two evenings booked, three open — the week reading shows shape, not hours.</span></div><div class="ent plan"><span class="tag">WEEK</span><span class="tx">One business-calendar item would appear here when a Workbench calendar is linked.</span></div>',
+ month:'<div class="ent plan"><span class="tag">MONTH</span><span class="tx">The month reading: paydays, due dates and the quarterly review — landmarks only.</span></div><div class="ent rec"><span class="tag">RHYTHM</span><span class="tx">Rent and the truck payment keep their rhythm; nothing else repeats.</span></div>'};
+function setH(h){$$('#v-calendar [data-h]').forEach(b=>b.classList.toggle('on',b.dataset.h===h)); $('#cal-body').innerHTML=CAL[h];}
+$$('#v-calendar [data-h]').forEach(b=>b.addEventListener('click',()=>setH(b.dataset.h))); setH('day');
+/* ---------- notes / to-do / shopping (samples) ---------- */
+$('#todo-list').innerHTML=[
+ {tx:'Shut off the two basement water taps',prov:'from Saturday — still open, kept visible'},
+ {tx:'Book the winter tire swap',prov:'from today’s margin note'},
+ {tx:'File the quarter’s statements',prov:'collection: Finance'}]
+ .map(e=>entHTML({tag:'TO-DO',tx:e.tx,prov:e.prov},'plan')).join('');
+$('#note-list').innerHTML=[
+ {tx:'Gate latch measurements — side door',prov:'written today, 12:40'},
+ {tx:'Lottery ticket check — private record',prov:'kept here, shown nowhere else'},
+ {tx:'Costa Rica trip ideas',prov:'collection: Travel'}]
+ .map(e=>entHTML({tag:'NOTE',tx:e.tx,prov:e.prov},'rec')).join('');
+$('#shop-list').innerHTML=['Eggs','Coffee','Winter washer fluid','AA batteries']
+ .map(x=>entHTML({tag:'LIST',tx:x},'plan')).join('');
+$('#shop-done').innerHTML=[{tx:'Milk',prov:'bought yesterday'},].map(e=>entHTML({tag:'BOUGHT',tx:e.tx,prov:e.prov},'rec done')).join('');
+/* ---------- finance tabs + team pot (a working ledger, restored from the old portal) ---------- */
+$$('#fin-tabs [data-f]').forEach(b=>b.addEventListener('click',()=>{
+  $$('#fin-tabs [data-f]').forEach(x=>x.classList.toggle('on',x===b));
+  const pot=b.dataset.f==='pot';
+  $('#fin-book').hidden=pot; $('#fin-pot').hidden=!pot; if(pot) renderPot();
+}));
+const POTKEY='daybook.teampot.v1';
+let pot={entries:[
+ {item:'Grant top-up',amt:200,dir:'in',receipt:true},
+ {item:'Team lunch — site visit',amt:86.40,dir:'out',receipt:true},
+ {item:'Fuel — shared truck run',amt:64.10,dir:'out',receipt:false}],confirmed:'49.50'};
+try{const raw=localStorage.getItem(POTKEY); if(raw){const q=JSON.parse(raw); if(q&&Array.isArray(q.entries)) pot=q;}}catch(e){}
+function potPersist(){try{localStorage.setItem(POTKEY,JSON.stringify(pot));}catch(e){}}
+function potCalc(){return pot.entries.reduce((a,e)=>a+(e.dir==='in'?e.amt:-e.amt),0);}
+function renderPot(){
+  $('#pot-list').innerHTML=pot.entries.map(e=>'<div class="ent '+(e.dir==='in'?'rec':'plan')+'"><span class="tag">'+(e.dir==='in'?'IN':'OUT')+'</span><span class="tx">'+esc(e.item)+' — $'+e.amt.toFixed(2)+'</span><span class="prov">receipt: '+(e.receipt?'ATTACHED':'MISSING')+'</span></div>').join('')||'<span class="nc">No entries yet.</span>';
+  const c=potCalc(); $('#pot-calc').textContent='$'+c.toFixed(2)+' calculated';
+  const conf=$('#pot-conf'); if(document.activeElement!==conf) conf.value=pot.confirmed;
+  const w=$('#pot-warn');
+  if(pot.confirmed!==''&&Math.abs(c-parseFloat(pot.confirmed))>0.005){w.textContent='⚠ BALANCE UNVERIFIED — the ledger says $'+c.toFixed(2)+', the confirmed balance says $'+parseFloat(pot.confirmed).toFixed(2)+'. Kept apart until they agree.';}
+  else if(pot.confirmed!==''){w.textContent='✓ Ledger and confirmed balance agree.'; w.style.color='#7fc98f';}
+  else {w.textContent=''; w.style.color='#f0b44c';}
+}
+$('#pot-f').addEventListener('submit',ev=>{ev.preventDefault();const it=$('#pot-item').value.trim();const am=parseFloat($('#pot-amt').value);
+  if(!it||!(am>0))return; pot.entries.push({item:it,amt:am,dir:$('#pot-dir').value,receipt:$('#pot-rcpt').checked});
+  potPersist(); $('#pot-item').value=''; $('#pot-amt').value=''; $('#pot-rcpt').checked=false; renderPot();});
+$('#pot-conf').addEventListener('change',()=>{pot.confirmed=$('#pot-conf').value; potPersist(); renderPot();});
+
+$('#commute-legs').innerHTML=commuteLegs().map(l=>'<div class="ent plan"><span class="tag">PLANNED</span><span class="tm">'+l.tm+'</span><span class="tx">'+l.tx+'</span></div>').join('');
+
+/* ---------- talk (entry present app-wide; honest about connection) ---------- */
+$('#talk-b').addEventListener('click',()=>{const q=$('#talk-i').value.trim();
+  $('#integ').textContent='Oakley (Daybook · this page): talk isn’t connected in this standalone build yet — nothing was sent. Your words stay on this page.'+(q?' You asked: “'+q+'”':'');
+  $('#talk-i').value='';});
+</script>
+</body>
+</html>

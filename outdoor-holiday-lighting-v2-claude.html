@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GLIMMER — Holiday Lighting Estimator</title>
+<meta name="theme-color" content="#3b0a1e">
+<style>
+:root{--ink:#241216;--ink2:#5c3a40;--cream:#fff6e4;--cream2:#f6e7c9;--berry:#8c1236;--berry2:#c2204e;--pine:#0f5a3c;--pine2:#1b8a5a;--gold:#f2b632;--ice:#7fd6ff;--line:#e2cfa6;--bad:#b3261e;--ok:#12794a}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font:16px/1.35 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:#2a0716;overflow:hidden}
+#sky{position:fixed;inset:0;z-index:0;background:
+ radial-gradient(1200px 700px at 15% 10%,#a3153f 0%,transparent 60%),
+ radial-gradient(1000px 800px at 90% 90%,#0e6b45 0%,transparent 60%),
+ radial-gradient(800px 600px at 80% 5%,#4b1d8f 0%,transparent 60%),#2a0716;background-size:140% 140%;animation:aur 40s ease-in-out infinite alternate}
+@keyframes aur{to{background-position:100% 60%}}
+#snow{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+#snow i{position:absolute;top:-10px;width:5px;height:5px;border-radius:50%;background:#ffe9f0;opacity:.55;animation:fall linear infinite}
+@keyframes fall{to{transform:translate3d(30px,110vh,0)}}
+#santa{pointer-events:none;position:fixed;top:64px;left:-340px;width:300px;z-index:30;opacity:.95;animation:fly 38s linear 6s infinite;cursor:pointer}
+@keyframes fly{0%{transform:translate(0,0)}8%{transform:translate(0,-6px)}16%{transform:translate(0,4px)}24%{transform:translate(0,-6px)}32%{transform:translate(0,4px)}40%,100%{transform:translate(calc(100vw + 680px),-4px)}}
+#santa .nose{animation:nose 2.4s ease-in-out infinite}@keyframes nose{50%{opacity:.55}}
+body.calm #santa,body.calm #snow{display:none}
+body.calm *{animation:none!important;transition:none!important}
+@media (prefers-reduced-motion:reduce){#santa,#snow{display:none}*{animation:none!important;transition:none!important}}
+#app{position:relative;z-index:5;height:100%;display:grid;grid-template-columns:92px 1fr;grid-template-rows:60px 1fr}
+header{grid-column:1/3;display:flex;align-items:center;gap:10px;padding:0 14px;color:#fff;background:linear-gradient(#1a0510cc,#1a051066);backdrop-filter:blur(6px)}
+header h1{font:700 22px Georgia,serif;letter-spacing:.14em;margin:0;color:var(--gold);text-shadow:0 0 14px #f2b63266}
+header .jn{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600;opacity:.95}
+.tag{background:var(--cream);color:var(--ink);border-radius:8px 8px 8px 8px;padding:4px 12px;font-weight:800;font-size:18px;position:relative;transform-origin:50% -10px;animation:sway 5s ease-in-out infinite;min-height:44px;display:flex;flex-direction:column;justify-content:center;line-height:1.05;border:2px solid var(--gold)}
+.tag small{font-weight:600;font-size:10.5px;color:var(--ink2);letter-spacing:.05em}
+@keyframes sway{50%{transform:rotate(1.6deg)}}
+.hb{min-width:44px;min-height:44px;border:0;border-radius:10px;background:#ffffff22;color:#fff;font:600 13px inherit;cursor:pointer;padding:0 10px}
+.hb[aria-pressed=true]{background:var(--gold);color:var(--ink)}
+nav#rail{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 0;overflow-y:auto;overflow-x:hidden}
+nav#rail:before{content:"";position:absolute;left:50%;top:0;bottom:0;width:3px;margin-left:-1.5px;background:linear-gradient(#ffffff55,#ffffff22);z-index:0}
+.bulb{position:relative;z-index:1;width:84px;min-height:58px;border:0;background:none;color:#fff;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px;padding:3px 0;font:600 11px inherit}
+.bulb .g{width:30px;height:30px;border-radius:50% 50% 46% 46%;background:var(--c,#777);opacity:.45;box-shadow:0 0 0 2px #00000055 inset;position:relative}
+.bulb .g:before{content:"";position:absolute;top:-6px;left:9px;width:12px;height:8px;background:#444;border-radius:2px}
+.bulb.done .g{opacity:1;box-shadow:0 0 14px 2px var(--c),0 0 0 2px #00000033 inset}
+.bulb.on .g{opacity:1;transform:scale(1.18);box-shadow:0 0 22px 6px var(--c),0 0 0 2px #fff inset}
+.bulb.on{color:var(--gold)}
+.bulb .n{background:#000a;border-radius:8px;padding:0 5px;min-width:18px}
+main{overflow:auto;padding:14px 16px 30px;-webkit-overflow-scrolling:touch}
+.stage{max-width:1100px;margin:0 auto}
+.panel{background:var(--cream);border-radius:16px;padding:14px 16px;margin:0 0 14px;box-shadow:0 8px 28px #0006;border:2px solid #fff3}
+.panel h2{margin:0 0 8px;font:700 21px Georgia,serif;color:var(--berry)}
+.panel h3{margin:10px 0 4px;font:700 14px system-ui;color:var(--pine);text-transform:uppercase;letter-spacing:.07em}
+.sub{color:var(--ink2);font-size:13.5px;margin:0 0 8px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.f{display:flex;flex-direction:column;gap:2px;min-width:92px;flex:1}
+.f.s{flex:0 0 96px}.f.w{flex:2 1 220px}
+.f label,.lab{font-size:12px;font-weight:700;color:var(--ink2);text-transform:uppercase;letter-spacing:.04em}
+input,select,textarea{font:inherit;color:var(--ink);background:#fff;border:2px solid var(--line);border-radius:10px;padding:8px 10px;min-height:44px;width:100%}
+input:focus,select:focus,textarea:focus{outline:3px solid var(--ice);border-color:var(--berry2)}
+textarea{min-height:70px}
+button.b,a.b{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:0 16px;border-radius:12px;border:0;font:700 15px inherit;cursor:pointer;background:var(--berry);color:#fff;text-decoration:none}
+.b.g2{background:var(--pine)}.b.o{background:#fff;color:var(--berry);border:2px solid var(--berry)}.b.k{background:var(--ink);color:#fff}.b.sm{min-height:44px;padding:0 12px;font-size:13px}.b.x{background:#fff;color:var(--bad);border:2px solid var(--bad)}
+.seg{display:inline-flex;border:2px solid var(--berry);border-radius:12px;overflow:hidden}
+.seg button{min-height:44px;padding:0 16px;border:0;background:#fff;color:var(--berry);font:700 15px inherit;cursor:pointer}
+.seg button.on{background:var(--berry);color:#fff}
+.card{border:2px solid var(--line);border-radius:14px;margin:10px 0;background:#fffdf6;overflow:hidden}
+.card>.hd{display:flex;gap:10px;align-items:center;padding:8px 12px;background:linear-gradient(90deg,#fff1cf,#fffdf6);cursor:pointer;min-height:52px}
+.card>.hd .t{flex:1;font-weight:700}
+.card>.hd .sets{font-weight:800;color:var(--pine);white-space:nowrap}
+.card .bd{padding:10px 12px 12px;border-top:2px dashed var(--line)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 12px;border-radius:22px;border:2px solid var(--line);background:#fff;font-weight:600;cursor:pointer;user-select:none}
+.chip input{width:22px;height:22px;min-height:0;accent-grid:0}
+.chip.on{background:#e8f6ee;border-color:var(--pine2)}
+.cdot{width:16px;height:16px;border-radius:50%;border:1px solid #0004;display:inline-block}
+.table{width:100%;border-collapse:collapse;font-size:14px}
+.table th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink2);padding:4px 6px;border-bottom:2px solid var(--line)}
+.table td{padding:6px;border-bottom:1px solid var(--line);vertical-align:middle}
+.table td.n,.table th.n{text-align:right;font-variant-numeric:tabular-nums}
+.tablewrap{overflow-x:auto}
+.pill{display:inline-block;padding:2px 9px;border-radius:12px;font-size:12px;font-weight:800;color:#fff}
+.p-on{background:var(--ok)}.p-low{background:#b36b00}.p-up{background:#4b3aa3}.p-ord{background:var(--bad)}.p-off{background:#777}
+.photos{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
+.ph{width:200px;border:2px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;position:relative}
+.ph img{display:block;width:100%;height:110px;object-fit:cover;cursor:crosshair}
+.ph .cap{display:flex;flex-wrap:wrap;gap:4px;padding:4px;font-size:12px;align-items:center}
+.ph .pn{position:absolute;top:4px;left:4px;background:var(--berry);color:#fff;border-radius:12px;padding:0 7px;font-weight:800;font-size:12px}
+.note{background:#fff3c7;border-left:5px solid var(--gold);padding:8px 12px;border-radius:8px;font-size:13.5px;margin:8px 0}
+.warn{background:#fde4e1;border-left-color:var(--bad)}
+.lab-dock{position:sticky;bottom:0;z-index:3;display:flex;gap:10px;flex-wrap:wrap;background:#241216f2;color:#fff;border-radius:14px;padding:8px 12px;margin-top:8px;align-items:center}
+.lab-dock .blk{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.lab-dock input{width:64px;min-height:44px;padding:4px 6px}
+.sw{position:relative;width:64px;height:44px;border-radius:22px;border:0;cursor:pointer;background:#777;color:#fff;font:800 12px inherit}
+.sw.on{background:var(--ok)}
+.big{font:800 26px Georgia,serif;color:var(--berry)}
+.tot td{font-weight:800}
+dialog{border:0;border-radius:16px;padding:16px;max-width:92vw;width:420px;background:var(--cream);color:var(--ink);box-shadow:0 12px 50px #000a}
+dialog::backdrop{background:#000a}
+#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#241216;color:#fff;padding:12px 18px;border-radius:12px;z-index:60;display:none;max-width:90vw;font-weight:600}
+.addr-panel{background:#fff;border:2px dashed var(--line);border-radius:10px;padding:8px 12px;margin-top:8px;font-size:14px}
+.pinmark{position:absolute;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;background:var(--berry2);border:2px solid #fff;color:#fff;font:800 12px/18px system-ui;text-align:center}
+@media (max-width:760px){
+ #app{grid-template-columns:1fr;grid-template-rows:56px 1fr 76px}
+ header h1{font-size:17px}.hb.lbl{display:none}
+ nav#rail{grid-row:3;flex-direction:row;overflow-x:auto;overflow-y:hidden;padding:0 6px;gap:0;background:#1a0510dd;justify-content:flex-start}
+ nav#rail:before{left:0;right:0;top:20px;bottom:auto;width:auto;height:3px;margin:0}
+ .bulb{flex:0 0 78px;width:78px;min-height:70px}
+ main{grid-row:2;padding:10px 8px 20px}
+ .panel{padding:12px}
+ #santa{width:200px;top:60px}.lab-dock{position:static}
+}
+@media (max-height:640px){header{grid-row:1}.bulb{min-height:50px}.bulb .g{width:24px;height:24px}.panel{margin-bottom:10px}}
+@media print{#sky,#snow,#santa,nav,header .hb{display:none}body{overflow:visible;background:#fff}#app{display:block}main{overflow:visible}}
+</style>
+</head>
+<body>
+<div id="sky"></div><div id="snow"></div>
+<svg id="santa" viewBox="0 0 400 110" aria-label="Santa and reindeer" role="img">
+ <g fill="#8b4a2b" stroke="#2a0f08" stroke-width="2"><ellipse cx="40" cy="62" rx="22" ry="11"/><circle cx="68" cy="50" r="8"/><path d="M68 42l-6-14m6 14l8-14m-8 14l-14-10" fill="none" stroke="#5a3118" stroke-width="3"/><circle class="nose" cx="77" cy="52" r="4" fill="#ff2a2a" stroke="none"/><path d="M28 72l-6 20m16-18l-4 20m22-20l6 18" stroke="#5a3118" stroke-width="3"/></g>
+ <g fill="#8b4a2b" stroke="#2a0f08" stroke-width="2"><ellipse cx="110" cy="64" rx="20" ry="10"/><circle cx="136" cy="54" r="7"/><path d="M136 47l-5-12m5 12l7-12" fill="none" stroke="#5a3118" stroke-width="3"/><path d="M100 72l-5 18m14-16l-3 18m18-18l5 16" stroke="#5a3118" stroke-width="3"/></g>
+ <path d="M150 58L215 60" stroke="#ffd86b" stroke-width="2" fill="none"/>
+ <g><path d="M215 60h90q8 0 6 14t-16 14h-84q-10 0-8-14z" fill="#c2204e" stroke="#2a0510" stroke-width="2"/><path d="M205 96q50 6 120 0" stroke="#f2b632" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="262" cy="40" r="15" fill="#f9d7bf"/><path d="M247 36q15-24 30 0z" fill="#d6112f"/><circle cx="278" cy="28" r="4" fill="#fff"/><path d="M250 46q12 14 24 0q-4 14-12 14t-12-14z" fill="#fff"/><rect x="250" y="52" width="26" height="22" rx="8" fill="#d6112f"/></g>
+ <g fill="#ffe08a" opacity=".85"><circle cx="330" cy="84" r="3"/><circle cx="346" cy="74" r="2.4"/><circle cx="362" cy="86" r="2"/><circle cx="378" cy="78" r="1.6"/></g>
+</svg>
+<div id="app">
+ <header><h1>GLIMMER</h1><div class="jn" id="jn"></div><div class="tag" id="tag"><span id="tagv">$0.00</span><small id="tagl">QUOTE TAG</small></div><button class="hb" id="calm" aria-pressed="false">Calm<span class="lbl"> mode</span></button></header>
+ <nav id="rail" aria-label="Job sections"></nav>
+ <main id="main"><div class="stage" id="stage"></div></main>
+</div>
+<div id="toast" role="status"></div>
+<dialog id="dlg"></dialog>
+
+<script>
+(function(){
+'use strict';
+var KEY='christmasLightingChecklist.v2';
+var COLORS=[['Warm White','#ffd9a0'],['Pure White','#f4f8ff'],['Red','#e0212b'],['Green','#18a24a'],['Blue','#2457e6'],['Yellow','#f7d51d'],['Orange','#f58a1f'],['Multi','conic-gradient(#e0212b,#f7d51d,#18a24a,#2457e6,#e0212b)'],['Purple','#8a3fd1'],['Teal','#12a3a0'],['Fuchsia','#e0309b'],['Lime','#9bd629']];
+var CNAME=COLORS.map(function(c){return c[0]});
+function cdot(n){var c=COLORS.filter(function(x){return x[0]===n})[0];return '<span class="cdot" style="background:'+(c?c[1]:'#ccc')+'"></span>'}
+var SET_FT=25;
+/* ---- product universe (stock list) : source bigstarlights.com sweep 2026-11-17; no prices carried ---- */
+var P=[],PM={};
+function addP(id,name,grp,sup,unit,lvl){var p={id:id,name:name,grp:grp,sup:sup||'Big Star',unit:unit||'each',lvl:lvl||''};P.push(p);PM[id]=p}
+CNAME.forEach(function(c){addP('5MM-50L-25-6-'+c,'5 mm coaxial mini set, 50 lights / 25 ft / 6" — '+c,'lights','Big Star','set')});
+CNAME.forEach(function(c){addP('C9-'+c,'C9 bulbs (pack of 25) — '+c,'lights','Big Star','pack')});
+CNAME.forEach(function(c){addP('C7-'+c,'C7 bulbs (pack of 25) — '+c,'lights','Big Star','pack')});
+addP('ICICLE-PW','Icicle lights, 5 mm 70 LED 7 ft — Pure White','lights','Big Star','strand');
+addP('ICICLE-WW','Icicle lights, 5 mm 70 LED 7 ft — Warm White','lights','Big Star','strand');
+addP('MICRO-70','Micro lights, 70 lights / 23 ft / 4"','lights','Big Star','strand');
+addP('E17-SPOOL-500','E17 socket wire spool, 500 ft (C9 base)','lights','Big Star','spool');
+addP('E12-SPOOL-500','E12 socket wire spool, 500 ft (C7 base)','lights','Big Star','spool');
+addP('WREATH-48-LIT','Deluxe Wreath, lit, 48"','lights','Big Star','each');
+addP('WREATH-48-UNLIT','Deluxe Wreath, unlit, 48"','lights','Big Star','each');
+addP('GARLAND-9-LIT','Royal Garland, lit, 9 ft','lights','Big Star','each');
+addP('GARLAND-SIG-3','Signature Garland, 3 ft section','lights','Big Star','each');
+var HW=[['CLIP-ONLY','Only Clip (pack of 25)','pack'],['CLIP-GUTTERGUARD','Gutter Guard Clips (pack of 25)','pack'],['CLIP-MAGROOF','Magnetic Roof Cap Clips (pack of 25)','pack'],['CLIP-RIDGE','Ridge Clips (pack of 25)','pack'],['CLIP-SPRING','Spring Clips (pack of 25)','pack'],['CLIP-ADH','Adhesive Clips (pack of 100)','pack'],['CLIP-ADH-XH','Extra Hold Adhesive Clips (pack of 100)','pack'],['CLIP-MAG','Magnetic Clips (pack of 100)','pack'],['CLIP-SCREW','Screw Clips with stainless screws (pack of 100)','pack'],['CLIP-TUFF','TuffClips (pack of 100)','pack'],['CLIP-CRADLE','Cradle Clips (pack of 500)','pack'],['CABLE-HOOK','Cable Hooks (pack of 100)','pack'],['ANCHOR-EYEBOLT','Concrete Anchor Eye Bolts (pack of 50)','pack'],['STAPLE-INS','Insulated Staples (pack of 300)','pack'],['STAPLER','Christmas Light Wire Stapler','each'],['STAPLE-LAWN','Lawn Staples, galvanized 1×6 in (pack of 100)','pack'],['LAWN-STAKE','Lawn Stakes','each'],['CLUTCHER-18','Clutchers for 1/8 in wire rope (pack of 10)','pack'],['MARRETTE','Chromaglow Pro Marrettes wire connectors (pack of 50)','pack'],['VHB','VHB Tape Roll','roll'],['STRAP-HOOK','Hook Utility Strap','each'],['STRAP-LOOP','Loop Utility Strap','each'],['HOOK-ULT','Ultimate Christmas Light Hanging Hook','each'],['HOOK-EASY','Easy Peasy Hooks (pack of 10)','pack'],['BRICK-HANGER','Brick Hanger','each'],['WREATH-HOOK','Wreath Hook','each'],['TERM-CAPS','Wire Termination Caps (pack of 100)','pack']];
+HW.forEach(function(h){addP(h[0],h[1],'hw','Big Star',h[2])});
+var EL=[['ADAPTER','String Light Adapter (REQUIRED per coaxial run)','each'],['EXT-COAX-15','Coaxial Plug Extension Cord, 15 ft','each'],['MICRO-ADAPTER','Micro Lights Plug Adapter','each'],['SPLIT-3','3-Tap Splitter','each'],['SPLIT-5','5-Tap Splitter','each'],['PWR-15','Power Cord, 15 ft','each'],['PWR-100','Power Cord, 100 ft','each'],['PWR-1000','Power Cord, 1000 ft bulk lamp cord','each'],['PWR-3OUT-15','Power Cord 3-Outlet Plug, 15 ft','each'],['TAP-3','3 Outlet Power Tap','each'],['TAP-3-HD','Heavy Duty 3 Outlet Power Tap','each'],['VAMP-M','Male Plugs / vampire (pack of 100)','pack'],['VAMP-F','Female Plugs / vampire (pack of 100)','pack'],['VAMP-M-GREASE','Grease Filled Male Plugs (pack of 100)','pack'],['VAMP-F-GREASE','Grease Filled Female Plugs (pack of 100)','pack'],['TIMER','Outdoor Digital Timer (the only timer Big Star sells)','each']];
+EL.forEach(function(h){addP(h[0],h[1],'el','Big Star',h[2])});
+addP('EXT-GENERIC','Extension cord, outdoor rated (NOT a Big Star product — generic)','el','Other (not Big Star)','each');
+var HWSEL=P.filter(function(p){return p.grp==='hw'}),ELSEL=P.filter(function(p){return p.grp==='el'});
+var ADAPTER='ADAPTER';
+/* ---- wrap math (spiral geometry on the 25 ft / 50-bulb / 6" set) ---- */
+var DENS={light:28/42,classic:1,full:61/42};
+/* per-part set counts measured from the v1.2 engine (hub contract), at the reference height: leafy 25 ft / evergreen 18 ft, Classic.
+   Other heights scale by area (h^2) for trunk/canopy/cone and by h for limbs — an EXTRAPOLATION, not the original engine. */
+var BASE={leafy:{trunk:13,canopy:37,limbs:6,tc:42,ref:25},evergreen:{trunk:7,cone:13,tc:13,ref:18}};
+function treeSets(t){var h=num(t.heightFt);if(!(h>0))return 0;var ev=t.kind==='evergreen',B=ev?BASE.evergreen:BASE.leafy,pt=t.parts||{},k=Math.pow(h/B.ref,2),kl=h/B.ref,d=DENS[t.density]||1,s=0;
+ if(ev){s=pt.cone&&pt.trunk?B.tc*k:(pt.cone?B.cone*k:0)+(pt.trunk?B.trunk*k:0)}
+ else{s=(pt.trunk&&pt.canopy?B.tc*k:(pt.trunk?B.trunk*k:0)+(pt.canopy?B.canopy*k:0))+(pt.limbs?B.limbs*kl:0)}
+ return Math.max(0,Math.ceil(s*d-1e-9))||0}
+var ROOF={mini:{n:'Mini lights, coaxial (25 ft sets)',sku:'MINI'},c9:{n:'C9 bulbs on E17 wire'},c7:{n:'C7 bulbs on E12 wire'},icicle:{n:'Icicle lights'},micro:{n:'Micro lights'}};
+function roofCalc(r){var L=num(r.lengthFt);if(!(L>0))return {qty:0,unit:'',sku:null,extra:[]};
+ if(r.type==='mini')return {qty:Math.ceil(L/SET_FT-1e-9),unit:'sets',sku:'5MM-50L-25-6-'+r.color,extra:[]};
+ if(r.type==='c9'||r.type==='c7'){var sp=num(r.spacingIn)||12,b=Math.ceil(L*12/sp);return {qty:Math.ceil(b/25),unit:'packs ('+b+' bulbs @ '+sp+'")',sku:(r.type==='c9'?'C9-':'C7-')+r.color,extra:[{sku:r.type==='c9'?'E17-SPOOL-500':'E12-SPOOL-500',qty:Math.ceil(L/500)}]}}
+ if(r.type==='icicle'){var cv=num(r.strandCovers)||6;return {qty:Math.ceil(L/cv),unit:'strands @ '+cv+' ft each',sku:r.color==='Warm White'?'ICICLE-WW':'ICICLE-PW',extra:[]}}
+ var cv2=num(r.strandCovers)||23;return {qty:Math.ceil(L/cv2),unit:'strands @ '+cv2+' ft each',sku:'MICRO-70',extra:[]}}
+/* ---- util ---- */
+function num(v){var n=parseFloat(v);return isFinite(n)?n:NaN}
+function n0(v){var n=num(v);return isFinite(n)?n:0}
+function uid(p){return (p||'i')+Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-3)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function money(v){return '$'+v.toLocaleString('en-CA',{minimumFractionDigits:2,maximumFractionDigits:2})}
+var $=function(s,r){return (r||document).querySelector(s)};
+function toast(m){var t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(function(){t.style.display='none'},3200)}
+/* ---- store ---- */
+var store,job=null,sec='home',openItem=null,draft=null,custMode='existing',custQ='';
+function fd(){for(var i=0;i<arguments.length;i++)if(arguments[i]!=null&&arguments[i]!=='')return arguments[i];return ''}
+function colorName(c){var m=CNAME.filter(function(x){return x.toLowerCase()===String(c||'').toLowerCase()})[0];return m||'Warm White'}
+function legTree(t){var s=String(t.kind||t.type||t.species||t.treeType||'').toLowerCase(),kind=/ever|conif|spruce|pine|cedar|fir/.test(s)?'evergreen':'leafy',ev=kind==='evergreen',parts;
+ if(t.parts&&typeof t.parts==='object')parts=t.parts;else{var w=String(t.wrap||'').toLowerCase();
+  if(!w){parts=('trunk' in t||'canopy' in t||'limbs' in t||'cone' in t)?(ev?{trunk:!!t.trunk,cone:!!(t.cone||t.canopy)}:{trunk:!!t.trunk,limbs:!!t.limbs,canopy:!!t.canopy}):(ev?{trunk:true,cone:true}:{trunk:true,limbs:false,canopy:true})}
+  else{var tr=/trunk|both|all|full/.test(w),ca=/canopy|cone|both|all|full/.test(w),li=/limb|all|full/.test(w);parts=ev?{trunk:tr,cone:ca}:{trunk:tr,limbs:li,canopy:ca}}}
+ var o=Object.assign({id:uid('t'),hrs:'',mins:'',runs:1,photos:[],hw:[],el:[],notes:''},t);o.kind=kind;o.parts=parts;o.heightFt=fd(t.heightFt,t.height,t.ht,t.heightFeet,t.h,'');o.qty=fd(t.qty,t.quantity,t.count,1);var dn=String(t.density||'classic').toLowerCase();o.density=DENS[dn]?dn:'classic';o.color=colorName(t.color||t.colour);return o}
+function normJob(j){j=j||{};var cu=Object.assign({},(j.customer&&typeof j.customer==='object')?j.customer:{}),cl=typeof j.client==='string'?j.client:(j.client&&(j.client.name||j.client.company))||'';if(!cu.name&&!cu.company)cu.name=cl||cu.contact||'';
+ var d={id:j.id||uid('j'),name:j.name||j.customerName||cu.name||cu.company||cl||'Untitled job',status:j.status||'quote',date:j.date||'',customerId:j.customerId||'',customer:cu,siteAddress:j.siteAddress||j.address||cu.siteAddress||cu.site||cu.address||'',billingSame:j.billingSame!==false,billingAddress:j.billingAddress||'',notes:j.notes||'',trees:[],roofs:[],garlands:[],wreaths:[],hw:j.hw||[],el:j.el||[],rentals:j.rentals||[],crews:j.crews||{},created:j.created||Date.now()};
+ var out=Object.assign({},j,d);
+ ['install','removal'].forEach(function(k){var c=(out.crews[k]||{});out.crews[k]={include:c.include===true,men:c.men==null?'':c.men,hours:c.hours==null?'':c.hours,mins:c.mins==null?'':c.mins,rate:c.rate==null?'':c.rate}});
+ out.trees=(j.trees||[]).map(legTree);
+ out.roofs=(j.roofs||j.rooflines||[]).map(function(r){var o=Object.assign({id:uid('r'),type:'mini',lengthFt:'',color:'Warm White',spacingIn:'',strandCovers:'',hrs:'',mins:'',runs:1,photos:[],hw:[],el:[],notes:''},r);o.name=r.name||r.label||r.title||'';o.lengthFt=fd(r.lengthFt,r.length,r.ft,r.lengthFeet,'');var ty=String(r.type||'').toLowerCase();o.type=ROOF[ty]?ty:'mini';o.color=colorName(r.color||r.colour);return o});
+ out.garlands=(j.garlands||[]).map(function(g){return Object.assign({id:uid('g'),name:'Garland',qty:1,price:'',sku:'',photos:[],hw:[],el:[],notes:''},g)});
+ out.wreaths=(j.wreaths||[]).map(function(g){return Object.assign({id:uid('w'),name:'Wreath',qty:1,price:'',sku:'',photos:[],hw:[],el:[],notes:''},g)});
+ return out}
+function load(){var raw={};try{raw=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){raw={}}
+ if(Array.isArray(raw))raw={jobs:raw};var jobs=raw.jobs;if(!jobs&&(raw.trees||raw.rooflines||raw.client||raw.customer))jobs=[Object.assign({id:'legacy-v1.2'},raw)];if(jobs&&!Array.isArray(jobs))jobs=Object.keys(jobs).map(function(k){return jobs[k]});
+ store=Object.assign({},raw,{jobs:(jobs||[]).map(normJob),customers:raw.customers||raw.customerBook||[],inventory:raw.inventory||{},priceBook:raw.priceBook||{},settings:raw.settings||{}});
+ delete store.customerBook}
+var saveT,dirty=false;function save(){dirty=true;clearTimeout(saveT);saveT=setTimeout(saveNow,350)}
+function saveNow(force){if(!dirty&&force!==true)return;try{localStorage.setItem(KEY,JSON.stringify(store));dirty=false}catch(e){toast('Could not save — storage full or blocked.')}}
+/* ---- photos in IndexedDB ---- */
+var mem={},idb=null;
+function idbOpen(){return new Promise(function(res){try{var r=indexedDB.open('glimmerPhotos',1);r.onupgradeneeded=function(){r.result.createObjectStore('p')};r.onsuccess=function(){idb=r.result;res()};r.onerror=function(){res()}}catch(e){res()}})}
+function putPhoto(id,url){mem[id]=url;if(!idb)return;try{idb.transaction('p','readwrite').objectStore('p').put(url,id)}catch(e){}}
+function getPhoto(id){return new Promise(function(res){if(mem[id])return res(mem[id]);if(!idb)return res('');try{var q=idb.transaction('p').objectStore('p').get(id);q.onsuccess=function(){if(q.result)mem[id]=q.result;res(q.result||'')};q.onerror=function(){res('')}}catch(e){res('')}})}
+function delPhoto(id){delete mem[id];if(idb)try{idb.transaction('p','readwrite').objectStore('p').delete(id)}catch(e){}}
+function shrink(file){return new Promise(function(res,rej){var fr=new FileReader();fr.onload=function(){var im=new Image();im.onload=function(){var m=1280,s=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext('2d').drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.72))};im.onerror=rej;im.src=fr.result};fr.onerror=rej;fr.readAsDataURL(file)})}
+/* ---- lookup ---- */
+function coll(c){return c==='trees'?job.trees:c==='roofs'?job.roofs:c==='garlands'?job.garlands:job.wreaths}
+function findItem(id){var all=job.trees.concat(job.roofs,job.garlands,job.wreaths);return all.filter(function(x){return x.id===id})[0]}
+/* ---- takeoff / price ---- */
+function itemTimeMin(i){return n0(i.hrs)*60+n0(i.mins)}
+function takeoff(j,onlyJob){var L={},lines=[],pins=[],labour=[];
+ function add(sku,q,from){q=n0(q);if(!(q>0)||!sku)return;L[sku]=L[sku]||{sku:sku,qty:0,from:[]};L[sku].qty+=q;L[sku].from.push(from+' ×'+q)}
+ var adapters=0;
+ j.trees.forEach(function(t){var q=n0(t.qty)||1,s=treeSets(t);add('5MM-50L-25-6-'+t.color,s*q,(t.kind==='leafy'?'Leafy ':'Evergreen ')+(t.heightFt||'?')+' ft');adapters+=Math.max(1,n0(t.runs))*q;itemAtt(t,q,'tree')});
+ j.roofs.forEach(function(r){var c=roofCalc(r);if(c.sku)add(c.sku,c.qty,'Roofline '+r.lengthFt+' ft');c.extra.forEach(function(e){add(e.sku,e.qty,'Roofline wire')});if(r.type==='mini'||r.type==='micro')adapters+=Math.max(1,n0(r.runs))*(c.qty?1:0);itemAtt(r,1,'roofline')});
+ j.garlands.concat(j.wreaths).forEach(function(g){var q=n0(g.qty)||1;if(g.sku)add(g.sku,q,g.name);itemAtt(g,q,g.name)});
+ function itemAtt(it,mult,lbl){(it.hw||[]).forEach(function(a){add(a.sku,n0(a.qty)*(it.hwEach?mult:1),lbl+' hardware')});(it.el||[]).forEach(function(a){add(a.sku,n0(a.qty),lbl+' power')});
+  (it.photos||[]).forEach(function(ph,pi){(ph.pins||[]).forEach(function(p,k){pins.push({item:lbl,photo:pi+1,n:k+1,what:p.what,qty:n0(p.qty)||1,price:p.price,pin:p})})})}
+ if(adapters)add(ADAPTER,adapters,'1 per coaxial run (required)');
+ (j.hw||[]).forEach(function(a){add(a.sku,a.qty,'Whole job hardware')});(j.el||[]).forEach(function(a){add(a.sku,a.qty,'Whole job power')});
+ [['install','INSTALLATION CREW'],['removal','SEASONAL REMOVAL CREW']].forEach(function(p){var c=j.crews[p[0]];if(c.include)labour.push({key:p[0],name:p[1],men:n0(c.men),hrs:n0(c.hours)+n0(c.mins)/60,rate:num(c.rate),cost:isFinite(num(c.rate))?n0(c.men)*(n0(c.hours)+n0(c.mins)/60)*num(c.rate):0,rateBlank:!isFinite(num(c.rate))})});
+ return {lines:Object.keys(L).map(function(k){return L[k]}),pins:pins,labour:labour}}
+function priceOf(j){var t=takeoff(j),m=0,rows=[];
+ t.lines.forEach(function(l){var pr=num(store.priceBook[l.sku]),c=isFinite(pr)?pr*l.qty:0;m+=c;rows.push({name:(PM[l.sku]||{name:l.sku}).name,qty:l.qty,unit:isFinite(pr)?pr:null,cost:c})});
+ var e=0;j.garlands.concat(j.wreaths).forEach(function(g){var p=num(g.price);if(isFinite(p))e+=p*(n0(g.qty)||1)});
+ var pn=0;t.pins.forEach(function(p){var pr=num(p.price);if(isFinite(pr))pn+=pr*p.qty});
+ var lab=0;t.labour.forEach(function(l){lab+=l.cost});
+ var inc=j.crews.install.include,rem=j.crews.removal.include;
+ return {materials:m,elements:e,pins:pn,labour:lab,total:m+e+pn+lab,rows:rows,t:t,scope:inc&&rem?'Both':inc?'Installation':rem?'Take-down':'Neither'}}
+function stock(j){var t=takeoff(j),up={};store.jobs.forEach(function(o){if(o.id!==j.id&&o.status==='scheduled')takeoff(o).lines.forEach(function(l){up[l.sku]=(up[l.sku]||0)+l.qty})});
+ return t.lines.map(function(l){var inv=store.inventory[l.sku]||{},oh=n0(inv.onHand),have=isFinite(num(inv.onHand)),low=isFinite(num(inv.low))&&oh<=n0(inv.low);
+  var pull=Math.min(l.qty,oh),ord=Math.max(0,l.qty-oh);return {sku:l.sku,need:l.qty,onHand:oh,known:have,pull:pull,order:ord,low:low,up:up[l.sku]||0,sup:(PM[l.sku]||{sup:'Other'}).sup}})}
+/* ---- UI helpers ---- */
+function fld(label,c,id,k,o){o=o||{};var v=o.v!=null?o.v:'',t=o.type||'text';var ex=(o.ph?' placeholder="'+esc(o.ph)+'"':'')+(t==='number'?' inputmode="decimal"':'')+(o.step?' step="'+o.step+'"':'');
+ return '<div class="f '+(o.cls||'')+'"><label>'+label+'</label><input type="'+(t==='number'?'text':t)+'" data-c="'+c+'" data-i="'+esc(id)+'" data-k="'+k+'" data-t="'+t+'" value="'+esc(v)+'"'+ex+'></div>'}
+function sel(label,c,id,k,opts,v,cls){return '<div class="f '+(cls||'')+'"><label>'+label+'</label><select data-c="'+c+'" data-i="'+esc(id)+'" data-k="'+k+'">'+opts.map(function(o){var a=Array.isArray(o)?o:[o,o];return '<option value="'+esc(a[0])+'"'+(a[0]===v?' selected':'')+'>'+esc(a[1])+'</option>'}).join('')+'</select></div>'}
+function colorSel(c,id,v){return sel('Light colour','item',id,'color',CNAME,v,'')}
+function timeFields(it){return fld('Hours','item',it.id,'hrs',{v:it.hrs,type:'number',cls:'s'})+fld('Minutes','item',it.id,'mins',{v:it.mins,type:'number',cls:'s'})}
+function attachBlock(kind,ownerId,list){var sels=kind==='hw'?HWSEL:ELSEL;var rows=(list||[]).map(function(a,ix){return '<tr><td>'+esc((PM[a.sku]||{name:a.sku}).name)+'</td><td style="width:90px"><input data-c="att" data-i="'+kind+'|'+ownerId+'|'+ix+'" data-k="qty" data-t="number" inputmode="decimal" value="'+esc(a.qty)+'"></td><td style="width:60px"><button class="b x sm" data-act="rmatt" data-a="'+kind+'|'+ownerId+'|'+ix+'" aria-label="Remove">✕</button></td></tr>'}).join('');
+ return '<div class="tablewrap"><table class="table"><tbody>'+(rows||'<tr><td class="sub">None added.</td></tr>')+'</tbody></table></div><div class="row" style="margin-top:6px"><div class="f w"><select id="ps-'+kind+ownerId+'">'+sels.map(function(p){return '<option value="'+p.id+'">'+esc(p.name)+'</option>'}).join('')+'</select></div><div class="f s"><input id="pq-'+kind+ownerId+'" inputmode="decimal" value="1" aria-label="Quantity"></div><button class="b g2 sm" data-act="addatt" data-a="'+kind+'|'+ownerId+'">Add</button></div>'}
+function ownerList(kind,oid){if(oid==='JOB')return kind==='hw'?job.hw:job.el;var it=findItem(oid);return it?it[kind]:null}
+function photoBlock(it){var h='<h3>Photos &amp; pins</h3><p class="sub">Tap a photo to drop a pin: say what and how much. Each pin becomes a quote line, and the marked-up photo is the customer picture.</p><div class="photos">';
+ (it.photos||[]).forEach(function(ph,ix){h+='<div class="ph"><div style="position:relative"><img data-ph="'+ph.id+'" data-act="pinphoto" data-a="'+it.id+'|'+ix+'" alt="Photo '+(ix+1)+'" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">'+(ph.pins||[]).map(function(p,k){return '<span class="pinmark" style="left:'+p.x+'%;top:'+p.y+'%">'+(k+1)+'</span>'}).join('')+'</div><div class="cap"><b>'+(ph.pins||[]).length+' pin'+((ph.pins||[]).length===1?'':'s')+'</b><span style="flex:1"></span><button class="b o sm" data-act="custpic" data-a="'+it.id+'|'+ix+'">Customer pic</button><button class="b x sm" data-act="rmphoto" data-a="'+it.id+'|'+ix+'" aria-label="Delete photo">✕</button></div></div>'});
+ h+='<label class="b o" style="align-self:flex-start;cursor:pointer">+ Add photo<input type="file" accept="image/*" capture="environment" data-ph-add="'+it.id+'" hidden></label></div>';
+ var pl=[];(it.photos||[]).forEach(function(ph,ix){(ph.pins||[]).forEach(function(p,k){pl.push('<tr><td>P'+(ix+1)+'·'+(k+1)+'</td><td>'+esc(p.what)+'</td><td class="n">'+esc(p.qty||1)+'</td><td class="n">'+(isFinite(num(p.price))?money(num(p.price)*(n0(p.qty)||1)):'—')+'</td></tr>')})});
+ if(pl.length)h+='<div class="tablewrap"><table class="table"><thead><tr><th>Pin</th><th>What</th><th class="n">Qty</th><th class="n">Line</th></tr></thead><tbody>'+pl.join('')+'</tbody></table></div>';return h}
+/* ---- sections ---- */
+var SECS=[['home','Jobs','#e0212b'],['who','Who','#f2b632'],['trees','Trees','#18a24a'],['roofs','Roofs','#2457e6'],['extras','Garland &amp; wreath','#8a3fd1'],['parts','Parts &amp; power','#12a3a0'],['crews','Crews','#f58a1f'],['stock','Stock','#e0309b'],['quote','Quote','#9bd629']];
+function done(s){if(!job)return false;switch(s){case'who':return !!(job.customerId||(job.customer&&job.customer.name));case'trees':return job.trees.length>0;case'roofs':return job.roofs.length>0;case'extras':return job.garlands.length+job.wreaths.length>0;case'parts':return job.hw.length+job.el.length>0;case'crews':return job.crews.install.include||job.crews.removal.include;case'stock':return Object.keys(store.inventory).length>0;case'quote':return priceOf(job).total>0;}return false}
+function counts(s){if(!job)return '';return {trees:job.trees.length,roofs:job.roofs.length,extras:job.garlands.length+job.wreaths.length,parts:job.hw.length+job.el.length}[s]||''}
+function renderRail(){$('#rail').innerHTML=SECS.map(function(s){var dis=s[0]!=='home'&&!job,c=counts(s[0]);return '<button class="bulb'+(sec===s[0]?' on':'')+(done(s[0])?' done':'')+'" style="--c:'+s[2]+'" data-sec="'+s[0]+'"'+(dis?' disabled style="opacity:.35;--c:'+s[2]+'"':'')+' aria-label="'+s[1].replace(/&amp;/g,'&')+'"><span class="g"></span><span>'+s[1]+'</span>'+(c!==''&&c>0?'<span class="n">'+c+'</span>':'')+'</button>'}).join('')}
+function refreshHead(){$('#jn').textContent=job?job.name:'Pick or start a job';if(job){var p=priceOf(job);$('#tagv').textContent=money(p.total);$('#tagl').textContent=p.scope==='Neither'?'NO LABOUR IN':p.scope.toUpperCase()+' IN'}else{$('#tagv').textContent='$0.00';$('#tagl').textContent='QUOTE TAG'}}
+function render(){var m=$('#main'),st=m.scrollTop,h;
+ if(sec==='home'||!job)h=vHome();else h={who:vWho,trees:vTrees,roofs:vRoofs,extras:vExtras,parts:vParts,crews:vCrews,stock:vStock,quote:vQuote}[sec]();
+ $('#stage').innerHTML=h;m.scrollTop=st;renderRail();refreshHead();hydrate()}
+function hydrate(){document.querySelectorAll('img[data-ph]').forEach(function(im){getPhoto(im.getAttribute('data-ph')).then(function(u){if(u)im.src=u})});if(sec==='who'&&custMode==='existing')renderCustList()}
+function laborDock(){var r=function(k,n){var c=job.crews[k];return '<div class="blk"><button class="sw'+(c.include?' on':'')+'" data-act="inc" data-a="'+k+'" aria-pressed="'+c.include+'">'+(c.include?'IN':'OUT')+'</button><b>'+n+'</b><input aria-label="'+n+' men" data-c="crew" data-i="'+k+'" data-k="men" data-t="number" inputmode="decimal" value="'+esc(c.men)+'" placeholder="men"><span>×</span><input aria-label="hours" data-c="crew" data-i="'+k+'" data-k="hours" data-t="number" inputmode="decimal" value="'+esc(c.hours)+'" placeholder="hrs"><span>×</span><input aria-label="rate" data-c="crew" data-i="'+k+'" data-k="rate" data-t="number" inputmode="decimal" value="'+esc(c.rate)+'" placeholder="$ rate"></div>'};
+ return '<div class="lab-dock"><b>LABOUR</b>'+r('install','INSTALL CREW')+r('removal','TAKE-DOWN CREW')+'</div>'}
+function vHome(){var h='<div class="panel"><h2>Jobs</h2><p class="sub">Every job lives in this device. Start one, or pick it back up.</p><button class="b" data-act="newjob">+ New job</button></div>';
+ if(!store.jobs.length)h+='<div class="panel"><p class="sub">No jobs yet. Tap <b>New job</b> to begin the first estimate.</p></div>';
+ store.jobs.slice().reverse().forEach(function(j){var p=priceOf(j);h+='<div class="panel"><div class="row"><div class="f w"><b style="font-size:18px">'+esc(j.name)+'</b><span class="sub">'+esc(j.siteAddress||'No site address yet')+' · '+esc(j.status)+'</span></div><div class="big">'+money(p.total)+'</div><button class="b" data-act="open" data-a="'+j.id+'">Open</button><button class="b x sm" data-act="deljob" data-a="'+j.id+'">Delete</button></div></div>'});
+ return h}
+function vWho(){var c=job.customer||{};var seg='<div class="seg" role="tablist"><button class="'+(custMode==='existing'?'on':'')+'" data-act="cmode" data-a="existing">Existing</button><button class="'+(custMode==='new'?'on':'')+'" data-act="cmode" data-a="new">New</button></div>';
+ var h='<div class="panel"><h2>Who is this for?</h2>'+seg+'<div id="custbody" style="margin-top:10px">';
+ if(custMode==='existing'){h+='<div class="f"><label>Search the customer book</label><input id="cq" value="'+esc(custQ)+'" placeholder="name, company, phone, address"></div><div id="custlist"></div>'}
+ else{draft=draft||{type:'residential',company:'',contact:'',name:'',phone:'',email:'',site:job.siteAddress||'',same:true,billing:'',notes:''};
+  h+='<div class="row">'+sel('Type','draft','d','type',[['residential','Residential'],['commercial','Commercial']],draft.type)+'</div><div id="dform">'+draftForm()+'</div><p class="sub">Nothing goes into the book until you press <b>Complete customer</b>.</p><button class="b g2" data-act="completecust">Complete customer</button>'}
+ h+='</div></div>';
+ h+='<div class="panel"><h2>Site</h2><div class="row"><div class="f w"><label>Site address</label><input id="site" data-c="job" data-i="job" data-k="siteAddress" value="'+esc(job.siteAddress)+'" placeholder="Street, city"></div>'+sel('Job status','job','job','status',[['quote','Quote'],['scheduled','Scheduled'],['done','Done']],job.status,'s')+fld('Install date','job','job','date',{v:job.date,type:'date'})+'</div>'+
+  '<div class="chips" style="margin-top:8px"><button class="b o" data-act="map" data-a="gmaps">Google Maps</button><button class="b o" data-act="map" data-a="earth">Google Earth</button><button class="b o" data-act="map" data-a="geo">GeoOttawa</button></div><div id="geopanel"></div>'+
+  '<div class="row" style="margin-top:8px"><div class="chip'+(job.billingSame?' on':'')+'" data-act="bill"><input type="checkbox" tabindex="-1" '+(job.billingSame?'checked':'')+'> Billing same as site</div>'+(job.billingSame?'':'<div class="f w"><label>Billing address</label><input data-c="job" data-i="job" data-k="billingAddress" value="'+esc(job.billingAddress)+'"></div>')+'</div>'+
+  '<div class="f" style="margin-top:8px"><label>Job notes</label><textarea data-c="job" data-i="job" data-k="notes">'+esc(job.notes)+'</textarea></div></div>';
+ return h}
+function draftForm(){var d=draft,comm=d.type==='commercial';return '<div class="row">'+(comm?fld('Company','draft','d','company',{v:d.company,cls:'w'})+fld('Contact','draft','d','contact',{v:d.contact,cls:'w'}):fld('Name','draft','d','name',{v:d.name,cls:'w'}))+'</div><div class="row">'+fld('Phone','draft','d','phone',{v:d.phone,type:'tel'})+fld('Email','draft','d','email',{v:d.email,type:'email'})+'</div><div class="row">'+fld('Site address','draft','d','site',{v:d.site,cls:'w'})+'</div><div class="row"><div class="chip'+(d.same?' on':'')+'" data-act="dsame"><input type="checkbox" tabindex="-1" '+(d.same?'checked':'')+'> Billing same as site</div>'+(d.same?'':fld('Billing address','draft','d','billing',{v:d.billing,cls:'w'}))+'</div><div class="f"><label>Notes</label><textarea data-c="draft" data-i="d" data-k="notes">'+esc(d.notes)+'</textarea></div>'}
+function custLabel(c){return (c.type==='commercial'?(c.company||'')+(c.contact?' — '+c.contact:''):c.name)||'(unnamed)'}
+function renderCustList(){var q=(custQ||'').toLowerCase(),L=store.customers.filter(function(c){return !q||JSON.stringify(c).toLowerCase().indexOf(q)>-1});var el=$('#custlist');if(!el)return;
+ el.innerHTML=L.length?L.map(function(c){return '<div class="card"><div class="hd" data-act="pickcust" data-a="'+c.id+'"><span class="t">'+esc(custLabel(c))+'</span><span class="sub">'+esc(c.phone||'')+' '+esc(c.site||'')+'</span><button class="b sm">Use</button></div></div>'}).join(''):'<p class="sub">'+(store.customers.length?'No match.':'The customer book is empty. Choose New to add the first customer.')+'</p>'}
+function treeCard(t){var open=openItem===t.id,s=treeSets(t),q=n0(t.qty)||1;var ev=t.kind==='evergreen';
+ var parts=ev?[['trunk','Trunk'],['cone','Cone']]:[['trunk','Trunk'],['limbs','Limbs'],['canopy','Canopy']];
+ var h='<div class="card"><div class="hd" data-act="toggle" data-a="'+t.id+'"><span class="t">'+cdot(t.color)+' '+(ev?'Evergreen':'Leafy')+' · '+esc(t.heightFt||'?')+' ft × '+q+'</span><span class="sets" data-live="sets:'+t.id+'">'+s*q+' sets</span><span>'+(open?'▲':'▼')+'</span></div>';
+ if(open){h+='<div class="bd"><div class="row">'+sel('Kind','item',t.id,'kind',[['leafy','Leafy'],['evergreen','Evergreen']],t.kind,'')+fld('Height (ft)','item',t.id,'heightFt',{v:t.heightFt,type:'number',cls:'s'})+sel('Density','item',t.id,'density',[['light','Light'],['classic','Classic'],['full','Full']],t.density||'classic','s')+fld('Quantity','item',t.id,'qty',{v:t.qty,type:'number',cls:'s'})+colorSel('item',t.id,t.color)+fld('Runs (adapters)','item',t.id,'runs',{v:t.runs,type:'number',cls:'s'})+timeFields(t)+'</div>'+
+  '<h3>Wrap — any combination</h3><div class="chips">'+parts.map(function(p){var on=t.parts[p[0]];return '<div class="chip'+(on?' on':'')+'" data-act="part" data-a="'+t.id+'|'+p[0]+'"><input type="checkbox" tabindex="-1" '+(on?'checked':'')+'> '+p[1]+'</div>'}).join('')+'</div>'+
+  '<p class="sub">Product: 5 mm coaxial mini, 25 ft / 50 bulbs / 6" spacing (SKU 5MM-50L-25-6). <b data-live="setsper:'+t.id+'">'+s+'</b> sets per tree.</p>'+
+  '<div class="row">'+fld('Notes','item',t.id,'notes',{v:t.notes,cls:'w'})+'</div>'+photoBlock(t)+'<h3>Hardware on this tree</h3>'+attachBlock('hw',t.id,t.hw)+'<h3>Power on this tree</h3>'+attachBlock('el',t.id,t.el)+'<div style="margin-top:10px"><button class="b x sm" data-act="rmitem" data-a="trees|'+t.id+'">Remove tree</button></div></div>'}
+ return h+'</div>'}
+function vTrees(){var h='<div class="panel"><h2>Trees</h2><p class="sub">One list drives capture and estimate. Open a tree to size it, wrap it, photograph it.</p><div class="chips"><button class="b" data-act="addtree" data-a="leafy">+ Leafy tree</button><button class="b g2" data-act="addtree" data-a="evergreen">+ Evergreen tree</button></div>';
+ job.trees.forEach(function(t){h+=treeCard(t)});if(!job.trees.length)h+='<p class="sub">No trees yet.</p>';
+ var tot=job.trees.reduce(function(a,t){return a+treeSets(t)*(n0(t.qty)||1)},0),tm=job.trees.reduce(function(a,t){return a+itemTimeMin(t)},0);
+ h+='<div class="note"><b data-live="treetotal">'+tot+'</b> light sets on trees · tree time <b data-live="treetime">'+Math.floor(tm/60)+'h '+tm%60+'m</b></div></div>'+laborDock();return h}
+function roofCard(r){var open=openItem===r.id,c=roofCalc(r);var h='<div class="card"><div class="hd" data-act="toggle" data-a="'+r.id+'"><span class="t">'+esc(r.name||ROOF[r.type].n)+' · '+esc(r.lengthFt||'?')+' ft</span><span class="sets" data-live="roof:'+r.id+'">'+c.qty+' '+esc(c.unit.split(' ')[0]||'')+'</span><span>'+(open?'▲':'▼')+'</span></div>';
+ if(open){var showSp=r.type==='c9'||r.type==='c7',showCv=r.type==='icicle'||r.type==='micro';
+  h+='<div class="bd"><div class="row">'+fld('Name','item',r.id,'name',{v:r.name,cls:'w',ph:'e.g. Front eave'})+sel('Light type','item',r.id,'type',Object.keys(ROOF).map(function(k){return [k,ROOF[k].n]}),r.type,'w')+fld('Length (ft)','item',r.id,'lengthFt',{v:r.lengthFt,type:'number',cls:'s'})+colorSel('item',r.id,r.color)+(showSp?fld('Socket spacing (in)','item',r.id,'spacingIn',{v:r.spacingIn,type:'number',cls:'s',ph:'12'}):'')+(showCv?fld('Ft covered per strand','item',r.id,'strandCovers',{v:r.strandCovers,type:'number',cls:'s',ph:r.type==='icicle'?'6':'23'}):'')+fld('Runs (adapters)','item',r.id,'runs',{v:r.runs,type:'number',cls:'s'})+timeFields(r)+'</div>'+
+  '<p class="sub" data-live="roofnote:'+r.id+'">'+roofNote(r)+'</p><div class="row">'+fld('Notes','item',r.id,'notes',{v:r.notes,cls:'w'})+'</div>'+photoBlock(r)+'<h3>Hardware on this roofline</h3>'+attachBlock('hw',r.id,r.hw)+'<h3>Power on this roofline</h3>'+attachBlock('el',r.id,r.el)+'<div style="margin-top:10px"><button class="b x sm" data-act="rmitem" data-a="roofs|'+r.id+'">Remove roofline</button></div></div>'}
+ return h+'</div>'}
+function roofNote(r){var c=roofCalc(r);if(r.type==='mini')return 'Minis: 25 ft per set (the 5 mm coaxial product) → '+c.qty+' set(s).';return 'ASSUMPTION (editable above): '+c.qty+' '+c.unit+'. Not a verified Big Star count — confirm before quoting.'}
+function vRoofs(){var h='<div class="panel"><h2>Rooflines</h2><p class="sub">Length-based. Minis use the 25 ft / 50-bulb basis; other light types state their assumptions and can be edited.</p><button class="b" data-act="addroof">+ Roofline</button>';job.roofs.forEach(function(r){h+=roofCard(r)});if(!job.roofs.length)h+='<p class="sub">No rooflines yet.</p>';return h+'</div>'+laborDock()}
+function elCard(g,coll,lbl){var open=openItem===g.id;var h='<div class="card"><div class="hd" data-act="toggle" data-a="'+g.id+'"><span class="t">'+esc(g.name||lbl)+' × '+esc(g.qty||1)+'</span><span class="sets">'+(isFinite(num(g.price))?money(num(g.price)*(n0(g.qty)||1)):'price not entered')+'</span><span>'+(open?'▲':'▼')+'</span></div>';
+ if(open)h+='<div class="bd"><div class="row">'+fld('Name / size','item',g.id,'name',{v:g.name,cls:'w'})+fld('Quantity','item',g.id,'qty',{v:g.qty,type:'number',cls:'s'})+fld('Price each ($)','item',g.id,'price',{v:g.price,type:'number',cls:'s'})+sel('Stock product (optional)','item',g.id,'sku',[['','— none —']].concat(P.filter(function(p){return /WREATH|GARLAND/.test(p.id)}).map(function(p){return [p.id,p.name]})),g.sku,'w')+'</div>'+fld('Notes','item',g.id,'notes',{v:g.notes,cls:'w'})+photoBlock(g)+'<h3>Hardware on this element</h3>'+attachBlock('hw',g.id,g.hw)+'<h3>Power / timer on this element</h3><p class="sub">e.g. one Outdoor Digital Timer for this wreath.</p>'+attachBlock('el',g.id,g.el)+'<div style="margin-top:10px"><button class="b x sm" data-act="rmitem" data-a="'+coll+'|'+g.id+'">Remove</button></div></div>';return h+'</div>'}
+function vExtras(){var h='<div class="panel"><h2>Garlands &amp; wreaths</h2><div class="chips"><button class="b" data-act="addgar">+ Garland</button><button class="b g2" data-act="addwr">+ Wreath</button></div>';job.garlands.forEach(function(g){h+=elCard(g,'garlands','Garland')});job.wreaths.forEach(function(g){h+=elCard(g,'wreaths','Wreath')});if(!job.garlands.length&&!job.wreaths.length)h+='<p class="sub">None yet.</p>';return h+'</div>'+laborDock()}
+function vParts(){var h='<div class="panel"><h2>Whole-job parts</h2><p class="sub">Wire, screws, anchors, clips for the whole job (each tree, garland and wreath can also carry its own).</p><h3>Hardware / small parts</h3>'+attachBlock('hw','JOB',job.hw)+'</div><div class="panel"><h2>Whole-job power</h2><div class="note">The String Light Adapter is required for every coaxial run — it is added automatically (1 per run). Big Star sells no rubber outdoor extension cords; the generic line is marked as non-Big-Star.</div>'+attachBlock('el','JOB',job.el)+'</div>';
+ h+='<div class="panel"><h2>Cooper rentals</h2><p class="sub">Bookings, not stock. They are not in the inventory compare.</p>'+(job.rentals||[]).map(function(r,ix){return '<div class="row" style="margin-bottom:6px">'+fld('Rental (lift, truck…)','rent',ix,'what',{v:r.what,cls:'w'})+fld('Dates','rent',ix,'dates',{v:r.dates})+'<button class="b x sm" data-act="rmrent" data-a="'+ix+'">✕</button></div>'}).join('')+'<button class="b o" data-act="addrent">+ Rental booking</button></div>';return h}
+function vCrews(){var p=priceOf(job);var h='<div class="panel"><h2>Crew work orders</h2><p class="sub">crew size × hours × rate. Rates ship blank — blank rate means no dollars from that block, ever. An OUT block is gone from the price and the takeoff.</p>';
+ [['install','INSTALLATION CREW'],['removal','SEASONAL REMOVAL CREW']].forEach(function(b){var c=job.crews[b.key||b[0]],k=b[0];var inst=k==='install';var tm=job.trees.concat(job.roofs).reduce(function(a,t){return a+itemTimeMin(t)},0);
+  h+='<div class="card"><div class="hd" style="cursor:default"><button class="sw'+(c.include?' on':'')+'" data-act="inc" data-a="'+k+'" aria-pressed="'+c.include+'">'+(c.include?'IN':'OUT')+'</button><span class="t">'+b[1]+'</span><span class="sets" data-live="lab:'+k+'">'+labText(k)+'</span></div><div class="bd"><div class="row">'+fld('Crew size (men)','crew',k,'men',{v:c.men,type:'number',cls:'s'})+fld('Hours','crew',k,'hours',{v:c.hours,type:'number',cls:'s'})+fld('Minutes','crew',k,'mins',{v:c.mins,type:'number',cls:'s'})+fld('Rate ($/man-hour)','crew',k,'rate',{v:c.rate,type:'number',cls:'s'})+'</div>'+(inst&&tm?'<p class="sub">Item times add up to '+Math.floor(tm/60)+'h '+tm%60+'m of work <button class="b o sm" data-act="usetime">Use as crew hours</button></p>':'')+'</div></div>'});
+ return h+'<div class="note"><b>'+p.scope+'</b> in the price.</div></div>'}
+function labText(k){var c=job.crews[k];if(!c.include)return 'OUT — not in price or takeoff';var hrs=n0(c.hours)+n0(c.mins)/60,r=num(c.rate);return n0(c.men)+' × '+hrs.toFixed(2).replace(/\.00$/,'')+'h × '+(isFinite(r)?money(r):'rate not entered')+' = '+(isFinite(r)?money(n0(c.men)*hrs*r):'$0.00')}
+function pill(c,t){return '<span class="pill '+c+'">'+t+'</span>'}
+function vStock(){var S=stock(job),H='<div class="panel"><h2>Stock check</h2><p class="sub">This job\'s takeoff against what is on the shelf. Four states: on hand · low · coming up (other scheduled jobs) · to order.</p>';
+ if(!S.length)H+='<p class="sub">Nothing in the takeoff yet.</p>';else{H+='<div class="tablewrap"><table class="table"><thead><tr><th>Product</th><th class="n">Need</th><th class="n">On hand</th><th class="n">Pull</th><th class="n">Order</th><th>State</th></tr></thead><tbody>'+S.map(function(s){var st=[];if(s.known&&s.order===0)st.push(pill('p-on','On hand'));if(s.low)st.push(pill('p-low','Low'));if(s.up>0)st.push(pill('p-up','Coming up '+s.up));if(s.order>0)st.push(pill('p-ord','To order'));if(!s.known)st.push(pill('p-off','On hand not entered'));return '<tr><td>'+esc((PM[s.sku]||{name:s.sku}).name)+'</td><td class="n">'+s.need+'</td><td class="n">'+(s.known?s.onHand:'—')+'</td><td class="n">'+s.pull+'</td><td class="n">'+s.order+'</td><td>'+st.join(' ')+'</td></tr>'}).join('')+'</tbody></table></div>'}
+ H+='</div>';var by={};S.forEach(function(s){if(s.order>0){(by[s.sup]=by[s.sup]||[]).push(s)}});
+ H+='<div class="panel"><h2>Order list</h2>'+(Object.keys(by).length?Object.keys(by).map(function(k){return '<h3>'+esc(k)+'</h3><ul>'+by[k].map(function(s){return '<li><b>'+s.order+'</b> × '+esc((PM[s.sku]||{name:s.sku}).name)+'</li>'}).join('')+'</ul>'}).join(''):'<p class="sub">Nothing to order for this job.</p>')+'<button class="b o" data-act="copyorder">Copy order list</button></div>';
+ H+='<div class="panel"><h2>Stock on hand</h2><p class="sub">Every product Big Star lists for this tool. Enter on-hand and a low-stock mark. Blank = not counted.</p><input id="sq" placeholder="Filter products" style="margin-bottom:8px"><div class="tablewrap"><table class="table" id="stbl"><thead><tr><th>Product</th><th>Supplier</th><th>On hand</th><th>Low at</th><th>Price each ($)</th></tr></thead><tbody>'+P.map(function(p){var inv=store.inventory[p.id]||{},pr=store.priceBook[p.id];return '<tr data-n="'+esc(p.name.toLowerCase())+'"><td>'+esc(p.name)+'</td><td>'+esc(p.sup)+'</td><td style="width:90px"><input data-c="inv" data-i="'+p.id+'" data-k="onHand" data-t="number" inputmode="decimal" value="'+esc(inv.onHand==null?'':inv.onHand)+'" aria-label="On hand"></td><td style="width:90px"><input data-c="inv" data-i="'+p.id+'" data-k="low" data-t="number" inputmode="decimal" value="'+esc(inv.low==null?'':inv.low)+'" aria-label="Low at"></td><td style="width:100px"><input data-c="price" data-i="'+p.id+'" data-k="v" data-t="number" inputmode="decimal" value="'+esc(pr==null?'':pr)+'" aria-label="Price"></td></tr>'}).join('')+'</tbody></table></div></div>';return H}
+function vQuote(){var p=priceOf(job),t=p.t;var h='<div class="panel"><h2>Price summary</h2><div class="row"><div class="big">'+money(p.total)+'</div><span class="sub">'+p.scope+' labour in. Tax not added.</span></div><div class="tablewrap"><table class="table"><tbody><tr><td>Materials (price book)</td><td class="n">'+money(p.materials)+'</td></tr><tr><td>Garlands &amp; wreaths</td><td class="n">'+money(p.elements)+'</td></tr><tr><td>Pinned photo lines</td><td class="n">'+money(p.pins)+'</td></tr>'+t.labour.map(function(l){return '<tr><td>'+l.name+' — '+l.men+' × '+l.hrs.toFixed(2)+'h × '+(l.rateBlank?'rate not entered':money(l.rate))+'</td><td class="n">'+money(l.cost)+'</td></tr>'}).join('')+'<tr class="tot"><td>Total</td><td class="n">'+money(p.total)+'</td></tr></tbody></table></div>'+(p.rows.some(function(r){return r.unit==null})?'<div class="note warn">Some materials have no price in the price book (Stock → Price each), so they count as $0.00.</div>':'')+'</div>';
+ h+='<div class="panel"><h2>Materials takeoff</h2><div class="tablewrap"><table class="table"><thead><tr><th>Item</th><th class="n">Qty</th><th>For</th></tr></thead><tbody>'+(t.lines.length?t.lines.map(function(l){return '<tr><td>'+esc((PM[l.sku]||{name:l.sku}).name)+'</td><td class="n">'+l.qty+'</td><td class="sub">'+esc(l.from.join('; '))+'</td></tr>'}).join(''):'<tr><td class="sub" colspan="3">Empty.</td></tr>')+'</tbody></table></div><h3>Work orders</h3>'+(t.labour.length?t.labour.map(function(l){return '<div class="card"><div class="hd" style="cursor:default"><span class="t">'+l.name+'</span><span class="sets">'+l.men+' men × '+l.hrs.toFixed(2)+' h</span></div></div>'}).join(''):'<p class="sub">No crew work order is switched IN.</p>')+(t.pins.length?'<h3>Pinned from photos</h3><ul>'+t.pins.map(function(x){return '<li>'+esc(x.item)+' · photo '+x.photo+' pin '+x.n+': '+esc(x.what)+' × '+x.qty+'</li>'}).join('')+'</ul>':'')+'</div>';
+ h+='<div class="panel"><h2>Export</h2><div class="chips"><button class="b" data-act="export">Download job JSON</button><button class="b o" data-act="copytake">Copy takeoff text</button><button class="b o" data-act="print">Print</button></div></div>';return h}
+/* ---- live refresh (no re-render so typing keeps focus) ---- */
+function live(){if(!job)return;var tot=0,tm=0;job.trees.forEach(function(t){var s=treeSets(t),q=n0(t.qty)||1;tot+=s*q;tm+=itemTimeMin(t);setL('sets:'+t.id,s*q+' sets');setL('setsper:'+t.id,s)});job.roofs.forEach(function(r){var c=roofCalc(r);setL('roof:'+r.id,c.qty+' '+(c.unit.split(' ')[0]||''));setL('roofnote:'+r.id,roofNote(r))});
+ setL('treetotal',tot);setL('treetime',Math.floor(tm/60)+'h '+tm%60+'m');['install','removal'].forEach(function(k){setL('lab:'+k,labText(k))});refreshHead()}
+function setL(k,v){var e=document.querySelector('[data-live="'+k+'"]');if(e)e.textContent=v}
+/* ---- events ---- */
+document.addEventListener('input',function(e){var el=e.target,c=el.getAttribute&&el.getAttribute('data-c');if(!c)return;var i=el.getAttribute('data-i'),k=el.getAttribute('data-k'),v=el.value;
+ if(c==='draft'){draft[k]=v;return}if(c==='cq'){return}
+ if(c==='job'){job[k]=v;if(k==='siteAddress'){}}
+ else if(c==='item'){var it=findItem(i);if(!it)return;it[k]=v}
+ else if(c==='crew'){job.crews[i][k]=v}
+ else if(c==='att'){var p=i.split('|'),L=ownerList(p[0],p[1]);if(L&&L[p[2]])L[p[2]].qty=v}
+ else if(c==='inv'){store.inventory[i]=store.inventory[i]||{};store.inventory[i][k]=v}
+ else if(c==='price'){if(v==='')delete store.priceBook[i];else store.priceBook[i]=v}
+ else if(c==='rent'){job.rentals[i][k]=v}
+ save();live()});
+document.addEventListener('input',function(e){if(e.target.id==='cq'){custQ=e.target.value;renderCustList()}if(e.target.id==='sq'){var q=e.target.value.toLowerCase();document.querySelectorAll('#stbl tbody tr').forEach(function(r){r.style.display=r.getAttribute('data-n').indexOf(q)>-1?'':'none'})}});
+document.addEventListener('change',function(e){var el=e.target;var c=el.getAttribute&&el.getAttribute('data-c');
+ if(c==='draft'&&el.getAttribute('data-k')==='type'){draft.type=el.value;$('#dform').innerHTML=draftForm();return}
+ if(c==='item'&&(el.getAttribute('data-k')==='kind'||el.getAttribute('data-k')==='type'||el.getAttribute('data-k')==='color'||el.getAttribute('data-k')==='sku')){var it=findItem(el.getAttribute('data-i'));if(it&&el.getAttribute('data-k')==='kind'){it.parts=el.value==='leafy'?{trunk:true,limbs:false,canopy:true}:{trunk:true,cone:true}}save();render();return}
+ if(c==='job'&&el.getAttribute('data-k')==='status'){save();render()}
+ if(el.hasAttribute&&el.hasAttribute('data-ph-add')){var f=el.files&&el.files[0];var id=el.getAttribute('data-ph-add');if(!f)return;shrink(f).then(function(u){var it=findItem(id),pid=uid('p');putPhoto(pid,u);it.photos.push({id:pid,pins:[]});save();render()}).catch(function(){toast('That photo could not be read.')})}});
+document.addEventListener('click',function(e){var b=e.target.closest('[data-act],[data-sec]');if(!b){if(e.target.id==='santa'||e.target.closest('#santa')){toast('Ho ho ho — merry glimmering!')}return}
+ if(b.hasAttribute('data-sec')){if(b.disabled)return;sec=b.getAttribute('data-sec');render();return}
+ var a=b.getAttribute('data-a'),act=b.getAttribute('data-act');
+ switch(act){
+ case'newjob':job=normJob({name:'New job '+(store.jobs.length+1)});store.jobs.push(job);draft=null;custMode='existing';sec='who';save();render();break;
+ case'open':job=store.jobs.filter(function(j){return j.id===a})[0];draft=null;sec='who';openItem=null;render();break;
+ case'deljob':confirmDlg('Delete this job from this device?',function(){store.jobs=store.jobs.filter(function(j){return j.id!==a});if(job&&job.id===a)job=null;dirty=true;saveNow();render()});break;
+ case'cmode':custMode=a;if(a==='new')draft=draft||null;render();break;
+ case'pickcust':var c=store.customers.filter(function(x){return x.id===a})[0];if(c){job.customerId=c.id;job.customer=Object.assign({},c);job.name=custLabel(c);if(!job.siteAddress)job.siteAddress=c.site||'';save();toast('Customer attached.');sec='trees';render()}break;
+ case'completecust':completeCust();break;
+ case'dsame':draft.same=!draft.same;$('#dform').innerHTML=draftForm();break;
+ case'bill':job.billingSame=!job.billingSame;save();render();break;
+ case'map':mapOpen(a);break;
+ case'toggle':openItem=openItem===a?null:a;render();break;
+ case'addtree':var t=normJob({trees:[{kind:a,parts:a==='leafy'?{trunk:true,limbs:false,canopy:true}:{trunk:true,cone:true}}]}).trees[0];job.trees.push(t);openItem=t.id;save();render();break;
+ case'addroof':var r=normJob({roofs:[{}]}).roofs[0];job.roofs.push(r);openItem=r.id;save();render();break;
+ case'addgar':var g=normJob({garlands:[{}]}).garlands[0];job.garlands.push(g);openItem=g.id;save();render();break;
+ case'addwr':var w=normJob({wreaths:[{}]}).wreaths[0];job.wreaths.push(w);openItem=w.id;save();render();break;
+ case'part':var pp=a.split('|'),ti=findItem(pp[0]);ti.parts[pp[1]]=!ti.parts[pp[1]];save();render();break;
+ case'rmitem':var q=a.split('|');confirmDlg('Remove this item?',function(){var L=coll(q[0]);var ix=L.map(function(x){return x.id}).indexOf(q[1]);var gone=L.splice(ix,1)[0];(gone.photos||[]).forEach(function(p){delAfter(p.id)});save();render()});break;
+ case'addatt':var ap=a.split('|'),L2=ownerList(ap[0],ap[1]),sk=$('#ps-'+ap[0]+ap[1]).value,qq=n0($('#pq-'+ap[0]+ap[1]).value)||1;L2.push({sku:sk,qty:qq});save();render();break;
+ case'rmatt':var rp=a.split('|'),L3=ownerList(rp[0],rp[1]);L3.splice(+rp[2],1);save();render();break;
+ case'addrent':job.rentals.push({what:'',dates:''});save();render();break;
+ case'rmrent':job.rentals.splice(+a,1);save();render();break;
+ case'inc':job.crews[a].include=!job.crews[a].include;save();render();break;
+ case'usetime':var mins=job.trees.concat(job.roofs).reduce(function(s,x){return s+itemTimeMin(x)},0);job.crews.install.hours=Math.floor(mins/60);job.crews.install.mins=mins%60;save();render();break;
+ case'pinphoto':pinStart(a,e);break;
+ case'custpic':customerPic(a);break;
+ case'rmphoto':var pa=a.split('|'),pit=findItem(pa[0]);confirmDlg('Delete this photo and its pins?',function(){var ph=pit.photos.splice(+pa[1],1)[0];delAfter(ph.id);save();render()});break;
+ case'copyorder':copyText(orderText());break;
+ case'copytake':copyText(takeText());break;
+ case'export':exportJob();break;
+ case'print':window.print();break;
+ case'geocopy':copyText(job.siteAddress);break}});
+function delAfter(id){delPhoto(id)}
+function confirmDlg(msg,fn){var d=$('#dlg');d.innerHTML='<p style="font-weight:700">'+esc(msg)+'</p><div class="row"><button class="b o" id="dn">Cancel</button><button class="b x" id="dy">Yes</button></div>';d.showModal();$('#dn').onclick=function(){d.close()};$('#dy').onclick=function(){d.close();fn()}}
+function completeCust(){var d=draft,comm=d.type==='commercial';var label=comm?(d.company||'').trim():(d.name||'').trim();if(!label){toast(comm?'Add the company name first.':'Add the customer name first.');return}
+ if(!(d.phone||'').trim()&&!(d.email||'').trim()){toast('Add a phone number or an email so the customer can be reached.');return}
+ var c={id:uid('c'),type:d.type,company:d.company.trim(),contact:d.contact.trim(),name:d.name.trim(),phone:d.phone.trim(),email:d.email.trim(),site:d.site.trim(),billing:d.same?d.site.trim():d.billing.trim(),billingSame:d.same,notes:d.notes,created:Date.now()};
+ store.customers.push(c);job.customerId=c.id;job.customer=Object.assign({},c);job.name=custLabel(c);if(!job.siteAddress)job.siteAddress=c.site;draft=null;dirty=true;saveNow();toast('Customer added to the book.');sec='trees';render()}
+function mapOpen(kind){var ad=((document.getElementById('site')||{}).value||job.siteAddress||'').trim();job.siteAddress=ad;save();
+ if(!ad){var s=document.getElementById('site');if(s)s.focus();toast('Type the site address first, then tap again.');return}
+ var q=encodeURIComponent(ad);
+ if(kind==='gmaps')window.open('https://www.google.com/maps/search/?api=1&query='+q,'_blank','noopener');
+ else if(kind==='earth')window.open('https://earth.google.com/web/search/'+q,'_blank','noopener');
+ else{window.open('https://maps.ottawa.ca/geoOttawa/','_blank','noopener');var gp=$('#geopanel');if(gp)gp.innerHTML='<div class="addr-panel"><b>GeoOttawa has no address deep link.</b> Paste this into its search box:<br><b>'+esc(ad)+'</b> <button class="b o sm" data-act="geocopy">Copy address</button></div>';copyText(ad,true)}}
+function copyText(t,quiet){try{navigator.clipboard.writeText(t).then(function(){if(!quiet)toast('Copied.')},function(){if(!quiet)toast('Copy was blocked — select the text instead.')})}catch(e){if(!quiet)toast('Copy was blocked.')}}
+function orderText(){var by={};stock(job).forEach(function(s){if(s.order>0)(by[s.sup]=by[s.sup]||[]).push(s.order+' x '+(PM[s.sku]||{name:s.sku}).name)});return Object.keys(by).map(function(k){return k+'\n'+by[k].join('\n')}).join('\n\n')||'Nothing to order.'}
+function takeText(){var t=takeoff(job);return job.name+' — '+job.siteAddress+'\n\n'+t.lines.map(function(l){return l.qty+' x '+(PM[l.sku]||{name:l.sku}).name}).join('\n')+'\n\n'+(t.labour.map(function(l){return l.name+': '+l.men+' men x '+l.hrs.toFixed(2)+' h'}).join('\n')||'No crew work order in.')}
+function wrapName(t){var p=t.parts||{},ev=t.kind==='evergreen',a=ev?['trunk','cone']:['trunk','canopy','limbs'],on=a.filter(function(k){return p[k]});if(!on.length)return 'none';if(on.length===a.length&&!ev)return 'all';if(ev&&on.length===2)return 'both';if(!ev&&on.join()==='trunk,canopy')return 'both';return on.join('+')}
+function exportJob(){var p=priceOf(job),S=stock(job),cu=job.customer||{};
+ var trees=job.trees.map(function(t){return Object.assign({},t,{type:t.kind,height:t.heightFt,wrap:wrapName(t),sets:treeSets(t),setsTotal:treeSets(t)*(n0(t.qty)||1)})});
+ var roofs=job.roofs.map(function(r){var c=roofCalc(r);return Object.assign({},r,{label:r.name,length:r.lengthFt,qtyCalc:c.qty,unitCalc:c.unit})});
+ var photoRefs=job.trees.concat(job.roofs,job.garlands,job.wreaths).map(function(i){return {item:i.id,photos:(i.photos||[]).map(function(p){return {id:p.id,pins:p.pins}})}});
+ /* union of the checklist keys (client, customer, trees, rooflines…) and the estimator keys, plus additive customer / labour / inventory keys; the GLIMMER envelope rides along under "glimmer" */
+ var o={id:job.id,name:job.name,client:cu.name||cu.company||job.name,customer:cu,customerId:job.customerId,siteAddress:job.siteAddress,address:job.siteAddress,billingSame:job.billingSame,billingAddress:job.billingAddress,status:job.status,date:job.date,notes:job.notes,
+  trees:trees,rooflines:roofs,garlands:job.garlands,wreaths:job.wreaths,hardware:job.hw,electrical:job.el,rentals:job.rentals,
+  photoRefs:photoRefs,pins:p.t.pins.map(function(x){return {item:x.item,photo:x.photo,n:x.n,what:x.what,qty:x.qty,price:x.price}}),
+  labour:{install:job.crews.install,removal:job.crews.removal,scope:p.scope},
+  inventory:{takeoff:p.t.lines,compare:S,orderList:S.filter(function(s){return s.order>0})},
+  totals:{materials:p.materials,elements:p.elements,pins:p.pins,labour:p.labour,total:p.total},
+  storageKey:KEY,exportedAt:new Date().toISOString(),
+  glimmer:{exportShape:'glimmer-job/1',app:'GLIMMER',job:Object.assign({},job)}};
+ var b=new Blob([JSON.stringify(o,null,1)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=(job.name||'job').replace(/[^\w]+/g,'-')+'.glimmer.json';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500)}
+/* ---- pins ---- */
+function pinStart(a,e){var pa=a.split('|'),it=findItem(pa[0]),ph=it.photos[+pa[1]],im=e.target,r=im.getBoundingClientRect();var x=Math.round((e.clientX-r.left)/r.width*1000)/10,y=Math.round((e.clientY-r.top)/r.height*1000)/10;
+ var d=$('#dlg');d.innerHTML='<h3 style="margin-top:0">Pin '+((ph.pins||[]).length+1)+'</h3><div class="f"><label>What</label><input id="pw" placeholder="e.g. net lights on hedge"></div><div class="row"><div class="f"><label>How much (qty)</label><input id="pqn" inputmode="decimal" value="1"></div><div class="f"><label>Price each ($, optional)</label><input id="ppr" inputmode="decimal"></div></div><div class="row" style="margin-top:10px"><button class="b o" id="pc">Cancel</button><button class="b g2" id="pk">Add pin</button></div>';d.showModal();$('#pw').focus();
+ $('#pc').onclick=function(){d.close()};$('#pk').onclick=function(){var w=$('#pw').value.trim();if(!w){toast('Say what the pin is for.');return}ph.pins=ph.pins||[];ph.pins.push({id:uid('n'),x:x,y:y,what:w,qty:$('#pqn').value||1,price:$('#ppr').value});d.close();save();render()}}
+function customerPic(a){var pa=a.split('|'),it=findItem(pa[0]),ph=it.photos[+pa[1]];getPhoto(ph.id).then(function(u){var im=new Image();im.onload=function(){var c=document.createElement('canvas');c.width=im.width;c.height=im.height;var x=c.getContext('2d');x.drawImage(im,0,0);var r=Math.max(14,im.width/55);(ph.pins||[]).forEach(function(p,k){var px=p.x/100*c.width,py=p.y/100*c.height;x.beginPath();x.arc(px,py,r,0,7);x.fillStyle='#c2204e';x.fill();x.lineWidth=r/6;x.strokeStyle='#fff';x.stroke();x.fillStyle='#fff';x.font='bold '+Math.round(r*1.2)+'px system-ui';x.textAlign='center';x.textBaseline='middle';x.fillText(k+1,px,py+1)});
+  var d=$('#dlg');d.innerHTML='<img src="'+c.toDataURL('image/jpeg',.85)+'" alt="Marked-up photo" style="width:100%;border-radius:10px"><ol>'+(ph.pins||[]).map(function(p){return '<li>'+esc(p.what)+' × '+esc(p.qty||1)+'</li>'}).join('')+'</ol><div class="row"><button class="b o" id="cc">Close</button><a class="b g2" id="cd" download="customer-picture.jpg">Download</a></div>';$('#cd').href=c.toDataURL('image/jpeg',.85);d.showModal();$('#cc').onclick=function(){d.close()}};im.src=u})}
+/* ---- chrome ---- */
+function snow(){var s=$('#snow'),h='';for(var i=0;i<26;i++){h+='<i style="left:'+(Math.random()*100)+'%;animation-duration:'+(16+Math.random()*20)+'s;animation-delay:-'+(Math.random()*30)+'s;width:'+(3+Math.random()*4)+'px;height:'+(3+Math.random()*4)+'px"></i>'}s.innerHTML=h}
+function calmSet(on){document.body.classList.toggle('calm',on);$('#calm').setAttribute('aria-pressed',on);store.settings.calm=on;save()}
+$('#calm').addEventListener('click',function(){calmSet(!document.body.classList.contains('calm'))});
+window.addEventListener('beforeunload',saveNow);
+window.__glimmer={treeSets:treeSets,wrapName:wrapName,store:function(){return store},job:function(){return job},takeoff:takeoff,priceOf:priceOf,stock:stock,KEY:KEY,normJob:normJob};
+idbOpen().then(function(){load();snow();if(store.settings.calm||(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches))calmSet(true);if(store.jobs.length===0){}render()});
+})();
+</script>
+</body>
+</html>

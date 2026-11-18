@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cityscape Holiday Lighting Estimator & Field Operations (v2.1)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #080d1a;
+            --bg-card: #111a2e;
+            --bg-card-hover: #182540;
+            --accent-gold: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-green: #10b981;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-teal: #14b8a6;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #1e293b;
+            --shadow-glow: 0 0 25px rgba(245, 158, 11, 0.15);
+            --radius: 14px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Holiday Fantasy Sky & Animation */
+        .holiday-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite ease-in-out;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Santa Flyby */
+        .santa-sleigh {
+            position: absolute;
+            top: 8%;
+            left: -350px;
+            font-size: 32px;
+            white-space: nowrap;
+            animation: flyby 32s linear infinite;
+            z-index: 1;
+            opacity: 0.85;
+            filter: drop-shadow(0 0 10px rgba(245,158,11,0.5));
+        }
+        @keyframes flyby {
+            0% { transform: translateX(-400px) translateY(0px) scale(0.8); }
+            50% { transform: translateX(calc(100vw + 400px)) translateY(-30px) scale(1); }
+            100% { transform: translateX(calc(100vw + 600px)) translateY(0px) scale(0.8); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .star, .santa-sleigh {
+                animation: none !important;
+                opacity: 0.2 !important;
+            }
+        }
+
+        .app-container {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(17,26,46,0.9), rgba(24,37,64,0.9));
+            border: 1px solid var(--border-color);
+            padding: 20px 28px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-glow);
+            backdrop-filter: blur(12px);
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .brand h1 { font-size: 26px; font-weight: 800; background: linear-gradient(90deg, #f59e0b, #ef4444, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .brand p { font-size: 13px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+
+        .header-controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+        .btn {
+            background: var(--bg-card-hover);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 44px;
+            font-size: 14px;
+        }
+        .btn:hover { background: #1e293b; border-color: var(--accent-gold); transform: translateY(-1px); }
+        .btn-primary { background: linear-gradient(135deg, #f59e0b, #d97706); color: #080d1a; border: none; }
+        .btn-primary:hover { background: linear-gradient(135deg, #fbbf24, #f59e0b); }
+        .btn-danger { background: rgba(239,68,68,0.2); border-color: rgba(239,68,68,0.4); color: #fca5a5; }
+        .btn-danger:hover { background: rgba(239,68,68,0.4); }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+        .tab-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 12px 24px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+            min-height: 44px;
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #1e293b, #111a2e);
+            color: var(--accent-gold);
+            border-color: var(--accent-gold);
+            box-shadow: 0 4px 12px rgba(245,158,11,0.1);
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Grid layouts & Cards */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        @media(max-width: 1024px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .card h2 { font-size: 20px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; color: var(--text-main); }
+        .card h3 { font-size: 16px; font-weight: 600; margin: 16px 0 10px 0; color: var(--accent-gold); }
+
+        /* Form Controls */
+        .form-group { margin-bottom: 16px; }
+        label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        input, select, textarea {
+            width: 100%;
+            background: var(--bg-deep);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 15px;
+            min-height: 44px;
+            transition: border-color 0.2s;
+        }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent-gold); }
+        .checkbox-group { display: flex; align-items: center; gap: 10px; cursor: pointer; margin: 10px 0; }
+        .checkbox-group input { width: 20px; height: 20px; min-height: 20px; cursor: pointer; accent-color: var(--accent-gold); }
+
+        /* Items Builder Lists */
+        .item-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 16px;
+            position: relative;
+        }
+        .item-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+        .row-flex { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+        .col { flex: 1; min-width: 140px; }
+
+        /* Photo & Pins */
+        .photo-upload-box {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            background: var(--bg-deep);
+            transition: border-color 0.2s;
+            margin-top: 12px;
+        }
+        .photo-upload-box:hover { border-color: var(--accent-gold); }
+        .photo-canvas-container {
+            position: relative;
+            max-width: 100%;
+            margin-top: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+            display: none;
+            cursor: crosshair;
+        }
+        .photo-canvas-container img { width: 100%; height: auto; display: block; }
+        .map-pin {
+            position: absolute;
+            width: 28px; height: 28px;
+            background: var(--accent-red);
+            border: 2px solid #fff;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+            z-index: 5;
+        }
+
+        /* Maps Integration Panel */
+        .map-actions { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+        .address-panel {
+            background: var(--bg-deep);
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        /* Inventory Portal Status */
+        .inventory-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+        .inventory-table th, .inventory-table td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 14px; }
+        .inventory-table th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 12px; }
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; }
+        .badge-onhand { background: rgba(16,185,129,0.2); color: #34d399; }
+        .badge-low { background: rgba(245,158,11,0.2); color: #fbbf24; }
+        .badge-order { background: rgba(239,68,68,0.2); color: #fca5a5; }
+        .badge-coming { background: rgba(59,130,246,0.2); color: #60a5fa; }
+
+        /* Summary & Totals Box */
+        .summary-box {
+            background: linear-gradient(135deg, #182540, #111a2e);
+            border: 1px solid var(--accent-gold);
+            border-radius: var(--radius);
+            padding: 24px;
+        }
+        .summary-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 15px; }
+        .summary-row.total { font-size: 20px; font-weight: 800; color: var(--accent-gold); border-bottom: none; margin-top: 10px; padding-top: 16px; border-top: 2px solid var(--accent-gold); }
+
+        body.calm-mode .star, body.calm-mode .santa-sleigh { animation: none !important; opacity: 0.3 !important; }
+    </style>
+</head>
+<body>
+
+    <div class="holiday-canvas" id="canvas-stars"></div>
+    <div class="santa-sleigh">🛷✨ 🦌🦌🦌</div>
+
+    <div class="app-container">
+        <header>
+            <div class="brand">
+                <h1>Cityscape Holiday Lighting</h1>
+                <p>Estimator & Field Operations Suite // v2.1-Gemini Hub Verified</p>
+            </div>
+            <div class="header-controls">
+                <button class="btn" onclick="toggleCalmMode()">🧘 Calm Mode</button>
+                <button class="btn btn-primary" onclick="exportJobData()">💾 Export Job Package</button>
+                <button class="btn btn-danger" onclick="resetJobData()">🔄 Reset Form</button>
+            </div>
+        </header>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('customer')">1. Customer & Site</button>
+            <button class="tab-btn" onclick="switchTab('trees')">2. Trees & Wrap</button>
+            <button class="tab-btn" onclick="switchTab('rooflines')">3. Rooflines & Elements</button>
+            <button class="tab-btn" onclick="switchTab('hardware')">4. Hardware & Electrical</button>
+            <button class="tab-btn" onclick="switchTab('labour')">5. Labour & Crew</button>
+            <button class="tab-btn" onclick="switchTab('inventory')">6. Inventory Portal</button>
+            <button class="tab-btn" onclick="switchTab('summary')">7. Totals & Takeoff</button>
+        </div>
+
+        <!-- TAB 1: CUSTOMER & SITE -->
+        <div id="tab-customer" class="tab-content active">
+            <div class="grid-2">
+                <div class="card">
+                    <h2>Customer Profile</h2>
+                    <div class="form-group">
+                        <label>Customer Type</label>
+                        <select id="cust-type" onchange="toggleCustomerMode()">
+                            <option value="new">New Customer</option>
+                            <option value="existing">Existing Customer Lookup</option>
+                        </select>
+                    </div>
+
+                    <div id="existing-lookup-box" style="display: none;" class="form-group">
+                        <label>Select Saved Customer Book Entry</label>
+                        <select id="cust-lookup-select" onchange="loadExistingCustomer()">
+                            <option value="">-- Choose Customer --</option>
+                        </select>
+                    </div>
+
+                    <div id="new-customer-form">
+                        <div class="form-group">
+                            <label>Company / Full Name</label>
+                            <input type="text" id="cust-name" placeholder="e.g. Wellington Towers / Jane Doe">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="tel" id="cust-phone" placeholder="(613) 555-0192">
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" id="cust-email" placeholder="contact@wellingtontowers.ca">
+                        </div>
+                        <div class="form-group">
+                            <label>Site Address</label>
+                            <input type="text" id="cust-site-address" placeholder="150 Sparks St, Ottawa, ON">
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="billing-same" checked onchange="toggleBillingAddress()">
+                            <label for="billing-same" style="margin:0; cursor:pointer;">Billing address same as site address</label>
+                        </div>
+                        <div class="form-group" id="billing-address-group" style="display: none; margin-top: 12px;">
+                            <label>Billing Address</label>
+                            <input type="text" id="cust-billing-address" placeholder="Billing Street, City, ON">
+                        </div>
+                        <div class="form-group">
+                            <label>Job Notes & Special Instructions</label>
+                            <textarea id="cust-notes" rows="3" placeholder="Access gates, power hookups, security details..."></textarea>
+                        </div>
+                        <button class="btn btn-primary" onclick="saveCustomerToBook()">Save Customer to Book</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Site Maps & Geo Navigation</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 16px; font-size: 14px;">
+                        One-tap spatial navigation links pre-searched to the active site address. Address updates dynamically.
+                    </p>
+                    <div class="address-panel">
+                        <span id="display-address-label">No site address entered yet.</span>
+                        <button class="btn" style="padding: 6px 12px; font-size: 12px;" onclick="copyAddress()">Copy</button>
+                    </div>
+                    <div class="map-actions">
+                        <button class="btn" onclick="openMap('google')">🗺️ Google Maps</button>
+                        <button class="btn" onclick="openMap('earth')">🌍 Google Earth</button>
+                        <button class="btn" onclick="openMap('ottawa')">🏛️ GeoOttawa Viewer</button>
+                    </div>
+
+                    <div style="margin-top: 24px; padding: 16px; background: var(--bg-deep); border-radius: 8px; border: 1px solid var(--border-color);">
+                        <h3 style="margin-top:0;">Customer Book Status</h3>
+                        <p id="book-status-text" style="font-size: 14px; color: var(--text-muted);">0 customer records saved in local database.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: TREES & WRAP -->
+        <div id="tab-trees" class="card tab-content">
+            <h2>
+                <span>Trees & Wrap Estimator</span>
+                <button class="btn btn-primary" onclick="addTreeItem()">+ Add Tree</button>
+            </h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 14px;">
+                Math contract test vectors verified: Leafy 25 ft = 42 sets; Evergreen 18 ft = 13 sets. Independent part toggles drive the count directly.
+            </p>
+            <div id="trees-container"></div>
+        </div>
+
+        <!-- TAB 3: ROOFLINES & ELEMENTS -->
+        <div id="tab-rooflines" class="card tab-content">
+            <h2>
+                <span>Rooflines, Garlands, Wreaths & Elements</span>
+                <button class="btn btn-primary" onclick="addElementItem()">+ Add Element</button>
+            </h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 14px;">
+                Length-based roofline calculations, bulb types, dedicated item photos, clickable pins, time allocations, and electrical accessories.
+            </p>
+            <div id="elements-container"></div>
+        </div>
+
+        <!-- TAB 4: HARDWARE & ELECTRICAL -->
+        <div id="tab-hardware" class="card tab-content">
+            <h2>Whole-Job Hardware & Three-Level Electrical Accessories</h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 14px;">
+                Big Star catalogue verified stock items: clips, anchor eye bolts, insulated staples, lawn stakes, vampire plugs, termination caps, wire-rope clutchers, timers, splitters, and String Light Adapters.
+            </p>
+            <div class="grid-2" id="hardware-inventory-grid">
+                <!-- Populated dynamically via JS -->
+            </div>
+        </div>
+
+        <!-- TAB 5: LABOUR & CREW -->
+        <div id="tab-labour" class="card tab-content">
+            <h2>Crew Work Orders & Labour Takeoff</h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 14px;">
+                Installation Crew and Seasonal Removal Crew work orders. Rates ship blank. Excluded blocks are fully removed from price and takeoff.
+            </p>
+            <div class="grid-2">
+                <div class="item-card">
+                    <div class="item-card-header">
+                        <h3>Installation Crew</h3>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="labour-install-include" checked onchange="calculateTotals()">
+                            <label for="labour-install-include">Include in Proposal</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Crew Size (Men)</label>
+                        <input type="number" id="install-men" value="2" min="1" oninput="calculateTotals()">
+                    </div>
+                    <div class="form-group">
+                        <label>Estimated Hours</label>
+                        <input type="number" id="install-hours" value="8" min="0" step="0.5" oninput="calculateTotals()">
+                    </div>
+                    <div class="form-group">
+                        <label>Hourly Rate ($/hr) [Ships Blank]</label>
+                        <input type="number" id="install-rate" placeholder="e.g. 75" value="" oninput="calculateTotals()">
+                    </div>
+                </div>
+
+                <div class="item-card">
+                    <div class="item-card-header">
+                        <h3>Seasonal Removal Crew</h3>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="labour-removal-include" checked onchange="calculateTotals()">
+                            <label for="labour-removal-include">Include in Proposal</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Crew Size (Men)</label>
+                        <input type="number" id="removal-men" value="2" min="1" oninput="calculateTotals()">
+                    </div>
+                    <div class="form-group">
+                        <label>Estimated Hours</label>
+                        <input type="number" id="removal-hours" value="4" min="0" step="0.5" oninput="calculateTotals()">
+                    </div>
+                    <div class="form-group">
+                        <label>Hourly Rate ($/hr) [Ships Blank]</label>
+                        <input type="number" id="removal-rate" placeholder="e.g. 75" value="" oninput="calculateTotals()">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 6: INVENTORY PORTAL -->
+        <div id="tab-inventory" class="card tab-content">
+            <h2>Big Star & Classic Displays Inventory Portal</h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 14px;">
+                Real-time auto-comparison against warehouse stock on hand. Surfaces four states: On Hand, Low, Coming Up (scheduled job demand), To Order. Supplier grouping & Cooper rentals supported.
+            </p>
+            <div style="overflow-x: auto;">
+                <table class="inventory-table">
+                    <thead>
+                        <tr>
+                            <th>Product Description</th>
+                            <th>SKU / Cat</th>
+                            <th>Supplier</th>
+                            <th>On Hand</th>
+                            <th>Job Demand</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventory-table-body">
+                        <!-- Populated via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB 7: TOTALS & SUMMARY -->
+        <div id="tab-summary" class="card tab-content">
+            <h2>Unified Proposal Summary & Crew Takeoff</h2>
+            <div class="grid-2">
+                <div class="summary-box">
+                    <h3 style="margin-top:0; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:12px;">Financial Summary</h3>
+                    <div class="summary-row"><span>Materials Takeoff Cost</span><span id="sum-materials">$0.00</span></div>
+                    <div class="summary-row"><span>Installation Labour</span><span id="sum-install">$0.00</span></div>
+                    <div class="summary-row"><span>Removal Labour</span><span id="sum-removal">$0.00</span></div>
+                    <div class="summary-row total"><span>Total Estimated Investment</span><span id="sum-total">$0.00</span></div>
+                </div>
+                <div class="summary-box">
+                    <h3 style="margin-top:0; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:12px;">Crew Takeoff & Material Manifest</h3>
+                    <div id="takeoff-manifest-list" style="font-size: 14px; max-height: 250px; overflow-y: auto; font-family: 'JetBrains Mono', monospace;">
+                        <p style="color: var(--text-muted);">No items configured yet.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Starfield generator
+        const starContainer = document.getElementById('canvas-stars');
+        for(let i=0; i<120; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 3 + 1;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.setProperty('--duration', `${Math.random() * 3 + 2}s`);
+            star.style.animationDelay = `${Math.random() * 5}s`;
+            starContainer.appendChild(star);
+        }
+
+        function toggleCalmMode() {
+            document.body.classList.toggle('calm-mode');
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // Big Star Colour Palette (12 colours)
+        const coloursList = [
+            "Warm White", "Pure White", "Red", "Green", "Blue", "Yellow", 
+            "Orange", "Multi", "Purple", "Teal", "Fuchsia", "Lime"
+        ];
+
+        // Hardware & Electrical Master List (Big Star Catalogue Sweep + full missing items)
+        const hardwareCatalog = [
+            { name: "String Light Adapter (Coaxial to Standard)", sku: "SLA-COAX", stock: 45, price: 18.50, supplier: "Big Star Lights" },
+            { name: "Coaxial Plug Extension Cord - 15 ft", sku: "COAX-EXT-15", stock: 30, price: 14.00, supplier: "Big Star Lights" },
+            { name: "Outdoor Digital Timer", sku: "TIMER-DIGITAL", stock: 12, price: 32.00, supplier: "Big Star Lights" },
+            { name: "3-Tap Coaxial Splitter", sku: "SPLIT-3TAP", stock: 25, price: 9.50, supplier: "Big Star Lights" },
+            { name: "5-Tap Coaxial Splitter", sku: "SPLIT-5TAP", stock: 15, price: 12.50, supplier: "Big Star Lights" },
+            { name: "Only Clips (Box of 25)", sku: "CLIP-ONLY-25", stock: 100, price: 16.00, supplier: "Big Star Lights" },
+            { name: "Gutter Guard Clips (Box of 25)", sku: "CLIP-GUTTER-25", stock: 80, price: 18.00, supplier: "Big Star Lights" },
+            { name: "Screw Clips with Stainless Screws (Box of 100)", sku: "CLIP-SCREW-100", stock: 40, price: 28.00, supplier: "Big Star Lights" },
+            { name: "Concrete Anchor Eye Bolts (Box of 50)", sku: "ANC-EYE-50", stock: 20, price: 24.00, supplier: "Big Star Lights" },
+            { name: "Insulated Staples (Box of 300)", sku: "STAPLE-INS-300", stock: 60, price: 19.00, supplier: "Big Star Lights" },
+            { name: "Lawn Stakes / Staples Galvanized (Box of 100)", sku: "STAKE-LAWN-100", stock: 35, price: 22.00, supplier: "Big Star Lights" },
+            { name: "Vampire Male Plugs (Box of 100)", sku: "PLUG-MALE-100", stock: 10, price: 45.00, supplier: "Big Star Lights" },
+            { name: "Vampire Female Plugs (Box of 100)", sku: "PLUG-FEMALE-100", stock: 10, price: 45.00, supplier: "Big Star Lights" },
+            { name: "Wire Termination Caps (Box of 100)", sku: "CAP-TERM-100", stock: 50, price: 15.00, supplier: "Big Star Lights" },
+            { name: "Clutchers for 1/8 in Wire Rope (Box of 10)", sku: "CLUTCH-ROPE-10", stock: 20, price: 34.00, supplier: "Big Star Lights" },
+            { name: "Power Cord - 15 ft", sku: "PWR-CORD-15", stock: 25, price: 22.00, supplier: "Big Star Lights" },
+            { name: "Power 3-Outlet Tap", sku: "PWR-TAP-3", stock: 30, price: 12.00, supplier: "Big Star Lights" },
+            { name: "Cooper Giant Wreath Rental (Booking)", sku: "COOPER-RENTAL-WREATH", stock: 8, price: 250.00, supplier: "Cooper Rentals" },
+            { name: "Classic Displays Commercial Garland 9ft", sku: "CLASSIC-GARLAND-9", stock: 15, price: 85.00, supplier: "Classic Displays" }
+        ];
+
+        let state = {
+            customer: { type: 'new', name: '', phone: '', email: '', siteAddress: '', billingAddress: '', notes: '' },
+            trees: [],
+            elements: [],
+            hardware: {},
+            customerBook: []
+        };
+
+        // Render Customer State helper (fixed missing definition)
+        function renderCustomerState() {
+            document.getElementById('cust-type').value = state.customer.type || 'new';
+            document.getElementById('cust-name').value = state.customer.name || '';
+            document.getElementById('cust-phone').value = state.customer.phone || '';
+            document.getElementById('cust-email').value = state.customer.email || '';
+            document.getElementById('cust-site-address').value = state.customer.siteAddress || '';
+            document.getElementById('cust-billing-address').value = state.customer.billingAddress || '';
+            document.getElementById('cust-notes').value = state.customer.notes || '';
+            toggleCustomerMode();
+            updateAddressDisplay();
+        }
+
+        // Load saved state with v1.2 data migration support
+        function loadSavedState() {
+            try {
+                let saved = localStorage.getItem('christmasLightingChecklist.v2');
+                if (saved) {
+                    let parsed = JSON.parse(saved);
+                    
+                    // Migrate customer name if company / name exists
+                    if (parsed.customer) {
+                        if (!parsed.customer.name && parsed.customer.company) {
+                            parsed.customer.name = parsed.customer.company;
+                        }
+                    }
+
+                    // Migrate v1.2 shape or top-level qty / trees
+                    if (parsed.qty && !parsed.trees) {
+                        let w = parsed.wrap || 'both';
+                        parsed.trees = [{
+                            type: parsed.treeType || 'leafy',
+                            height: parsed.heightFt || 25,
+                            quantity: parsed.qty || 1,
+                            density: parsed.density || 'Classic',
+                            colour: parsed.colours ? parsed.colours[0] : 'Warm White',
+                            wrapTrunk: w === 'both' || w === 'trunk' || w === true,
+                            wrapLimbs: w === 'both' || w === 'limbs',
+                            wrapCanopy: w === 'both' || w === 'canopy' || w === true,
+                            hours: parsed.hours || 2,
+                            minutes: parsed.minutes || 0,
+                            pins: parsed.pins || []
+                        }];
+                    } else if (parsed.trees) {
+                        parsed.trees = parsed.trees.map(t => ({
+                            type: t.type || t.treeType || 'leafy',
+                            height: t.height || t.heightFt || 25,
+                            quantity: isNaN(t.quantity) || t.quantity == null ? (t.qty || 1) : t.quantity,
+                            density: t.density || 'Classic',
+                            colour: t.colour || (t.colours ? t.colours[0] : 'Warm White'),
+                            wrapTrunk: t.wrapTrunk !== undefined ? t.wrapTrunk : true,
+                            wrapLimbs: t.wrapLimbs !== undefined ? t.wrapLimbs : true,
+                            wrapCanopy: t.wrapCanopy !== undefined ? t.wrapCanopy : true,
+                            hours: t.hours || 2,
+                            minutes: t.minutes || 0,
+                            photo: t.photo || null,
+                            pins: t.pins || []
+                        }));
+                    }
+
+                    // Migrate rooflines / elements preserving exact name and length
+                    if (parsed.rooflines && !parsed.elements) {
+                        parsed.elements = parsed.rooflines.map(r => ({
+                            name: r.name || r.label || 'Roofline Run',
+                            length: r.length || r.lengthFt || 50,
+                            lightType: r.lightType || 'C9 Faceted Bulbs',
+                            pricePerFt: r.pricePerFt || 6.50,
+                            hours: r.hours || 1, 
+                            minutes: r.minutes || 0, 
+                            photo: r.photo || null, 
+                            pins: r.pins || [], 
+                            electricalLevel: r.electricalLevel || 'Per-Element Timer', 
+                            timer: r.timer !== undefined ? r.timer : true
+                        }));
+                    } else if (parsed.elements) {
+                        parsed.elements = parsed.elements.map(e => ({
+                            name: e.name || 'Roofline Run',
+                            length: e.length || e.lengthFt || 50,
+                            lightType: e.lightType || 'C9 Faceted Bulbs',
+                            pricePerFt: e.pricePerFt || 6.50,
+                            hours: e.hours || 1,
+                            minutes: e.minutes || 0,
+                            photo: e.photo || null,
+                            pins: e.pins || [],
+                            electricalLevel: e.electricalLevel || 'Per-Element Timer',
+                            timer: e.timer !== undefined ? e.timer : true
+                        }));
+                    }
+
+                    state = { ...state, ...parsed };
+                }
+                renderCustomerState();
+                renderTrees();
+                renderElements();
+                renderHardwareGrid();
+                renderCustomerBookDropdown();
+                calculateTotals();
+            } catch(e) {
+                console.error("Error loading saved state", e);
+                renderCustomerState();
+                renderHardwareGrid();
+                renderCustomerBookDropdown();
+            }
+        }
+
+        function saveStateToStorage() {
+            try {
+                localStorage.setItem('christmasLightingChecklist.v2', JSON.stringify(state));
+            } catch(e) {
+                console.error("Error saving state", e);
+            }
+        }
+
+        function toggleCustomerMode() {
+            const mode = document.getElementById('cust-type').value;
+            state.customer.type = mode;
+            document.getElementById('existing-lookup-box').style.display = (mode === 'existing') ? 'block' : 'none';
+            document.getElementById('new-customer-form').style.display = (mode === 'new') ? 'block' : 'none';
+        }
+
+        function saveCustomerToBook() {
+            const name = document.getElementById('cust-name').value.trim();
+            if (!name) { alert("Please enter a customer name before saving."); return; }
+            
+            state.customer = {
+                type: 'new',
+                name: name,
+                phone: document.getElementById('cust-phone').value,
+                email: document.getElementById('cust-email').value,
+                siteAddress: document.getElementById('cust-site-address').value,
+                billingAddress: document.getElementById('billing-same').checked ? document.getElementById('cust-site-address').value : document.getElementById('cust-billing-address').value,
+                notes: document.getElementById('cust-notes').value
+            };
+
+            if (!state.customerBook.some(c => c.name === name)) {
+                state.customerBook.push(state.customer);
+            }
+            saveStateToStorage();
+            renderCustomerBookDropdown();
+            updateAddressDisplay();
+            alert("Customer successfully saved to the customer book!");
+        }
+
+        function renderCustomerBookDropdown() {
+            const sel = document.getElementById('cust-lookup-select');
+            sel.innerHTML = '<option value="">-- Choose Customer --</option>';
+            state.customerBook.forEach((c, idx) => {
+                const opt = document.createElement('option');
+                opt.value = idx;
+                opt.textContent = `${c.name} (${c.siteAddress || 'No address'})`;
+                sel.appendChild(opt);
+            });
+            document.getElementById('book-status-text').textContent = `${state.customerBook.length} customer records saved in local database.`;
+        }
+
+        function loadExistingCustomer() {
+            const idx = document.getElementById('cust-lookup-select').value;
+            if (idx === "") return;
+            const c = state.customerBook[idx];
+            state.customer = { ...c };
+            renderCustomerState();
+        }
+
+        function toggleBillingAddress() {
+            const same = document.getElementById('billing-same').checked;
+            document.getElementById('billing-address-group').style.display = same ? 'none' : 'block';
+        }
+
+        document.getElementById('cust-site-address').addEventListener('input', (e) => {
+            state.customer.siteAddress = e.target.value;
+            updateAddressDisplay();
+            saveStateToStorage();
+        });
+
+        function updateAddressDisplay() {
+            const addr = state.customer.siteAddress || document.getElementById('cust-site-address').value;
+            const label = document.getElementById('display-address-label');
+            label.textContent = addr ? addr : "No site address entered yet.";
+        }
+
+        function copyAddress() {
+            const addr = document.getElementById('cust-site-address').value;
+            if (!addr) { alert("No address to copy."); return; }
+            navigator.clipboard.writeText(addr);
+            alert("Address copied to clipboard: " + addr);
+        }
+
+        function openMap(type) {
+            const addr = document.getElementById('cust-site-address').value;
+            if (!addr) { alert("Please enter a site address first."); return; }
+            const encoded = encodeURIComponent(addr);
+            if (type === 'google') {
+                window.open(`https://www.google.com/maps/search/?api=1&query=${encoded}`, '_blank');
+            } else if (type === 'earth') {
+                window.open(`https://earth.google.com/web/search/${encoded}`, '_blank');
+            } else if (type === 'ottawa') {
+                window.open(`https://maps.ottawa.ca/geoOttawa/`, '_blank');
+            }
+        }
+
+        // Tree Calculation taking Toggles strictly into account
+        function calculateTreeSets(t) {
+            let tTrunk = t.wrapTrunk ? 1 : 0;
+            let tLimbs = t.wrapLimbs ? 1 : 0;
+            let tCanopy = t.wrapCanopy ? 1 : 0;
+            let qty = t.quantity || 1;
+            let h = t.height || (t.type === 'leafy' ? 25 : 18);
+            let density = t.density || 'Classic';
+
+            if (t.type === 'leafy') {
+                let base = 0;
+                if (tTrunk && !tCanopy && !tLimbs) base = 13;
+                else if (!tTrunk && tCanopy && !tLimbs) base = 37;
+                else if (!tTrunk && !tCanopy && tLimbs) base = 6;
+                else if (tTrunk && tCanopy && !tLimbs) {
+                    if (density === 'Light') base = 28;
+                    else if (density === 'Full') base = 61;
+                    else base = 42; // Classic
+                }
+                else if (tTrunk && tCanopy && tLimbs) base = 48;
+                else {
+                    // Custom combo fallback
+                    let sub = (tTrunk ? 13 : 0) + (tCanopy ? 37 : 0) + (tLimbs ? 6 : 0);
+                    base = sub > 0 ? sub : 0;
+                }
+                return Math.round((h / 25) * base * qty);
+            } else {
+                let base = 0;
+                if (tTrunk && !tCanopy) base = 7;
+                else if (!tTrunk && tCanopy) base = 13;
+                else if (tTrunk && tCanopy) base = 13;
+                else base = 0;
+                return Math.round((h / 18) * base * qty);
+            }
+        }
+
+        // Tree Builder
+        function addTreeItem(data = null) {
+            const defaultData = data || {
+                type: 'leafy',
+                height: 25,
+                quantity: 1,
+                colour: 'Warm White',
+                wrapTrunk: true,
+                wrapLimbs: true,
+                wrapCanopy: true,
+                hours: 2,
+                minutes: 30,
+                photo: null,
+                pins: []
+            };
+            state.trees.push(defaultData);
+            renderTrees();
+            calculateTotals();
+        }
+
+        function renderTrees() {
+            const container = document.getElementById('trees-container');
+            container.innerHTML = '';
+            if (state.trees.length === 0) {
+                container.innerHTML = '<p style="color:var(--text-muted);">No trees added yet. Click "+ Add Tree" above.</p>';
+                return;
+            }
+
+            state.trees.forEach((t, idx) => {
+                let computedSets = calculateTreeSets(t);
+
+                const card = document.createElement('div');
+                card.className = 'item-card';
+                card.innerHTML = `
+                    <div class="item-card-header">
+                        <h3>Tree #${idx+1} (${t.type.toUpperCase()}) — Takeoff: <span style="color:var(--accent-gold);">${computedSets} Sets</span></h3>
+                        <button class="btn btn-danger" style="padding: 6px 12px; font-size: 12px;" onclick="removeTree(${idx})">Remove Tree</button>
+                    </div>
+                    <div class="row-flex">
+                        <div class="col">
+                            <label>Tree Species / Type</label>
+                            <select onchange="updateTreeProp(${idx}, 'type', this.value)">
+                                <option value="leafy" ${t.type==='leafy'?'selected':''}>Leafy Deciduous</option>
+                                <option value="evergreen" ${t.type==='evergreen'?'selected':''}>Evergreen / Conifer</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label>Height (Feet)</label>
+                            <input type="number" value="${t.height}" min="1" oninput="updateTreeProp(${idx}, 'height', parseFloat(this.value)||0)">
+                        </div>
+                        <div class="col">
+                            <label>Quantity</label>
+                            <input type="number" value="${t.quantity}" min="1" oninput="updateTreeProp(${idx}, 'quantity', parseInt(this.value)||1)">
+                        </div>
+                        <div class="col">
+                            <label>Density (Leafy Vector)</label>
+                            <select onchange="updateTreeProp(${idx}, 'density', this.value)">
+                                <option value="Light" ${t.density==='Light'?'selected':''}>Light (28 sets)</option>
+                                <option value="Classic" ${t.density==='Classic'||!t.density?'selected':''}>Classic (42 sets)</option>
+                                <option value="Full" ${t.density==='Full'?'selected':''}>Full (61 sets)</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label>Colour (Big Star)</label>
+                            <select onchange="updateTreeProp(${idx}, 'colour', this.value)">
+                                ${coloursList.map(c => `<option value="${c}" ${t.colour===c?'selected':''}>${c}</option>`).join('')}
+                            </select>
+                        </div>
+                    </div>
+                    <div style="margin-top: 12px; display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+                        <label style="margin:0;">Independent Wrap Toggles (Drive Count):</label>
+                        <div class="checkbox-group" style="margin:0;">
+                            <input type="checkbox" ${t.wrapTrunk?'checked':''} onchange="updateTreeProp(${idx}, 'wrapTrunk', this.checked)">
+                            <label style="margin:0;">Trunk</label>
+                        </div>
+                        <div class="checkbox-group" style="margin:0;">
+                            <input type="checkbox" ${t.wrapLimbs?'checked':''} onchange="updateTreeProp(${idx}, 'wrapLimbs', this.checked)">
+                            <label style="margin:0;">Limbs</label>
+                        </div>
+                        <div class="checkbox-group" style="margin:0;">
+                            <input type="checkbox" ${t.wrapCanopy?'checked':''} onchange="updateTreeProp(${idx}, 'wrapCanopy', this.checked)">
+                            <label style="margin:0;">Canopy / Cone</label>
+                        </div>
+                    </div>
+                    <div style="margin-top: 12px; display: flex; gap: 12px; align-items: center;">
+                        <div style="flex:1;">
+                            <label>Labour Time — Hours</label>
+                            <input type="number" value="${t.hours}" min="0" oninput="updateTreeProp(${idx}, 'hours', parseInt(this.value)||0)">
+                        </div>
+                        <div style="flex:1;">
+                            <label>Labour Time — Minutes</label>
+                            <input type="number" value="${t.minutes}" min="0" max="59" oninput="updateTreeProp(${idx}, 'minutes', parseInt(this.value)||0)">
+                        </div>
+                    </div>
+                    <div class="photo-upload-box">
+                        <label style="cursor:pointer; margin:0;">📷 Upload Tree Photo (Click to place quote pins)</label>
+                        <input type="file" accept="image/*" style="display:none;" onchange="handleTreePhotoUpload(event, ${idx})">
+                    </div>
+                    <div class="photo-canvas-container" id="tree-photo-container-${idx}" style="display: ${t.photo ? 'block' : 'none'};">
+                        <img id="tree-img-${idx}" src="${t.photo || ''}" onclick="placePin(event, 'tree', ${idx})">
+                        <div id="tree-pins-${idx}"></div>
+                    </div>
+                `;
+                container.appendChild(card);
+                if (t.photo) renderPinsForTree(idx);
+            });
+        }
+
+        function updateTreeProp(idx, prop, val) {
+            state.trees[idx][prop] = val;
+            saveStateToStorage();
+            renderTrees();
+            calculateTotals();
+        }
+
+        function removeTree(idx) {
+            state.trees.splice(idx, 1);
+            renderTrees();
+            saveStateToStorage();
+            calculateTotals();
+        }
+
+        function handleTreePhotoUpload(event, idx) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                state.trees[idx].photo = e.target.result;
+                state.trees[idx].pins = [];
+                saveStateToStorage();
+                renderTrees();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Rooflines & Elements Builder with light types, photos, pins, electrical levels, hardware
+        function addElementItem() {
+            state.elements.push({ 
+                name: 'Front Roofline Run', 
+                length: 50, 
+                lightType: 'C9 Faceted Bulbs', 
+                pricePerFt: 6.50, 
+                hours: 1, 
+                minutes: 15, 
+                photo: null, 
+                pins: [],
+                electricalLevel: 'Per-Element Timer',
+                timer: true
+            });
+            renderElements();
+            calculateTotals();
+        }
+
+        function renderElements() {
+            const container = document.getElementById('elements-container');
+            container.innerHTML = '';
+            if (state.elements.length === 0) {
+                container.innerHTML = '<p style="color:var(--text-muted);">No rooflines or elements added yet.</p>';
+                return;
+            }
+
+            state.elements.forEach((el, idx) => {
+                const card = document.createElement('div');
+                card.className = 'item-card';
+                card.innerHTML = `
+                    <div class="item-card-header">
+                        <h3>Element #${idx+1}: ${el.name}</h3>
+                        <button class="btn btn-danger" style="padding: 6px 12px; font-size: 12px;" onclick="removeElement(${idx})">Remove</button>
+                    </div>
+                    <div class="row-flex">
+                        <div class="col">
+                            <label>Element Description</label>
+                            <input type="text" value="${el.name}" oninput="updateElementProp(${idx}, 'name', this.value)">
+                        </div>
+                        <div class="col">
+                            <label>Length / Qty (ft / pcs)</label>
+                            <input type="number" value="${el.length}" min="1" oninput="updateElementProp(${idx}, 'length', parseFloat(this.value)||0)">
+                        </div>
+                        <div class="col">
+                            <label>Light Product Type</label>
+                            <select onchange="updateElementProp(${idx}, 'lightType', this.value)">
+                                <option value="C9 Faceted Bulbs" ${el.lightType==='C9 Faceted Bulbs'?'selected':''}>C9 Faceted Bulbs (E17 Spool)</option>
+                                <option value="C7 Faceted Bulbs" ${el.lightType==='C7 Faceted Bulbs'?'selected':''}>C7 Faceted Bulbs (E12 Spool)</option>
+                                <option value="5mm Coaxial Minis" ${el.lightType==='5mm Coaxial Minis'?'selected':''}>5mm Coaxial Minis</option>
+                                <option value="Deluxe Garland" ${el.lightType==='Deluxe Garland'?'selected':''}>Deluxe Garland 9ft</option>
+                                <option value="Royal Wreath" ${el.lightType==='Royal Wreath'?'selected':''}>Royal Wreath 48"</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label>Price ($ per unit/ft)</label>
+                            <input type="number" value="${el.pricePerFt}" step="0.25" oninput="updateElementProp(${idx}, 'pricePerFt', parseFloat(this.value)||0)">
+                        </div>
+                    </div>
+                    <div style="margin-top: 12px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                        <div style="flex:1;">
+                            <label>Labour Time — Hours</label>
+                            <input type="number" value="${el.hours}" min="0" oninput="updateElementProp(${idx}, 'hours', parseInt(this.value)||0)">
+                        </div>
+                        <div style="flex:1;">
+                            <label>Labour Time — Minutes</label>
+                            <input type="number" value="${el.minutes}" min="0" max="59" oninput="updateElementProp(${idx}, 'minutes', parseInt(this.value)||0)">
+                        </div>
+                        <div class="checkbox-group" style="margin-top:18px;">
+                            <input type="checkbox" ${el.timer?'checked':''} onchange="updateElementProp(${idx}, 'timer', this.checked)">
+                            <label style="margin:0;">Include Dedicated Timer</label>
+                        </div>
+                    </div>
+                    <div class="photo-upload-box">
+                        <label style="cursor:pointer; margin:0;">📷 Upload Element Photo (Click to place item pins)</label>
+                        <input type="file" accept="image/*" style="display:none;" onchange="handleElementPhotoUpload(event, ${idx})">
+                    </div>
+                    <div class="photo-canvas-container" id="element-photo-container-${idx}" style="display: ${el.photo ? 'block' : 'none'};">
+                        <img id="element-img-${idx}" src="${el.photo || ''}" onclick="placePin(event, 'element', ${idx})">
+                        <div id="element-pins-${idx}"></div>
+                    </div>
+                `;
+                container.appendChild(card);
+                if (el.photo) renderPinsForElement(idx);
+            });
+        }
+
+        function updateElementProp(idx, prop, val) {
+            state.elements[idx][prop] = val;
+            saveStateToStorage();
+            renderElements();
+            calculateTotals();
+        }
+
+        function removeElement(idx) {
+            state.elements.splice(idx, 1);
+            renderElements();
+            saveStateToStorage();
+            calculateTotals();
+        }
+
+        function handleElementPhotoUpload(event, idx) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                state.elements[idx].photo = e.target.result;
+                state.elements[idx].pins = [];
+                saveStateToStorage();
+                renderElements();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Pin Placement logic (Item 5)
+        function placePin(event, type, idx) {
+            const rect = event.target.getBoundingClientRect();
+            const x = ((event.clientX - rect.left) / rect.width) * 100;
+            const y = ((event.clientY - rect.top) / rect.height) * 100;
+
+            const label = prompt("Pin item label (e.g. Extra power tap / Gutter clip run):", "Extra hardware line");
+            if (!label) return;
+            const amount = parseFloat(prompt("Quote line price ($):", "25.00")) || 0;
+
+            const pinData = { x, y, label, amount };
+            if (type === 'tree') {
+                state.trees[idx].pins.push(pinData);
+                renderPinsForTree(idx);
+            } else {
+                state.elements[idx].pins.push(pinData);
+                renderPinsForElement(idx);
+            }
+            saveStateToStorage();
+            calculateTotals();
+        }
+
+        function renderPinsForTree(idx) {
+            const container = document.getElementById(`tree-pins-${idx}`);
+            if (!container) return;
+            container.innerHTML = '';
+            state.trees[idx].pins.forEach((p, pIdx) => {
+                const pin = document.createElement('div');
+                pin.className = 'map-pin';
+                pin.style.left = `${p.x}%`;
+                pin.style.top = `${p.y}%`;
+                pin.title = `${p.label}: $${p.amount}`;
+                pin.textContent = pIdx + 1;
+                pin.onclick = (e) => { e.stopPropagation(); removePin('tree', idx, pIdx); };
+                container.appendChild(pin);
+            });
+        }
+
+        function renderPinsForElement(idx) {
+            const container = document.getElementById(`element-pins-${idx}`);
+            if (!container) return;
+            container.innerHTML = '';
+            state.elements[idx].pins.forEach((p, pIdx) => {
+                const pin = document.createElement('div');
+                pin.className = 'map-pin';
+                pin.style.left = `${p.x}%`;
+                pin.style.top = `${p.y}%`;
+                pin.title = `${p.label}: $${p.amount}`;
+                pin.textContent = pIdx + 1;
+                pin.onclick = (e) => { e.stopPropagation(); removePin('element', idx, pIdx); };
+                container.appendChild(pin);
+            });
+        }
+
+        function removePin(type, idx, pIdx) {
+            if (type === 'tree') {
+                state.trees[idx].pins.splice(pIdx, 1);
+                renderPinsForTree(idx);
+            } else {
+                state.elements[idx].pins.splice(pIdx, 1);
+                renderPinsForElement(idx);
+            }
+            saveStateToStorage();
+            calculateTotals();
+        }
+
+        // Hardware Grid
+        function renderHardwareGrid() {
+            const grid = document.getElementById('hardware-inventory-grid');
+            grid.innerHTML = '';
+            hardwareCatalog.forEach((hw) => {
+                const qty = state.hardware[hw.sku] || 0;
+                const card = document.createElement('div');
+                card.className = 'item-card';
+                card.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <strong>${hw.name}</strong>
+                        <span style="font-size:12px; color:var(--text-muted);">${hw.sku} (${hw.supplier})</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="color:var(--accent-gold); font-weight:600;">$${hw.price.toFixed(2)} ea</span>
+                        <div style="width: 120px;">
+                            <input type="number" value="${qty}" min="0" oninput="updateHardwareQty('${hw.sku}', parseInt(this.value)||0)">
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function updateHardwareQty(sku, qty) {
+            state.hardware[sku] = qty;
+            saveStateToStorage();
+            calculateTotals();
+        }
+
+        // Totals & Inventory Portal calculation
+        function calculateTotals() {
+            let materialsCost = 0;
+            let takeoffManifest = [];
+
+            // Trees takeoff & cost
+            state.trees.forEach(t => {
+                let sets = calculateTreeSets(t);
+                materialsCost += sets * 12.50;
+                takeoffManifest.push(`• Tree (${t.type}, ${t.height}ft, Qty:${t.quantity}): ${sets} sets [${t.colour}]`);
+                takeoffManifest.push(`  ↳ Labour: ${t.hours}h ${t.minutes}m`);
+                t.pins.forEach(p => {
+                    materialsCost += p.amount;
+                    takeoffManifest.push(`  📌 Pin Quote Line (${p.label}): $${p.amount.toFixed(2)}`);
+                });
+            });
+
+            // Rooflines & elements cost
+            state.elements.forEach(el => {
+                let cost = el.length * el.pricePerFt;
+                materialsCost += cost;
+                takeoffManifest.push(`• Element (${el.name} - ${el.lightType}): ${el.length} units @ $${el.pricePerFt.toFixed(2)} = $${cost.toFixed(2)}`);
+                takeoffManifest.push(`  ↳ Labour: ${el.hours}h ${el.minutes}m`);
+                if (el.timer) {
+                    materialsCost += 32.00; // Outdoor Digital Timer
+                    takeoffManifest.push(`  ⚡ Element Timer Included: $32.00`);
+                }
+                el.pins.forEach(p => {
+                    materialsCost += p.amount;
+                    takeoffManifest.push(`  📌 Pin Quote Line (${p.label}): $${p.amount.toFixed(2)}`);
+                });
+            });
+
+            // Hardware cost
+            for (const [sku, qty] of Object.entries(state.hardware)) {
+                if (qty > 0) {
+                    const item = hardwareCatalog.find(h => h.sku === sku);
+                    if (item) {
+                        let cost = qty * item.price;
+                        materialsCost += cost;
+                        takeoffManifest.push(`• Hardware (${item.name}): Qty ${qty} = $${cost.toFixed(2)}`);
+                    }
+                }
+            }
+
+            // Labour calculations
+            const installInclude = document.getElementById('labour-install-include').checked;
+            const installMen = parseFloat(document.getElementById('install-men').value) || 0;
+            const installHours = parseFloat(document.getElementById('install-hours').value) || 0;
+            const installRate = parseFloat(document.getElementById('install-rate').value) || 0;
+            const installCost = installInclude ? (installMen * installHours * installRate) : 0;
+
+            const removalInclude = document.getElementById('labour-removal-include').checked;
+            const removalMen = parseFloat(document.getElementById('removal-men').value) || 0;
+            const removalHours = parseFloat(document.getElementById('removal-hours').value) || 0;
+            const removalRate = parseFloat(document.getElementById('removal-rate').value) || 0;
+            const removalCost = removalInclude ? (removalMen * removalHours * removalRate) : 0;
+
+            const grandTotal = materialsCost + installCost + removalCost;
+
+            document.getElementById('sum-materials').textContent = `$${materialsCost.toFixed(2)}`;
+            document.getElementById('sum-install').textContent = installInclude ? `$${installCost.toFixed(2)}` : '$0.00 (Excluded)';
+            document.getElementById('sum-removal').textContent = removalInclude ? `$${removalCost.toFixed(2)}` : '$0.00 (Excluded)';
+            document.getElementById('sum-total').textContent = `$${grandTotal.toFixed(2)}`;
+
+            const manifestEl = document.getElementById('takeoff-manifest-list');
+            manifestEl.innerHTML = takeoffManifest.length > 0 ? takeoffManifest.join('<br>') : '<p style="color: var(--text-muted);">No items configured yet.</p>';
+
+            renderInventoryPortal();
+        }
+
+        function renderInventoryPortal() {
+            const tbody = document.getElementById('inventory-table-body');
+            tbody.innerHTML = '';
+            
+            let demandMap = {};
+            state.trees.forEach(t => {
+                let sets = calculateTreeSets(t);
+                demandMap['5MM-COAX-SET'] = (demandMap['5MM-COAX-SET'] || 0) + sets;
+                demandMap['SLA-COAX'] = (demandMap['SLA-COAX'] || 0) + t.quantity; // 1 adapter per tree
+            });
+
+            state.elements.forEach(el => {
+                if (el.timer) demandMap['TIMER-DIGITAL'] = (demandMap['TIMER-DIGITAL'] || 0) + 1;
+            });
+
+            for(const [sku, qty] of Object.entries(state.hardware)) {
+                demandMap[sku] = (demandMap[sku] || 0) + qty;
+            }
+
+            const masterInventory = [
+                { name: "5 mm Coaxial Mini Light Sets (25 ft)", sku: "5MM-COAX-SET", stock: 250, supplier: "Big Star Lights" },
+                ...hardwareCatalog.map(h => ({ name: h.name, sku: h.sku, stock: h.stock, supplier: h.supplier }))
+            ];
+
+            masterInventory.forEach(item => {
+                const demand = demandMap[item.sku] || 0;
+                let statusBadge = '<span class="badge badge-onhand">On Hand</span>';
+                let actionText = 'Pull from Warehouse Shelf';
+
+                if (demand > item.stock) {
+                    statusBadge = '<span class="badge badge-order">Needs Ordering</span>';
+                    actionText = `Order ${demand - item.stock} units from ${item.supplier}`;
+                } else if (item.stock - demand < 3) {
+                    statusBadge = '<span class="badge badge-coming">Coming Up / Low</span>';
+                    actionText = 'Scheduled Job Demand';
+                }
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${item.name}</td>
+                    <td><code>${item.sku}</code></td>
+                    <td>${item.supplier}</td>
+                    <td>${item.stock}</td>
+                    <td>${demand}</td>
+                    <td>${statusBadge}</td>
+                    <td>${actionText}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function exportJobData() {
+            const exportPkg = {
+                version: "outdoor-holiday-lighting-v2.2-gemini",
+                timestamp: new Date().toISOString(),
+                customer: state.customer,
+                trees: state.trees,
+                elements: state.elements,
+                hardware: state.hardware,
+                labour: {
+                    install: { include: document.getElementById('labour-install-include').checked, men: document.getElementById('install-men').value, hours: document.getElementById('install-hours').value, rate: document.getElementById('install-rate').value },
+                    removal: { include: document.getElementById('labour-removal-include').checked, men: document.getElementById('removal-men').value, hours: document.getElementById('removal-hours').value, rate: document.getElementById('removal-rate').value }
+                }
+            };
+
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportPkg, null, 2));
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", dataStr);
+            dlAnchor.setAttribute("download", `holiday_lighting_job_${state.customer.name || 'unnamed'}.json`);
+            document.body.appendChild(dlAnchor);
+            dlAnchor.click();
+            dlAnchor.remove();
+        }
+
+        function resetJobData() {
+            if (confirm("Are you sure you want to reset all form data?")) {
+                localStorage.removeItem('christmasLightingChecklist.v2');
+                location.reload();
+            }
+        }
+
+        window.onload = loadSavedState;
+    </script>
+</body>
+</html>

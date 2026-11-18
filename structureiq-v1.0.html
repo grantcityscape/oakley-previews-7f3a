@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StructureIQ Modular — Workspace</title>
+<style>
+:root{
+  --bg:#E8EEF2; --bggrid:rgba(30,60,80,.07); --panel:#F8FBFC; --panel2:#EDF3F6; --inset:#E2EBEF;
+  --ink:#1E1E24; --mut:#54656F; --faint:#8D99AE;
+  --cyan:#00B4D8; --cyan-ink:#00748E; --silver:#8D99AE; --steel:#070A10;
+  --line:#B7C9D2; --line2:#D3DEE4;
+  --ok:#1E7A46; --warn:#9A6A00; --hold:#A33327; --rev:#6A4BC4;
+  --chip:#E2EBEF; --shadow:0 1px 3px rgba(7,10,16,.14);
+  --head-bg:#070A10; --head-ink:#E8EEF2;
+}
+html[data-theme="dark"]{
+  --bg:#070A10; --bggrid:rgba(0,180,216,.06); --panel:#12151D; --panel2:#1E1E24; --inset:#0C0F16;
+  --ink:#D8E0EA; --mut:#9AA7B8; --faint:#8D99AE;
+  --cyan:#00B4D8; --cyan-ink:#3FCDEE; --silver:#8D99AE; --steel:#070A10;
+  --line:#2A3140; --line2:#232936;
+  --ok:#3FB97A; --warn:#D8A93F; --hold:#E0685A; --rev:#A58BE0;
+  --chip:#1E1E24; --shadow:0 1px 3px rgba(0,0,0,.5);
+  --head-bg:#0C0F16; --head-ink:#E8EEF2;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; color:var(--ink); font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  background:
+    linear-gradient(var(--bggrid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--bggrid) 1px, transparent 1px),
+    var(--bg);
+  background-size:28px 28px,28px 28px,auto;
+  display:flex; flex-direction:column; overflow:hidden;
+}
+button{font:inherit; cursor:pointer}
+input,select,textarea{font:inherit; color:var(--ink); background:var(--panel); border:1px solid var(--line); border-radius:4px; padding:7px 9px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--cyan); outline-offset:0}
+a{color:var(--cyan-ink)}
+h1,h2,h3{margin:0; font-weight:650; letter-spacing:.01em}
+.small{font-size:12px} .mut{color:var(--mut)} .tiny{font-size:11px}
+/* ---------- opening ---------- */
+#opening{position:fixed; inset:0; z-index:60; background:#070A10; color:#E8EEF2; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; cursor:pointer;
+  background-image:linear-gradient(rgba(0,180,216,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(0,180,216,.07) 1px,transparent 1px); background-size:28px 28px}
+#opening .oname{font-size:30px; letter-spacing:.14em; font-weight:700}
+#opening .osub{color:#8D99AE; letter-spacing:.22em; font-size:11px; text-transform:uppercase}
+#opening .oskip{color:#8D99AE; font-size:12px; border:1px solid #2A3140; padding:5px 14px; border-radius:20px; background:transparent}
+#opening svg .draw{stroke-dasharray:600; stroke-dashoffset:600; animation:draw 2.6s ease forwards}
+#opening svg .panelL{transform-origin:150px 100px; animation:unfoldL 2.6s ease forwards}
+#opening svg .panelR{transform-origin:150px 100px; animation:unfoldR 2.6s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes unfoldL{0%{transform:translate(0,0) }55%{transform:translate(0,0)}100%{transform:translate(-16px,8px)}}
+@keyframes unfoldR{0%{transform:translate(0,0)}55%{transform:translate(0,0)}100%{transform:translate(16px,8px)}}
+#opening.gone{display:none}
+/* ---------- header ---------- */
+header{background:var(--head-bg); color:var(--head-ink); display:flex; align-items:center; gap:14px; padding:9px 16px; border-bottom:2px solid var(--cyan); flex:0 0 auto}
+header .brand{font-size:17px; font-weight:700; letter-spacing:.08em}
+header .brand span{color:var(--cyan)}
+header .hsub{font-size:11px; color:#8D99AE; letter-spacing:.14em; text-transform:uppercase}
+header .sp{flex:1}
+.hbtn{background:transparent; color:var(--head-ink); border:1px solid #2A3140; border-radius:4px; padding:6px 11px; font-size:12.5px}
+.hbtn:hover{border-color:var(--cyan)}
+#switcher{position:relative}
+#switchPanel{position:absolute; right:0; top:calc(100% + 8px); background:var(--panel); color:var(--ink); border:1px solid var(--line); border-radius:6px; box-shadow:var(--shadow); width:280px; padding:10px; z-index:40; display:none}
+#switchPanel.open{display:block}
+#switchPanel h3{font-size:12px; text-transform:uppercase; letter-spacing:.12em; color:var(--mut); margin-bottom:8px}
+#switchPanel .peer{display:flex; justify-content:space-between; align-items:center; width:100%; text-align:left; background:var(--panel2); border:1px solid var(--line2); border-radius:4px; padding:7px 10px; margin-bottom:6px; color:var(--ink)}
+#switchPanel .peer.cur{border-color:var(--cyan); font-weight:650}
+/* ---------- layout ---------- */
+#shell{flex:1; display:flex; min-height:0}
+nav#rail{flex:0 0 172px; background:var(--panel); border-right:1px solid var(--line); padding:12px 10px; display:flex; flex-direction:column; gap:4px; overflow-y:auto}
+nav#rail button{display:flex; align-items:center; gap:9px; text-align:left; background:transparent; border:1px solid transparent; border-radius:4px; padding:8px 10px; color:var(--ink); font-size:13.5px}
+nav#rail button .dot{width:7px; height:7px; border:1px solid var(--cyan); flex:0 0 auto; transform:rotate(45deg)}
+nav#rail button.active{background:var(--inset); border-color:var(--cyan); font-weight:650}
+nav#rail .railnote{margin-top:auto; font-size:11px; color:var(--mut); border-top:1px dashed var(--line); padding-top:9px}
+main{flex:1; min-width:0; overflow-y:auto; padding:16px 18px 22px}
+section.view{display:none; max-width:1180px; margin:0 auto}
+section.view.active{display:block}
+.vhead{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:4px}
+.vhead h2{font-size:20px}
+.kicker{font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--cyan-ink); font-weight:700}
+.rule{height:2px; background:linear-gradient(90deg,var(--cyan),transparent); margin:8px 0 14px}
+/* ---------- cards & boards ---------- */
+.grid{display:grid; gap:12px}
+.grid.c2{grid-template-columns:repeat(auto-fill,minmax(min(330px,100%),1fr))}
+.card{background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:13px 14px; box-shadow:var(--shadow)}
+.card.clickable{cursor:pointer} .card.clickable:hover{border-color:var(--cyan)}
+.card h3{font-size:15px; margin-bottom:3px}
+.badge{display:inline-block; font-size:10.5px; font-weight:700; letter-spacing:.06em; padding:1.5px 7px; border-radius:9px; vertical-align:1px}
+.b-sample{background:#F3D34A; color:#4A3A00; border:1px solid #C9A227}
+html[data-theme="dark"] .b-sample{background:#5C4B00; color:#F3D34A; border-color:#8A6D1F}
+.b-nc{background:var(--inset); color:var(--mut); border:1px solid var(--line)}
+.b-rev{background:#E5DEFA; color:#3D2A86; border:1px solid var(--rev)}
+html[data-theme="dark"] .b-rev{background:#2A2148; color:#C4B5F2}
+.b-ok{background:#DDF0E4; color:var(--ok); border:1px solid var(--ok)}
+html[data-theme="dark"] .b-ok{background:#123324; color:#7BD8A6}
+.b-hold{background:#F8E0DC; color:var(--hold); border:1px solid var(--hold)}
+html[data-theme="dark"] .b-hold{background:#3A1B16; color:#F0A396}
+.chip{display:inline-block; background:var(--chip); border:1px solid var(--line2); border-radius:4px; padding:2px 8px; font-size:12px; margin:0 4px 4px 0}
+.chip b{color:var(--cyan-ink)}
+.tracks{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px}
+.track{border:1px solid var(--line2); border-radius:5px; padding:9px 10px; background:var(--panel2)}
+.track h4{margin:0 0 6px; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--mut)}
+.ck{display:flex; justify-content:space-between; gap:8px; padding:4px 0; border-top:1px dashed var(--line2); font-size:12.5px}
+.ck:first-of-type{border-top:none}
+.st{font-size:11px; font-weight:700; white-space:nowrap}
+.st.Ready{color:var(--ok)} .st.Recorded{color:var(--cyan-ink)} .st.InProgress{color:var(--warn)} .st.OnHold{color:var(--hold)} .st.NotRecorded{color:var(--faint)}
+table{width:100%; border-collapse:collapse; font-size:13px}
+th,td{text-align:left; padding:7px 8px; border-bottom:1px solid var(--line2); vertical-align:top}
+th{font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--mut)}
+.rowbtns button{background:transparent; border:1px solid var(--line); border-radius:4px; padding:3px 8px; font-size:12px; margin-right:4px}
+.btn{background:var(--steel); color:#E8EEF2; border:1px solid var(--steel); border-radius:4px; padding:8px 14px; font-weight:600}
+html[data-theme="dark"] .btn{background:var(--cyan); color:#04222B; border-color:var(--cyan)}
+.btn.ghost{background:transparent; color:var(--ink); border-color:var(--line)}
+.btn.sm{padding:5px 10px; font-size:12.5px}
+form.f{display:grid; gap:9px; background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:13px 14px; margin:12px 0}
+form.f .cols{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:9px}
+form.f label{font-size:12px; color:var(--mut); display:grid; gap:4px}
+.notice{border:1px solid var(--cyan); background:var(--panel2); border-radius:6px; padding:11px 13px; font-size:13px}
+.notice.warn{border-color:var(--warn)}
+.framebox{border:1px solid var(--line); border-radius:6px; background:
+  linear-gradient(var(--bggrid) 1px, transparent 1px),linear-gradient(90deg, var(--bggrid) 1px, transparent 1px), var(--inset);
+  background-size:22px 22px,22px 22px,auto; padding:12px; text-align:center}
+.framebox .cap{font-size:11.5px; color:var(--mut); margin-top:8px}
+.revbanner{border:1.5px solid var(--rev); border-radius:6px; padding:11px 13px; background:var(--panel); margin:12px 0}
+.revbanner b{color:var(--rev); letter-spacing:.08em}
+.vergrid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:12px 0}
+.verbox{border:1px solid var(--line); border-radius:6px; padding:11px 13px; background:var(--panel)}
+.verbox.appr{border-color:var(--ok)}
+.verbox .vl{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--mut)}
+.verbox .vv{font-size:19px; font-weight:700; margin-top:2px}
+/* calendar */
+.calwrap{display:grid; grid-template-columns:minmax(300px,430px) 1fr; gap:14px; align-items:start}
+.calgrid{display:grid; grid-template-columns:repeat(7,1fr); gap:3px}
+.calgrid .dow{font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--mut); text-align:center; padding:3px 0}
+.calgrid .day{min-height:44px; border:1px solid var(--line2); border-radius:4px; padding:3px 5px; font-size:11.5px; background:var(--panel)}
+.calgrid .day.dim{opacity:.38} .calgrid .day.today{border-color:var(--cyan); border-width:1.5px}
+.calgrid .day .ev{display:block; background:var(--inset); border-left:2px solid var(--cyan); border-radius:2px; padding:0 3px; margin-top:2px; font-size:10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+/* doors */
+.doors{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:12px}
+.door{display:block; text-decoration:none; color:var(--ink); background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:13px 14px}
+.door:hover{border-color:var(--cyan)}
+.door h3{font-size:14.5px; color:var(--cyan-ink)}
+.door p{margin:5px 0 0; font-size:12.5px; color:var(--mut)}
+/* footer */
+footer{flex:0 0 auto; display:flex; align-items:center; gap:16px; padding:6px 16px; border-top:1px solid var(--line); background:var(--panel); font-size:12px; color:var(--mut)}
+#statusline{flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.memorial{display:flex; align-items:center; gap:6px; font-size:11px; font-weight:500; color:var(--mut); white-space:nowrap}
+.memorial svg{width:15px; height:15px}
+@media (max-width:760px){
+  header{flex-wrap:wrap; row-gap:6px}
+  nav#rail{flex-basis:58px; padding:12px 6px}
+  nav#rail button span.lbl, nav#rail .railnote{display:none}
+  .tracks,.vergrid,.calwrap{grid-template-columns:1fr}
+  header .hsub{display:none}
+  main{padding:12px}
+}
+</style>
+</head>
+<body>
+
+<div id="opening" role="button" aria-label="Skip opening" title="Tap to skip">
+  <svg width="300" height="190" viewBox="0 0 300 190" fill="none" aria-hidden="true">
+    <g stroke="#00B4D8" stroke-width="1.6">
+      <polygon class="draw" points="150,28 214,64 150,100 86,64" fill="rgba(0,180,216,.08)"/>
+      <polygon class="draw panelL" points="86,64 150,100 150,162 86,126" fill="rgba(141,153,174,.10)"/>
+      <polygon class="draw panelR" points="150,100 214,64 214,126 150,162" fill="rgba(141,153,174,.16)"/>
+      <line class="draw" x1="150" y1="100" x2="150" y2="162"/>
+      <line class="draw" x1="86" y1="95" x2="150" y2="131" stroke-dasharray="4 4"/>
+      <line class="draw" x1="214" y1="95" x2="150" y2="131" stroke-dasharray="4 4"/>
+    </g>
+    <g fill="#8D99AE"><circle cx="150" cy="28" r="2.4"/><circle cx="86" cy="64" r="2.4"/><circle cx="214" cy="64" r="2.4"/><circle cx="150" cy="162" r="2.4"/></g>
+  </svg>
+  <div class="oname">StructureIQ <span style="color:#00B4D8">Modular</span></div>
+  <div class="osub">Isometric Wireframe Unfold — design treatment</div>
+  <button class="oskip" id="skipBtn">Skip</button>
+</div>
+
+<header>
+  <div>
+    <div class="brand">StructureIQ <span>Modular</span></div>
+    <div class="hsub">Unit &amp; assembly dossiers</div>
+  </div>
+  <div class="sp"></div>
+  <div id="switcher">
+    <button class="hbtn" id="switchBtn">Workbench ▾</button>
+    <div id="switchPanel" aria-label="Workbench switcher"></div>
+  </div>
+  <button class="hbtn" id="deckBtn">⌂ Command Deck</button>
+  <button class="hbtn" id="themeBtn">Dark</button>
+</header>
+
+<div id="shell">
+  <nav id="rail" aria-label="Views">
+    <button data-view="board" class="active"><i class="dot"></i><span class="lbl">Board</span></button>
+    <button data-view="dossier"><i class="dot"></i><span class="lbl">Dossier</span></button>
+    <button data-view="inventory"><i class="dot"></i><span class="lbl">Inventory</span></button>
+    <button data-view="calendar"><i class="dot"></i><span class="lbl">Calendar</span></button>
+    <button data-view="email"><i class="dot"></i><span class="lbl">Email</span></button>
+    <button data-view="social"><i class="dot"></i><span class="lbl">Social</span></button>
+    <button data-view="assistant"><i class="dot"></i><span class="lbl">Assistant</span></button>
+    <button data-view="reference"><i class="dot"></i><span class="lbl">Reference</span></button>
+    <button data-view="accounts"><i class="dot"></i><span class="lbl">Accounts</span></button>
+    <button data-view="about"><i class="dot"></i><span class="lbl">About</span></button>
+    <div class="railnote">Standalone workspace. Records are saved on this device only — nothing here is live or synced.</div>
+  </nav>
+
+  <main id="main">
+    <section class="view active" id="view-board"></section>
+    <section class="view" id="view-dossier"></section>
+    <section class="view" id="view-inventory"></section>
+    <section class="view" id="view-calendar"></section>
+    <section class="view" id="view-email"></section>
+    <section class="view" id="view-social"></section>
+    <section class="view" id="view-assistant"></section>
+    <section class="view" id="view-reference"></section>
+    <section class="view" id="view-accounts"></section>
+    <section class="view" id="view-about"></section>
+  </main>
+</div>
+
+<footer>
+  <div id="statusline">Ready.</div>
+  <div class="memorial"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><ellipse cx="12" cy="15.5" rx="4.6" ry="3.9"/><circle cx="5.2" cy="10.6" r="1.9"/><circle cx="8.7" cy="7.6" r="2.05"/><circle cx="12.9" cy="6.9" r="2.05"/><circle cx="16.9" cy="8.6" r="1.9"/><circle cx="19" cy="12" r="1.65"/></svg><span>In memory of Oakley</span></div>
+</footer>
+
+<script>
+'use strict';
+/* ================= StructureIQ Modular — standalone workspace =================
+   Storage: structureIq.entries.v1 (records) · structureIq.social.v1 (social drafts)
+            structureIq.theme.v1 (theme choice)
+   Rules set for THIS app: dates are stored ISO (YYYY-MM-DD) and shown as "Nov 18, 2026".
+   This app holds no prices and no currency amounts — quantities are unit counts only.
+   Email is DRAFT-ONLY: the app never sends and keeps no sent log. */
+var STORE_KEY='structureIq.entries.v1';
+var SOCIAL_KEY='structureIq.social.v1';
+var THEME_KEY='structureIq.theme.v1';
+var APP_VERSION='1.0';
+
+var store=null, social=null, seedWriteFailed=false, socialWriteFailed=false;
+var selectedDossierId=null, calCursor=null, editingDraftId=null, editingDossierId=null;
+
+function todayStr(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function uid(p){return p+'-'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function fmtDate(iso){if(!iso){return '—';}var p=String(iso).split('-');if(p.length!==3){return esc(iso);}var M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return M[Number(p[1])-1]+' '+Number(p[2])+', '+p[0];}
+function sampleTag(r){return r&&r.sample?' <span class="badge b-sample">Sample</span>':'';}
+function stClass(s){return String(s||'').replace(/\s/g,'');}
+function stHtml(s){return '<span class="st '+stClass(s)+'">'+esc(s||'Not recorded')+'</span>';}
+
+/* ---------------- seeds: every seed is explicitly fictional ---------------- */
+function seedData(){
+  return {
+    version:APP_VERSION,
+    dossiers:[
+      {id:'d-ex01', code:'SIQ-EX-01', title:'Two-module assembly — worked example', sample:true,
+       workingVersion:'v1.1', approvedRevision:'Rev A', state:'Aligned',
+       note:'Fictional example dossier. The working version and the approved revision describe the same assembly, so the record reads aligned.',
+       components:[
+         {id:'c11', ref:'M-1', name:'Module frame A', spec:'Steel frame, bolted connections', status:'Ready', note:'Example entry.'},
+         {id:'c12', ref:'M-2', name:'Module frame B', spec:'Steel frame, bolted connections', status:'Ready', note:'Example entry.'},
+         {id:'c13', ref:'W-1', name:'Wall cassette set', spec:'Panelised cassettes, gasketed seams', status:'Recorded', note:'Example entry.'},
+         {id:'c14', ref:'R-1', name:'Roof cassette', spec:'Panelised cassette, membrane spec on file', status:'Recorded', note:'Example entry.'},
+         {id:'c15', ref:'S-1', name:'Services stub kit', spec:'Rough-in stubs, capped', status:'In progress', note:'Example entry.'}
+       ],
+       factory:[
+         {id:'f11', step:'Frame jig check', status:'Ready', date:'2026-11-04', note:'Example record.'},
+         {id:'f12', step:'Panel line record', status:'Recorded', date:'2026-11-09', note:'Example record.'},
+         {id:'f13', step:'Services rough-in record', status:'In progress', date:'', note:'Example record.'},
+         {id:'f14', step:'Factory inspection visit', status:'Not recorded', date:'', note:''}
+       ],
+       site:[
+         {id:'s11', step:'Foundation readiness record', status:'Recorded', date:'2026-11-11', note:'Example record.'},
+         {id:'s12', step:'Delivery window record', status:'Not recorded', date:'', note:''},
+         {id:'s13', step:'Crane plan record', status:'Not recorded', date:'', note:''},
+         {id:'s14', step:'Set & seal record', status:'Not recorded', date:'', note:''}
+       ],
+       revisionNote:''},
+      {id:'d-ex02', code:'SIQ-EX-02', title:'Panelised wall assembly — revised example', sample:true,
+       workingVersion:'v2.3', approvedRevision:'Rev B', state:'Revised assembly',
+       note:'Fictional difficult case. After Rev B was approved, two components changed in the working version. The dossier keeps both in view: the assembly as approved, and the assembly as it now stands.',
+       components:[
+         {id:'c21', ref:'W-1', name:'Wall cassette W-1', spec:'Panelised cassette, gasketed seams', status:'Ready', note:'Unchanged since Rev B.'},
+         {id:'c22', ref:'W-2', name:'Wall cassette W-2', spec:'Panelised cassette, gasketed seams', status:'Ready', note:'Unchanged since Rev B.'},
+         {id:'c23', ref:'W-3', name:'Wall cassette W-3', spec:'Insulation spec CHANGED after approval', status:'On hold', note:'Changed in working v2.2 — not in approved Rev B.'},
+         {id:'c24', ref:'G-1', name:'Glazing unit G-1', spec:'Size CHANGED after approval', status:'On hold', note:'Changed in working v2.3 — not in approved Rev B.'},
+         {id:'c25', ref:'F-1', name:'Floor cassette F-1', spec:'Panelised cassette', status:'Recorded', note:'Unchanged since Rev B.'}
+       ],
+       factory:[
+         {id:'f21', step:'Frame jig check', status:'Ready', date:'2026-10-21', note:'Example record.'},
+         {id:'f22', step:'Panel line record', status:'Recorded', date:'2026-10-28', note:'Example record.'},
+         {id:'f23', step:'Re-approval of revised assembly', status:'Not recorded', date:'', note:'No re-approval is recorded for v2.3.'}
+       ],
+       site:[
+         {id:'s21', step:'Foundation readiness record', status:'Recorded', date:'2026-11-02', note:'Example record.'},
+         {id:'s22', step:'Delivery window record', status:'On hold', date:'', note:'Held in this example until the revision question is closed.'}
+       ],
+       revisionNote:'REVISED ASSEMBLY — working version v2.3 differs from approved revision Rev B (components W-3 and G-1 changed after approval). No re-approval is recorded. This banner stays until a re-approval record exists or the working version returns to Rev B.'},
+      {id:'d-ex03', code:'SIQ-EX-03', title:'Single-module utility pod — early example', sample:true,
+       workingVersion:'v0.2', approvedRevision:'—', state:'In preparation',
+       note:'Fictional example dossier at an early stage. No revision has been approved, and the record says so.',
+       components:[
+         {id:'c31', ref:'P-1', name:'Pod shell', spec:'Single module shell, spec in draft', status:'Recorded', note:'Example entry.'},
+         {id:'c32', ref:'D-1', name:'Door & hardware set', spec:'Not yet specified', status:'Not recorded', note:''}
+       ],
+       factory:[
+         {id:'f31', step:'Frame jig check', status:'Not recorded', date:'', note:''}
+       ],
+       site:[
+         {id:'s31', step:'Foundation readiness record', status:'Not recorded', date:'', note:''}
+       ],
+       revisionNote:''}
+    ],
+    inventory:[
+      {id:'i1', item:'Connector plate set', spec:'Galvanised steel, bolted', qty:24, unit:'sets', status:'Recorded', sample:true},
+      {id:'i2', item:'Seam gasket roll', spec:'Closed-cell, 25 m roll', qty:9, unit:'rolls', status:'Recorded', sample:true},
+      {id:'i3', item:'Lifting lug', spec:'Rated lug, tagged', qty:16, unit:'pieces', status:'Recorded', sample:true},
+      {id:'i4', item:'Panel screw box', spec:'Self-drilling, 500 per box', qty:0, unit:'boxes', status:'Not recorded', sample:true}
+    ],
+    appointments:[
+      {id:'a1', date:'2026-11-24', title:'Follow-up — revised assembly re-approval', kind:'Follow-up', dossierId:'d-ex02', note:'Example appointment, tied to the SIQ-EX-02 dossier.', sample:true},
+      {id:'a2', date:'2026-12-03', title:'Deadline — factory track records for SIQ-EX-01', kind:'Deadline', dossierId:'d-ex01', note:'Example deadline, tied to the SIQ-EX-01 dossier.', sample:true}
+    ],
+    drafts:[
+      {id:'m1', date:'2026-11-15', recipient:'', subject:'Dossier SIQ-EX-02 — revision question', body:'Draft example. The working version of the wall assembly has moved past the approved revision; two components changed. This draft is stored here only — it has not been sent anywhere.', dossierId:'d-ex02', sample:true}
+    ],
+    settings:{provider:'', accountLabel:''}
+  };
+}
+function seedSocial(){
+  return {posts:[
+    {id:'p1', date:'2026-11-12', body:'Example post draft — the structure-first board is where every StructureIQ Modular dossier starts: components, both readiness tracks, and the approved revision, side by side.', sample:true}
+  ]};
+}
+
+/* ---------------- persistence discipline (BOOT write + catch-branch persist) ---------------- */
+function updateStatus(msg){var el=document.getElementById('statusline');if(el){el.textContent=msg;}}
+function persist(){
+  try{localStorage.setItem(STORE_KEY,JSON.stringify(store));}
+  catch(e){updateStatus('NOT SAVED — the write to local storage failed ('+(e&&e.name?e.name:'storage error')+'). Records are kept in memory only; download a backup from Accounts before relying on them.');return false;}
+  updateStatus('Saved locally under '+STORE_KEY+' — '+store.dossiers.length+' dossiers · '+store.inventory.length+' inventory records · '+store.drafts.length+' email drafts.');
+  return true;
+}
+function loadStore(){
+  var raw=null;
+  try{raw=localStorage.getItem(STORE_KEY);}catch(e){raw=null;}
+  if(raw){
+    try{store=JSON.parse(raw);if(!store||typeof store!=='object'||!Array.isArray(store.dossiers)){throw new Error('not a store');}}
+    catch(e){
+      try{localStorage.setItem(STORE_KEY+'.unreadable-'+todayStr(),raw);}catch(e2){}
+      store=seedData();
+      if(!persist()){seedWriteFailed=true;}
+      updateStatus('Saved records could not be read — a copy was kept aside and the SAMPLE examples were restored. '+(seedWriteFailed?'The restore could not be saved either; see Accounts.':''));
+      return store;
+    }
+  }else{
+    store=seedData();
+    if(!persist()){seedWriteFailed=true;}
+  }
+  var seed=seedData();
+  ['dossiers','inventory','appointments','drafts'].forEach(function(k){if(!Array.isArray(store[k])){store[k]=seed[k];}});
+  if(!store.settings||typeof store.settings!=='object'){store.settings=seed.settings;}
+  return store;
+}
+function persistSocial(){
+  try{localStorage.setItem(SOCIAL_KEY,JSON.stringify(social));}
+  catch(e){updateStatus('NOT SAVED — the social draft write failed ('+(e&&e.name?e.name:'storage error')+').');return false;}
+  return true;
+}
+function loadSocial(){
+  var raw=null;
+  try{raw=localStorage.getItem(SOCIAL_KEY);}catch(e){raw=null;}
+  if(raw){
+    try{social=JSON.parse(raw);if(!social||!Array.isArray(social.posts)){throw new Error('not a store');}}
+    catch(e){social=seedSocial();if(!persistSocial()){socialWriteFailed=true;}return social;}
+  }else{social=seedSocial();if(!persistSocial()){socialWriteFailed=true;}}
+  return social;
+}
+
+/* ---------------- theme ---------------- */
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  document.getElementById('themeBtn').textContent=(t==='dark')?'Light':'Dark';
+  try{localStorage.setItem(THEME_KEY,t);}catch(e){}
+}
+function initTheme(){
+  var t='light';
+  try{t=localStorage.getItem(THEME_KEY)||'light';}catch(e){}
+  applyTheme(t==='dark'?'dark':'light');
+}
+
+/* ---------------- navigation ---------------- */
+function switchView(name){
+  document.querySelectorAll('section.view').forEach(function(s){s.classList.toggle('active',s.id==='view-'+name);});
+  document.querySelectorAll('nav#rail button').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-view')===name);});
+  document.getElementById('main').scrollTop=0;
+}
+function dossierById(id){return store.dossiers.find(function(d){return d.id===id;})||null;}
+function trackCounts(track){var r=track.filter(function(c){return c.status==='Ready';}).length;return r+' of '+track.length+' recorded ready';}
+
+/* ---------------- Board ---------------- */
+function wireSvg(size){
+  var w=size||300,h=Math.round(w*0.62);
+  return '<svg width="'+w+'" height="'+h+'" viewBox="0 0 300 190" fill="none" aria-hidden="true">'
+  +'<g stroke="#00B4D8" stroke-width="1.6"><polygon points="150,28 214,64 150,100 86,64" fill="rgba(0,180,216,.08)"/>'
+  +'<polygon points="86,64 150,100 150,162 86,126" fill="rgba(141,153,174,.10)"/>'
+  +'<polygon points="150,100 214,64 214,126 150,162" fill="rgba(141,153,174,.16)"/>'
+  +'<line x1="150" y1="100" x2="150" y2="162"/><line x1="86" y1="95" x2="150" y2="131" stroke-dasharray="4 4"/><line x1="214" y1="95" x2="150" y2="131" stroke-dasharray="4 4"/></g>'
+  +'<g fill="#8D99AE"><circle cx="150" cy="28" r="2.4"/><circle cx="86" cy="64" r="2.4"/><circle cx="214" cy="64" r="2.4"/><circle cx="150" cy="162" r="2.4"/></g></svg>';
+}
+function renderBoard(){
+  var el=document.getElementById('view-board');
+  var cards=store.dossiers.map(function(d){
+    var aligned=(d.state==='Aligned');
+    var rev=(d.state==='Revised assembly');
+    return '<div class="card clickable" data-open="'+d.id+'"><h3>'+esc(d.code)+' — '+esc(d.title)+sampleTag(d)+'</h3>'
+      +'<div><span class="chip">Working <b>'+esc(d.workingVersion)+'</b></span>'
+      +'<span class="chip">Approved <b>'+esc(d.approvedRevision)+'</b></span>'
+      +(aligned?'<span class="badge b-ok">Aligned</span>':rev?'<span class="badge b-rev">Revised assembly</span>':'<span class="badge b-nc">'+esc(d.state)+'</span>')
+      +'</div>'
+      +'<div class="tracks"><div class="track"><h4>Factory readiness</h4><div class="small">'+trackCounts(d.factory)+'</div></div>'
+      +'<div class="track"><h4>Site readiness</h4><div class="small">'+trackCounts(d.site)+'</div></div></div>'
+      +'<p class="small mut" style="margin:9px 0 0">'+d.components.length+' components on record — open the dossier for the itemised list.</p></div>';
+  }).join('');
+  el.innerHTML='<div class="kicker">StructureIQ Modular</div>'
+    +'<div class="vhead"><h2>STRUCTURE-FIRST BOARD READY</h2></div>'
+    +'<p class="mut" style="margin:0">Unit &amp; assembly dossiers. Every example on this board is fictional and labelled <b>SAMPLE</b> — StructureIQ Modular has no projects, clients or portfolio on record, and this board invents none.</p>'
+    +'<div class="rule"></div>'
+    +'<div class="framebox" style="margin-bottom:14px">'+wireSvg(240)+'<div class="cap">Isometric Wireframe Unfold — a design treatment in the filed palette. It is not a product, a unit, a project or a site.</div></div>'
+    +(store.dossiers.length?'<div class="grid c2">'+cards+'</div>':'<div class="notice">No dossiers yet. Add the first one from the Dossier view.</div>')
+    +'<form class="f" id="newDossierForm"><h3 style="font-size:14px">New dossier</h3><div class="cols">'
+    +'<label>Code<input name="code" placeholder="SIQ-…" required></label>'
+    +'<label>Title<input name="title" placeholder="What the assembly is" required></label>'
+    +'<label>Working version<input name="wv" value="v0.1"></label></div>'
+    +'<button class="btn sm" type="submit">Add dossier</button></form>';
+  el.querySelectorAll('[data-open]').forEach(function(c){c.addEventListener('click',function(){selectedDossierId=c.getAttribute('data-open');renderDossier();switchView('dossier');});});
+  document.getElementById('newDossierForm').addEventListener('submit',function(ev){
+    ev.preventDefault();var f=ev.target;
+    var d={id:uid('d'),code:f.code.value.trim(),title:f.title.value.trim(),sample:false,workingVersion:f.wv.value.trim()||'v0.1',approvedRevision:'—',state:'In preparation',note:'',components:[],factory:[],site:[],revisionNote:''};
+    store.dossiers.push(d);persist();selectedDossierId=d.id;renderBoard();renderDossier();
+  });
+}
+
+/* ---------------- Dossier ---------------- */
+var CK_STATUSES=['Not recorded','Recorded','In progress','Ready','On hold'];
+function statusSelect(cls,val){
+  return '<select class="'+cls+'">'+CK_STATUSES.map(function(s){return '<option'+(s===val?' selected':'')+'>'+s+'</option>';}).join('')+'</select>';
+}
+function trackTable(d,trackName,rows){
+  var body=rows.map(function(c){
+    return '<tr><td>'+esc(c.step)+'</td><td>'+(c.date?fmtDate(c.date):'—')+'</td><td>'+stHtml(c.status)+'</td>'
+      +'<td class="small mut">'+esc(c.note||'')+'</td>'
+      +'<td class="rowbtns">'+statusSelect('ckst',c.status)+'<button type="button" data-delck="'+trackName+':'+c.id+'">Delete</button></td></tr>';
+  }).join('');
+  return '<div class="track" style="background:var(--panel)"><h4>'+(trackName==='factory'?'Factory readiness track':'Site readiness track')+' — '+trackCounts(rows)+'</h4>'
+    +'<table><thead><tr><th>Checkpoint record</th><th>Date</th><th>Status</th><th>Note</th><th></th></tr></thead><tbody>'+(body||'<tr><td colspan="5" class="mut">No checkpoint records yet.</td></tr>')+'</tbody></table>'
+    +'<form class="f" style="margin:9px 0 0;padding:9px" data-addck="'+trackName+'"><div class="cols">'
+    +'<label>Checkpoint<input name="step" placeholder="Name of the record" required></label>'
+    +'<label>Date<input name="date" type="date"></label>'
+    +'<label>Status'+statusSelect('stin','Recorded')+'</label></div>'
+    +'<button class="btn sm ghost" type="submit">Add checkpoint</button></form></div>';
+}
+function renderDossier(){
+  var el=document.getElementById('view-dossier');
+  if(!store.dossiers.length){el.innerHTML='<div class="vhead"><h2>Dossier</h2></div><div class="rule"></div><div class="notice">No dossiers yet — add one from the Board.</div>';return;}
+  if(!selectedDossierId||!dossierById(selectedDossierId)){selectedDossierId=store.dossiers[0].id;}
+  var d=dossierById(selectedDossierId);
+  var opts=store.dossiers.map(function(x){return '<option value="'+x.id+'"'+(x.id===d.id?' selected':'')+'>'+esc(x.code)+' — '+esc(x.title)+'</option>';}).join('');
+  var compRows=d.components.map(function(c){
+    return '<tr><td><b>'+esc(c.ref)+'</b></td><td>'+esc(c.name)+'</td><td>'+esc(c.spec)+'</td><td>'+stHtml(c.status)+'</td>'
+      +'<td class="small mut">'+esc(c.note||'')+'</td>'
+      +'<td class="rowbtns">'+statusSelect('cmpst',c.status)+'<button type="button" data-delcmp="'+c.id+'">Delete</button></td></tr>';
+  }).join('');
+  el.innerHTML='<div class="kicker">Unit / assembly dossier</div>'
+    +'<div class="vhead"><h2>'+esc(d.code)+' — '+esc(d.title)+'</h2>'+sampleTag(d)+'</div>'
+    +'<label class="small mut">Open dossier <select id="dossierPick">'+opts+'</select></label>'
+    +'<div class="rule"></div>'
+    +(d.revisionNote?'<div class="revbanner"><b>REVISED ASSEMBLY</b><div class="small" style="margin-top:4px">'+esc(d.revisionNote)+'</div></div>':'')
+    +'<div class="vergrid"><div class="verbox"><div class="vl">Working version — as it now stands</div><div class="vv">'+esc(d.workingVersion)+'</div></div>'
+    +'<div class="verbox appr"><div class="vl">Approved revision — as approved</div><div class="vv">'+esc(d.approvedRevision)+'</div></div></div>'
+    +'<p class="small mut" style="margin:0 0 6px">The working version and the approved revision are separate records. Editing one never rewrites the other.</p>'
+    +'<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr))">'
+    +'<div class="framebox">'+wireSvg(260)+'<div class="cap">Spatial frame for '+esc(d.code)+' — a labelled design treatment (wireframe on the blueprint grid). It is not a drawing of a real unit and carries no engineering claim. The itemised record beside it is the source of truth.</div></div>'
+    +'<div class="card"><h3>Record notes</h3><p class="small">'+esc(d.note||'No notes recorded.')+'</p>'
+    +'<p class="small mut">State on record: <b>'+esc(d.state)+'</b></p>'
+    +'<div class="rowbtns"><button type="button" id="editDossierBtn">Edit dossier record</button> <button type="button" id="delDossierBtn">Delete dossier</button></div>'
+    +'<div id="editDossierSlot"></div></div></div>'
+    +'<h3 style="margin:16px 0 6px;font-size:15px">Components — itemised record</h3>'
+    +'<div class="card" style="padding:6px 12px"><table><thead><tr><th>Ref</th><th>Component</th><th>Specification on record</th><th>Status</th><th>Note</th><th></th></tr></thead><tbody>'
+    +(compRows||'<tr><td colspan="6" class="mut">No components recorded yet.</td></tr>')+'</tbody></table></div>'
+    +'<form class="f" id="addCompForm"><div class="cols"><label>Ref<input name="ref" placeholder="W-4" required></label>'
+    +'<label>Component<input name="name" placeholder="What it is" required></label>'
+    +'<label>Specification<input name="spec" placeholder="Spec as recorded"></label>'
+    +'<label>Status'+statusSelect('stin','Recorded')+'</label></div>'
+    +'<label>Note<input name="note" placeholder="Optional"></label>'
+    +'<button class="btn sm" type="submit">Add component</button></form>'
+    +'<h3 style="margin:16px 0 6px;font-size:15px">Readiness — two parallel tracks</h3>'
+    +'<p class="small mut" style="margin:0 0 8px">Factory readiness and site readiness are kept side by side and never collapsed into one another; a record on one track says nothing about the other.</p>'
+    +'<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr))">'+trackTable(d,'factory',d.factory)+trackTable(d,'site',d.site)+'</div>';
+
+  document.getElementById('dossierPick').addEventListener('change',function(e){selectedDossierId=e.target.value;renderDossier();});
+  document.getElementById('delDossierBtn').addEventListener('click',function(){
+    if(!confirm('Delete dossier '+d.code+'? This removes its components, tracks and links on this device.')){return;}
+    store.dossiers=store.dossiers.filter(function(x){return x.id!==d.id;});
+    store.appointments.forEach(function(a){if(a.dossierId===d.id){a.dossierId='';}});
+    persist();selectedDossierId=null;renderBoard();renderDossier();renderCalendar();
+  });
+  document.getElementById('editDossierBtn').addEventListener('click',function(){
+    var slot=document.getElementById('editDossierSlot');
+    slot.innerHTML='<form class="f" id="editDossierForm"><div class="cols">'
+      +'<label>Title<input name="title" value="'+esc(d.title)+'"></label>'
+      +'<label>Working version<input name="wv" value="'+esc(d.workingVersion)+'"></label>'
+      +'<label>Approved revision<input name="ar" value="'+esc(d.approvedRevision)+'"></label>'
+      +'<label>State on record<select name="state">'+['In preparation','Aligned','Revised assembly','On hold'].map(function(s){return '<option'+(s===d.state?' selected':'')+'>'+s+'</option>';}).join('')+'</select></label></div>'
+      +'<label>Record notes<textarea name="note" rows="2">'+esc(d.note||'')+'</textarea></label>'
+      +'<label>Revision note (shows as the REVISED ASSEMBLY banner when filled)<textarea name="rnote" rows="2">'+esc(d.revisionNote||'')+'</textarea></label>'
+      +'<button class="btn sm" type="submit">Save dossier record</button></form>';
+    document.getElementById('editDossierForm').addEventListener('submit',function(ev){
+      ev.preventDefault();var f=ev.target;
+      d.title=f.title.value.trim()||d.title; d.workingVersion=f.wv.value.trim()||d.workingVersion;
+      d.approvedRevision=f.ar.value.trim()||'—'; d.state=f.state.value; d.note=f.note.value; d.revisionNote=f.rnote.value;
+      persist();renderBoard();renderDossier();
+    });
+  });
+  el.querySelectorAll('[data-delcmp]').forEach(function(b){b.addEventListener('click',function(){
+    d.components=d.components.filter(function(c){return c.id!==b.getAttribute('data-delcmp');});persist();renderDossier();renderBoard();
+  });});
+  el.querySelectorAll('table select.cmpst').forEach(function(sel,idx){
+    sel.addEventListener('change',function(){d.components[idx].status=sel.value;persist();renderDossier();renderBoard();});
+  });
+  el.querySelectorAll('[data-addck]').forEach(function(f){f.addEventListener('submit',function(ev){
+    ev.preventDefault();var track=f.getAttribute('data-addck');
+    d[track].push({id:uid('k'),step:f.step.value.trim(),status:f.querySelector('.stin').value,date:f.date.value,note:''});
+    persist();renderDossier();renderBoard();
+  });});
+  el.querySelectorAll('[data-delck]').forEach(function(b){b.addEventListener('click',function(){
+    var parts=b.getAttribute('data-delck').split(':');var track=parts[0],id=parts[1];
+    d[track]=d[track].filter(function(c){return c.id!==id;});persist();renderDossier();renderBoard();
+  });});
+  el.querySelectorAll('.track table select.ckst').forEach(function(sel){
+    sel.addEventListener('change',function(){
+      var row=sel.closest('tr');var tbl=sel.closest('.track');
+      var heads=el.querySelectorAll('.track');var track=(heads[0]===tbl)?'factory':'site';
+      var rows=Array.prototype.slice.call(tbl.querySelectorAll('tbody tr'));
+      var idx=rows.indexOf(row);if(idx>=0&&d[track][idx]){d[track][idx].status=sel.value;persist();renderDossier();renderBoard();}
+    });
+  });
+  document.getElementById('addCompForm').addEventListener('submit',function(ev){
+    ev.preventDefault();var f=ev.target;
+    d.components.push({id:uid('c'),ref:f.ref.value.trim(),name:f.name.value.trim(),spec:f.spec.value.trim(),status:f.querySelector('.stin').value,note:f.note.value.trim()});
+    persist();renderDossier();renderBoard();
+  });
+}
+
+/* ---------------- Inventory ---------------- */
+function renderInventory(){
+  var el=document.getElementById('view-inventory');
+  var rows=store.inventory.map(function(r){
+    return '<tr><td>'+esc(r.item)+sampleTag(r)+'</td><td>'+esc(r.spec)+'</td><td>'+esc(r.qty)+' '+esc(r.unit)+'</td><td>'+stHtml(r.status)+'</td>'
+      +'<td class="rowbtns"><button type="button" data-editinv="'+r.id+'">Edit</button><button type="button" data-delinv="'+r.id+'">Delete</button></td></tr>';
+  }).join('');
+  el.innerHTML='<div class="kicker">Components &amp; materials</div><div class="vhead"><h2>Inventory</h2></div>'
+    +'<p class="mut" style="margin:0">The inventory view is kept as its own record, separate from any single dossier. Quantities are unit counts — this app records no prices. Example rows are fictional and labelled SAMPLE.</p>'
+    +'<div class="rule"></div>'
+    +'<div class="card" style="padding:6px 12px"><table><thead><tr><th>Item</th><th>Specification on record</th><th>On hand</th><th>Status</th><th></th></tr></thead><tbody>'
+    +(rows||'<tr><td colspan="5" class="mut">No inventory records yet.</td></tr>')+'</tbody></table></div>'
+    +'<div id="invFormSlot"></div>';
+  function invForm(r){
+    document.getElementById('invFormSlot').innerHTML='<form class="f" id="invForm"><h3 style="font-size:14px">'+(r?'Edit inventory record':'Add inventory record')+'</h3><div class="cols">'
+      +'<label>Item<input name="item" value="'+esc(r?r.item:'')+'" required></label>'
+      +'<label>Specification<input name="spec" value="'+esc(r?r.spec:'')+'"></label>'
+      +'<label>Qty on hand<input name="qty" type="number" min="0" value="'+(r?r.qty:0)+'"></label>'
+      +'<label>Unit<input name="unit" value="'+esc(r?r.unit:'pieces')+'"></label>'
+      +'<label>Status'+statusSelect('stin',r?r.status:'Recorded')+'</label></div>'
+      +'<button class="btn sm" type="submit">'+(r?'Save record':'Add record')+'</button></form>';
+    document.getElementById('invForm').addEventListener('submit',function(ev){
+      ev.preventDefault();var f=ev.target;
+      var rec={item:f.item.value.trim(),spec:f.spec.value.trim(),qty:Math.max(0,Number(f.qty.value)||0),unit:f.unit.value.trim()||'pieces',status:f.querySelector('.stin').value};
+      if(r){Object.assign(r,rec);}else{rec.id=uid('i');rec.sample=false;store.inventory.push(rec);}
+      persist();renderInventory();
+    });
+  }
+  invForm(null);
+  el.querySelectorAll('[data-delinv]').forEach(function(b){b.addEventListener('click',function(){
+    store.inventory=store.inventory.filter(function(x){return x.id!==b.getAttribute('data-delinv');});persist();renderInventory();
+  });});
+  el.querySelectorAll('[data-editinv]').forEach(function(b){b.addEventListener('click',function(){
+    invForm(store.inventory.find(function(x){return x.id===b.getAttribute('data-editinv');}));
+    document.getElementById('invForm').scrollIntoView({behavior:'smooth',block:'center'});
+  });});
+}
+
+/* ---------------- Calendar ---------------- */
+function renderCalendar(){
+  var el=document.getElementById('view-calendar');
+  if(!calCursor){calCursor=new Date();calCursor.setDate(1);}
+  var y=calCursor.getFullYear(),m=calCursor.getMonth();
+  var M=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var first=new Date(y,m,1),startDay=first.getDay(),days=new Date(y,m+1,0).getDate(),prevDays=new Date(y,m,0).getDate();
+  var cells='';
+  ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(function(d){cells+='<div class="dow">'+d+'</div>';});
+  for(var i=0;i<42;i++){
+    var dayNum,dim=false,iso='';
+    if(i<startDay){dayNum=prevDays-startDay+1+i;dim=true;}
+    else if(i>=startDay+days){dayNum=i-startDay-days+1;dim=true;}
+    else{dayNum=i-startDay+1;var mm=String(m+1).padStart(2,'0'),dd=String(dayNum).padStart(2,'0');iso=y+'-'+mm+'-'+dd;}
+    var evs=iso?store.appointments.filter(function(a){return a.date===iso;}):[];
+    cells+='<div class="day'+(dim?' dim':'')+(iso===todayStr()?' today':'')+'">'+dayNum
+      +evs.map(function(a){return '<span class="ev" title="'+esc(a.title)+'">'+esc(a.title)+'</span>';}).join('')+'</div>';
+    if(i>=startDay+days+6&&i>34){break;}
+  }
+  var list=store.appointments.slice().sort(function(a,b){return a.date<b.date?-1:1;}).map(function(a){
+    var d=a.dossierId?dossierById(a.dossierId):null;
+    return '<tr><td>'+fmtDate(a.date)+'</td><td>'+esc(a.title)+sampleTag(a)+'</td><td>'+esc(a.kind)+'</td><td>'+(d?esc(d.code):'—')+'</td>'
+      +'<td class="small mut">'+esc(a.note||'')+'</td><td class="rowbtns"><button type="button" data-delappt="'+a.id+'">Delete</button></td></tr>';
+  }).join('');
+  var dopts='<option value="">— none —</option>'+store.dossiers.map(function(d){return '<option value="'+d.id+'">'+esc(d.code)+' — '+esc(d.title)+'</option>';}).join('');
+  el.innerHTML='<div class="kicker">Appointments · follow-ups · deadlines</div><div class="vhead"><h2>Calendar</h2></div>'
+    +'<p class="mut" style="margin:0">A month and list over this app\'s own records. Appointments are created here and linked to a dossier; nothing is pulled from any outside calendar in this standalone app.</p>'
+    +'<div class="rule"></div><div class="calwrap"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'
+    +'<button class="btn sm ghost" id="calPrev">‹</button><b>'+M[m]+' '+y+'</b><button class="btn sm ghost" id="calNext">›</button></div>'
+    +'<div class="calgrid">'+cells+'</div></div>'
+    +'<div><div class="card" style="padding:6px 12px"><table><thead><tr><th>Date</th><th>Item</th><th>Kind</th><th>Dossier</th><th>Note</th><th></th></tr></thead><tbody>'
+    +(list||'<tr><td colspan="6" class="mut">Nothing scheduled.</td></tr>')+'</tbody></table></div>'
+    +'<form class="f" id="apptForm"><h3 style="font-size:14px">Add to calendar</h3><div class="cols">'
+    +'<label>Date<input name="date" type="date" required></label>'
+    +'<label>Title<input name="title" required></label>'
+    +'<label>Kind<select name="kind"><option>Appointment</option><option>Follow-up</option><option>Deadline</option></select></label>'
+    +'<label>Linked dossier<select name="dossierId">'+dopts+'</select></label></div>'
+    +'<label>Note<input name="note"></label><button class="btn sm" type="submit">Add</button></form></div></div>';
+  document.getElementById('calPrev').addEventListener('click',function(){calCursor=new Date(y,m-1,1);renderCalendar();});
+  document.getElementById('calNext').addEventListener('click',function(){calCursor=new Date(y,m+1,1);renderCalendar();});
+  el.querySelectorAll('[data-delappt]').forEach(function(b){b.addEventListener('click',function(){
+    store.appointments=store.appointments.filter(function(x){return x.id!==b.getAttribute('data-delappt');});persist();renderCalendar();
+  });});
+  document.getElementById('apptForm').addEventListener('submit',function(ev){
+    ev.preventDefault();var f=ev.target;
+    store.appointments.push({id:uid('a'),date:f.date.value,title:f.title.value.trim(),kind:f.kind.value,dossierId:f.dossierId.value,note:f.note.value.trim(),sample:false});
+    persist();renderCalendar();
+  });
+}
+
+/* ---------------- Email — DRAFT ONLY ---------------- */
+function renderEmail(){
+  var el=document.getElementById('view-email');
+  var cards=store.drafts.map(function(m){
+    var d=m.dossierId?dossierById(m.dossierId):null;
+    return '<div class="card" style="margin-bottom:10px"><h3 style="font-size:14px">'+esc(m.subject||'(no subject)')+sampleTag(m)+'</h3>'
+      +'<div class="small mut">Draft · '+fmtDate(m.date)+' · To: '+(m.recipient?esc(m.recipient):'<i>not addressed — Johnny fills this in when he sends</i>')+(d?' · Linked: '+esc(d.code):'')+'</div>'
+      +'<p class="small" style="white-space:pre-wrap;margin:8px 0">'+esc(m.body)+'</p>'
+      +'<div class="rowbtns"><button type="button" data-editdraft="'+m.id+'">Edit draft</button><button type="button" data-deldraft="'+m.id+'">Delete draft</button></div></div>';
+  }).join('');
+  var dopts='<option value="">— none —</option>'+store.dossiers.map(function(d){return '<option value="'+d.id+'">'+esc(d.code)+' — '+esc(d.title)+'</option>';}).join('');
+  var ed=editingDraftId?store.drafts.find(function(x){return x.id===editingDraftId;}):null;
+  el.innerHTML='<div class="kicker">Email workspace</div><div class="vhead"><h2>Email — drafts only</h2></div>'
+    +'<div class="notice"><b>This app never sends email.</b> It composes and stores drafts and shows them ready to send. Johnny reviews every draft and sends it himself from his own mailbox — there is no sent log, because the app has sent nothing. No email address for StructureIQ Modular is on record, so no address is pre-filled or suggested anywhere in this app.</div>'
+    +'<div class="rule"></div>'
+    +'<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(330px,100%),1fr))"><div>'
+    +'<div class="card"><h3>Inbox</h3><p class="small mut">No mailbox is linked to StructureIQ Modular in this standalone app, so no messages are shown and none are claimed. When an account is linked in the full Canopy shell, its inbox appears here. See Accounts.</p></div>'
+    +'<h3 style="margin:14px 0 8px;font-size:15px">Stored drafts ('+store.drafts.length+')</h3>'
+    +(cards||'<p class="mut small">No drafts stored yet.</p>')+'</div>'
+    +'<form class="f" id="draftForm" style="margin:0"><h3 style="font-size:14px">'+(ed?'Edit draft':'Compose a draft')+'</h3>'
+    +'<label>Recipient — name or address, in your words<input name="recipient" value="'+esc(ed?ed.recipient:'')+'" placeholder="Nothing is on file — fill in only what you know"></label>'
+    +'<label>Subject<input name="subject" value="'+esc(ed?ed.subject:'')+'"></label>'
+    +'<label>Body<textarea name="body" rows="7">'+esc(ed?ed.body:'')+'</textarea></label>'
+    +'<label>Linked dossier<select name="dossierId">'+dopts+'</select></label>'
+    +'<button class="btn sm" type="submit">'+(ed?'Save draft':'Save draft')+'</button>'
+    +(ed?'<button class="btn sm ghost" type="button" id="cancelEditDraft">Cancel edit</button>':'')
+    +'<p class="tiny mut" style="margin:0">Saving stores the draft on this device only. Sending is always done by Johnny, from his own mailbox, outside this app.</p></form></div>';
+  var sel=el.querySelector('#draftForm select[name="dossierId"]');
+  if(ed&&ed.dossierId){sel.value=ed.dossierId;}
+  document.getElementById('draftForm').addEventListener('submit',function(ev){
+    ev.preventDefault();var f=ev.target;
+    if(ed){ed.recipient=f.recipient.value.trim();ed.subject=f.subject.value.trim();ed.body=f.body.value;ed.dossierId=f.dossierId.value;editingDraftId=null;}
+    else{store.drafts.push({id:uid('m'),date:todayStr(),recipient:f.recipient.value.trim(),subject:f.subject.value.trim(),body:f.body.value,dossierId:f.dossierId.value,sample:false});}
+    persist();renderEmail();
+  });
+  var ce=document.getElementById('cancelEditDraft');
+  if(ce){ce.addEventListener('click',function(){editingDraftId=null;renderEmail();});}
+  el.querySelectorAll('[data-editdraft]').forEach(function(b){b.addEventListener('click',function(){editingDraftId=b.getAttribute('data-editdraft');renderEmail();});});
+  el.querySelectorAll('[data-deldraft]').forEach(function(b){b.addEventListener('click',function(){
+    store.drafts=store.drafts.filter(function(x){return x.id!==b.getAttribute('data-deldraft');});persist();renderEmail();
+  });});
+}
+
+/* ---------------- Social ---------------- */
+function renderSocial(){
+  var el=document.getElementById('view-social');
+  var accts=[
+    {name:'Facebook Page', state:'No Facebook Page for StructureIQ Modular was found in the team\'s research — not connected.'},
+    {name:'Instagram', state:'No account on record — not connected.'},
+    {name:'LinkedIn', state:'No account on record — not connected.'}
+  ];
+  var posts=social.posts.slice().sort(function(a,b){return a.date<b.date?1:-1;}).map(function(p){
+    return '<div class="card" style="margin-bottom:10px"><div class="small mut">'+fmtDate(p.date)+' · Post draft'+sampleTag(p)+'</div>'
+      +'<p class="small" style="white-space:pre-wrap;margin:6px 0">'+esc(p.body)+'</p>'
+      +'<div class="rowbtns"><button type="button" data-delpost="'+p.id+'">Delete draft</button></div></div>';
+  }).join('');
+  el.innerHTML='<div class="kicker">Social accounts</div><div class="vhead"><h2>Social</h2></div>'
+    +'<p class="mut" style="margin:0">Accounts link inside the full Canopy shell. In this standalone app nothing is connected, and posts are drafts saved on this device.</p><div class="rule"></div>'
+    +'<div class="grid c2">'+accts.map(function(a){return '<div class="card"><h3 style="font-size:14.5px">'+a.name+'</h3><p class="small mut">'+a.state+'</p><span class="badge b-nc">Not connected</span></div>';}).join('')+'</div>'
+    +'<form class="f" id="postForm"><h3 style="font-size:14px">New post draft</h3><label>Post text<textarea name="body" rows="3" required></textarea></label>'
+    +'<button class="btn sm" type="submit">Save post draft</button></form>'
+    +'<h3 style="margin:14px 0 8px;font-size:15px">Post drafts ('+social.posts.length+')</h3>'+(posts||'<p class="mut small">No post drafts yet.</p>');
+  document.getElementById('postForm').addEventListener('submit',function(ev){
+    ev.preventDefault();social.posts.push({id:uid('p'),date:todayStr(),body:ev.target.body.value,sample:false});persistSocial();renderSocial();
+  });
+  el.querySelectorAll('[data-delpost]').forEach(function(b){b.addEventListener('click',function(){
+    social.posts=social.posts.filter(function(x){return x.id!==b.getAttribute('data-delpost');});persistSocial();renderSocial();
+  });});
+}
+
+/* ---------------- Assistant — Records Search ---------------- */
+function renderAssistant(){
+  var el=document.getElementById('view-assistant');
+  el.innerHTML='<div class="kicker">Assistant</div><div class="vhead"><h2>Assistant — Records Search</h2></div>'
+    +'<p class="mut" style="margin:0">Searches the records saved in this app only — dossiers, components, inventory, calendar items and drafts. It does not look anything up outside this device.</p><div class="rule"></div>'
+    +'<form class="f" id="searchForm" style="margin-top:0"><label>Search records<input name="q" placeholder="Try a component, a code like SIQ-EX-02, or a word like gasket" autocomplete="off"></label>'
+    +'<button class="btn sm" type="submit">Search</button></form><div id="searchResults"></div>';
+  document.getElementById('searchForm').addEventListener('submit',function(ev){
+    ev.preventDefault();
+    var q=ev.target.q.value.trim().toLowerCase(),out=[];
+    if(q){
+      store.dossiers.forEach(function(d){
+        if((d.code+' '+d.title+' '+d.note+' '+d.workingVersion+' '+d.approvedRevision).toLowerCase().indexOf(q)>=0){out.push({t:'Dossier',h:d.code+' — '+d.title,s:'Working '+d.workingVersion+' · Approved '+d.approvedRevision,v:'dossier',id:d.id,sample:d.sample});}
+        d.components.forEach(function(c){if((c.ref+' '+c.name+' '+c.spec+' '+c.note).toLowerCase().indexOf(q)>=0){out.push({t:'Component',h:c.ref+' — '+c.name,s:'In '+d.code+' · '+c.status,v:'dossier',id:d.id,sample:d.sample});}});
+        d.factory.concat(d.site).forEach(function(c){if((c.step+' '+c.note).toLowerCase().indexOf(q)>=0){out.push({t:'Checkpoint',h:c.step,s:'In '+d.code+' · '+c.status,v:'dossier',id:d.id,sample:d.sample});}});
+      });
+      store.inventory.forEach(function(r){if((r.item+' '+r.spec).toLowerCase().indexOf(q)>=0){out.push({t:'Inventory',h:r.item,s:r.qty+' '+r.unit+' · '+r.status,v:'inventory',sample:r.sample});}});
+      store.appointments.forEach(function(a){if((a.title+' '+a.note).toLowerCase().indexOf(q)>=0){out.push({t:'Calendar',h:a.title,s:fmtDate(a.date)+' · '+a.kind,v:'calendar',sample:a.sample});}});
+      store.drafts.forEach(function(m){if((m.subject+' '+m.body).toLowerCase().indexOf(q)>=0){out.push({t:'Email draft',h:m.subject||'(no subject)',s:fmtDate(m.date),v:'email',sample:m.sample});}});
+    }
+    document.getElementById('searchResults').innerHTML=q
+      ?(out.length?out.map(function(r){return '<div class="card" style="margin-bottom:8px"><span class="badge b-nc">'+r.t+'</span> <b>'+esc(r.h)+'</b>'+sampleTag(r)+'<div class="small mut">'+esc(r.s)+'</div>'
+        +(r.v?'<div class="rowbtns" style="margin-top:6px"><button type="button" data-goto="'+r.v+'" data-gid="'+(r.id||'')+'">Open</button></div>':'')+'</div>';}).join('')
+        :'<div class="notice">No records match “'+esc(q)+'”.</div>')
+      :'<div class="notice">Type a word and search — results come only from records saved in this app.</div>';
+    el.querySelectorAll('[data-goto]').forEach(function(b){b.addEventListener('click',function(){
+      var v=b.getAttribute('data-goto');if(v==='dossier'&&b.getAttribute('data-gid')){selectedDossierId=b.getAttribute('data-gid');renderDossier();}
+      switchView(v);
+    });});
+  });
+}
+
+/* ---------------- Reference doors ---------------- */
+function renderReference(){
+  var el=document.getElementById('view-reference');
+  var doors=[
+    {t:'Ontario Building Code', u:'https://www.ontario.ca/page/ontarios-building-code', p:'The province\'s official Building Code page, including the Compendium. Reference only — reading material, nothing embedded.'},
+    {t:'Building a modular house — Ontario\'s guide', u:'https://files.ontario.ca/mmah-building-a-modular-house-en-202-12-06.pdf', p:'Ontario\'s own modular-house guide (PDF). It carries its own disclaimer and may be out of date — check it before relying on anything in it.'},
+    {t:'geoOttawa', u:'https://maps.ottawa.ca/geoottawa/', p:'City of Ottawa mapping. Property lines shown there are approximate and are not a survey. Reference only.'},
+    {t:'WSIB', u:'https://www.wsib.ca', p:'Workplace Safety and Insurance Board — clearances information. Reference only: nothing here claims StructureIQ Modular holds a WSIB clearance.'},
+    {t:'CSA A277 — reference topic only', u:'https://www.csagroup.org', p:'CSA A277 is the procedure for certifying factory-built buildings, modules and panels. It appears in this app as a reading topic only — nothing in this app states or implies that StructureIQ Modular holds, meets, or is certified under CSA A277.'}
+  ];
+  el.innerHTML='<div class="kicker">Reference doors</div><div class="vhead"><h2>Reference</h2></div>'
+    +'<p class="mut" style="margin:0">Labelled doors to outside references. They open in a new tab; nothing is embedded and nothing about StructureIQ Modular is sent anywhere.</p><div class="rule"></div>'
+    +'<div class="doors">'+doors.map(function(d){return '<a class="door" href="'+d.u+'" target="_blank" rel="noopener"><h3>'+esc(d.t)+' ↗</h3><p>'+esc(d.p)+'</p></a>';}).join('')+'</div>';
+}
+
+/* ---------------- Accounts ---------------- */
+function storeBytes(){try{return new Blob([JSON.stringify(store)]).size;}catch(e){return JSON.stringify(store).length;}}
+function renderAccounts(){
+  var el=document.getElementById('view-accounts');
+  var s=store.settings||{provider:'',accountLabel:''};
+  el.innerHTML='<div class="kicker">Accounts &amp; data</div><div class="vhead"><h2>Accounts</h2></div><div class="rule"></div>'
+    +'<div class="card"><h3>Link an email + calendar account</h3>'
+    +'<p class="small mut">Link a Microsoft account or a Gmail account to StructureIQ Modular. <b>No email address for this business is on record</b>, so nothing is pre-filled and no address is suggested — the guard is deliberate: an unconfirmed address is never printed as fact. What you save here (provider + your own label) is recorded on this device only. The live link — inbox, sending by the account holder, and calendar sync — activates in the full Canopy shell; this standalone app claims no sync.</p>'
+    +'<form class="f" id="acctForm" style="margin-bottom:0"><div class="cols">'
+    +'<label>Provider<select name="provider"><option value="">— not linked —</option><option value="Microsoft"'+(s.provider==='Microsoft'?' selected':'')+'>Microsoft</option><option value="Gmail"'+(s.provider==='Gmail'?' selected':'')+'>Gmail</option></select></label>'
+    +'<label>Account label — your words, not an address<input name="label" value="'+esc(s.accountLabel||'')+'" placeholder="e.g. Johnny\'s work account"></label></div>'
+    +'<button class="btn sm" type="submit">Save account record</button></form>'
+    +(s.provider?'<p class="small" style="margin:10px 0 0">On record: <b>'+esc(s.provider)+'</b>'+(s.accountLabel?' · '+esc(s.accountLabel):'')+' — recorded locally; live link activates in the full shell.</p>':'<p class="small mut" style="margin:10px 0 0">No account is recorded yet.</p>')
+    +'</div>'
+    +'<div class="card" style="margin-top:12px"><h3>Your records on this device</h3>'
+    +'<p class="small mut">Records are stored in this browser under <b>'+STORE_KEY+'</b> (about '+Math.max(1,Math.round(storeBytes()/102.4)/10)+' KB). Social drafts live under <b>'+SOCIAL_KEY+'</b>. Download a StructureIQ backup (JSON) to keep or move your records; restoring a backup replaces the records on this device.</p>'
+    +(seedWriteFailed?'<div class="notice warn" style="margin-bottom:10px">The first save of the sample records failed on this device — storage may be unavailable or full. Your changes this session are in memory only; download a backup before closing.</div>':'')
+    +'<div class="rowbtns"><button type="button" id="exportBtn">Download backup (JSON)</button> '
+    +'<label class="btn sm ghost" style="display:inline-block;padding:5px 10px">Restore from backup<input type="file" id="importFile" accept="application/json" style="display:none"></label></div>'
+    +'<div id="importMsg" class="small" style="margin-top:8px"></div></div>';
+  document.getElementById('acctForm').addEventListener('submit',function(ev){
+    ev.preventDefault();var f=ev.target;
+    store.settings={provider:f.provider.value,accountLabel:f.label.value.trim()};persist();renderAccounts();
+  });
+  document.getElementById('exportBtn').addEventListener('click',function(){
+    var blob=new Blob([JSON.stringify(store,null,2)],{type:'application/json'});
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='structureiq-backup-'+todayStr()+'.json';a.click();
+    setTimeout(function(){URL.revokeObjectURL(a.href);},4000);
+  });
+  document.getElementById('importFile').addEventListener('change',function(ev){
+    var file=ev.target.files[0];if(!file){return;}
+    var rd=new FileReader();
+    rd.onload=function(){
+      try{
+        var obj=JSON.parse(rd.result);
+        if(!obj||!Array.isArray(obj.dossiers)||!Array.isArray(obj.inventory)){throw new Error('shape');}
+        store=obj;['appointments','drafts'].forEach(function(k){if(!Array.isArray(store[k])){store[k]=[];}});
+        if(!store.settings){store.settings={provider:'',accountLabel:''};}
+        persist();selectedDossierId=null;renderAll();
+        document.getElementById('importMsg').textContent='Backup restored — records on this device now match the file.';
+      }catch(e){document.getElementById('importMsg').textContent='That file could not be restored — it is not a StructureIQ backup in the expected shape. Nothing was changed.';}
+    };
+    rd.readAsText(file);
+  });
+}
+
+/* ---------------- About ---------------- */
+function renderAbout(){
+  var el=document.getElementById('view-about');
+  el.innerHTML='<div class="kicker">About this app</div><div class="vhead"><h2>About — StructureIQ Modular</h2></div><div class="rule"></div>'
+    +'<div class="card"><h3>Company facts — only what is on record</h3>'
+    +'<p class="small">StructureIQ Modular is Johnny Kulwartian\'s modular construction business. That is the whole of the verified public record: the business has <b>no website, no logo, no published colours, no photographs, no portfolio, no clients and no certifications on record</b>, and no current projects or deals are recorded for it. This app therefore ships with fictional examples only, each labelled SAMPLE, and it invents nothing to fill the space — no projects, no clients, no deliveries, no history.</p>'
+    +'<p class="small">A different company with a similar name exists in another field and country; it is not this business, and none of its branding, products or proof points appear here.</p>'
+    +'<p class="small"><b>Palette:</b> the steel, precision slate, laser cyan and silver palette, the blueprint grid and the Isometric Wireframe Unfold are a design interpretation of a CAD fabrication facility, filed by the team on Nov 7, 2026 — they are <b>not</b> the company\'s official brand, because no official brand assets are on record. No logo exists, so the name is shown in plain text. <b>Type:</b> no typeface of record exists either; this app uses your device\'s system fonts and claims no brand font.</p>'
+    +'<p class="small"><b>Certification:</b> CSA A277 appears in this app as a reference topic only (see Reference). Nothing here states or implies StructureIQ Modular holds, meets, or is certified under it — or under anything else.</p>'
+    +'<p class="small"><b>Email:</b> this app composes and stores drafts only; it never sends, and keeps no sent log. <b>Dates</b> are stored as ISO dates and shown in words (e.g. '+fmtDate('2026-11-18')+'). <b>Money:</b> this app records no prices or amounts — quantities are unit counts only.</p>'
+    +'<p class="small mut">Version '+APP_VERSION+'</p></div>';
+}
+
+/* ---------------- Workbench switcher ---------------- */
+var PEERS=['KÜL Real Estate','Lions Gate Yachts','Brand My Aqua','CMS Construction','purEnzyme','StructureIQ Modular','8Twelve Mortgages','Atra Lend'];
+function renderSwitcher(){
+  var p=document.getElementById('switchPanel');
+  p.innerHTML='<h3>Workbench — businesses</h3>'
+    +PEERS.map(function(n){var cur=(n==='StructureIQ Modular');return '<button type="button" class="peer'+(cur?' cur':'')+'" data-peer="'+esc(n)+'"><span>'+esc(n)+'</span><span class="small mut">'+(cur?'You are here':'Peer app')+'</span></button>';}).join('')
+    +'<p class="small mut" style="margin:4px 0 0">The eight businesses are peers, not subsidiaries. In this standalone file the switcher lists them; in the full Canopy shell each door opens that business\'s own app.</p>';
+  p.querySelectorAll('[data-peer]').forEach(function(b){b.addEventListener('click',function(){
+    if(b.getAttribute('data-peer')==='StructureIQ Modular'){p.classList.remove('open');return;}
+    updateStatus(b.getAttribute('data-peer')+' opens in the full Workbench shell — this standalone file stays on StructureIQ Modular.');
+    p.classList.remove('open');
+  });});
+}
+
+/* ---------------- boot ---------------- */
+function renderAll(){renderBoard();renderDossier();renderInventory();renderCalendar();renderEmail();renderSocial();renderAssistant();renderReference();renderAccounts();renderAbout();}
+function boot(){
+  initTheme();
+  loadStore();loadSocial();
+  if(store.dossiers.length){selectedDossierId=store.dossiers[0].id;}
+  calCursor=new Date();calCursor.setDate(1);
+  renderAll();renderSwitcher();
+  if(seedWriteFailed){updateStatus('NOT SAVED — the first write of the sample records failed on this device. Changes are in memory only; see Accounts for a backup.');}
+  document.querySelectorAll('nav#rail button').forEach(function(b){b.addEventListener('click',function(){switchView(b.getAttribute('data-view'));});});
+  document.getElementById('themeBtn').addEventListener('click',function(){
+    applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+  });
+  document.getElementById('switchBtn').addEventListener('click',function(){document.getElementById('switchPanel').classList.toggle('open');});
+  document.addEventListener('click',function(e){
+    var sw=document.getElementById('switcher');
+    if(sw&&!sw.contains(e.target)){document.getElementById('switchPanel').classList.remove('open');}
+  });
+  document.getElementById('deckBtn').addEventListener('click',function(){
+    updateStatus('The Command Deck is the return door in the full Canopy shell — this standalone file has nowhere to send you yet.');
+  });
+  var opening=document.getElementById('opening');
+  var closeOpening=function(){opening.classList.add('gone');};
+  opening.addEventListener('click',closeOpening);
+  document.getElementById('skipBtn').addEventListener('click',function(e){e.stopPropagation();closeOpening();});
+  setTimeout(closeOpening,4200);
+}
+document.addEventListener('DOMContentLoaded',boot);
+</script>
+</body>
+</html>

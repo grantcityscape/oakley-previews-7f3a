@@ -1,0 +1,1117 @@
+<!doctype html>
+<!-- PACKAGED COPY · index.html (Home) · source: home-wall-v4.3.8.html (frozen master, untouched) · Canopy Phase 0 wiring, 2026-11-18 -->
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- CSP: connect-src is https: because the hub may point CFG.PROXY / CFG.cam.base / feed URLs at its own host at packaging. Tighten to those hosts when known. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://cdnjs.cloudflare.com; script-src 'unsafe-inline' https://cdnjs.cloudflare.com; img-src data: https://traffic.ottawa.ca https:; connect-src https:; frame-src https://www.youtube.com https://www.youtube-nocookie.com https://s.tradingview.com https://www.tradingview.com">
+<title>Home Wall v4.3.8</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" integrity="sha512-Zcn6bjR/8RZbLEpLIeOwNtzREBAJnUKESxces60Mpoj+2okopSAcSUIUOseddDm0cxnGQzxIR7vJgsLZbdLE3w==" crossorigin="">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js" integrity="sha512-BwHfrr4c9kmRkLw6iXFdzcdWV/PGkVgiIyIWLLlTSXzWQzxuSg4DiQUCpauz/EWjgk5TYQqX/kvn9pG1NpYfqg==" crossorigin=""></script>
+<style>
+/* ===== HOME WALL v4.2 — graphite terminal finish. Blue lives ONLY on the Command Deck door (and its own section view). ===== */
+:root{--void:#050506;--hull:#0b0b0d;--cell:#111114;--well:#18181c;--ld:#232327;--lh:#34343a;
+--tmax:#f7f5f2;--tp:#e6e3de;--ts:#aba69f;--tm:#8f8a83;
+--amber:#ff9f1c;--gold:#facc15;--em:#10b981;--em2:#34d399;--cr:#ef4444;--cr2:#f87171;--frost:#ececec;--orchid:#e879f9;--silver:#b5b0a9;
+--r-amber:255 159 28;--r-gold:250 204 21;--r-em:16 185 129;--r-nb:30 77 43;--r-nbs:108 133 116;--r-nbd:26 46 34;--r-nbm:212 232 219;--r-cr:239 68 68;--r-frost:236 236 236;--r-orchid:232 121 249;--r-silver:181 176 169;--r-cb:59 130 246;
+--ct:2.75rem;--s:1;--a:var(--r-silver);
+--fd:"Chakra Petch","Segoe UI",system-ui,-apple-system,sans-serif;
+--fm:ui-monospace,SFMono-Regular,"JetBrains Mono","DejaVu Sans Mono",Menlo,Consolas,monospace;
+--fs:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:var(--tp);font:400 .75rem/1.25 var(--fs);font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html{font-size:16px}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-align:inherit}a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--amber);outline-offset:-2px}[hidden]{display:none!important}
+.num{font-family:var(--fm)}.tr{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.am{color:var(--amber)}.em,.gn{color:var(--em2)}.cr,.rd{color:var(--cr2)}.ic,.ice{color:var(--frost)}.dm{color:var(--ts)}.mt{color:var(--tm)}.gd{color:var(--gold)}
+/* per-box accent identities (no blue on Home) */
+#wx,#cc,#yw{--a:var(--r-gold)}#nw,#wm,#sn{--a:var(--r-gold)}#tm{--a:var(--r-nbs)}#sc,#cl,#mk{--a:var(--r-cr)}
+/* ---------- frame ---------- */
+.bridge{display:grid;width:100%;height:100%;padding:.3rem;gap:.3rem;grid-template-rows:2.8rem minmax(0,1fr) 1.6rem;
+ background:radial-gradient(ellipse 65% 38% at 50% -8%,rgb(var(--r-amber) / .085),transparent 70%),radial-gradient(ellipse 130% 95% at 50% 50%,transparent 58%,rgb(0 0 0 / .6) 100%),repeating-linear-gradient(0deg,rgb(255 255 255 / .012) 0 .0625rem,transparent .0625rem .25rem),linear-gradient(180deg,#0a0a0b,#050506)}
+.top{display:grid;grid-template-columns:12.6rem minmax(0,1fr);gap:.4rem;min-width:0}
+.chrono{display:flex;align-items:center;justify-content:space-between;gap:.3rem;padding:0 .4rem;border-radius:.3rem;overflow:hidden;white-space:nowrap;border:1px solid #232327;border-left:3px solid var(--amber);
+ background:linear-gradient(90deg,rgb(var(--r-amber) / .13),transparent 60%),linear-gradient(180deg,#121214,#0b0b0d);box-shadow:inset 0 1px 0 rgb(255 255 255 / .05),0 0 0 1px rgb(0 0 0 / .6),-.2rem 0 1rem rgb(var(--r-amber) / .12)}
+.chrono b{font:700 1.3rem/1.2 var(--fd);letter-spacing:0;color:#fff7ea;text-shadow:0 0 .9rem rgb(var(--r-amber) / .5)}
+.chrono span{display:flex;flex-direction:column;font:.7rem/1.15 var(--fm);color:var(--ts)}.chrono i{font-style:normal}
+.doors{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.4rem}
+.door{--d:var(--r-silver);position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:.4rem;padding:0 .7rem;border-radius:.3rem;min-width:0;overflow:hidden;transition:box-shadow .15s,filter .15s;
+ background:radial-gradient(120% 170% at 0% 0%,rgb(var(--d) / .32),transparent 55%),radial-gradient(80% 120% at 100% 100%,rgb(var(--d) / .10),transparent 60%),linear-gradient(180deg,#131316,#0b0b0d);
+ border:1px solid rgb(var(--d) / .38);border-bottom:2px solid rgb(var(--d));box-shadow:inset 0 1px 0 rgb(255 255 255 / .07),0 0 0 1px rgb(0 0 0 / .55),0 .25rem 1.2rem rgb(var(--d) / .14)}
+.door::after{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(115deg,rgb(255 255 255 / .022) 0 .08rem,transparent .08rem .5rem)}
+.door:hover{filter:brightness(1.12);box-shadow:inset 0 1px 0 rgb(255 255 255 / .08),0 0 0 1px rgb(0 0 0 / .55),0 .25rem 1.4rem rgb(var(--d) / .3)}
+#d-deck{--d:var(--r-nb)}#d-day{--d:var(--r-cr);border-bottom-color:var(--gold)}#d-wb{--d:var(--r-cb)}
+.door .in{min-width:0;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:1}
+.door .nm{font:700 .9rem/1.2 var(--fd);letter-spacing:.1em;color:#fff;white-space:nowrap;text-shadow:0 0 .8rem rgb(var(--d) / .65)}
+#d-day .nm{color:#fde68a;text-shadow:0 0 .8rem rgb(var(--r-gold) / .45)}#d-wb .nm{color:#dbeafe}
+.door .ln{font:.72rem/1.25 var(--fs);color:var(--ts);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.door .ln .nc{color:rgb(var(--d));margin-right:.15rem}#d-day .ln .nc{color:var(--gold)}
+.door .go{font:700 .95rem var(--fm);color:rgb(var(--d));position:relative;z-index:1;text-shadow:0 0 .6rem rgb(var(--d) / .7)}#d-day .go{color:var(--gold)}
+.deck{display:grid;grid-template-columns:3.35fr 3.8fr 2.95fr;gap:.3rem;min-height:0;min-width:0;position:relative}
+.col{display:flex;flex-direction:column;gap:.3rem;min-height:0;min-width:0}
+#wx{flex:8.43 1 0}#cc{flex:16.4 1 0}#tm{flex:5.38 1 0}#nw{flex:none}#wm{flex:1 1 0}#mk{flex:10.83 1 0}#sc{flex:9.5 1 0}#cl{flex:5.06 1 0}#sn{flex:2.43 1 0}#yw{flex:3.89 1 0}
+/* ---------- card ---------- */
+.card{position:relative;display:flex;flex-direction:column;overflow:hidden;min-height:0;min-width:0;border-radius:.3rem;border:1px solid #1f1f23;
+ background:linear-gradient(180deg,rgb(255 255 255 / .022),transparent 3rem),var(--hull);box-shadow:inset 0 1px 0 rgb(255 255 255 / .035),0 0 0 1px rgb(0 0 0 / .7),0 .5rem 1.2rem rgb(0 0 0 / .45)}
+.card::before{content:'';position:absolute;left:0;right:0;top:0;height:2px;z-index:6;pointer-events:none;background:linear-gradient(90deg,rgb(var(--a)),rgb(var(--a) / .5) 38%,transparent 88%);box-shadow:0 0 .7rem rgb(var(--a) / .55)}
+.card:not(.xp){cursor:pointer}
+.hdw{flex:none}
+.hd{display:flex;align-items:center;justify-content:space-between;gap:.4rem;height:1.4rem;min-height:1.4rem;padding:0 .5rem;
+ background:linear-gradient(90deg,rgb(var(--a) / .14),rgb(var(--a) / .035) 45%,transparent 78%),linear-gradient(180deg,#151518,#0f0f12);border-bottom:1px solid rgb(var(--a) / .28)}
+.hd.tall{height:2.85rem;min-height:2.85rem}
+.ttl{display:flex;align-items:center;gap:.4rem;font:700 .72rem/1.15 var(--fd);letter-spacing:.09em;color:var(--tp);text-transform:uppercase;white-space:nowrap;min-width:0;overflow:hidden}.ttl .tt{overflow:hidden;text-overflow:ellipsis}
+.led{width:.42rem;height:.42rem;border-radius:1px;flex:none;background:rgb(var(--a));box-shadow:0 0 .4rem rgb(var(--a) / .95),0 0 .12rem rgb(var(--a))}
+.hr{display:flex;align-items:center;gap:.3rem;min-width:0;flex:none}
+.bd{flex:1;min-height:0;min-width:0;padding:.25rem .45rem;display:flex;flex-direction:column;gap:.2rem;overflow:hidden;background-image:radial-gradient(rgb(255 255 255 / .04) .03rem,transparent .05rem);background-size:.5rem .5rem}
+/* ---------- chips / pills / tags ---------- */
+.pill{font:600 .7rem/1.1 var(--fm);padding:.06rem .38rem;border-radius:2px;white-space:nowrap;flex:none;letter-spacing:.02em}
+.p-live{color:var(--em2);background:linear-gradient(180deg,rgb(var(--r-em) / .24),rgb(var(--r-em) / .10));border:1px solid rgb(var(--r-em) / .55);box-shadow:0 0 .55rem rgb(var(--r-em) / .2);text-shadow:0 0 .45rem rgb(var(--r-em) / .55)}
+.p-warn{color:#ffb547;background:linear-gradient(180deg,rgb(var(--r-amber) / .24),rgb(var(--r-amber) / .10));border:1px solid rgb(var(--r-amber) / .6);box-shadow:0 0 .55rem rgb(var(--r-amber) / .16)}
+.p-crit{color:#fff;background:repeating-linear-gradient(-45deg,rgb(var(--r-cr) / .5) 0 .22rem,rgb(var(--r-cr) / .3) .22rem .44rem);border:1px solid var(--cr);box-shadow:0 0 .6rem rgb(var(--r-cr) / .3)}
+.p-off{color:var(--ts);background:repeating-linear-gradient(-45deg,#1a1a1d 0 .22rem,#121214 .22rem .44rem);border:1px dashed #45454c}
+.p-ice{color:var(--frost);background:rgb(var(--r-frost) / .1);border:1px solid rgb(var(--r-frost) / .45)}
+/* ---------- controls ---------- */
+.btn{min-width:var(--ct);min-height:var(--ct);display:inline-flex;align-items:center;justify-content:center;padding:0 .55rem;font:700 .72rem var(--fm);color:var(--ts);white-space:nowrap;border-radius:.22rem;
+ background:linear-gradient(180deg,#1b1b1f,#121215);border:1px solid #303036;box-shadow:inset 0 1px 0 rgb(255 255 255 / .06),0 1px 0 rgb(0 0 0 / .6);transition:color .12s,border-color .12s,box-shadow .12s}
+.btn:hover{color:var(--tmax);border-color:#5a5a62}
+.btn[aria-pressed=true]{color:#fff;border-color:rgb(var(--a));background:linear-gradient(180deg,rgb(var(--a) / .3),rgb(var(--a) / .12));box-shadow:inset 0 0 .7rem rgb(var(--a) / .22),0 0 .8rem rgb(var(--a) / .32);text-shadow:0 0 .5rem rgb(var(--a) / .6)}
+.btn.pl{--a:var(--r-amber)}
+.btn.bk{color:var(--amber);border-color:rgb(var(--r-amber) / .7)}
+.btn.tab{color:#fde68a;border-color:var(--gold);background:linear-gradient(180deg,rgb(var(--r-gold) / .22),rgb(var(--r-gold) / .08));box-shadow:0 0 .8rem rgb(var(--r-gold) / .2);max-width:22rem;white-space:normal;line-height:1.1;text-align:center}
+/* ---------- key/value cells ---------- */
+.kv{display:flex;flex-direction:column;justify-content:center;min-width:0;overflow:hidden;padding:.12rem .35rem;border-radius:.2rem;background:linear-gradient(180deg,#151518,#0f0f12);border:1px solid #232327;box-shadow:inset 0 1px 0 rgb(255 255 255 / .035)}
+.kv .k{font:.7rem/1.15 var(--fm);color:var(--tm);white-space:nowrap;letter-spacing:.02em;overflow:hidden;text-overflow:ellipsis}.kv .v{font:700 .76rem/1.2 var(--fm);color:var(--tmax);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kv.h1{flex-direction:row;align-items:center;justify-content:space-between;gap:.25rem;padding:.02rem .3rem}.kv.h1 .k{flex:none;overflow:visible}.kv.h1 .v{font-size:.72rem;text-align:right}
+.rows{flex:1;min-height:0;display:flex;flex-direction:column;gap:.2rem}
+.rw{flex:1;min-height:0;display:grid;grid-template-columns:3.4rem minmax(0,1fr);gap:.4rem;align-items:center;padding:0 .4rem;min-width:0;overflow:hidden;border-radius:.2rem;background:linear-gradient(90deg,rgb(var(--a) / .06),transparent 40%),var(--cell);border:1px solid #232327;border-left:2px solid var(--lh)}
+.rw b{font:700 .7rem/1.15 var(--fm);color:var(--tp);white-space:nowrap}.rw span{font:.72rem/1.15 var(--fm);color:var(--ts);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rw span em{font-style:normal;color:var(--tp)}
+.rw.on{border-left-color:var(--em)}.rw.on span{color:var(--tp)}.rw.wa{border-left-color:var(--amber)}.rw.er{border-left-color:var(--cr)}
+.nos{font:.7rem/1.15 var(--fm);color:var(--tm);display:flex;align-items:center;justify-content:center;text-align:center}
+/* ---------- weather ---------- */
+#wx .bd{flex-direction:row;gap:.35rem}#wx.xp .bd{flex-direction:column}
+.wxl{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;gap:.2rem}
+.seg{width:2.9rem;flex:none;display:flex;flex-direction:column;gap:.2rem}.seg .btn{flex:1}
+.hero{display:flex;align-items:center;gap:.45rem;height:2.9rem;flex:none;min-width:0}
+.big{font:700 2.3rem/1.2 var(--fd);color:#fff;letter-spacing:-.01em;white-space:nowrap;text-shadow:0 0 1.2rem rgb(var(--r-frost) / .3),0 0 .2rem rgb(255 255 255 / .25)}
+.wst{display:flex;flex-direction:column;justify-content:center;font:.7rem/1.15 var(--fm);color:var(--ts);white-space:nowrap;min-width:0;overflow:hidden;flex:1}.wst span{overflow:hidden;text-overflow:ellipsis;line-height:1.17;flex:none}.wst .c1{font:700 .78rem/1.22 var(--fs);color:var(--tp)}.wst span:last-child{line-height:1.36}.gatb{flex:none;max-width:5.7rem;min-width:4rem;align-self:stretch;display:flex;flex-direction:column;justify-content:center;align-items:flex-end;gap:0;padding:0 .1rem 0 .4rem;border-left:1px solid #2a2a2f;background:linear-gradient(90deg,transparent,rgb(var(--r-frost) / .04))}.gatb>*{flex:none}.gatb .k{font:.7rem/1.17 var(--fm);color:var(--tm)}.gatb b{font:700 .9rem/1.22 var(--fd);color:var(--tmax)}.gatb b.am{color:var(--amber)}.gatb span:last-child{font:.7rem/1.22 var(--fs);color:var(--ts);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gatb span.am{color:var(--amber)}
+.nd{width:.78rem;height:.78rem;color:var(--amber);vertical-align:-.12rem}
+.cd{font:700 .74rem/1.25 var(--fs);height:.95rem;flex:none;color:var(--amber);text-shadow:0 0 .6rem rgb(var(--r-amber) / .3)}
+.g3{flex:1;min-height:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:1fr 1fr;gap:.2rem}
+.g2{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;gap:.25rem}
+.dsg{display:flex;align-items:center;gap:.45rem;height:1.3rem;flex:none;padding:0 .45rem;white-space:nowrap;overflow:hidden;border-radius:.2rem;border:1px solid rgb(var(--r-amber) / .55);border-left:4px solid var(--amber);background:linear-gradient(90deg,rgb(var(--r-amber) / .22),rgb(var(--r-amber) / .04) 70%),var(--cell);box-shadow:0 0 .8rem rgb(var(--r-amber) / .12)}
+.dsg .dk{font:700 .7rem var(--fm);color:#ffcf8a;letter-spacing:.06em}.dsg b{font:700 .95rem/1.1 var(--fd);padding-bottom:.055rem;letter-spacing:.07em;text-shadow:0 0 .6rem currentColor}.dsg b.dm{text-shadow:none}.dsg .ds{font:.7rem var(--fm);color:var(--ts)}.dsg .ds i{font-style:normal;font-weight:700;color:#ffcf8a}
+.pgrid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:1fr 1fr;gap:.12rem}.pgrid .kv{padding:.01rem .25rem}.wxl.plow{gap:.15rem}.pgrid .kv .k{line-height:1.02;letter-spacing:0;padding-bottom:.05rem}.pgrid .kv .v{line-height:1.08;padding-bottom:.035rem}.kv.s2{grid-column:span 2}
+.pbot{flex:none;height:1.1rem;display:grid;grid-template-columns:1.1fr 1fr;gap:.2rem}
+.pst{min-width:0;min-height:0;overflow:hidden;padding:.08rem .2rem;border-radius:.2rem;background:var(--cell);border:1px solid #232327}.pst svg{width:100%;height:100%;display:block}
+.x3{flex:1;min-height:0;display:grid;grid-template-columns:1.1fr 1fr 1.1fr;gap:.45rem}.x2{flex:1;min-height:0;display:grid;grid-template-columns:1.25fr 1fr;gap:.45rem}
+.xc{display:flex;flex-direction:column;gap:.3rem;min-height:0;min-width:0}.fl1{flex:1;min-height:0}.fcl{gap:.2rem}
+.fcr{flex:1;grid-template-columns:4rem minmax(0,1fr)}.fcr span{white-space:nowrap}
+#wx.xp .pst{flex:.8}#wx.xp .dsg{height:2.4rem}
+/* ---------- commute + cameras ---------- */
+.ch,.ce{display:grid;grid-template-columns:3.6rem minmax(0,1fr) 4.2rem;gap:.3rem;align-items:center;white-space:nowrap;overflow:hidden}
+.ch{height:.95rem;flex:none;font:700 .7rem var(--fm);color:var(--tm);letter-spacing:0;border-bottom:1px solid #2a2a2f}.ch span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ch span:last-child,.ce em{text-align:right}
+.ces{display:flex;flex-direction:column;gap:.12rem;flex:none}
+.ce{height:1.2rem;font:.72rem var(--fm);padding:0 .3rem;border-radius:0 .15rem .15rem 0;border-left:2px solid var(--amber);background:linear-gradient(90deg,rgb(var(--r-amber) / .1),transparent 45%),var(--cell)}
+.ce:has(b.cr){border-left-color:var(--cr);background:linear-gradient(90deg,rgb(var(--r-cr) / .12),transparent 45%),var(--cell)}
+.ce b{font-weight:700;font-size:.7rem}.ce b.dir{color:var(--tmax);font-size:.7rem;padding:0 .15rem;border:1px solid #4a4a50;border-radius:2px}.ce em{font-style:normal;font-weight:700;font-size:.7rem}
+.cl{flex:none;height:1rem;font:.7rem/1rem var(--fm);color:var(--ts);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cl b{color:var(--tp)}
+.cl2{border-top:1px solid #2a2a2f;height:1.1rem;line-height:1.1rem}.cl.sp{display:flex;justify-content:space-between;gap:.5rem}.cl.sp>span:last-child{flex:none}
+.cg{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:.25rem}
+.cam,.cb{position:relative;overflow:hidden;min-width:0;min-height:0;border-radius:.22rem;border:1px solid #2c2c31;
+ background:radial-gradient(ellipse at 50% 45%,rgb(255 255 255 / .05),transparent 70%),repeating-linear-gradient(-45deg,#111114 0 .35rem,#16161a .35rem .7rem);box-shadow:inset 0 0 1.4rem rgb(0 0 0 / .75),inset 0 1px 0 rgb(255 255 255 / .04)}
+.cam::after,.cb::after{content:'';position:absolute;inset:.12rem;pointer-events:none;
+ background:linear-gradient(var(--fr),var(--fr)) 0 0/.5rem 1px no-repeat,linear-gradient(var(--fr),var(--fr)) 0 0/1px .5rem no-repeat,linear-gradient(var(--fr),var(--fr)) 100% 0/.5rem 1px no-repeat,linear-gradient(var(--fr),var(--fr)) 100% 0/1px .5rem no-repeat,linear-gradient(var(--fr),var(--fr)) 0 100%/.5rem 1px no-repeat,linear-gradient(var(--fr),var(--fr)) 0 100%/1px .5rem no-repeat,linear-gradient(var(--fr),var(--fr)) 100% 100%/.5rem 1px no-repeat,linear-gradient(var(--fr),var(--fr)) 100% 100%/1px .5rem no-repeat}
+.cam,.cb{--fr:rgb(255 255 255 / .2)}
+.cam img,.cb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cam .cgl{position:absolute;left:50%;top:50%;width:2.4rem;height:1.65rem;transform:translate(-50%,-50%);color:#5a5a62}
+.cam .cn{position:absolute;left:.4rem;top:.25rem;right:.4rem;font:700 .72rem var(--fm);color:var(--tp);text-shadow:0 1px 2px #000,0 0 4px #000}
+.cam .cs{position:absolute;left:.4rem;bottom:.3rem;font:700 .7rem/1.25 var(--fm);padding:0 .3rem;border-radius:2px;background:rgb(0 0 0 / .62);border:1px solid currentColor}
+.cam.has .cn{background:rgb(0 0 0 / .45);padding:0 .2rem;right:auto;max-width:calc(100% - .8rem)}
+/* ---------- team gauges ---------- */
+.tg{flex:1;min-height:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.06rem}
+.gm{display:flex;flex-direction:column;align-items:center;justify-content:space-between;min-width:0;padding:.03rem 0;border-radius:.2rem;background:linear-gradient(180deg,rgb(var(--r-orchid) / .05),transparent 70%)}
+.gn{font:600 .7rem/1.15 var(--fs);color:var(--tp);max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.01em;padding-bottom:.03rem}.gn i{font-style:normal;color:var(--ts);font-weight:400}
+.ring{--f:var(--orchid);--g:var(--r-orchid);--trk:#2a2a30;position:relative;width:1.9rem;height:1.9rem;flex:none;display:flex;align-items:center;justify-content:center}
+.ring::before,.ring::after{content:'';position:absolute;inset:0;border-radius:50%;-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - .26rem),#000 calc(100% - .25rem));mask:radial-gradient(farthest-side,transparent calc(100% - .26rem),#000 calc(100% - .25rem))}
+.ring::before{background:conic-gradient(from 225deg,var(--f) 0 calc(var(--p) * .75%),var(--trk) 0 75%,transparent 0);filter:drop-shadow(0 0 .22rem rgb(var(--g) / .6))}
+.ring::after{background:repeating-conic-gradient(from 225deg,rgb(0 0 0 / .85) 0 1.6deg,transparent 1.6deg 27deg)}
+.ring.hi{--f:var(--amber);--g:var(--r-amber)}.ring.cx{--f:var(--cr);--g:var(--r-cr)}
+.ring.stl{--f:#8f8a83;--g:0 0 0}.ring.stl::before{filter:none}
+.ring.na::before{background:conic-gradient(from 225deg,var(--trk) 0 75%,transparent 0);filter:none}
+.ring b{position:relative;display:flex;flex-direction:column;align-items:center;font:700 .74rem/1.08 var(--fm);color:var(--tmax);gap:0}.ring b span{padding-bottom:.035rem}.ring small{font:.7rem/1.08 var(--fm);color:var(--ts);padding-bottom:.035rem}.gm.big .ring b span{padding-bottom:.07rem}.gm.big .ring small{padding-bottom:.04rem}
+.gl{font:.7rem/1.04 var(--fs);letter-spacing:-.01em;color:var(--ts);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}.gl:nth-of-type(2){color:var(--tm)}.gl.am{color:var(--amber)}.gls{font:.7rem/1.04 var(--fs);letter-spacing:-.03em;color:var(--ts);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;text-align:center;padding-bottom:.07rem}.gls .gsr{color:var(--tp,#fff);}.gls .gq{display:none}.gls .am{color:var(--amber)}#tm:not(.xp) .hd{height:1.3rem;min-height:1.3rem}#tm:not(.xp) .bd{padding-top:.1rem;padding-bottom:.1rem}
+.tg.big{gap:.5rem}.gm.big{justify-content:center;gap:.3rem;padding:.4rem .3rem;border:1px solid #232327;background:linear-gradient(180deg,rgb(var(--r-orchid) / .07),transparent 60%),var(--cell)}
+.gm.big .gn{font-size:1.05rem;white-space:normal;text-align:center;padding-bottom:.04rem}.gm.big .ring{width:7rem;height:7rem}.gm.big .ring::before,.gm.big .ring::after{-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - .8rem),#000 calc(100% - .78rem));mask:radial-gradient(farthest-side,transparent calc(100% - .8rem),#000 calc(100% - .78rem))}
+.gm.big .ring b{font-size:1.6rem}.gm.big .ring small{font-size:.85rem}.gm.big .gl{font-size:.8rem;line-height:1.3;white-space:normal;text-align:center}.gm.big .gw{color:var(--tp)}
+.tnote{flex:none;font:.78rem/1.35 var(--fs);color:var(--ts);padding:.3rem .2rem 0}
+/* ---------- live TV ---------- */
+.stn{display:flex;gap:.2rem;flex:1;justify-content:center;min-width:0}.btn.st{padding:0 .35rem;min-width:var(--ct)}
+.nwm{flex:none;display:flex;min-height:0}
+.stage{position:relative;width:100%;aspect-ratio:16/9;background:#020203;flex:none;overflow:hidden;box-shadow:inset 0 0 0 1px #000}
+.stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.poster{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.45rem;text-align:center;padding:0 1rem;
+ background:radial-gradient(ellipse 60% 55% at 50% 42%,rgb(var(--r-cr) / .2),transparent 70%),repeating-linear-gradient(0deg,rgb(255 255 255 / .022) 0 .0625rem,transparent .0625rem .19rem),#070708}
+.poster b{font:700 2.8rem/1.25 var(--fd);letter-spacing:.18em;color:#fff;text-shadow:0 0 1.6rem rgb(var(--r-cr) / .55)}
+.poster span{font:.74rem var(--fm);color:var(--ts)}.poster u{font:700 .76rem var(--fm);color:var(--amber);text-decoration:none;border:1px solid var(--amber);padding:.35rem .9rem;border-radius:.22rem;box-shadow:0 0 .8rem rgb(var(--r-amber) / .25)}
+.nxs{display:none}
+.tks{display:flex;flex-direction:column;flex:none}
+.bar2{display:flex;height:1.55rem;align-items:stretch;overflow:hidden;white-space:nowrap;position:relative}
+.bar2.lo{background:linear-gradient(180deg,#c76b0e,#a4530a);color:#fff8ee;border-top:1px solid #fbbf24}
+.bar2.wo{background:linear-gradient(180deg,#b42020,#8a1616);color:#fff1f1;border-top:1px solid #f87171}
+.bg2{flex:none;display:flex;align-items:center;padding:0 .65rem;font:800 .72rem var(--fm);letter-spacing:.1em;box-shadow:inset -1px 0 0 rgb(0 0 0 / .25),.15rem 0 .5rem rgb(0 0 0 / .2);z-index:2}
+.bar2.lo .bg2{background:linear-gradient(180deg,#fcc24a,#f59e0b);color:#2b1700}
+.bar2.wo .bg2{background:linear-gradient(180deg,#f26b6b,#dc2626);color:#fff}
+.bst{flex:none;display:flex;align-items:center;margin:.17rem .35rem;padding:0 .4rem;font:800 .7rem var(--fm);letter-spacing:.05em;border-radius:2px;color:#fff;background:rgb(0 0 0 / .34);border:1px solid rgb(255 255 255 / .7);z-index:2}
+.bst:empty{display:none}
+.bar2.stl .bst,.bar2.off .bst{background:#fff;color:#1a1100;border-color:#fff;box-shadow:0 0 .6rem rgb(255 255 255 / .35)}.bar2.wo.stl .bst,.bar2.wo.off .bst{color:#3a0000}
+.win{position:relative;flex:1;overflow:hidden;min-width:0}
+.bar2.stl .win::after,.bar2.off .win::after{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(-45deg,rgb(0 0 0 / .22) 0 .3rem,transparent .3rem .6rem)}
+.bar2.stl .trk{opacity:.8}
+.trk{position:absolute;left:0;top:0;height:100%;display:flex;align-items:center;white-space:nowrap;will-change:transform}.trk.st{position:relative}
+.it{display:inline-flex;align-items:center;font:600 .78rem var(--fm);text-shadow:0 1px 0 rgb(0 0 0 / .35)}
+.it b{font-weight:800;font-size:.7rem;margin-right:.4rem;letter-spacing:.05em;opacity:.92}.it .ag{opacity:.78;font-size:.7rem;margin-left:.4rem;font-weight:400}.it i{font-style:normal;opacity:.55;margin:0 .9rem}
+.msg{padding:0 .6rem;font:600 .72rem var(--fm);display:flex;align-items:center;height:100%;overflow:hidden;text-overflow:ellipsis}
+/* ---------- world ---------- */
+.lyr{display:flex;gap:.2rem;align-items:center;flex:1;justify-content:flex-end;min-width:0}
+.btn.ly{flex-direction:column;gap:0;padding:0 .3rem;line-height:1.12;min-width:3.2rem}.ly span{font:700 .7rem var(--fm);letter-spacing:.02em}.ly b{font:700 .8rem var(--fm);color:var(--tmax)}.ly b.cr{color:var(--cr2)}.ly b.dm{color:var(--ts)}
+.btn.ly[aria-pressed=false]{opacity:.55}.ly b.tk{color:#a7f3d0;text-shadow:0 0 .5rem rgb(var(--r-em) / .9)}
+.ltot{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:3rem;height:var(--ct);border-radius:.22rem;border:1px solid rgb(var(--r-em) / .5);background:linear-gradient(180deg,rgb(var(--r-em) / .16),rgb(var(--r-em) / .05));font:700 .7rem var(--fm);color:var(--ts);line-height:1.1}
+.ltot b{font:700 .95rem var(--fm);color:#fff;text-shadow:0 0 .55rem rgb(var(--r-em) / .7)}.ltot b.tk{color:#a7f3d0}
+.wbody{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:.3rem;padding:.3rem}
+.wsx{display:none}
+.mapw{position:relative;border-radius:.22rem;overflow:hidden;min-height:0;isolation:isolate;background:#070708;border:1px solid #2a2a2f;box-shadow:inset 0 0 1.6rem rgb(0 0 0 / .85)}
+.gmap{position:absolute;inset:0;background:#0a0a0b}
+.gmap .leaflet-tile-pane{filter:grayscale(1) invert(1) brightness(.95) contrast(1.3)}
+.gmap .leaflet-pane{z-index:auto}.gmap .leaflet-tile-pane{z-index:200}.gmap .leaflet-radar-pane{z-index:250}.gmap .leaflet-marker-pane{z-index:600}.gmap .leaflet-overlay-pane{z-index:400}
+.ghi{pointer-events:none}.ghi i{position:absolute;left:-.3rem;top:-.3rem;width:.6rem;height:.6rem;border:2px solid var(--amber);border-radius:50%;background:#000;box-shadow:0 0 .5rem rgb(var(--r-amber) / .8)}.ghi b{position:absolute;left:.5rem;top:-.55rem;font:700 .7rem var(--fm);color:var(--amber);text-shadow:0 0 3px #000,0 0 3px #000}
+.mk{--sv:var(--r-frost);display:block;position:relative;width:var(--z);height:var(--z);margin:calc(var(--z) / -2) 0 0 calc(var(--z) / -2);color:rgb(var(--sv));filter:drop-shadow(0 0 .22rem rgb(var(--sv) / .95))}
+.mk.s1{--sv:var(--r-amber)}.mk.s2{--sv:var(--r-cr)}
+.mk::before{content:'';position:absolute;left:50%;top:50%;width:max(44px,100%);height:max(44px,100%);transform:translate(-50%,-50%);pointer-events:auto}.mk b{position:absolute;inset:0;display:block}
+.mk.q b{border-radius:50%;border:2px solid currentColor;background:rgb(var(--sv) / .28)}
+.mk.d b{transform:rotate(45deg) scale(.78);border:2px solid currentColor;background:rgb(var(--sv) / .28)}
+.mk.e b{background:currentColor;clip-path:polygon(50% 4%,96% 92%,4% 92%)}
+.mk.a b{border:2px solid currentColor;background:rgb(var(--sv) / .22)}
+.mk.sel{filter:drop-shadow(0 0 .3rem #fff)}.mk.sel b{outline:2px solid #fff;outline-offset:2px}
+.mk.fr::after{content:'';position:absolute;inset:-.4rem;border-radius:50%;border:2px solid currentColor;animation:rip 1.7s ease-out 6}
+@keyframes rip{from{transform:scale(.35);opacity:.95}to{transform:scale(1.9);opacity:0}}
+.tv{display:block;width:.5rem;height:.5rem;margin:-.25rem 0 0 -.25rem;background:var(--amber);transform:rotate(45deg);box-shadow:0 0 .35rem rgb(var(--r-amber) / .8)}.tv.i{background:var(--cr);box-shadow:0 0 .35rem rgb(var(--r-cr) / .8)}
+.mtg{position:absolute;left:.3rem;top:.3rem;z-index:700}.mtg .btn{background:rgb(9 9 10 / .84);min-width:5rem;color:var(--tp);border-color:#3c3c43}
+.mov{position:absolute;left:.3rem;right:.3rem;bottom:.3rem;z-index:700;display:flex;justify-content:space-between;gap:.4rem;padding:.1rem .4rem;border-radius:.15rem;background:rgb(9 9 10 / .84);border:1px solid #33333a;font:.7rem var(--fm);color:var(--em2);white-space:nowrap;overflow:hidden}
+.mov>span:first-child{overflow:hidden;text-overflow:ellipsis;min-width:0}.mov>span+span{flex:none}
+.evc{display:flex;flex-direction:column;min-width:0;min-height:0;gap:.2rem}
+.evl{flex:1;min-height:0;display:flex;flex-direction:column;gap:.2rem;overflow:hidden}
+.ev{--sv:var(--r-frost);flex:1;min-height:var(--ct);width:100%;display:flex;flex-direction:column;justify-content:center;gap:.08rem;padding:.1rem .45rem;border-radius:.2rem;overflow:hidden;
+ background:linear-gradient(90deg,rgb(var(--sv) / .11),transparent 55%),var(--cell);border:1px solid #232327;border-left:3px solid rgb(var(--sv))}
+.ev.s1{--sv:var(--r-amber)}.ev.s2{--sv:var(--r-cr)}
+.ev .h{font:700 .8rem/1.2 var(--fs);color:var(--tp)}.ev .h i{font:700 .7rem var(--fm);font-style:normal;color:rgb(var(--sv))}.ev .p{font:.7rem/1.2 var(--fm);color:var(--ts)}
+.ev.sel{background:linear-gradient(90deg,rgb(var(--r-em) / .2),transparent 65%),var(--well);border-color:rgb(var(--r-em) / .75);border-left-color:var(--em2);box-shadow:0 0 .7rem rgb(var(--r-em) / .22)}.ev.sel .p{color:var(--tp)}
+.ev.nw{box-shadow:inset 0 0 0 1px rgb(var(--sv) / .7)}
+.ev0{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;font:.72rem var(--fm);color:var(--ts);border:1px dashed #45454c;border-radius:.2rem;padding:.3rem}
+.evp{flex:none;height:.95rem;font:.7rem/.95rem var(--fm);color:var(--tm);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* ---------- markets ---------- */
+.tape{height:2.9rem;position:relative;flex:none;border-radius:.22rem;overflow:hidden;border:1px solid #2a2a2f;background:linear-gradient(180deg,#141417,#0e0e10)}
+.tape iframe{position:absolute;left:0;top:0;border:0;width:calc(100% / var(--s));height:calc(100% / var(--s));transform:scale(var(--s));transform-origin:0 0}
+.tvl{position:absolute;right:0;top:0;z-index:2;font:700 .7rem/1 var(--fm);padding:.12rem .3rem;color:#ffb547;background:rgb(10 10 11 / .9);border-left:1px solid rgb(var(--r-amber) / .5);border-bottom:1px solid rgb(var(--r-amber) / .5);border-radius:0 0 0 .2rem}
+.tape .tvm{position:absolute;inset:0;display:none;align-items:center;padding:0 .4rem;font:.7rem/1.2 var(--fm);color:var(--ts)}.tape.fail .tvm{display:flex}.tape.fail iframe{display:none}
+.mkt{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:.2rem}
+.mt4{position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:0 .3rem;min-width:0;overflow:hidden;border-radius:.22rem;background:linear-gradient(180deg,#151518,#0e0e11);border:1px solid #26262b;box-shadow:inset 0 1px 0 rgb(255 255 255 / .035)}
+.mt4 .chl{position:absolute;left:0;right:0;top:12%;bottom:0}.mt4 .spk{position:absolute;left:0;top:0;width:100%;height:100%}.mt4 .chl iframe{position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none}.mt4.c-none .chl,.mt4 .chl.tvf{background:repeating-linear-gradient(-45deg,rgb(255 255 255 / .04) 0 .22rem,transparent .22rem .44rem)}.mt4 .chl.tvf iframe{visibility:hidden}.mt4 .txl{position:relative;display:flex;flex-direction:column;justify-content:space-between;height:100%;min-height:0;pointer-events:none}.mt4 .cnt{font:.7rem/1 var(--fs);font-style:normal;color:var(--ts);padding-bottom:.06rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.spk.up{color:var(--em2)}.spk.dn{color:var(--cr2)}.spk.stl{color:#8f8a83}
+.spk .ln{fill:none;stroke:currentColor;stroke-width:2.4;vector-effect:non-scaling-stroke;filter:drop-shadow(0 0 2px currentColor)}.spk circle{fill:currentColor}
+.mt4 .a,.mt4 .b{position:relative;display:flex;justify-content:space-between;align-items:center;gap:.25rem;white-space:nowrap;line-height:1;text-shadow:0 0 3px #000,0 0 3px #000}
+.mt4 .a b{font:700 .72rem/1 var(--fm);color:var(--tp);padding-bottom:.06rem}.mt4 .b b{font:700 .8rem/1 var(--fm);color:#fff;padding-bottom:.07rem}.mt4 .b i{font:700 .7rem/1 var(--fm);font-style:normal;padding-bottom:.06rem}
+.tag{font:700 .7rem/1 var(--fm);font-style:normal;padding:0 .22rem .06rem;border-radius:2px;border:1px solid;text-shadow:none;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.tag.lv{color:var(--em2);border-color:rgb(var(--r-em) / .6);background:rgb(var(--r-em) / .14)}.tag.dl{color:#ffb547;border-color:rgb(var(--r-amber) / .6);background:rgb(var(--r-amber) / .12)}
+.tag.st{color:#1a1100;background:#ffd166;border-color:#ffd166}.cst{font:700 .7rem/1 var(--fm);font-style:normal;color:#1a1100;background:#ffd166;padding:.01rem .25rem .06rem;border-radius:2px;white-space:nowrap}.tag.of{color:var(--ts);border-style:dashed;border-color:#4a4a50}.tag.pd{color:var(--ts);border-color:#3a3a40}
+.mt4.stl{background:repeating-linear-gradient(-45deg,#141416 0 .3rem,#111113 .3rem .6rem)}
+/* ---------- security ---------- */
+.flip{gap:.2rem}.flip .btn{padding:0 .3rem}
+.cbx{flex:1;min-height:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.25rem}
+.cb{display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:.1rem .1rem;text-align:center}
+.cb .cgl{position:absolute;left:50%;top:52%;width:2.1rem;height:1.45rem;transform:translate(-50%,-50%);color:#47474e}
+.cb b{position:relative;font:700 .7rem/1 var(--fm);color:var(--tp);white-space:normal;text-shadow:0 1px 2px #000;padding-bottom:.06rem}
+.cb span{position:relative;font:700 .7rem/1 var(--fm);white-space:normal;text-shadow:0 1px 2px #000;padding-bottom:.06rem}.cb small{position:relative;font:.75rem/1.25 var(--fm);color:var(--ts)}
+.cb.on{border-color:rgb(var(--r-em) / .6)}
+.sg{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:.2rem}
+.zt{display:flex;flex-direction:column;justify-content:center;min-width:0;overflow:hidden;padding:.04rem .35rem;border-radius:.2rem;border:1px dashed #3d3d44;background:repeating-linear-gradient(-45deg,#121215 0 .3rem,#151518 .3rem .6rem)}
+.zt b{font:700 .7rem/1.15 var(--fm);color:var(--tp);white-space:nowrap}.zt span{font:.7rem/1.15 var(--fm);color:var(--tm);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#sc:not(.xp) .sg.h2{grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,minmax(0,1fr))}#sc:not(.xp) .zt.rowz{flex-direction:row;align-items:center;justify-content:space-between;gap:.3rem;padding:0 .4rem}#sc.xp .sg.h2{grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr}
+.zt.on{border-style:solid;border-color:rgb(var(--r-em) / .55);background:linear-gradient(180deg,rgb(var(--r-em) / .1),transparent),var(--cell)}.zt.on span{color:var(--em2)}
+/* ---------- calendar ---------- */
+.wk{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.15rem;flex:none;height:2.05rem}
+.dy{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.12rem;min-width:0;border-radius:.2rem;background:linear-gradient(180deg,#151518,#0f0f12);border:1px solid #232327}
+.dy span{font:700 .7rem/1.1 var(--fm);color:var(--tm);padding-bottom:.03rem}.dy b{font:700 1.05rem/1.12 var(--fd);color:var(--tp);padding-bottom:.05rem}.dy i{font:.7rem/1.1 var(--fm);font-style:normal;color:var(--ts);padding-bottom:.03rem}
+.dy.we span{color:var(--ts)}#cl:not(.xp) .hd,#sn:not(.xp) .hd,#yw:not(.xp) .hd{height:1.3rem;min-height:1.3rem}#cl:not(.xp) .bd,#sn:not(.xp) .bd,#yw:not(.xp) .bd{padding-top:.15rem;padding-bottom:.15rem}#cl:not(.xp) .wk{flex:1;height:auto;min-height:1.8rem}#cl:not(.xp) .rows{flex:none;height:1.2rem}#cl:not(.xp) .dy{gap:.04rem}#cl:not(.xp) .dy span{line-height:1;padding-bottom:.06rem}#cl:not(.xp) .dy b{font-size:.9rem;line-height:1.1;padding-bottom:.055rem}
+.dy.td{border-color:rgb(var(--r-gold) / .75);background:linear-gradient(180deg,rgb(var(--r-gold) / .24),rgb(var(--r-gold) / .06));box-shadow:0 0 .7rem rgb(var(--r-gold) / .22),inset 0 1px 0 rgb(255 255 255 / .08)}.dy.td b{color:#fde68a;text-shadow:0 0 .6rem rgb(var(--r-gold) / .6)}.dy.td span{color:var(--gold)}
+/* ---------- scanner ---------- */
+.ssum{flex:none;font:.7rem/1.2 var(--fs);color:var(--ts);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;height:.85rem}.ssum b{color:var(--tp)}
+.lks{flex:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.25rem}
+.btn.lk{flex-direction:column;gap:.04rem;line-height:1.1;padding:.1rem .2rem;min-width:0;color:var(--tp);border-color:#3a3a41;background:linear-gradient(180deg,#1b1b1f,#111114)}
+.lk b{font:700 .72rem var(--fm);color:#fff}.lk small{font:600 .7rem var(--fs);color:var(--ts);max-width:100%;overflow:hidden;text-overflow:ellipsis}.lk i{font:.7rem var(--fm);font-style:normal;color:var(--tm)}
+/* ---------- bottom rail ---------- */
+.bot{display:flex;align-items:center;justify-content:space-between;gap:.8rem;padding:0 .6rem;overflow:hidden;border-radius:.3rem;border:1px solid #1f1f23;background:linear-gradient(180deg,#101012,#0a0a0b);box-shadow:inset 0 1px 0 rgb(255 255 255 / .03)}
+#log{font:.72rem var(--fm);color:var(--tp);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}#log b{font-weight:400;color:var(--amber)}#log .e{color:var(--cr2)}
+#stamp{font:.72rem var(--fm);color:var(--ts);white-space:nowrap;flex:none}
+/* ---------- expanded (tap a box) ---------- */
+.card.xp{position:absolute;inset:0;z-index:60;border-color:#3a3a40;box-shadow:0 0 0 1px #000,0 0 2.5rem rgb(0 0 0 / .85),0 0 1.4rem rgb(var(--a) / .18)}
+.card.xp .hd{height:2.9rem;min-height:2.9rem}.card.xp .bd{padding:.45rem .55rem;gap:.35rem}
+.card.xp .rw{grid-template-columns:7.5rem minmax(0,1fr);padding:0 .8rem}.card.xp .rw b{font-size:1rem}.card.xp .rw span{font-size:1.1rem;white-space:normal;line-height:1.3}
+.card.xp .kv{padding:.3rem .6rem}.card.xp .kv .k{font-size:.85rem}.card.xp .kv .v{font-size:1.2rem;white-space:normal}
+.card.xp .hero{height:4rem}.card.xp .big{font-size:3rem}.card.xp .wst{font-size:.95rem}.card.xp .wst .c1{font-size:1rem}
+.card.xp .fcr b{font-size:.95rem}.card.xp .fcr span{font-size:1rem;white-space:nowrap}.card.xp .dsg b{font-size:1.4rem}.card.xp .dsg .ds,.card.xp .dsg .dk{font-size:.85rem}
+.card.xp .ces .ce{flex:1;height:auto;font-size:.82rem}.card.xp .cg{grid-template-columns:1fr 1fr}.card.xp .cam .cn{font-size:.95rem}.card.xp .cam .cs{font-size:.85rem}.card.xp .cam .cgl{width:4rem;height:2.75rem}
+#nw.xp .nwm{flex:1;display:grid;grid-template-columns:auto minmax(0,1fr);gap:.45rem;padding:.45rem;min-height:0}
+#nw.xp .stage{width:auto;height:100%;aspect-ratio:16/9}
+#nw.xp .nxs{display:flex;flex-direction:column;gap:.4rem;min-width:0;min-height:0;overflow:hidden}
+.nxh{flex:none;display:flex;flex-direction:column;gap:.15rem;padding:.4rem .6rem;border-radius:.22rem;border:1px solid rgb(var(--r-cr) / .5);background:linear-gradient(90deg,rgb(var(--r-cr) / .16),transparent),var(--cell)}
+.nxh .k,.nxl .k{font:700 .75rem var(--fm);color:var(--ts);letter-spacing:.08em}.nxh b{font:700 1.2rem var(--fd);color:#fff;letter-spacing:.06em}.nxh span{font:.85rem var(--fm);color:var(--ts)}
+.nxl{flex:1;min-height:0;display:flex;flex-direction:column;gap:.2rem;overflow:hidden}.nxl .k.lo{color:#fbbf24}.nxl .k.wo{color:var(--cr2)}
+.hl{flex:1;min-height:0;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:.5rem;align-items:center;padding:.2rem .5rem;border-radius:.2rem;background:var(--cell);border:1px solid #232327}
+.hl b{font:700 .72rem var(--fm);color:var(--ts)}.hl span{font:.85rem/1.25 var(--fs);color:var(--tp);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hl i{font:.72rem var(--fm);font-style:normal;color:var(--tm)}
+#wm.xp .wbody{grid-template-columns:minmax(0,2fr) minmax(0,1.1fr) minmax(0,.9fr);padding:.45rem}
+#wm.xp .wsx{display:flex;flex-direction:column;gap:.25rem;min-height:0}#wm.xp .wsx .rw{grid-template-columns:minmax(0,1fr);gap:.1rem;padding:.2rem .6rem;align-content:center}#wm.xp .wsx .rw b{font-size:.85rem;white-space:normal}#wm.xp .wsx .rw span{font-size:.85rem}
+#wm.xp .ev .h{font-size:.85rem}#wm.xp .ev .p{font-size:.78rem}
+#mk.xp .tape{height:3.4rem}#mk.xp .mt4{padding:.6rem .8rem}#mk.xp .mt4 .a b{font-size:1.1rem;line-height:1.2}#mk.xp .mt4 .b b{font-size:2rem;line-height:1.2}#mk.xp .mt4 .a,#mk.xp .mt4 .b{line-height:1.2}#mk.xp .tag{font-size:.85rem;padding:.06rem .4rem .13rem}#mk.xp .mt4 .b i{font-size:1rem;padding-bottom:.09rem}#mk.xp .mt4 .chl{top:30%}#mk.xp .cnt{font-size:.95rem;line-height:1.25}
+#sc.xp .cb{justify-content:center;gap:.6rem;padding:.6rem}#sc.xp .cb .cgl{position:relative;left:auto;top:auto;transform:none;width:5rem;height:3.4rem}#sc.xp .cb b{font-size:1.3rem;padding-bottom:.11rem}#sc.xp .cb span{font-size:1.1rem;padding-bottom:.1rem}
+#sc.xp .zt{padding:.5rem .9rem}#sc.xp .zt b{font-size:1.3rem;line-height:1.3}#sc.xp .zt span{font-size:1rem;line-height:1.3;white-space:normal}
+#cl.xp .wk{height:7rem;grid-template-columns:repeat(7,minmax(0,1fr));grid-template-rows:1fr 1fr;height:9rem}#cl.xp .dy b{font-size:1.8rem;padding-bottom:.09rem}#cl.xp .dy span,#cl.xp .dy i{font-size:.85rem}
+#sn.xp .ssum{height:auto;white-space:normal;font-size:1.05rem;line-height:1.35}#sn.xp .lk .ar{font-size:1.1rem}#sn:not(.xp) .bd{padding-top:.1rem;padding-bottom:.1rem}.snr{flex:1;min-height:0;display:flex;align-items:center;gap:.3rem}.snr .ssum{flex:1;min-width:0;height:auto;display:flex;flex-direction:column;font:.7rem/1.22 var(--fs)}.snr .ssum span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.snr .lks{flex:none;display:flex;gap:.2rem}.snr .lk{width:auto;min-width:var(--ct);height:var(--ct);padding:0 .1rem;gap:0}.lk .ar{font:700 .72rem var(--fm);color:var(--ts)}#sn.xp .lks{height:6rem}#sn.xp .lk b{font-size:1.2rem}#sn.xp .lk small{font-size:.95rem}#sn.xp .lk i{font-size:.85rem}
+/* ---------- section placeholder view (doors / Daybook tabs) ---------- */
+.sv{position:fixed;inset:0;z-index:200;display:grid;grid-template-rows:auto minmax(0,1fr);gap:.4rem;padding:.4rem;--d:var(--r-silver);
+ background:radial-gradient(ellipse 70% 55% at 15% 0%,rgb(var(--d) / .22),transparent 65%),radial-gradient(ellipse 130% 95% at 50% 50%,transparent 55%,rgb(0 0 0 / .6)),linear-gradient(180deg,#0b0b0d,#050506)}
+.sv-deck{--d:var(--r-nbs)}.sv-day{--d:var(--r-cr)}.sv-wb{--d:var(--r-cb)}
+.svh{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}.svh .btn{color:var(--tp)}
+.crumb{font:700 .85rem var(--fd);letter-spacing:.1em;color:rgb(var(--d));padding-left:.4rem;text-shadow:0 0 .7rem rgb(var(--d) / .5);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.sv-day .crumb{color:#fde68a}
+.svb{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:.4rem;min-height:0}
+.svid{display:flex;flex-direction:column;gap:.5rem;padding:1rem;border-radius:.3rem;border:1px solid rgb(var(--d) / .45);border-bottom:3px solid rgb(var(--d));background:radial-gradient(120% 120% at 0 0,rgb(var(--d) / .25),transparent 60%),var(--hull);min-height:0;overflow:hidden}
+.sv-day .svid{border-bottom-color:var(--gold)}
+.svid .k,.svd .k{font:700 .75rem var(--fm);letter-spacing:.1em;color:var(--ts)}
+.svid>b{font:700 2.4rem/1.2 var(--fd);letter-spacing:.06em;color:#fff;text-shadow:0 0 1.4rem rgb(var(--d) / .55)}.sv-day .svid>b{color:#fde68a}
+.svid .dd{font:1rem var(--fs);color:var(--ts)}
+.svd{flex:1;display:flex;flex-direction:column;justify-content:center;gap:.3rem;padding:.6rem .8rem;border-radius:.25rem;background:var(--cell);border:1px solid #26262b;font:.95rem/1.4 var(--fs);color:var(--tp);min-height:0}.svd b{color:#fff}
+.svl{display:flex;flex-direction:column;gap:.3rem;min-height:0}
+.svs{flex:1;min-height:var(--ct);display:grid;grid-template-columns:2.4rem minmax(0,1fr) auto;align-items:center;gap:.6rem;padding:0 .8rem;border-radius:.25rem;background:var(--cell);border:1px solid #26262b;border-left:3px solid #3a3a40}
+.svs .no{font:700 .8rem var(--fm);color:var(--tm)}.svs b{font:700 1.05rem var(--fd);letter-spacing:.05em;color:var(--tp)}.svs .ss{font:.8rem var(--fm);color:var(--tm)}
+.svs.on{border-left-color:rgb(var(--d));background:linear-gradient(90deg,rgb(var(--d) / .2),transparent 70%),var(--well)}.svs.on b{color:#fff}.svs.on .ss{color:var(--tp)}
+.sv-day .svs.on{border-left-color:var(--gold)}
+/* ---------- below the smallest wall size (phones, small windows): stacked, scrolling, nothing crushed ---------- */
+html.stk,html.stk body{height:auto;min-height:100%;overflow-x:hidden;overflow-y:auto}
+html.stk .bridge{height:auto;min-height:100vh;grid-template-rows:auto auto auto}
+html.stk .top{grid-template-columns:1fr;grid-auto-rows:auto}html.stk .chrono{height:3rem}
+html.stk .doors{grid-template-columns:1fr;grid-auto-rows:3rem}
+html.stk.c2 .top{grid-template-columns:12.6rem minmax(0,1fr)}html.stk.c2 .doors{grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:3rem}
+html.stk .deck{display:block;columns:1;column-gap:.3rem}html.stk.c2 .deck{columns:2}
+html.stk .col{display:contents}
+html.stk .card{break-inside:avoid;margin-bottom:.3rem;flex:none!important}
+html.stk #wx{height:8.6rem}html.stk #cc{height:15rem}html.stk #tm{height:7.5rem}html.stk #wm{height:13rem}html.stk #mk{height:11.5rem}html.stk #sc{height:8.6rem}html.stk #cl{height:5.4rem}html.stk #sn{height:4.5rem}html.stk #yw{height:3.85rem}
+html.stk .card.xp{position:fixed;inset:.3rem;height:auto!important;margin:0}
+html.stk .bot{height:auto;min-height:1.6rem;padding:.2rem .6rem;flex-wrap:wrap;gap:.2rem .8rem}
+@media (prefers-reduced-motion:reduce){.door,.btn{transition:none}.mk.fr::after{animation:none;display:none}}
+
+#mk .ttl{flex:none}#mk .hr{flex:0 1 auto}.msrc{min-width:0;font:.7rem/1.22 var(--fs);color:var(--tm);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar2.mq{background:linear-gradient(180deg,#a87b06,#7f5c04);color:#fffbe8;border-top:1px solid #facc15}.bar2.mq .bg2{background:linear-gradient(180deg,#fde047,#eab308);color:#2b2100}.bar2.mq.stl .bst,.bar2.mq.off .bst{color:#2b2100}
+.door .ln b{color:var(--tp);font-weight:700}.door .ln b.am{color:var(--amber)}
+.dy i.ec{position:absolute;right:.14rem;bottom:.08rem;font:700 .7rem/1 var(--fm);color:var(--gold);padding-bottom:.06rem}.dy i.ec::before{content:'•';margin-right:.06rem}
+.cl.sp{letter-spacing:-.02em}
+/* v4.3.3 — colour families: NEWS = gold (bars, world, markets) · TRAVEL = emerald (weather, commute, scanner, YOW) · team orchid · calendar amber · security red */
+.bar2.lo,.bar2.wo,.bar2.mq{background:linear-gradient(180deg,#a87b06,#7f5c04);color:#fffbe8;border-top:1px solid #facc15}
+.bar2.lo .bg2,.bar2.wo .bg2,.bar2.mq .bg2{background:linear-gradient(180deg,#fde047,#eab308);color:#2b2100}
+.bar2.lo.stl .bst,.bar2.lo.off .bst,.bar2.wo.stl .bst,.bar2.wo.off .bst{color:#2b2100}
+/* slim headers (SECURITY, WORLD): colour + contrast instead of bulk; the 44px hit area is a pseudo-element centred on the control, extending into the body */
+.card:not(.xp) .hd.slim{height:1.3rem;min-height:1.3rem;background:linear-gradient(90deg,rgb(var(--a) / .95),rgb(var(--a) / .5) 62%,rgb(var(--a) / .2));border-bottom:1px solid rgb(var(--a));--hf:#fff}
+#wm:not(.xp) .hd.slim{--hf:#1a1400}
+.card:not(.xp) .hd.slim .ttl{color:var(--hf);text-shadow:none}.card:not(.xp) .hd.slim .led{background:var(--hf);box-shadow:none}
+.card:not(.xp) .hd.slim .btn{position:relative;min-height:0;min-width:0;height:1.05rem;padding:0 .4rem;font:700 .7rem var(--fm);background:rgb(0 0 0 / .62);color:#fff;border-color:rgb(255 255 255 / .45)}
+.card:not(.xp) .hd.slim .btn[aria-pressed=true]{background:#fff;color:#111;border-color:#fff;text-shadow:none;box-shadow:none}
+.card:not(.xp) .hd.slim .btn::before{content:'';position:absolute;left:0;right:0;top:-.13rem;height:44px}
+.card:not(.xp) .hd.slim .btn.ly{flex-direction:row;gap:.25rem;padding:0 .3rem}.card:not(.xp) .hd.slim .ly span,.card:not(.xp) .hd.slim .ly b{font:700 .7rem var(--fm);color:inherit}.card:not(.xp) .hd.slim .ly b.cr,.card:not(.xp) .hd.slim .ly b.dm{color:#fca5a5}
+.card:not(.xp) .hd.slim .ltot{height:1.05rem;min-width:0;flex-direction:row;gap:.25rem;padding:0 .35rem;background:rgb(0 0 0 / .62);border-color:rgb(255 255 255 / .45);color:#fff}.card:not(.xp) .hd.slim .ltot b{font:700 .7rem var(--fm);text-shadow:none;color:#fff}
+.ssum.one{height:auto;display:block}.snr .ssum.one span{display:block}
+.card:not(.xp) .hd.slim .ltot span{display:none}.card:not(.xp) .hd.slim .ltot::before{content:'ALL';font:700 .7rem var(--fm);color:#fff}.card:not(.xp) .hd.slim .lyr{gap:.15rem}.card:not(.xp) .hd.slim .btn.ly{padding:0 .25rem;gap:.2rem}
+.card:not(.xp) .hd.slim .ltot{display:none}.card:not(.xp) .hd.slim .btn.ly{flex:none}
+/* v4.3.4 F433-01: layer chips set in the narrow sans so all four fit between the title and the header's right edge */
+.card:not(.xp) .hd.slim .ttl{flex:none}.card:not(.xp) .hd.slim .lyr{justify-content:flex-end;flex:1 1 0;gap:.12rem}
+.card:not(.xp) .hd.slim .btn.ly{padding:0 .2rem;gap:.15rem;letter-spacing:-.02em}.card:not(.xp) .hd.slim .ly span,.card:not(.xp) .hd.slim .ly b{font:700 .7rem var(--fs);letter-spacing:-.02em}
+.gg{font-style:normal}.card:not(.xp) .hd.slim .gg{display:none}.card:not(.xp) .hd.slim .btn.ly{padding:0 .3rem}
+.card:not(.xp) .hd.slim .btn.ly{padding:0 .13rem}.card:not(.xp) #wm .hd.slim,.card:not(.xp).hd.slim{padding:0 .35rem}#wm:not(.xp) .hd.slim{padding:0 .3rem}#wm:not(.xp) .hd.slim .ttl{letter-spacing:.03em;gap:.3rem}#wm:not(.xp) .hd.slim .lyr{gap:.1rem}
+.card:not(.xp) .hd.slim .of{font-size:0;font-style:normal}.card:not(.xp) .hd.slim .of::after{content:'×';font:700 .7rem var(--fs)}
+
+/* ===== v4.3.6 CHANGE 1 — Northbirch green: Command Deck door + section view + Team Usage box (primary #1E4D2B · sage #6C8574 · deep #1A2E22 · mint #D4E8DB) ===== */
+#d-deck{border-color:rgb(108 133 116 / .55);border-bottom-color:#6C8574;background:radial-gradient(120% 170% at 0% 0%,#1E4D2B,transparent 60%),radial-gradient(80% 120% at 100% 100%,rgb(26 46 34 / .9),transparent 60%),linear-gradient(180deg,#1A2E22,#0b0b0d);box-shadow:inset 0 1px 0 rgb(212 232 219 / .1),0 0 0 1px rgb(0 0 0 / .55),0 .25rem 1.2rem rgb(30 77 43 / .4)}
+#d-deck:hover{box-shadow:inset 0 1px 0 rgb(212 232 219 / .14),0 0 0 1px rgb(0 0 0 / .55),0 .25rem 1.4rem rgb(108 133 116 / .45)}
+#d-deck .nm{color:#D4E8DB;text-shadow:0 0 .8rem rgb(108 133 116 / .6)}#d-deck .go{color:#D4E8DB;text-shadow:0 0 .6rem rgb(108 133 116 / .7)}#d-deck .ln .nc{color:#6C8574}
+.sv-deck{background:radial-gradient(ellipse 70% 55% at 15% 0%,rgb(30 77 43 / .6),transparent 65%),radial-gradient(ellipse 130% 95% at 50% 50%,transparent 55%,rgb(0 0 0 / .6)),linear-gradient(180deg,#1A2E22,#050506)}.sv-deck .crumb{color:#D4E8DB}
+#tm{background:linear-gradient(180deg,rgb(30 77 43 / .3),transparent 3rem),#1A2E22}
+#tm::before{background:linear-gradient(90deg,#6C8574,#1E4D2B 45%,transparent 88%);box-shadow:0 0 .7rem rgb(108 133 116 / .45)}
+#tm .hd{background:linear-gradient(90deg,#1E4D2B,#1A2E22 60%,transparent 92%),linear-gradient(180deg,#151518,#0f0f12);border-bottom-color:#6C8574}
+#tm .ttl{color:#D4E8DB}#tm .tnote{color:#D4E8DB}
+/* ===== Broadcast bars (v4.3.8). LOCAL = white bar, red chip; the chip reads BREAKING NEWS only when a feed headline itself carries the outlet's BREAKING label (data-driven), otherwise LOCAL. WORLD = solid #0087D2 blue bar, near-black chip, 2px red top rule. MARKETS = near-black bar, amber #FF9F1C chip, 2px amber top rule, sitting at the bottom of the Markets card. Separators are neutral (grey/soft white); red is only for breaking/live states and negative market data. ===== */
+.bar2{--fc:"Barlow Condensed","Roboto Condensed","Arial Narrow","Liberation Sans Narrow","Helvetica Neue Condensed","DejaVu Sans Condensed",Arial,sans-serif;border-radius:0}
+.bar2 .it,.bar2 .it b,.bar2 .it .ag{font-family:var(--fc);font-stretch:condensed;text-transform:uppercase;letter-spacing:-.02em;text-shadow:none}
+.bar2 .it{font-weight:800;font-size:.86rem}.bar2 .it b{font-weight:800;font-size:.72rem;opacity:1;margin-right:.4rem}.bar2 .it .ag{font-weight:700;font-size:.7rem;opacity:.7}
+.bar2 .it i{opacity:1;margin:0 .8rem;font-weight:800}
+.bar2 .it .up{color:#0EB24E}.bar2 .it .dn{color:#CC0000}
+.bar2 .bg2{border-radius:0;box-shadow:none;font:800 .76rem/1 var(--fc);letter-spacing:.04em;text-transform:uppercase}
+.bar2 .bst{border-radius:0}
+.bar2.lo{height:1.55rem;background:#FFFFFF;color:#111111;border-top:0}
+.bar2.lo .bg2{background:#CC0000;color:#FFFFFF;min-width:7.5rem;justify-content:center;padding:0 .6rem}
+.bar2.lo .it,.bar2.lo .it i{color:#111111}
+.bar2.lo .bst,.bar2.lo.stl .bst,.bar2.lo.off .bst{background:#111111;color:#FFFFFF;border:0;box-shadow:none}
+.bar2.wo,.bar2.mq{height:1.3rem;background:#111111;color:#FFFFFF;border-top:2px solid #CC0000}
+.bar2.wo .bg2,.bar2.mq .bg2{background:#111111;color:#FFFFFF;border-right:1px solid #FFFFFF;padding:0 .6rem}
+.bar2.wo .it,.bar2.mq .it{color:#FFFFFF}.bar2.wo .it i{color:rgb(255 255 255 / .6)}.bar2.mq .it i{color:#8A8A8A}
+.bar2.wo .bst,.bar2.mq .bst{background:transparent;color:#FFFFFF;border:1px solid #FFFFFF;margin:.1rem .35rem}
+.bar2.wo.stl .bst,.bar2.wo.off .bst,.bar2.mq.stl .bst,.bar2.mq.off .bst{background:#FFFFFF;color:#111111;box-shadow:none}
+.bar2.wo.stl .win::after,.bar2.wo.off .win::after,.bar2.mq.stl .win::after,.bar2.mq.off .win::after{background:repeating-linear-gradient(-45deg,rgb(255 255 255 / .1) 0 .3rem,transparent .3rem .6rem)}
+
+/* ===== v4.3.7 CHANGE B — three bars (bars-spec-v437). Heights = 48/40/38 px at 1080p-equivalent (rem 28.8); speeds 144/108/96 px/s at 1080p-equivalent (JS) ===== */
+.bar2.lo{height:1.667rem}.bar2.wo{height:1.389rem}.bar2.mq{height:1.319rem}
+.bar2.lo .it,.bar2.lo .it b,.bar2.lo .it .ag{letter-spacing:-.01em}
+.bar2.lo .it i{color:#9A9A9A}
+.bar2.lo .it .brk{font:800 .7rem/1 var(--fc);font-style:normal;color:#FFFFFF;background:#CC0000;padding:.1rem .3rem;margin-right:.4rem;letter-spacing:.02em;border-radius:0}
+.bar2.wo{background:#0087D2;color:#FFFFFF;border-top:2px solid #CC0000}
+.bar2.wo .bg2{background:#111111;color:#FFFFFF;min-width:7.5rem;justify-content:center;border-right:2px solid #FFFFFF}
+.bar2.mq{background:#111111;color:#FFFFFF;border-top:2px solid #FF9F1C}
+.bar2.mq .bg2{background:#FF9F1C;color:#111111;min-width:7.5rem;justify-content:center;border-right:0}
+/* Phase 0 */
+#tk-btn{height:1.2rem;min-height:0;min-width:0;padding:0 .5rem;font-size:.62rem;letter-spacing:.1em;border:1px solid #3a3a41;flex:none}
+.tk-nc{display:inline-block;margin-left:.3rem;padding:.05rem .3rem;border:1px dashed currentColor;border-radius:.6rem;font-size:.54rem;letter-spacing:.1em;color:var(--ts)}
+#tkh{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;background:rgb(0 0 0 / .62)}
+#tkh[hidden]{display:none!important}
+.tks{width:min(30rem,92vw);background:var(--cell);border:1px solid var(--lh);border-top:3px solid rgb(var(--r-gold));border-radius:.4rem;padding:.8rem 1rem;color:var(--tp);font-size:.8rem;line-height:1.4}
+.tkh1{display:flex;align-items:center;gap:.6rem;margin-bottom:.5rem}.tkh1 b{letter-spacing:.14em;font-size:.8rem}.tkh1 .btn{margin-left:auto}
+.tkf{display:flex;justify-content:flex-end;margin-top:.6rem}
+
+/* ---- Canopy slim strip (Phase 0 retrofit): Canopy · Command Deck · Daybook · Workbench, current surface drops out ---- */
+.cstrip{flex:none;display:flex;align-items:center;gap:.2rem;height:1.55rem;padding:0 .7rem;background:#000;color:#d9d3bb;border-bottom:1px solid rgba(255,255,255,.09);font-family:inherit;font-size:.66rem;font-weight:700;letter-spacing:.14em;line-height:1;position:relative;z-index:5}
+.cstrip a{height:100%;display:flex;align-items:center;padding:0 .7rem;color:#d9d3bb;text-decoration:none;white-space:nowrap;border-right:1px solid rgba(255,255,255,.07);text-transform:uppercase}
+.cstrip a:first-child{border-left:1px solid rgba(255,255,255,.07)}
+.cstrip a:hover,.cstrip a:focus-visible{color:#facc15;background:rgba(250,204,21,.08);outline:0}
+.cstrip .sp{flex:1}
+.cstrip a.ret{border:1px solid rgba(250,204,21,.5);border-radius:.25rem;height:1.2rem;color:#facc15;margin-left:.3rem}
+body{display:flex;flex-direction:column}.bridge{flex:1 1 0;min-height:0;height:auto}
+</style><style>
+/* ===== header-door snapshots · Home tab treatment · SITREP strip door (Grant 2026-11-18, 19:21-19:26 rulings) ===== */
+.bridge{grid-template-rows:6.9rem minmax(0,1fr) 1.6rem}
+.top{grid-template-columns:15rem minmax(0,1fr)}
+html.stk.c2 .top{grid-template-columns:15rem minmax(0,1fr)}
+html.stk .doors,html.stk.c2 .doors{grid-auto-rows:auto}
+.door .in .stag{font:700 .56rem/1.35 var(--fm);letter-spacing:.12em;color:rgb(var(--d));white-space:nowrap}
+.door .snap{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:flex-start;gap:.3rem .75rem;padding-top:.32rem;border-top:1px solid rgb(var(--d) / .25);font:.64rem/1.3 var(--fs);color:var(--ts);position:relative;z-index:1;min-width:0}
+.door .snap .stag{font:700 .56rem/1.35 var(--fm);letter-spacing:.12em;color:rgb(var(--d));white-space:nowrap}
+.door .snap .pt b{color:var(--tp);font-weight:700}
+.door .snap .gg{display:inline-flex;flex-direction:column;gap:.13rem}
+.door .snap .gg .gn{font:700 .54rem/1 var(--fm);letter-spacing:.09em;color:var(--ts)}
+.door .snap .gg .gr{display:inline-flex;align-items:center;gap:.3rem}
+.door .snap .gg .gb{width:1.6rem;height:.34rem;border-radius:1rem;background:rgb(255 255 255 / .10);overflow:hidden;display:inline-block;flex:none}
+.door .snap .gg .gb i{display:block;height:100%;background:rgb(var(--d));border-radius:1rem}
+.door .snap .gg .gp{font:700 .6rem/1 var(--fm);color:var(--tp);white-space:nowrap}
+.chrome-wm{font-style:normal;font-weight:800;letter-spacing:.24em;font-size:.58rem;background:linear-gradient(180deg,#fdfdff 0%,#c9d4e2 30%,#7e8ea6 48%,#e8eef7 52%,#93a5bd 72%,#f4f8ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 1px rgb(0 0 0 / .5))}
+.chrono .wxdoor{display:flex;flex-direction:column;align-items:flex-start;gap:.02rem;text-decoration:none;border-left:1px solid #232327;padding-left:.35rem;min-width:0;flex:none}
+.chrono .wxdoor .wxt{font:700 1rem/1.1 var(--fd);color:#fff7ea}
+.chrono .wxdoor .wxc{font:600 .5rem/1.1 var(--fm);letter-spacing:.08em;color:var(--ts);white-space:nowrap}
+.chrono .wxdoor .wxg{font:700 .6rem/1 var(--fm);color:var(--amber)}
+.chrono .wxdoor:hover .wxt{color:var(--amber)}
+@media (max-width:760px){.cstrip a{padding:0 .35rem;letter-spacing:.06em}}
+</style>
+</head><body>
+<nav class="cstrip" id="cstrip" aria-label="Canopy destinations"><a href="./deck.html" data-door="deck">COMMAND DECK</a><a href="./daybook.html" data-door="day">DAYBOOK</a><a href="./workbench.html" data-door="wb">WORKBENCH</a><a href="./sitrep.html" data-door="sitrep">SITREP</a><span class="sp"></span></nav>
+<div class="bridge" id="bridge">
+ <header class="top"><div class="chrono"><b id="ck" class="num">--:--:--</b><span><i id="dt">---</i><i id="ut">---</i><i class="chrome-wm" aria-hidden="true">CANOPY</i></span><a class="wxdoor" href="./sitrep.html#sec=weather&from=wx" aria-label="Weather, Ottawa — opens the SITREP weather section" title="Weather — opens SITREP · Weather"><span class="wxt num" id="ckwx-t">--°</span><span class="wxc" id="ckwx-c">OTTAWA</span><span class="wxg" aria-hidden="true">▸</span></a></div><nav class="doors" id="doors" aria-label="Sections"></nav></header>
+ <main class="deck" id="deck">
+  <div class="col" id="c1"><section class="card" id="wx"></section><section class="card" id="cc"></section><section class="card" id="sn"></section><section class="card" id="yw"></section></div>
+  <div class="col" id="c2"><section class="card" id="nw"></section><section class="card" id="wm"></section></div>
+  <div class="col" id="c3"><section class="card" id="mk"></section><section class="card" id="sc"></section><section class="card" id="cl"></section><section class="card" id="tm"></section></div>
+ </main>
+ <footer class="bot"><span id="log">&gt; SYS.LOG [--] starting</span><button id="tk-btn" class="btn" data-a="tk:open" aria-label="Talk to Oakley — shell-bound, not connected in this file">TALK TO OAKLEY <span class="tk-nc">SHELL</span></button><span id="stamp">🐾 In memory of Oakley</span></footer>
+<div id="tkh" hidden role="dialog" aria-modal="true" aria-labelledby="tkt"><div class="tks"><div class="tkh1"><b id="tkt">TALK TO OAKLEY</b><span class="tk-nc">SHELL-BOUND</span><button class="btn" data-a="tk:close" aria-label="Close">✕</button></div><p>Voice and chat run in the Canopy shell. This standalone Home file has <b>no talk channel</b> and does not pretend to have one — nothing you type here is sent anywhere.</p><div class="tkf"><button class="btn" data-a="tk:close">CLOSE</button></div></div></div>
+</div>
+<div id="sv" hidden></div>
+<script>
+'use strict';
+/* ============================ HUB CONFIG — fill at packaging ============================
+   NEVER put credentials/keys/certs in this file. Anything secret lives behind a hub endpoint.
+   -------------------------------------------------------------------------------------- */
+const CFG={
+  PROXY:'',   // optional CORS proxy prefix for RSS, e.g. 'https://hub.example/p?u=' (the URL is appended URL-encoded)
+  wx:{url:'https://api.weather.gc.ca/collections/citypageweather-realtime/items/on-118?f=json&lang=en',name:'OTTAWA (KANATA - ORLEANS) · ECCC s0000430',everyMs:600000,staleMs:1800000},
+    // F3-1 (dispatch #11): NO third-party public reader is used. Public-feed routes: direct → hub proxy (CFG.PROXY, set at app integration) → honest OFFLINE.
+  cam:{
+    list:'https://traffic.ottawa.ca/map/service/camera',                // public camera list (no certificate needed)
+    route:'certificate',                                              // City of Ottawa CERTIFICATE route (dispatch #10) — no unauthenticated image requests are ever made
+    base:'https://traffic.ottawa.ca/opendata/camera',                  // City camera service: base?c=<camera_number>&certificate=<certificate>&id=<user-id>
+    certificate:'',   // >>> PLACEHOLDER — SUPPLIED AT APP INTEGRATION from Grant's records. NEVER embed a real value in this file. Empty = no camera requests are made (state: CERTIFICATE PENDING).
+    userId:'',        // >>> PLACEHOLDER — alphanumeric user-id supplied at app integration (optional &id=). NEVER embed a real value here.
+    live:true,                                          // false = show only hub-supplied CFG.cam.frames
+    intervalMs:60000,                                   // City terms (W137): ONE request per 60 s TOTAL across ALL cameras (rotating)
+    staleMs:300000,
+    set:[ {id:312,s:"417 @ O'CONNOR",n:"(MTO) Hwy 417 near O'Connor St",note:'nearest real cam to 417 @ Metcalfe'},
+          {id:149,s:'BANK @ CATHERINE',n:'Bank & Catherine',note:'nearest real cam to 417 @ Bank'},
+          {id:289,s:'174 EB @ BLAIR',n:'Highway 174 (East) at Blair',note:'exact match'},
+          {id:309,s:'416 NB > 417 E',n:'(MTO) Hwy 416 NB ramp to Hwy 417 East',note:'nearest real cam to 416 @ Baseline'} ],
+    frames:{}   // HUB-SUPPLIED real frames: {<id>:{src:'data:image/jpeg;base64,...',ts:'ISO-8601 capture time'}}
+  },
+  news:{
+    staleMs:900000,everyMs:300000,
+    local:[ {id:'cbc-ott',o:'CBC OTTAWA',url:'https://www.cbc.ca/webfeed/rss/rss-canada-ottawa',link:'cbc.ca',pub:true},
+            {id:'citynews-ott',o:'CITYNEWS OTTAWA',url:'https://ottawa.citynews.ca/feed/',link:'ottawa.citynews.ca'} ],
+    world:[ {id:'bbc-world',o:'BBC NEWS',url:'https://feeds.bbci.co.uk/news/world/rss.xml',link:'bbc.co.uk',pub:true},
+            {id:'dw-world',o:'DW',url:'https://rss.dw.com/xml/rss-en-world',link:'dw.com'} ],
+    fallback:{}  // HUB-SUPPLIED feed snapshots when a feed is blocked cross-origin: {<id>:{xml:'<rss>…',asOf:'ISO'}}
+  },
+  stream:{dw:'LuKwFajn37U',dwFallback:'https://www.dw.com/en/live-tv/channel-english'},
+  links:{cbc:'https://gem.cbc.ca/channel/cbc-news',ctv:'https://www.ctvnews.ca/video/live/',global:'https://globalnews.ca/live/national/'},
+  quakes:{url:'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson',everyMs:300000,staleMs:900000,minMag:4.5,nearKm:250},   // USGS all_day; list = M4.5+ worldwide OR any quake within nearKm of Ottawa
+  wm:{everyMs:600000,staleMs:1800000,
+      gdacs:'https://www.gdacs.org/xml/rss.xml',           // CC BY 4.0 — credit GDACS. No CORS header: needs CFG.PROXY or CFG.wm.fallback.gdacs
+      eonet:'https://eonet.gsfc.nasa.gov/api/v3/events?status=open&days=30&limit=100',
+      cap:'https://dd.weather.gc.ca/today/alerts/cap/',    // ECCC CAP: {base}{YYYYMMDD}/CWTO/{HH}/ (UTC). No CORS header: needs CFG.PROXY. 404 for an empty hour is normal.
+      capHours:6,
+      fallback:{}},                                        // HUB-SUPPLIED copies when blocked: {gdacs:{text:'<rss>…',asOf:'ISO'}}
+  ge:{tile:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',geo:'https://geo.weather.gc.ca/geomet',rv:'https://api.rainviewer.com/public/weather-maps.json',refreshMs:360000},
+  markets:{btc:'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd%2Ccad&include_24hr_change=true&include_last_updated_at=true',btcEveryMs:60000,chart:'https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=1',chartEveryMs:300000,chartStaleMs:900000,boc:'https://www.bankofcanada.ca/valet/observations/FXUSDCAD,BD.CDN.10YR.DQ.YLD/json?recent=30',bocEveryMs:1800000,bocStaleMs:10800000},
+  hubfeed:{url:'',everyMs:15000,staleMs:60000},     // HUB team feed: JSON {asOf, lanes:[{name,state:'WORKING|QUEUED|IDLE|ERROR',ms,pct,resetAt}]}
+  security:{url:'',staleMs:60000},    // HUB: JSON {asOf, zones:[{n,s}], cams:[{name,src,ts}], home:{doors:{v,ts},locks:{v,ts},smoke:{v,ts},water:{v,ts},temp:{v,ts},alarm:{v,ts}}}
+  wxg:{url:'https://api.weather.gc.ca/collections/citypageweather-realtime/items/qc-126?f=json&lang=en',name:'GATINEAU · ECCC qc-126',staleMs:1800000},
+  ev:{url:'https://traffic.ottawa.ca/map/service/events?accept-language=en&version=v2&format=geojson',everyMs:300000,staleMs:900000},   // City traffic-events v2 GeoJSON (no key, CORS-open)
+  i511:{key:''},   // HUB: Ontario 511 key lives in the hub's secure keeping, NEVER in this file; 511 events stay PENDING until the hub supplies them
+  cal:{url:'',private:false,everyMs:60000},   // HUB at app integration: JSON {asOf, events:[{start,end,title,allDay}]}; titles shown only when private:true (private presentation)
+  scn:{url:'',everyMs:120000,staleMs:600000},   // OPTIONAL public-source feed: JSON {asOf, items:[{svc:'FIRE|POLICE|PARAMEDIC',t,msg}]} — none verified, stays NOT AVAILABLE
+  doors:{deck:'./deck.html',day:'./daybook.html',wb:'./workbench.html'}   // PACKAGED (Phase 0): stable names; hub may override
+};
+/* =========================================================================================== */
+const $=(s,r)=>(r||document).querySelector(s),$$=(s,r)=>[...(r||document).querySelectorAll(s)];
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad=n=>String(n).padStart(2,'0');
+const hms=t=>{const d=new Date(t);return pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds())};
+const hm=t=>{const d=new Date(t);return pad(d.getHours())+':'+pad(d.getMinutes())};
+const ago=t=>{if(!t)return '--';const s=Math.max(0,(Date.now()-t)/1000);return s<90?Math.round(s)+'s':s<5400?Math.round(s/60)+'m':Math.round(s/3600)+'h'};
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const NIGHT=()=>{const h=new Date().getHours();return h<6};
+const ST={m:'wall',id:null};
+const UI={gwv:'map',wx:'reg',camMode:4,camCur:0,stn:'dw',yt:'idle',ytAt:0};
+const D={seen:new Set(),seenInit:false,wx:null,camList:null,frames:{},camReq:0,camNext:0,news:{local:[],world:[]},nsrc:{},nat:{local:0,world:0},quakes:null,btc:null,hubfeed:null,brief:null,hcam:{},sec:null,wxg:null,tev:null,cal:null,scn:null,wmi:{usgs:[],gdacs:[],cap:[],eonet:[]},radar:null,events:[],log:[]};
+const H={wx:{st:'pend'},cams:{st:'pend'},news:{st:'pend'},quakes:{st:'pend'},mk:{st:'dly'},ge:{st:'pend'},wxg:{st:'pend'},tev:{st:'pend'},wm:{usgs:{st:'pend'},gdacs:{st:'pend'},cap:{st:'pend'},eonet:{st:'pend'}}};
+/* ---- log (real events only) ---- */
+const PINGS={WX:'wx',WXG:'wx',EVENTS:'trf',CAM:'trf',CAMS:'trf',WM:'gw',MKT:'mk',NEWS:'news'};
+function log(msg,bad){{const m=/^(WXG|WX|EVENTS|CAMS|CAM|WM|MKT|NEWS)\b/.exec(msg);if(m&&!bad&&PINGS[m[1]]&&typeof ping==='function')ping(PINGS[m[1]])}D.log.unshift({t:Date.now(),m:msg,bad:!!bad});D.log.length=Math.min(D.log.length,40);const e=$('#log');if(e)e.innerHTML='&gt; SYS.LOG [<b>'+hms(D.log[0].t)+'</b>] '+(bad?'<span class="e">'+esc(msg)+'</span>':esc(msg))}
+async function jget(url,type,ms){const c=new AbortController();const to=setTimeout(()=>c.abort(),ms||15000);try{const r=await fetch(url,{cache:'no-store',signal:c.signal});if(!r.ok)throw new Error('HTTP '+r.status);return type==='text'?await r.text():await r.json()}finally{clearTimeout(to)}}
+/* ============================ WEATHER (ECCC citypageweather) ============================ */
+const g=(o,p)=>p.split('.').reduce((a,k)=>a==null?a:a[k],o);
+const EN=o=>o==null?null:(typeof o==='object'&&'en' in o?o.en:o);
+async function getWx(){
+  try{const j=await jget(CFG.wx.url);const p=j.properties,c=p.currentConditions||{};
+    const o={t:EN(g(c,'temperature.value')),feels:EN(g(c,'windChill.value')),cond:EN(c.condition),ws:EN(g(c,'wind.speed.value')),wd:EN(g(c,'wind.direction.value')),brg:EN(g(c,'wind.bearing.value')),gust:EN(g(c,'wind.gust.value')),hum:EN(g(c,'relativeHumidity.value')),pr:EN(g(c,'pressure.value')),tend:EN(g(c,'pressure.tendency')),dew:EN(g(c,'dewpoint.value')),stn:EN(g(c,'station.value')),vis:EN(g(c,'visibility.value')),ts:EN(c.timestamp)};
+    const fc=((p.forecastGroup||{}).forecasts||[]).map(f=>{const t=((f.temperatures||{}).temperature||[])[0]||{};return{n:EN(g(f,'period.textForecastName')),v:EN(t.value),k:EN(t.class),sum:EN(g(f,'abbreviatedForecast.textSummary')),txt:EN(f.textSummary)}});
+    const hr=((p.hourlyForecastGroup||{}).hourlyForecasts||[]).map(h=>({ts:Date.parse(h.timestamp),t:EN(g(h,'temperature.value')),lop:EN(g(h,'lop.value')),cond:EN(h.condition),ws:EN(g(h,'wind.speed.value')),wd:EN(g(h,'wind.direction.value'))}));
+    const warn=(p.warnings||[]).map(w=>EN(w.description)||EN(w.type)||JSON.stringify(w).slice(0,60));
+    D.wx={o,fc,hr,warn,upd:Date.parse(p.lastUpdated),sr:Date.parse(EN(g(p,'riseSet.sunrise'))||''),ss:Date.parse(EN(g(p,'riseSet.sunset'))||''),at:Date.now()};
+    H.wx={st:'live',at:Date.now()};log('WX OK · ECCC on-118 · obs '+(o.ts?hm(o.ts):'--'));
+  }catch(e){H.wx={st:H.wx.at?'stale':'err',at:H.wx.at||0,msg:String(e.message||e)};log('WX FAIL · '+(e.message||e),1)}
+  paint('wx');paint('ge');healthRender()}
+/* ============================ WORLD MONITOR sources: USGS · GDACS · ECCC CAP (+citypage alerts) · NASA EONET ============================ */
+const kmBetween=(la1,lo1,la2,lo2)=>{const r=Math.PI/180,dl=(la2-la1)*r,dg=(lo2-lo1)*r,a=Math.sin(dl/2)**2+Math.cos(la1*r)*Math.cos(la2*r)*Math.sin(dg/2)**2;return 12742*Math.asin(Math.sqrt(a))};
+const WMH=(k,st,x)=>{H.wm[k]=Object.assign({st,at:Date.now()},x||{})};
+async function getQuakes(){
+  try{const j=await jget(CFG.quakes.url);const all=j.features.map(f=>({id:f.id,m:f.properties.mag,p:f.properties.place||'',t:f.properties.time,u:f.properties.url,c:f.geometry&&f.geometry.coordinates}));
+    const near=r=>r.c&&kmBetween(45.4215,-75.6972,r.c[1],r.c[0])<=CFG.quakes.nearKm;
+    const rows=all.filter(r=>r.m>=CFG.quakes.minMag||near(r)).sort((a,b)=>b.t-a.t);
+    D.quakes={at:Date.now(),gen:j.metadata&&j.metadata.generated,total:all.length,rows};
+    {const fresh=D.seenInit?rows.filter(r=>!D.seen.has(r.id)).map(r=>r.id):[];rows.forEach(r=>D.seen.add(r.id));D.seenInit=true;D.quakes.fresh=new Set(fresh)}
+    D.wmi.usgs=rows.map(r=>({src:'USGS',id:r.id,mag:r.m,c:r.c&&[r.c[0],r.c[1]],t:r.t,sev:r.m>=6?2:r.m>=5?1:0,txt:'M'+r.m.toFixed(1)+' '+r.p,link:r.u}));
+    H.quakes={st:'live',at:Date.now()};WMH('usgs','live',{n:rows.length,total:all.length});log('WM OK · USGS all_day · '+all.length+' events · '+rows.length+' listed')}
+  catch(e){H.quakes={st:H.quakes.at?'stale':'err',at:H.quakes.at||0,msg:String(e.message||e)};WMH('usgs',D.wmi.usgs.length?'stale':'err',{err:String(e.message||e)});log('WM FAIL · USGS '+(e.message||e),1)}
+  paint('wm');healthRender()}
+async function wmText(key,url){
+  try{const r=await pubGet(url,20000);return{text:r.t,via:r.via,asOf:Date.now()}}
+  catch(e1){
+    const fb=CFG.wm.fallback[key];if(fb&&fb.text)return{text:fb.text,via:'hub-supplied',asOf:Date.parse(fb.asOf)||Date.now()};
+    const er=new Error(e1 instanceof TypeError?offMsg():String(e1.message||e1));er.blocked=e1 instanceof TypeError;throw er}}
+const xt=(el,tag)=>{const e=el.getElementsByTagName(tag)[0];return e?e.textContent.trim():''};
+async function getGdacs(){
+  try{const r=await wmText('gdacs',CFG.wm.gdacs);const d=new DOMParser().parseFromString(r.text.replace(/^﻿/,''),'text/xml');if(d.querySelector('parsererror'))throw new Error('bad XML');
+    const all=[...d.getElementsByTagName('item')];const items=all.filter(i=>xt(i,'gdacs:iscurrent')!=='false'&&xt(i,'gdacs:eventtype')!=='EQ').map(i=>{const lv=xt(i,'gdacs:alertlevel');const pt=xt(i,'georss:point').split(/\s+/).map(Number);return{src:'GDACS',id:xt(i,'guid'),c:pt.length===2&&isFinite(pt[0])?[pt[1],pt[0]]:null,t:Date.parse(xt(i,'pubDate'))||0,sev:lv==='Red'?2:lv==='Orange'?1:0,txt:xt(i,'title'),link:xt(i,'link')}}).sort((a,b)=>b.t-a.t).slice(0,20);
+    D.wmi.gdacs=items;WMH('gdacs','live',{n:items.length,total:all.length,via:r.via,asOf:r.asOf});log('WM OK · GDACS '+items.length+' current (non-EQ) · '+r.via)}
+  catch(e){WMH('gdacs',D.wmi.gdacs.length?'stale':(e.blocked?'blocked':'err'),{err:String(e.message||e)});log('WM FAIL · GDACS '+(e.message||e),1)}
+  paint('wm')}
+async function getEonet(){
+  try{const j=await jget(CFG.wm.eonet,'json',25000);const ev=j.events||[];
+    const items=ev.filter(e=>!(e.categories||[]).some(c=>c.id==='earthquakes')&&!(e.sources||[]).some(s=>s.id==='GDACS')).map(e=>{const g=(e.geometry||[]).slice(-1)[0]||{};const c=(e.categories||[])[0]||{};return{src:'EONET',id:e.id,c:g.type==='Point'&&g.coordinates?g.coordinates.slice(0,2):null,t:Date.parse(g.date)||0,sev:0,txt:(c.title?c.title.toUpperCase()+' · ':'')+e.title,link:e.link}}).sort((a,b)=>b.t-a.t);
+    D.wmi.eonet=items;WMH('eonet','live',{n:items.length,total:ev.length,dedup:ev.length-items.length,asOf:Date.now()});log('WM OK · EONET '+items.length+' of '+ev.length+' (deduped vs GDACS/USGS)')}
+  catch(e){WMH('eonet',D.wmi.eonet.length?'stale':'err',{err:String(e.message||e)});log('WM FAIL · EONET '+(e.message||e),1)}
+  paint('wm')}
+async function capGet(u){try{const r=await pubGet(u,15000);return r.t?r:null}catch(e){
+  if(/HTTP 404/.test(String(e.message)))return null;   // an empty hour is normal, not an error
+  if(e instanceof TypeError)throw Object.assign(new Error(offMsg()),{blocked:true});
+  throw e}}
+async function getCap(){
+  try{const now=Date.now(),seen=new Set(),out=[];let files=0,dirs=0,via='direct';
+    for(let i=0;i<CFG.wm.capHours;i++){const t=new Date(now-i*3600000),p=n=>String(n).padStart(2,'0');const day=t.getUTCFullYear()+p(t.getUTCMonth()+1)+p(t.getUTCDate()),hh=p(t.getUTCHours());
+      const dir=CFG.wm.cap+day+'/CWTO/'+hh+'/';const dr=await capGet(dir);if(dr==null)continue;dirs++;if(dr.via!=='direct')via=dr.via;const html=dr.t;
+      const names=[...html.matchAll(/href="([^"?\/]+\.cap)"/g)].map(m=>m[1]).slice(0,30);
+      for(const n of names){files++;let x;try{const fr=await capGet(dir+n);x=fr&&fr.t;if(fr&&fr.via!=='direct')via=fr.via}catch(e){continue}if(!x)continue;
+        const d=new DOMParser().parseFromString(x,'text/xml');const id=xt(d,'identifier');if(!id||seen.has(id))continue;seen.add(id);if(xt(d,'msgType')==='Cancel')continue;
+        [...d.getElementsByTagName('info')].filter(f=>/^en/i.test(xt(f,'language')||'en')).forEach(f=>{const areas=[...f.getElementsByTagName('areaDesc')].map(a=>a.textContent);if(!areas.some(a=>/ottawa/i.test(a)))return;const ex=Date.parse(xt(f,'expires'));if(ex&&ex<now)return;const sv=xt(f,'severity');
+          out.push({src:'ECCC',id:id+':'+xt(f,'event'),t:Date.parse(xt(d,'sent'))||0,sev:sv==='Extreme'?2:sv==='Severe'?1:0,txt:'OTTAWA '+(xt(f,'headline')||xt(f,'event')),link:'https://weather.gc.ca/warnings/index_e.html'})})}}
+    D.wmi.cap=out;WMH('cap','live',{n:out.length,files,dirs,via,asOf:Date.now()});log('WM OK · ECCC CAP · '+dirs+' hrs · '+files+' files · '+out.length+' for Ottawa')}
+  catch(e){WMH('cap',D.wmi.cap.length?'stale':(e.blocked?'blocked':'err'),{err:String(e.message||e)});log('WM FAIL · ECCC CAP '+(e.message||e),1)}
+  paint('wm')}
+function wmItems(){let a=[].concat(D.wmi.usgs,D.wmi.gdacs,D.wmi.cap,D.wmi.eonet);
+  if(D.wx&&D.wx.warn&&D.wx.warn.length)a=a.concat(D.wx.warn.map((w,i)=>({src:'ECCC',id:'cp'+i,t:D.wx.upd||D.wx.at,sev:1,txt:'OTTAWA ALERT '+w,link:'https://weather.gc.ca/city/pages/on-118_metric_e.html'})));
+  return a.sort((x,y)=>y.sev-x.sev||y.t-x.t)}
+const sev=m=>m>=6?['CRIT','r']:m>=5?['ELEV','a']:['INFO','si'];
+/* ============================ NEWS (RSS) ============================ */
+function parseRSS(xml,o,max){const d=new DOMParser().parseFromString(xml,'text/xml');if(d.querySelector('parsererror'))throw new Error('bad XML');
+  return [...d.querySelectorAll('item')].slice(0,max).map(it=>{const q=n=>{const e=it.querySelector(n);return e?e.textContent.trim():''};const r={o,t:q('title'),l:q('link'),ts:Date.parse(q('pubDate'))||0};if(/breaking/i.test(r.t))r.brk=true;return r}).filter(x=>x.t)}
+/* direct first → hub proxy (CFG.PROXY, optional, app integration) → honest OFFLINE. A 404 stays a 404 (an empty CAP hour is normal). No public reader is used. */
+const offMsg=()=>'OFFLINE — direct blocked (no CORS)'+(CFG.PROXY?' and hub proxy failed':'; hub proxy not configured');
+async function pubGet(url,ms){   // → {t:text,via}
+  try{return{t:await jget(url,'text',ms),via:'direct'}}catch(e1){
+    if(/HTTP 404/.test(String(e1.message)))throw e1;
+    if(CFG.PROXY){try{return{t:await jget(CFG.PROXY+encodeURIComponent(url),'text',ms),via:'hub proxy'}}catch(e2){if(/HTTP 404/.test(String(e2.message)))return{t:'',via:'hub proxy'}}}
+    throw e1}}
+async function getSrc(s){
+  const mk=(via,xml,asOf)=>{const items=parseRSS(xml,s.o,12);D.nsrc[s.id]={ok:true,n:items.length,at:asOf||Date.now(),via,items};return items};
+  try{if(s.pub){const r=await pubGet(s.url);return mk(r.via,r.t)}return mk('direct',await jget(s.url,'text'))}
+  catch(e1){
+    if(!s.pub&&CFG.PROXY){try{return mk('proxy',await jget(CFG.PROXY+encodeURIComponent(s.url),'text'))}catch(e2){}}
+    const fb=CFG.news.fallback[s.id];if(fb){try{return mk('hub-supplied',fb.xml,Date.parse(fb.asOf)||Date.now())}catch(e3){}}
+    const blocked=(e1 instanceof TypeError);
+    D.nsrc[s.id]={ok:false,n:0,at:(D.nsrc[s.id]||{}).at||0,err:blocked?(s.pub?offMsg():'blocked cross-origin (no CORS) — needs hub proxy/feed'):String(e1.message||e1),items:(D.nsrc[s.id]||{}).items||[]};return null}}
+async function getNews(){
+  for(const k of ['local','world','mkts']){
+    const res=await Promise.all(CFG.news[k].map(getSrc));
+    let items=[];CFG.news[k].forEach((s,i)=>{const n=D.nsrc[s.id];if(n&&n.ok)items=items.concat(n.items)});
+    if(k==='mkts')items=items.filter(x=>CFG.news.mktRe.test(x.t));   // market headlines only
+    if(items.length){items.sort((a,b)=>b.ts-a.ts);D.news[k]=items.slice(0,16);D.nat[k]=Date.now()}
+    const ok=CFG.news[k].filter(s=>D.nsrc[s.id]&&D.nsrc[s.id].ok).map(s=>s.o).join('+'),bad=CFG.news[k].filter(s=>D.nsrc[s.id]&&!D.nsrc[s.id].ok).map(s=>s.o).join('+');
+    log('NEWS '+k.toUpperCase()+' · '+(ok?'ok '+ok:'none ok')+(bad?' · blocked/failed '+bad:''),!ok)}
+  H.news={st:(D.nat.local||D.nat.world)?'live':'err',at:Math.max(D.nat.local,D.nat.world)};
+  barsUpdate();paint('news');healthRender()}
+/* ============================ MARKETS — browser-fetchable sources first; every series keeps its own clock ============================ */
+/* BTC price: CoinGecko (keyless; attribution shown on the card) → Coinbase spot (CORS documented by Coinbase). The last price is kept on failure and goes STALE (frozen + time) after 10 min. */
+async function getBtc(){let why='';
+  const cb=async()=>{const j=await jget(CFG.markets.btcAlt);const v=+(j&&j.data&&j.data.amount);if(!(v>0))throw new Error('shape');const s=D.btcS&&D.btcS.p,span=s&&s.length>1?s[s.length-1][0]-s[0][0]:0;
+    D.btc={usd:v,ch:span>20*36e5?(v-s[0][1])/s[0][1]*100:null,at:Date.now(),t:Date.now(),src:'Coinbase'};H.mk.btcErr=0;log('MKT OK · Coinbase BTC spot')};
+  const cg=async()=>{const j=await jget(CFG.markets.btc);const b=j.bitcoin;if(!b||typeof b.usd!=='number')throw new Error('shape');D.btc={usd:b.usd,cad:b.cad,ch:b.usd_24h_change,at:Date.now(),t:b.last_updated_at?b.last_updated_at*1000:Date.now(),src:'CoinGecko'};H.mk.btcErr=0;log('MKT OK · CoinGecko BTC')};
+  try{await cb()}catch(e){why='Coinbase '+(e instanceof TypeError?'blocked/offline':(e.message||e));
+    try{await cg()}catch(e2){H.mk.btcErr=Date.now();log('MKT FAIL · BTC price — '+why+' · CoinGecko '+(e2 instanceof TypeError?'blocked/offline':(e2.message||e2)),1)}}
+  paint('mk');if(!D.btcS||Date.now()-D.btcS.at>=CFG.markets.chartEveryMs-5000)getBtcS()}
+/* BTC 24 h chart: CoinGecko market_chart → Coinbase Exchange 15-min candles → Binance public-data mirror 15-min klines (all keyless; the first that answers draws, and the tile names it).
+   Failure keeps the last series; it goes STALE after chartStaleMs and freezes — on its own clock, independent of the price. */
+const BTCS=[['Coinbase',()=>CFG.markets.chartCb,j=>(Array.isArray(j)?j:[]).map(r=>[+r[0]*1000,+r[4]])],
+  ['Binance',()=>CFG.markets.chartBn,j=>(Array.isArray(j)?j:[]).map(r=>[+(r[6]||r[0]),+r[4]])],
+  ['CoinGecko',()=>CFG.markets.chart,j=>(j&&j.prices||[]).map(r=>[+r[0],+r[1]])]];
+async function getBtcS(){const errs=[];
+  for(const [n,u,f] of BTCS){try{let p=f(await jget(u(),'json',15000)).filter(r=>isFinite(r[0])&&r[1]>0).sort((a,b)=>a[0]-b[0]);if(p.length)p=p.filter(r=>r[0]>=p[p.length-1][0]-24.5*36e5);if(p.length<10)throw new Error('shape');
+      D.btcS={p:p.length>96?p.filter((_,i)=>i%Math.ceil(p.length/96)===0||i===p.length-1):p,at:Date.now(),src:n};H.mk.btcSErr='';log('MKT OK · '+n+' BTC 24 h series · '+p.length+' pts');paint('mk');return}
+    catch(e){errs.push(n+' '+(e instanceof TypeError?'blocked/offline':(e.message||e)))}}
+  H.mk.btcSErr=errs.join(' · ');log('MKT FAIL · BTC series — '+H.mk.btcSErr,1);paint('mk')}
+/* USD/CAD daily reference rate: Bank of Canada Valet (direct, then the hub proxy) → ECB reference rate via Frankfurter (keyless, browser-fetchable).
+   The tile judges age by the observation date inside the data (F42-02), never by when we fetched it. */
+async function getBoc(){let why='';
+  const parse=j=>{const ser={};(j.observations||[]).forEach(o=>{['FXUSDCAD','BD.CDN.10YR.DQ.YLD'].forEach(k=>{if(o[k]&&o[k].v!=null&&isFinite(+o[k].v))(ser[k]=ser[k]||[]).push([o.d,+o[k].v])})});for(const k in ser)ser[k].sort((a,b)=>a[0]<b[0]?-1:1);if(!ser.FXUSDCAD||ser.FXUSDCAD.length<2)throw new Error('shape');return ser};
+  const ecbFirst=async()=>{const st=new Date(Date.now()-45*864e5).toISOString().slice(0,10);const j=await jget(CFG.markets.ecb.replace('{start}',st));const r=j&&j.rates||{};const fx=Object.keys(r).sort().map(d=>[d,+(r[d]&&r[d].CAD)]).filter(x=>x[1]>0);if(fx.length<2)throw new Error('shape');D.boc={fx,y:null,at:Date.now(),src:'ECB',via:'Frankfurter'};H.mk.fxErr='';log('MKT OK · ECB USD/CAD '+fx.slice(-1)[0][1]+' via Frankfurter');paint('mk')};
+  if(!CFG.PROXY){try{await ecbFirst();return}catch(e){why='ECB '+(e instanceof TypeError?'blocked/offline':(e.message||e))}}
+  for(const via of ['direct','hub proxy']){if(via==='hub proxy'&&!CFG.PROXY)break;
+    try{const ser=parse(await jget(via==='direct'?CFG.markets.boc:CFG.PROXY+encodeURIComponent(CFG.markets.boc)));D.boc={fx:ser.FXUSDCAD,y:ser['BD.CDN.10YR.DQ.YLD']||null,at:Date.now(),src:'Bank of Canada',via};H.mk.fxErr='';log('MKT OK · Bank of Canada USD/CAD '+ser.FXUSDCAD.slice(-1)[0][1]+' ('+via+')');paint('mk');return}
+    catch(e){why+=(why?' · ':'')+via+' '+(e instanceof TypeError?'blocked (no CORS) or offline':(e.message||e))}}
+  try{const st=new Date(Date.now()-45*864e5).toISOString().slice(0,10);const j=await jget(CFG.markets.ecb.replace('{start}',st));const r=j&&j.rates||{};
+    const fx=Object.keys(r).sort().map(d=>[d,+(r[d]&&r[d].CAD)]).filter(x=>x[1]>0);if(fx.length<2)throw new Error('shape');
+    D.boc={fx,y:null,at:Date.now(),src:'ECB',via:'Frankfurter'};H.mk.fxErr='';log('MKT OK · ECB USD/CAD '+fx.slice(-1)[0][1]+' via Frankfurter (Bank of Canada: '+why+')')}
+  catch(e){H.mk.fxErr='Bank of Canada '+why+' · ECB '+(e instanceof TypeError?'blocked/offline':(e.message||e));log('MKT FAIL · USD/CAD — '+H.mk.fxErr,1)}
+  paint('mk')}
+/* ============================ TEAM / SECURITY (hub feeds, optional) ============================ */
+const HUBMAP={hubfeed:['hubfeed','os'],security:['sec','sec'],cal:['cal','cal'],scn:['scn','scn'],brief:['brief','brief']};
+async function getHub(k){const u=CFG[k].url;if(!u)return;const m=HUBMAP[k];try{const j=await jget(u);D[m[0]]=Object.assign(j,{at:Date.now()});log(k.toUpperCase()+' OK')}catch(e){log(k.toUpperCase()+' FAIL · '+(e.message||e),1)}paint(m[1])}
+/* ============================ GATINEAU (ECCC qc-126) + CITY TRAFFIC EVENTS (commute) ============================ */
+async function getWxg(){try{const j=await jget(CFG.wxg.url);const c=(j.properties||{}).currentConditions||{};D.wxg={t:EN(g(c,'temperature.value')),cond:EN(c.condition),ws:EN(g(c,'wind.speed.value')),wd:EN(g(c,'wind.direction.value')),gust:EN(g(c,'wind.gust.value')),ts:EN(c.timestamp),at:Date.now()};H.wxg={st:'live',at:Date.now()};log('WXG OK · ECCC qc-126 Gatineau')}catch(e){H.wxg={st:D.wxg?'stale':'err',at:H.wxg.at||0};log('WXG FAIL · '+(e.message||e),1)}paint('wx')}
+async function getTev(){try{const j=await jget(CFG.ev.url);const rows=(j.features||[]).map(f=>{const p=f.properties||{};const gc=(f.geometry||{}).coordinates;let cc=gc;while(Array.isArray(cc)&&Array.isArray(cc[0]))cc=cc[0];return{ll:Array.isArray(cc)&&isFinite(cc[0])?[cc[0],cc[1]]:null,id:p.id,t:p.eventType,ln:p.lanes||'',c:p.closureType,pr:p.priority,st:p.status,h:p.headline||p.mainStreet||'',u:Date.parse(String(p.updated||'').replace(' ','T'))||0}}).filter(r=>r.h&&(!r.st||r.st==='ACTIVE'));D.tev={at:Date.now(),rows};H.tev={st:'live',at:Date.now()};log('EVENTS OK · City v2 · '+rows.length+' active')}catch(e){H.tev={st:D.tev?'stale':'err',at:H.tev.at||0};log('EVENTS FAIL · '+(e.message||e),1)}paint('trf');paint('ge')}
+/* ============================ TRAFFIC CAMERAS (City of Ottawa) ============================ */
+function camSet(){return JSON.parse(JSON.stringify(CFG.cam.set))}
+let SET=camSet();
+async function getCamList(){try{const j=await jget(CFG.cam.list);D.camList=(j.cameras||[]).filter(c=>c.latitude&&c.longitude);H.ge={st:'live',at:Date.now()};log('CAMS OK · City list '+D.camList.length+' cameras')}catch(e){H.ge={st:'err',at:0,msg:String(e.message||e)};log('CAMS FAIL · list '+(e.message||e),1)}paint('ge');paint('trf')}
+function camNo(id){const L=D.camList&&D.camList.find(x=>x.id===id);return L?L.camera_number:null}
+const camReady=()=>!!CFG.cam.certificate;
+function camUrl(c){const n=camNo(c.id);if(n==null)return null;return CFG.cam.base+'?c='+encodeURIComponent(n)+'&certificate='+encodeURIComponent(CFG.cam.certificate)+(CFG.cam.userId?'&id='+encodeURIComponent(CFG.cam.userId):'')}
+function visibleCams(){return UI.camMode===1?[SET[UI.camCur%SET.length]]:SET}
+/* 60-s camera limit: in-memory timing always applies; localStorage only extends it across reloads when available (blocked storage cannot loosen the limit) */
+let CAMLAST=0;
+function lastReq(){let s=0;try{s=+localStorage.getItem('hw3.lastCam')||0}catch(e){}return Math.max(CAMLAST,isFinite(s)?s:0)}
+function setReq(t){CAMLAST=t;try{localStorage.setItem('hw3.lastCam',String(t))}catch(e){}}
+/* ONE request per 60 s total across ALL cameras; rotation over the visible set */
+let rot=0;
+let certLogged=false;
+function camTick(){
+  if(!CFG.cam.live)return;
+  if(!camReady()){D.camNext=0;if(!certLogged){certLogged=true;log('CAM · certificate not configured (supplied at app integration) — no camera requests made')}return}
+  const now=Date.now();if(now-lastReq()<CFG.cam.intervalMs-500){D.camNext=lastReq()+CFG.cam.intervalMs;return}
+  const vis=visibleCams();const c=vis[rot%vis.length];const u=camUrl(c);if(!u)return;   // camera list not loaded yet: no request, no slot used
+  rot++;setReq(now);D.camNext=now+CFG.cam.intervalMs;D.camReq++;
+  const im=new Image();im.onload=()=>{const done=()=>{D.frames[c.id]={src:im.src,ts:Date.now(),real:'fetched'};H.cams={st:'live',at:Date.now()};log('CAM OK · '+c.s+' (id '+c.id+')');D.events.unshift({t:Date.now(),id:c.id});D.events.length=20;paintCam(c.id);paint('ge');healthRender()};(im.decode?im.decode().then(done,done):done())};
+  im.onerror=()=>{log('CAM FAIL · '+c.s+' (id '+c.id+')',1);H.cams={st:H.cams.at?'stale':'err',at:H.cams.at||0};healthRender();paint('trf')};
+  im.src=u}
+function frameOf(id){const hub=CFG.cam.frames[id];const f=D.frames[id];if(f&&(!hub||f.ts>=Date.parse(hub.ts)))return{src:f.src,ts:f.ts,how:'fetched'};if(hub)return{src:hub.src,ts:Date.parse(hub.ts),how:'hub'};return null}
+function camStale(f){return f&&Date.now()-f.ts>CFG.cam.staleMs}
+/* ============================ v4.3 DATA ADDITIONS: Canada alerts (GeoMet) · tsunami · Stooq · radar rate · team snapshot · door briefs · home cameras ============================ */
+Object.assign(CFG,{
+  alerts:{url:'https://api.weather.gc.ca/collections/weather-alerts/items?f=json&lang=en&limit=100&bbox=-77.5,44.6,-74.5,46.2',everyMs:600000},
+  tsu:{urls:['https://www.tsunami.gov/events/xml/PHEBAtom.xml','https://www.tsunami.gov/events/xml/PAAQAtom.xml'],everyMs:600000},
+  stooq:{everyMs:900000,days:50,syms:{spx:'^spx',tsx:'^tsx',cad:'usdcad'}},
+  rate:{everyMs:360000},
+  links:Object.assign(CFG.links,{bcast:'https://www.broadcastify.com/',fire:'https://ottawa.ca/en/city-hall/emergency-and-protective-services/ottawa-fire-services',police:'https://www.ottawapolice.ca/'}),
+  /* DOOR BRIEFS — HUB at app integration. Each door is the URGENT / attention overview for its area (Grant):
+     JSON {asOf, deck:{n, items:[{t}]}  — urgent project/team items,
+                 day:{msgs, email, missed} — personal waiting items: unread messages/texts, unread email, missed calls,
+                 wb:{email, urgent}        — work email waiting, urgent work to-dos}.
+     A missing feed/field = an honest "not connected" line. Never invent a count or an item. */
+  brief:{url:'',everyMs:60000,staleMs:600000},
+  /* SUITE ADDRESSES — real app addresses for the Daybook suites land at integration; empty = the in-file section page opens */
+  suites:{'Home Automation & Security':'./daybook.html#view=security','Finance & Investments':'./daybook.html#view=invest','Calendar':'./daybook.html#view=calendar'},
+  /* HOME CAMERAS — one snapshot image URL per zone from Grant's own camera/NVR, set at app integration. Empty = NO CAMERA (derived, not hard-coded). NEVER put credentials in a URL here. */
+  homecams:{zones:[{n:'DRIVEWAY',url:''},{n:'FRONT DOOR',url:''},{n:'GARAGE',url:''},{n:'BACKYARD',url:''}],everyMs:60000,staleMs:300000},
+  /* TEAM USAGE — honest SNAPSHOT values transcribed from Grant's own usage screens on 2026-11-05; the hub team feed (CFG.hubfeed url) overrides when connected. */
+  team:{asOf:'2026-11-05',members:[
+    {n:'CLAUDE',nm:'Claude',win:'wk',kd:'weekly',ss:'snap·use',pct:0,lab:'0% of weekly used',src:'Settings → Usage',as:'11-05 11:03',rl:'Thu 11:00',resetAt:'2026-11-12T11:00'},
+    {n:'CHATGPT',nm:'ChatGPT',win:'5h',kd:'5h window',ss:'snap·use',pct:82,lab:'5h window 82% used · weekly 13% used',src:'Settings → Usage (agentic)',as:'11-05 15:54',rl:'5h ~19:40 · weekly Wed 16:56',resetAt:'2026-11-05T19:40'},
+    {n:'PERPLEXITY',nm:'Perplexity',win:'',kd:'no cap published',ss:'snap·rates',pct:null,cnt:'400',cntl:'PRO left',lab:'400 PRO · 50 RESEARCH · 50 LABS left',src:'rate-limit feed (no cap published)',as:'11-05 11:48',rl:'',resetAt:null},
+    {n:'GEMINI',nm:'Gemini',win:'wk',kd:'weekly',ss:'snap·use',pct:25,lab:'25% of weekly used · current window 0%',src:'Settings → Usage limits',as:'11-05 11:50',rl:'Fri 11:45',resetAt:'2026-11-06T11:45'},
+    {n:'OAKLEY',nm:'Oakley',win:'wk',kd:'weekly',ss:'snap·plan',pct:59,lab:'59% of weekly used',src:'Muse subscription status',as:'11-05 11:50',rl:'Sat 09:03',resetAt:'2026-11-08T09:03'}]}
+});
+/* MARKETS v4.3 — browser-fetchable fallbacks, all keyless. BTC price: CoinGecko → Coinbase spot. BTC 24 h chart: CoinGecko → Coinbase Exchange 15-min candles → Binance public-data mirror.
+   USD/CAD: Bank of Canada (direct → hub proxy) → ECB reference rate via Frankfurter. TSX / S&P 500: Stooq daily closes (direct → hub proxy); while those are blocked, a TradingView mini chart (delayed) draws in the tile. */
+Object.assign(CFG.markets,{btcStaleMs:600000,btcAlt:'https://api.coinbase.com/v2/prices/BTC-USD/spot',
+  chartCb:'https://api.exchange.coinbase.com/products/BTC-USD/candles?granularity=900',chartBn:'https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=15m&limit=96',
+  ecb:'https://api.frankfurter.dev/v1/{start}..?base=USD&symbols=CAD',tv:{tsx:'TSX:TSX',spx:'FOREXCOM:SPXUSD'},tvRange:'1M'});
+/* MARKET HEADLINES — a third headline bar (gold, labelled MARKETS) on the news bars' pattern: business feeds, market items only (keyword filter), direct → hub proxy → honest OFFLINE */
+Object.assign(CFG.news,{mkts:[{id:'cbc-biz',o:'CBC BUSINESS',url:'https://www.cbc.ca/webfeed/rss/rss-business',link:'cbc.ca',pub:true},{id:'bbc-biz',o:'BBC BUSINESS',url:'https://feeds.bbci.co.uk/news/business/rss.xml',link:'bbc.co.uk',pub:true}],
+  mktRe:/\b(stocks?|markets?|TSX|S&P|Dow|Nasdaq|shares?|index|indices|bonds?|yields?|oil|crude|gold|dollar|loonie|currenc(y|ies)|rates?|interest|Fed|Federal Reserve|Bank of Canada|central bank|inflation|CPI|GDP|earnings|profits?|revenue|IPO|crypto|bitcoin|investors?|trading|tariffs?|prices?|econom(y|ic)|recession|jobs|unemployment|housing|mortgages?)\b/i});
+Object.assign(D.news,{mkts:[]});Object.assign(D.nat,{mkts:0});
+Object.assign(D,{alr:[],tsu:null,stq:{},stqE:{},rate:null});
+Object.assign(H,{alr:{st:'pend'},tsu:{st:'pend'},rate:{st:'pend'}});
+const cent=g=>{let c=g&&g.coordinates;while(Array.isArray(c)&&Array.isArray(c[0])&&Array.isArray(c[0][0]))c=c[0];if(g&&g.type==='Point')return c;if(!Array.isArray(c)||!c.length)return null;let x=0,y=0;c.forEach(p=>{x+=p[0];y+=p[1]});return[x/c.length,y/c.length]};
+async function getAlerts(){
+  try{const j=await jget(CFG.alerts.url,'json',20000);const fs=j.features||[];
+    D.alr=fs.map((f,i)=>{const p=f.properties||{};const nm=EN(p.alert_name_en||p.alert_short_name_en||p.headline_en||p.headline||p.event||p.title)||'';const col=String(p.risk_colour_en||p.risk_colour||'').toLowerCase();return{src:'ECCC',id:String(f.id||p.id||'a'+i),c:cent(f.geometry),t:Date.parse(p.publication_datetime||p.issued||p.effective||'')||Date.now(),sev:/red|extreme|warning/i.test(col+nm)?(/warning/i.test(nm)||/red/.test(col)?2:1):/yellow|orange|watch|advisory|statement/i.test(col+nm)?1:0,txt:(String(p.feature_name_en||p.area||'').toUpperCase()+' · '+nm).replace(/^ · /,''),link:'https://weather.gc.ca/warnings/index_e.html'}}).filter(x=>x.txt);
+    H.alr={st:'live',at:Date.now(),n:D.alr.length,total:fs.length};log('WM OK · ECCC GeoMet alerts · '+D.alr.length+' near Ottawa')}
+  catch(e){H.alr={st:D.alr.length?'stale':'err',at:H.alr.at||0,msg:String(e.message||e)};log('WM FAIL · ECCC alerts '+(e.message||e),1)}paint('wm')}
+async function getTsu(){
+  try{const out=[];let ok=0,blocked=false;for(const u of CFG.tsu.urls){try{const r=await pubGet(u,15000);ok++;const d=new DOMParser().parseFromString(r.t,'text/xml');[...d.getElementsByTagName('entry')].slice(0,6).forEach(e=>{const t=xt(e,'title'),up=Date.parse(xt(e,'updated'))||0;if(!t)return;out.push({src:'PTWC',id:xt(e,'id')||t,c:null,t:up,sev:/warning/i.test(t)?2:/advisory|watch/i.test(t)?1:0,txt:'TSUNAMI · '+t,link:'https://www.tsunami.gov/'})})}catch(e){if(e instanceof TypeError)blocked=true}}
+    if(!ok)throw Object.assign(new Error(blocked?offMsg():'unreachable'),{blocked});
+    D.tsu={items:out.filter(x=>!/no tsunami|information statement/i.test(x.txt)||Date.now()-x.t<864e5),at:Date.now(),ok,of:CFG.tsu.urls.length};H.tsu={st:'live',at:Date.now()};log('WM OK · PTWC '+ok+'/'+CFG.tsu.urls.length+' feeds · '+D.tsu.items.length+' messages')}
+  catch(e){H.tsu={st:D.tsu?'stale':(e.blocked?'blocked':'err'),at:H.tsu.at||0,msg:String(e.message||e)};log('WM FAIL · PTWC '+(e.message||e),1)}paint('wm')}
+async function getStq(k){
+  try{const e=new Date(),b=new Date(Date.now()-CFG.stooq.days*864e5),f=d=>d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate());
+    const su='https://stooq.com/q/d/l/?s='+encodeURIComponent(CFG.stooq.syms[k])+'&i=d&d1='+f(b)+'&d2='+f(e);let t;
+    try{t=await jget(su,'text',20000)}catch(e1){if(!CFG.PROXY)throw e1;t=await jget(CFG.PROXY+encodeURIComponent(su),'text',20000)}   // direct → hub proxy
+    const p=t.trim().split(/\r?\n/).slice(1).map(l=>l.split(',')).filter(c=>c.length>=5&&isFinite(+c[4])).map(c=>[c[0],+c[4]]);if(p.length<3)throw new Error('no rows');
+    D.stq[k]={p,at:Date.now()};delete D.stqE[k];log('MKT OK · Stooq '+k+' '+p[p.length-1][1])}
+  catch(e){D.stqE[k]=e instanceof TypeError?'blocked':'error';log('MKT FAIL · Stooq '+k+' '+(e instanceof TypeError?'blocked (no CORS) or offline':(e.message||e)),1)}paint('mk')}
+async function getRate(){
+  try{const u=CFG.ge.geo+'?service=WMS&version=1.3.0&request=GetFeatureInfo&layers=RADAR_1KM_RSNO&query_layers=RADAR_1KM_RSNO&styles=&crs=EPSG:4326&bbox=45.37,-75.76,45.47,-75.63&width=101&height=101&i=50&j=50&info_format=application/json';
+    const j=await jget(u,'json',15000);const f=(j.features||[])[0];let v=null;if(f&&f.properties){for(const k in f.properties){const n=+f.properties[k];if(isFinite(n)&&f.properties[k]!==''&&f.properties[k]!==null){v=n;break}}}
+    D.rate={v,at:Date.now(),none:!f};H.rate={st:'live',at:Date.now()};log('WX OK · ECCC radar snow-rate sample at home '+(v==null?'(no echo)':v))}
+  catch(e){H.rate={st:D.rate?'stale':'err',at:H.rate.at||0};log('WX FAIL · radar rate '+(e.message||e),1)}paint('wx')}
+/* home camera snapshots: <img> loads only (no fetch), only for zones whose URL is configured */
+function hcamTick(){CFG.homecams.zones.forEach((z,i)=>{if(!z.url)return;const im=new Image();im.onload=()=>{D.hcam[i]={src:im.src,ts:Date.now()};paint('sec')};im.onerror=()=>{D.hcam[i]=Object.assign({},D.hcam[i]||{},{err:Date.now()});paint('sec')};im.src=z.url+(z.url.indexOf('?')>=0?'&':'?')+'t='+Date.now()})}
+const HOME={lat:45.4215,lon:-75.6972};
+const GE={map:null,el:null,base:null,radar:null,cov:null,layer:'',mode:'eccc',ok:0,er:0,since:0,cams:null,camKey:'',rvAt:0,rv:null};
+const geSnow=()=>/snow|flurr|blizzard|squall|ice pellet/i.test((D.wx&&D.wx.o&&D.wx.o.cond)||'');
+const geK=()=>geSnow()?'RSNO':'RRAI';
+function geInit(){if(GE.map)return true;if(!window.L)return false;
+  const el=document.createElement('div');el.className='gmap';$('#sm').appendChild(el);
+  const map=L.map(el,{zoomControl:false,attributionControl:false,dragging:false,scrollWheelZoom:false,doubleClickZoom:false,touchZoom:false,boxZoom:false,keyboard:false,tap:false,zoomSnap:.25,zoomAnimation:false,fadeAnimation:!RM,inertia:false,center:[HOME.lat,HOME.lon],zoom:7});
+  el.style.position='absolute';map.createPane('radar').style.zIndex=250;
+  GE.base=L.tileLayer(CFG.ge.tile,{maxZoom:19,noWrap:true,keepBuffer:1,updateWhenIdle:true,updateWhenZooming:false}).addTo(map);
+  L.marker([HOME.lat,HOME.lon],{icon:L.divIcon({className:'ghi',html:'<i></i><b>HOME</b>',iconSize:[0,0]}),interactive:false,keyboard:false}).addTo(map);
+  GE.rg=L.layerGroup([25,50,100].map(k=>L.circle([HOME.lat,HOME.lon],{radius:k*1000,color:'#efe9d9',weight:1,opacity:.28,fill:false,dashArray:'2 5',interactive:false}))).addTo(map);GE.qg=L.layerGroup().addTo(map);
+  GE.map=map;GE.el=el;GE.since=Date.now();geRadar();geCaps();return true}
+function geRadar(force){if(!GE.map||GE.mode!=='eccc')return;const k=geK(),ln='RADAR_1KM_'+k;
+  if(GE.layer!==ln){[GE.cov,GE.radar].forEach(l=>l&&GE.map.removeLayer(l));
+    const o={format:'image/png',transparent:true,version:'1.3.0',pane:'radar'};
+    GE.cov=L.tileLayer.wms(CFG.ge.geo,Object.assign({layers:'RADAR_COVERAGE_'+k+'.INV',opacity:.4},o)).addTo(GE.map);
+    GE.radar=L.tileLayer.wms(CFG.ge.geo,Object.assign({layers:ln,opacity:.8},o)).addTo(GE.map);
+    GE.radar.on('tileload',()=>{GE.ok++}).on('tileerror',()=>{GE.er++});GE.layer=ln;GE.ok=0;GE.er=0;GE.since=Date.now()}
+  else if(force){GE.radar.setParams({_:Date.now()});GE.cov.setParams({_:Date.now()});GE.ok=0;GE.er=0;GE.since=Date.now()}}
+async function geCaps(){try{const t=await jget(CFG.ge.geo+'?service=WMS&version=1.3.0&request=GetCapabilities&layer=RADAR_1KM_'+geK(),'text',20000);const m=t.match(/<Dimension[^>]*name="time"[^>]*default="([^"]+)"/);if(m){D.radar={t:Date.parse(m[1]),layer:'RADAR_1KM_'+geK(),at:Date.now()}}}catch(e){log('RADAR caps FAIL · '+(e.message||e),1)}paint('ge')}
+async function geFallback(){GE.mode='rv';[GE.cov,GE.radar].forEach(l=>l&&GE.map&&GE.map.removeLayer(l));GE.cov=GE.radar=null;
+  try{const j=await jget(CFG.ge.rv,'json',20000);const f=((j.radar||{}).past||[]).slice(-1)[0];if(!f)throw new Error('no radar frames');
+    GE.radar=L.tileLayer(j.host+f.path+'/256/{z}/{x}/{y}/2/1_1.png',{pane:'radar',opacity:.75}).addTo(GE.map);GE.rv={t:f.time*1000,at:Date.now()};log('RADAR fallback · RainViewer frame '+hm(GE.rv.t))}
+  catch(e){GE.mode='none';log('RADAR UNAVAILABLE · ECCC and RainViewer failed',1)}paint('ge')}
+function geWatch(){if(!GE.map||GE.mode!=='eccc')return;if(GE.er>=1&&GE.ok===0&&Date.now()-GE.since>8000){log('RADAR ECCC tiles failing — using RainViewer fallback',1);geFallback()}
+  else if(GE.layer&&GE.layer!=='RADAR_1KM_'+geK()){geRadar();geCaps()}}
+function geRefresh(){if(GE.mode==='eccc'){geRadar(true);geCaps()}}/* ================= HOME WALL v4.3 — UI (feeds come from the data layer above) ================= */
+const num=(v,d)=>v==null||isNaN(v)?'--':(+v).toFixed(d==null?0:d).replace('-','−');
+const sg=v=>v==null||isNaN(v)?'--':(v>0?'+':'')+num(v,0).replace(/^\+?0$/,'0');
+const setH=(e,h)=>{if(e&&e._h!==h){e._h=h;e.innerHTML=h}};
+const ptype=c=>/freezing|ice pellet|ice /i.test(c||'')?'z':/snow|flurr|blizzard/i.test(c||'')?'s':/rain|shower|drizzle|thunder/i.test(c||'')?'r':'n';
+Object.assign(UI,{wx:'std',sm:'world',stn:'dw',yt:'idle',ytAt:0,note:'',fl:'cam',sel:null,tap:0,lay:{eq:1,ds:1,ev:1,ca:1},tabNote:''});
+const CMP={N:0,NNE:22.5,NE:45,ENE:67.5,E:90,ESE:112.5,SE:135,SSE:157.5,S:180,SSW:202.5,SW:225,WSW:247.5,W:270,WNW:292.5,NW:315,NNW:337.5};
+const windDeg=o=>{if(!o||o.ws===0||o.ws==null)return null;if(o.brg!=null&&isFinite(o.brg))return +o.brg;const d=CMP[String(o.wd||'').toUpperCase()];return d==null?null:d};
+const wxStale=()=>D.wx&&Date.now()-D.wx.at>CFG.wx.staleMs;
+const wxSt=()=>!D.wx?(H.wx.st==='err'?['UNREACHABLE','err']:['PENDING','pend']):wxStale()?['STALE '+hm(D.wx.at),'stale']:['LIVE · ECCC','live'];
+const wxgStale=()=>D.wxg&&Date.now()-D.wxg.at>CFG.wxg.staleMs;
+function plowFacts(){const w=D.wx;if(!w||!w.hr.length)return null;const h=w.hr.slice(0,12);const mnT=Math.min(...h.map(x=>x.t)),mxW=Math.max(...h.map(x=>x.ws||0));let cm=null;
+  w.fc.slice(0,4).forEach(f=>{const m=/(\d+)(?:\s*to\s*(\d+))?\s*cm/i.exec(f.txt||'');if(m&&!cm)cm=m[1]+(m[2]?'–'+m[2]:'')+' cm'});
+  return{mnT,mxW,cm,snowH:h.filter(x=>ptype(x.cond)==='s').length,zH:h.filter(x=>ptype(x.cond)==='z').length,h}}
+function desig(){const w=D.wx;if(!w)return['NO DATA','dm',H.wx.st==='err'?'ECCC unreachable — no designation without data':'waiting for first ECCC fetch'];const f=plowFacts();if(!f)return['NO DATA','dm','no hourly forecast from ECCC'];
+  if(/snow|blizzard|freezing|winter|squall|\bice\b/i.test(w.warn.concat(D.alr.map(x=>x.txt)).join(' ')))return['MOBILISE','rd','ECCC winter warning in effect'];
+  if(f.snowH>=3||f.zH>=1||f.cm)return['WATCH','am','snow/ice next 12 h'];
+  if(f.mnT<=0)return['MONITOR','ice','below 0° next 12 h'];return['STAND DOWN','gn','no snow/ice next 12 h']}
+function needle(o){const d=windDeg(o);if(d==null)return'';const to=(d+180)%360;return '<svg class="nd" viewBox="0 0 20 20" style="transform:rotate('+to+'deg)" role="img" aria-label="Wind from '+esc(o.wd||'')+'"><circle cx="10" cy="10" r="9" fill="none" stroke="currentColor" opacity=".4"/><path d="M10 2.5 L13.6 12 L10 10.2 L6.4 12Z" fill="currentColor"/></svg>'}
+const fcName=n=>{n=n||'';return n==='Tonight'?'TONIGHT':n==='Today'?'TODAY':/night/i.test(n)?n.slice(0,3).toUpperCase()+' N':n.slice(0,3).toUpperCase()};
+function stripSvg(hr){const h=hr.slice(0,12);if(!h.length)return'';const ts=h.map(x=>x.t),mn=Math.min(0,...ts),mx=Math.max(1,...ts),sp=mx-mn||1;const W=120,bw=W/h.length;
+  const y=t=>24-(t-mn)/sp*22;let r='';h.forEach((x,i)=>{const ty=ptype(x.cond),bh=Math.max(ty==='n'?.8:2.5,(x.lop||0)/100*20);r+='<rect x="'+(i*bw+.8)+'" y="'+(26-bh)+'" width="'+(bw-1.6)+'" height="'+bh+'" fill="'+(ty==='s'?'#f1ede6':ty==='z'?'#ff5a45':ty==='r'?'#4fd1a5':'#2e2c29')+'" opacity=".9"/>'});
+  const pts=h.map((x,i)=>(i*bw+bw/2).toFixed(1)+','+y(x.t).toFixed(1)).join(' ');
+  return '<svg viewBox="0 0 120 26" preserveAspectRatio="none" role="img" aria-label="Next 12 hours: temperature line, precipitation chance bars (white snow, green rain, red freezing)"><line x1="0" x2="120" y1="'+y(0).toFixed(1)+'" y2="'+y(0).toFixed(1)+'" stroke="#8a857e" stroke-width=".6" stroke-dasharray="2 2"/>'+r+'<polyline points="'+pts+'" fill="none" stroke="#ffb020" stroke-width="1.4" vector-effect="non-scaling-stroke"/></svg>'}
+const bdg=s=>'<span class="pill '+({live:'p-live',stale:'p-warn',err:'p-crit',pend:'p-off',ice:'p-ice',part:'p-warn',blocked:'p-crit'}[s[1]]||'p-off')+'">'+esc(s[0])+'</span>';
+let SPKN=0;
+function spk(pr,stale,up){if(!pr||pr.length<3)return'';const mn=Math.min(...pr),mx=Math.max(...pr),sp=(mx-mn)||1,n=pr.length;const pts=pr.map((v,i)=>[i/(n-1)*100,(1-(v-mn)/sp)*16+2]);const d='M'+pts.map(q=>q[0].toFixed(1)+' '+q[1].toFixed(1)).join(' L');const l=pts[n-1],id='sg'+(++SPKN);
+  return '<svg class="spk '+(stale?'stl':up?'up':'dn')+'" viewBox="0 0 100 20" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="currentColor" stop-opacity=".55"/><stop offset="1" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs><path class="ar" d="'+d+' L100 20 L0 20Z" fill="url(#'+id+')"/><path class="ln" d="'+d+'"/><circle cx="'+l[0].toFixed(1)+'" cy="'+l[1].toFixed(1)+'" r="2.4"/></svg>'}
+const camIcon='<svg class="cgl" viewBox="0 0 32 22" aria-hidden="true"><rect x="1.5" y="4.5" width="21" height="15" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M22.5 9.5 L30 5.5 V18.5 L22.5 14.5Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M5 2 H10" stroke="currentColor" stroke-width="1.6"/></svg>';
+const remPx=()=>parseFloat(getComputedStyle(document.documentElement).fontSize);
+/* ---------- live broadcast (DW embed · CBC/CTV/Global link-outs) ---------- */
+const RMQ=matchMedia('(prefers-reduced-motion: reduce)');const rm=()=>RMQ.matches;
+const STN=[{k:'cbc',n:'CBC',t:'CBC NEWS NETWORK',site:'gem.cbc.ca',w:'Opens CBC Gem (sign-in needed — no embed)',url:()=>CFG.links.cbc},
+ {k:'ctv',n:'CTV',t:'CTV NEWS',site:'ctvnews.ca',w:'Opens CTV News live in a new tab',url:()=>CFG.links.ctv},
+ {k:'global',n:'GLOBAL',t:'GLOBAL NEWS',site:'globalnews.ca',w:'Opens Global News live in a new tab',url:()=>CFG.links.global},
+ {k:'dw',n:'DW',t:'DW NEWS',site:'youtube.com',w:'DW News livestream (YouTube embed)',url:()=>CFG.stream.dwFallback}];
+const ytSt=()=>({idle:['IDLE','pend'],loading:['LOADING','stale'],playing:['PLAYING','live'],paused:['PAUSED','stale'],offline:['OFFLINE','err']}[UI.yt]||['IDLE','pend']);
+function playerHTML(){if(UI.stn==='dw')return '<iframe title="DW News livestream (YouTube embed)" src="https://www.youtube.com/embed/'+CFG.stream.dw+'?autoplay=1&mute=1&playsinline=1&rel=0&enablejsapi=1'+(/^https?:/.test(location.protocol)?'&origin='+encodeURIComponent(location.origin):'')+'" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-presentation allow-popups"></iframe>';
+  const s=STN.find(x=>x.k===UI.stn);return '<a class="poster" href="'+esc(s.url())+'" target="_blank" rel="noopener noreferrer"><b>'+s.n+'</b><span>'+esc(s.t)+' · '+esc(s.w)+'</span><u>OPEN '+esc(s.site)+' ↗</u></a>'}
+function setStation(){const pv=$('#plv');if(!pv)return;if(UI.stn==='dw'){UI.yt='loading';UI.ytAt=Date.now()}pv.innerHTML=playerHTML();const f=$('iframe',pv);if(f)f.addEventListener('load',()=>{try{f.contentWindow.postMessage(JSON.stringify({event:'listening',id:1,channel:'widget'}),'*')}catch(e){}});rNews()}
+window.addEventListener('message',e=>{if(typeof e.data!=='string'||!/youtube/.test(e.origin))return;let j;try{j=JSON.parse(e.data)}catch(x){return}
+  let s=null;if(j.event==='onStateChange')s=j.info;else if(j.event==='infoDelivery'&&j.info&&typeof j.info.playerState==='number')s=j.info.playerState;
+  if(j.event==='onError')UI.yt='offline';else if(s===1)UI.yt='playing';else if(s===2)UI.yt='paused';else if(s===3||s===-1||s===5)UI.yt='loading';else if(s===0)UI.yt='offline';else return;rNews()});
+setInterval(()=>{if(UI.stn==='dw'&&UI.yt==='loading'&&UI.ytAt&&Date.now()-UI.ytAt>8000&&$('#nw iframe')){UI.yt='offline';rNews()}},1000);
+/* ---------- news bars: scroll while fresh (no pause control) · stale = freeze + unmissable STALE · no data = unmissable OFFLINE · reduced-motion = static headlines ---------- */
+const BARS=new Set();
+function barOff(k){const srcs=CFG.news[k],tried=srcs.filter(s=>D.nsrc[s.id]);if(!tried.length)return['PENDING','waiting for the first RSS fetch…'];
+  if(k==='mkts'&&srcs.some(s=>D.nsrc[s.id]&&D.nsrc[s.id].ok))return['QUIET','business feeds answered — no market headlines in them right now (market items only; nothing invented)'];
+  const names=srcs.map(s=>s.o.replace(/ OTTAWA$/,'')).join(' + ');const blk=srcs.some(s=>D.nsrc[s.id]&&/CORS|OFFLINE/i.test(D.nsrc[s.id].err||''));
+  return['OFFLINE',names+(blk?' not readable from this browser (no CORS, or offline) — the hub proxy connects them at integration':' unreachable — '+srcs.map(s=>(D.nsrc[s.id]||{}).err||'').filter(Boolean)[0])]}
+const mkNum=t=>t.replace(/(^|\s)([+\u2212-]\d[\d,.]*%?)(?=\s|$|[,.;:)])/g,(m,a,b)=>a+'<span class="'+(b[0]==='+'?'up':'dn')+'">'+b+'</span>');
+function barUnit(k){return D.news[k].map(x=>'<span class="it"'+(x.brk?' data-breaking="true"':'')+'>'+(x.brk?'<em class="brk">BREAKING</em>':'')+'<b>'+esc(x.o)+'</b><span>'+(k==='local'?esc(x.t):mkNum(esc(x.t)))+'</span>'+(x.ts?'<span class="ag">'+ago(x.ts)+'</span>':'')+'<i>•</i></span>').join('')}
+function barsUpdate(){$$('[data-bar]').forEach(runBar)}
+function stopBar(trk){if(trk._a){trk._a.cancel();trk._a=null}trk.dataset.u='';trk._dur=0}
+function runBar(el){const k=el.dataset.bar,trk=$('.trk',el),chip=$('.bst',el);BARS.add(el);if(k==='local'){const bg=$('.bg2',el),bt=D.news.local.some(x=>x.brk)?'BREAKING NEWS':'LOCAL';if(bg&&bg.textContent!==bt)bg.textContent=bt}const items=D.news[k],stale=!!(D.nat[k]&&Date.now()-D.nat[k]>CFG.news.staleMs);
+  el.classList.toggle('off',!items.length);el.classList.toggle('stl',!!items.length&&stale);el.classList.toggle('rmo',!!items.length&&!stale&&rm());
+  if(!items.length){stopBar(trk);const o=barOff(k);chip.textContent=o[0];trk.classList.add('st');setH(trk,'<span class="msg">'+esc(o[1])+'</span>');return}
+  chip.textContent=stale?'STALE · SINCE '+hm(D.nat[k]):rm()?'MOTION OFF · SYSTEM SETTING':'';
+  const unit=barUnit(k);
+  if(rm()){stopBar(trk);trk.classList.add('st');setH(trk,unit);return}
+  trk.classList.remove('st');if(trk.dataset.u===unit&&trk._a){applyRate(el);return}if(trk._a&&trk.dataset.u){el._pend=unit;return}buildBar(el,unit)}
+function buildBar(el,unit){const k=el.dataset.bar,trk=$('.trk',el),win=$('.win',el);el._pend=null;trk._h=null;trk.dataset.u=unit;trk.innerHTML=unit;if(trk._a){trk._a.cancel();trk._a=null}
+  const u=trk.scrollWidth||1,w=win.clientWidth||1,c=2*Math.max(1,Math.ceil(w/u));trk.innerHTML=new Array(c+1).join(unit);
+  const dist=u*c/2,spd=({local:144,world:108,mkts:96}[k]||108)*remPx()/28.8,dur=dist/spd*1000;trk._a=trk.animate([{transform:'translateX(0)'},{transform:'translateX(-'+dist+'px)'}],{duration:dur,iterations:Infinity,easing:'linear'});trk._dur=dur;applyRate(el)}
+function applyRate(el){const trk=$('.trk',el),a=trk&&trk._a;if(!a)return;const k=el.dataset.bar,stale=!!(D.nat[k]&&Date.now()-D.nat[k]>CFG.news.staleMs);
+  el.classList.toggle('stl',stale);const chip=$('.bst',el);chip.textContent=stale?'STALE · SINCE '+hm(D.nat[k]):'';a.playbackRate=(stale||el._hold)?0:1}
+setInterval(()=>{BARS.forEach(el=>{if(!el.isConnected)return;const trk=$('.trk',el);if(trk&&trk._a&&el._pend&&trk._dur){const p=(trk._a.currentTime||0)%trk._dur;if(p<900||p>trk._dur-300)buildBar(el,el._pend)}if(trk&&trk._a&&trk._a.playState==='idle')buildBar(el,barUnit(el.dataset.bar));if(trk&&trk._a)applyRate(el);else runBar(el)})},1000);
+(RMQ.addEventListener?RMQ.addEventListener('change',()=>{$$('[data-bar]').forEach(el=>{stopBar($('.trk',el));runBar(el)})}):0);
+/* ---------- expand framework: tap a box → it expands in place · tap it again / elsewhere / BACK → it shrinks · a Daybook tab (where the box has a suite) is the way in ---------- */
+const XP={id:null};const X=id=>XP.id===id;
+const CARDS=['wx','cc','tm','nw','wm','mk','sc','cl','sn','yw'];
+const CNAME={wx:'WEATHER',cc:'COMMUTE',tm:'TEAM USAGE',nw:'LIVE TV',wm:'WORLD',mk:'MARKETS',sc:'SECURITY',cl:'CALENDAR',sn:'SCANNER',yw:'YOW'};
+const ENTRY={sc:['day','Home Automation & Security'],mk:['day','Finance & Investments'],cl:['day','Calendar']};
+/* destinations: a real app address in config wins (CFG.suites[name] for a suite, CFG.doors[key] for a section); otherwise the in-file section page opens. Real addresses land at app integration. */
+const okUrl=u=>typeof u==='string'&&/^(https?:\/\/|\/|#|\.\/)/.test(u.trim());
+function dest(k,sub){const s=sub&&CFG.suites?CFG.suites[sub]:null;return okUrl(s)?s.trim():okUrl(CFG.doors[k])?CFG.doors[k].trim():null}
+function tabBtn(id){const e=ENTRY[id];if(!e)return'';const u=dest(e[0],e[1]),lab='Daybook · '+esc(e[1])+' ▸';return u?'<a class="btn tab" href="'+esc(u)+'">'+lab+'</a>':'<button class="btn tab" data-a="go:'+id+'">'+lab+'</button>'}
+const xbtns=id=>X(id)?'<button class="btn bk" data-a="xp:">◂ BACK</button>'+tabBtn(id):'';
+function hdr(id,t,pill,tall){return '<div class="hd'+(tall?' tall':'')+'"><span class="ttl"><i class="led"></i><span class="tt">'+t+'</span></span><span class="hr">'+(pill||'')+xbtns(id)+'</span></div>'}
+function hdw(id,t,pill){setH($('#'+id+' .hdw'),hdr(id,t,pill))}
+const dirOf=h=>{const m=/\b(EB|WB|NB|SB)\b/i.exec(h)||/\b(east|west|north|south)bound\b/i.exec(h);if(!m)return'';const s=m[1].toUpperCase();return s.length===2?s:s[0]+'B'};
+/* ---------- doors: each door = the URGENT / attention overview for its area (Grant) — Command Deck: urgent project/team items · Daybook: personal waiting items (messages/texts, email, missed calls) · Workbench: work email waiting + urgent work to-dos.
+   Values come only from the hub brief / team feed. A missing feed or field reads "not connected"; a stale brief says STALE; nothing is invented. ---------- */
+const DOORS={deck:{n:'COMMAND DECK',d:'Team command centre — projects, lanes and usage',secs:['Projects','Team lanes','Usage']},
+  day:{n:'DAYBOOK',d:'Day to Day · budget · investing · home',secs:['Day to Day','Calendar','Finance & Investments','Home Automation & Security','Budgeting']},
+  wb:{n:'WORKBENCH',d:'Work — jobs, templates and references',secs:['Jobs','Templates','References']}};
+const briefOk=()=>D.brief&&Date.now()-D.brief.at<CFG.brief.staleMs;
+const calOk=()=>D.cal&&Date.now()-D.cal.at<CFG.cal.everyMs*5;
+const NC='<span class="nc">○</span> ';
+const brStaleTxt=()=>'<b class="am">briefing STALE since '+hm(D.brief.at)+'</b>';
+const nOf=(n,w)=>n+' '+w+(n===1?'':'s');
+function deckLine(){const b=D.brief&&D.brief.deck,hf=hfLive(),errs=hf?(D.hubfeed.lanes||[]).filter(l=>/ERROR/i.test(l.state||'')):[];
+  const ln=errs.length?'<b class="am">'+errs.map(l=>esc(l.name)).join(', ')+' lane'+(errs.length>1?'s':'')+' ERROR</b>':hf?'team lanes OK':'';
+  if(!b||(b.n==null&&!b.items))return hf?ln+' · project items not connected':NC+'not connected · urgent project &amp; team items';
+  if(!briefOk())return brStaleTxt();
+  const n=b.n!=null?+b.n:b.items.length,top=b.items&&b.items[0]&&b.items[0].t;
+  const it=n?'<b>'+nOf(n,'item')+'</b> need'+(n===1?'s':'')+' attention'+(top?' · '+esc(top):''):'nothing urgent';
+  return errs.length?ln+' · '+it:it+(ln?' · '+ln:'')}   // a lane in ERROR is the most urgent team item: it leads
+/* the calendar-derived "next" only shows while the calendar feed is fresh; stale says so, not connected says nothing about events (Daybook section page + calendar card) */
+function nextTxt(){const e=(D.cal.events||[]).filter(e=>Date.parse(e.end||e.start)>Date.now()).sort((a,c)=>Date.parse(a.start)-Date.parse(c.start))[0];if(!e)return'nothing further on the calendar';const t=Date.parse(e.start),d=new Date(t);return 'next '+(sameDay(d,new Date())?'':DOW[d.getDay()].slice(0,1)+DOW[d.getDay()].slice(1).toLowerCase()+' ')+(e.allDay?'all day':hm(t))+(CFG.cal.private&&e.title?' '+esc(e.title):'')}
+const calNext=()=>D.cal?(calOk()?nextTxt():'<b class="am">calendar STALE since '+hm(D.cal.at)+'</b> — no event shown as current'):'calendar not connected';
+function dayLine(){const b=D.brief&&D.brief.day;
+  if(!b||(b.msgs==null&&b.email==null&&b.missed==null))return NC+'not connected · messages · email · missed calls';
+  if(!briefOk())return brStaleTxt();
+  const p=[],nc=[];[['msgs','message','messages'],['email','email','email'],['missed','missed call','calls']].forEach(([k,w,g])=>{if(b[k]==null)nc.push(g);else if(+b[k]>0)p.push('<b>'+nOf(+b[k],w)+'</b>')});
+  const t=p.join(' · ');return (p.length?(t.replace(/<[^>]+>/g,'').length<=30?'you have '+t:t):'nothing waiting')+(nc.length?' · '+nc.join(', ')+' not connected':'')}
+function wbLine(){const b=D.brief&&D.brief.wb;
+  if(!b||(b.email==null&&b.urgent==null))return NC+'not connected · work email · urgent to-dos';
+  if(!briefOk())return brStaleTxt();
+  const p=[],nc=[];
+  if(b.email==null)nc.push('work email');else if(+b.email>0)p.push('<b>'+nOf(+b.email,'work email')+'</b> waiting');
+  if(b.urgent==null)nc.push('to-dos');else if(+b.urgent>0)p.push('<b>'+nOf(+b.urgent,'urgent to-do')+'</b>');
+  return (p.length?p.join(' · '):'nothing waiting')+(nc.length?' · '+nc.join(', ')+' not connected':'')}
+const GORD=['OAKLEY','CLAUDE','CHATGPT','GEMINI','PERPLEXITY'];
+const ggH=m=>m.pct==null?'<span class="gg"><span class="gn">'+m.n+'</span><span class="gp">'+esc(m.cnt||'')+' '+esc(m.cntl||'')+'</span></span>':'<span class="gg"><span class="gn">'+m.n+'</span><span class="gr"><span class="gb"><i style="width:'+m.pct+'%"></i></span><span class="gp">'+m.pct+'%</span></span></span>';
+const WBPTS=[['BLUEPRINT','own app'],['KÜL','LIVE PWA'],['TRELLIS','7 planned'],['SITEVISION','ground-up'],['NB APP','not built']];
+function doorSnap(key){if(key==='deck'){const ms=GORD.map(n=>CFG.team.members.find(m=>m.n===n)).filter(Boolean);return '<span class="snap">'+ms.map(ggH).join('')+'</span>'}
+ if(key==='wb')return '<span class="snap">'+WBPTS.map(q=>'<span class="pt"><b>'+q[0]+'</b> '+q[1]+'</span>').join('')+'</span>';
+ if(key==='day')return '<span class="snap">'+DOORS.day.secs.map(q=>'<span class="pt"><b>'+esc(q)+'</b></span>').join('')+'</span>';return ''}
+const STAGS={deck:'SNAPSHOT · '+CFG.team.asOf,day:'IN DAYBOOK · SNAPSHOT',wb:'APPS · SNAPSHOT'};
+function door(id,key,ln){const d=DOORS[key],u=dest(key),b='<span class="in"><span class="nm">'+d.n+'</span><span class="ln">'+ln+'</span><span class="stag">'+STAGS[key]+'</span></span><span class="go">▸</span>'+doorSnap(key);
+  return u?'<a id="'+id+'" class="door" href="'+esc(u)+'">'+b+'</a>':'<button id="'+id+'" class="door" data-a="door:'+key+'" aria-label="'+d.n+' — opens its section page">'+b+'</button>'}
+function rDoors(){setH($('#doors'),door('d-deck','deck',deckLine())+door('d-day','day',dayLine())+door('d-wb','wb',wbLine()))}
+/* ---------- section placeholder view (in-file destination for doors and Daybook tabs) ---------- */
+let SV=null;
+function openSuite(k,sub,from){const u=dest(k,sub);if(u){location.href=u;return}SV={k,sub,from};renderSV()}
+function closeSuite(home){const f=SV&&SV.from;SV=null;renderSV();if(home&&XP.id)xpSet(null);else if(f)setTimeout(()=>{const t=$('#'+f+' .tab');if(t)t.focus({preventScroll:true})},0)}
+function renderSV(){const el=$('#sv');if(!SV){el.hidden=true;el.innerHTML='';el.className='';return}const d=DOORS[SV.k];el.hidden=false;el.className='sv sv-'+SV.k;
+  const subs=d.secs.map((s,i)=>'<div class="svs'+(SV.sub===s?' on':'')+'"><span class="no">0'+(i+1)+'</span><b>'+esc(s)+'</b><span class="ss">'+(SV.sub===s?'opened from Home':'suite in the app')+'</span></div>').join('');
+  el.innerHTML='<div class="svh"><button class="btn" data-a="sv:back">◂ BACK'+(SV.from?' TO '+CNAME[SV.from]:'')+'</button><button class="btn" data-a="sv:home">⌂ HOME</button><div class="crumb">HOME › '+d.n+(SV.sub?' › '+esc(SV.sub.toUpperCase()):'')+'</div></div>'+
+   '<div class="svb"><div class="svid"><span class="k">'+(SV.sub?'DAYBOOK SUITE':'SECTION')+'</span><b>'+(SV.sub?esc(SV.sub):d.n)+'</b><span class="dd">'+esc(d.d)+'</span>'+
+   '<div class="svd"><span class="k">DESTINATION</span><span>This suite opens in the app. It is not part of this standalone Home file, so nothing here is simulated. Real app addresses land at integration: the hub sets <b>'+(SV.sub?'CFG.suites[“'+esc(SV.sub)+'”]':'CFG.doors.'+SV.k)+'</b>, and then this tap goes straight in.</span></div>'+
+   '<div class="svd"><span class="k">ON HOME</span><span>'+(SV.k==='deck'?deckLine():SV.k==='day'?dayLine():wbLine())+'</span></div>'+(SV.k==='day'?'<div class="svd"><span class="k">CALENDAR</span><span>'+calNext()+'</span></div>':'')+'</div><div class="svl">'+subs+'</div></div>'}
+/* ---------- weather · STD / PLOW (PLOW always renders — a filled honest state when ECCC is down) ---------- */
+const seg2=()=>'<div class="seg"><button class="btn" data-a="wx:std" aria-pressed="'+(UI.wx==='std')+'">STD</button><button class="btn pl" data-a="wx:plow" aria-pressed="'+(UI.wx==='plow')+'">PLOW</button></div>';
+const kvh=(k,v,c)=>'<div class="kv"><span class="k">'+k+'</span><span class="v '+(c||'')+'">'+v+'</span></div>';
+const kv1=(k,v,c)=>'<div class="kv h1"><span class="k">'+k+'</span><span class="v '+(c||'')+'">'+v+'</span></div>';
+const tendA=t=>/rising/i.test(t||'')?'↑':/falling/i.test(t||'')?'↓':'';
+function gatTxt(long){const w=D.wxg;if(!w)return[H.wxg.st==='err'?'unreachable':'pending','dm'];const st=wxgStale();if(st)return[num(w.t)+'° '+esc(String(w.cond||''))+' — STALE since '+hm(w.at),'am'];return[num(w.t)+'° '+esc(String(w.cond||'')),'']}
+function gatParts(){const w=D.wxg;if(!w)return{t:'--',c:H.wxg.st==='err'?'unreachable':'pending',k:'dm'};if(wxgStale())return{t:num(w.t)+'°',c:'STALE '+hm(w.at),k:'am'};return{t:num(w.t)+'°',c:esc(String(w.cond||'')),k:''}}
+function roadInf(o,f){if(!o)return['--','dm'];const c=ptype(o.cond),t=o.t;if(c==='z')return['ICE RISK','cr'];if(c==='s')return['SNOW RISK','am'];if(t!=null&&t<=0&&f&&f.snowH>0)return['SLIP RISK','am'];if(t!=null&&t<=0)return['COLD·DRY','ic'];return['NO SNOW','em']}
+function alertTxt(){const w=D.wx;return [].concat((w&&w.warn)||[],D.alr.map(x=>x.txt))}
+function alertKnown(){return !!D.wx||H.alr.st==='live'}
+function rateTxt(){return D.rate?(D.rate.v==null?'NO ECHO':num(D.rate.v,1)+' mm/h'):H.rate.st==='err'?'n/a (feed)':'pending'}
+function dsgHTML(){const d=desig();return '<div class="dsg"><span class="dk">WINTER</span><b class="'+d[1]+'">'+d[0]+'</b><span class="ds tr"><i>UNOFFICIAL</i> · '+esc(d[2])+'</span></div>'}
+function rWx(){const w=D.wx,s=wxSt(),o=w&&w.o,x=X('wx'),pl=UI.wx==='plow',f=w?plowFacts():null,obs=o?(o.ts?hm(o.ts):hm(w.upd)):null;
+  hdw('wx','WEATHER · OTTAWA',bdg(s[1]==='live'&&obs?['LIVE · ECCC '+obs,'live']:s));
+  const g=gatTxt(x),al=alertTxt(),ak=alertKnown(),alV=al.length?(x?al.length+' in effect':esc(String(al[0]).slice(0,26))):ak?'none in effect':'unknown — feed down',alC=al.length?'cr':ak?'em':'dm';
+  const wind=o?(o.ws!=null?num(o.ws)+' km/h '+esc(o.wd||''):'calm'):'--',rd=roadInf(o,f),sn=f?(f.cm?f.cm:'NONE'):'--';
+  const plowCells=k=>k('SNOW FCST',sn)+k('RADAR RATE',rateTxt())+k('VISIBILITY',o?(o.vis!=null?num(o.vis)+' km':'n/r'):'--')+k('WIND CHILL',o?(o.feels!=null?sg(o.feels)+'°':'none'):'--')+k('WIND',wind)+k('ROAD EST.',rd[0],rd[1]);
+  const strip=w&&w.hr.length?'<div class="pst">'+stripSvg(w.hr)+'</div>':'<div class="pst nos">12-h strip needs the ECCC hourly forecast</div>';
+  let L;
+  if(x){const fc=w?w.fc.slice(0,8).map(q=>'<div class="rw fcr"><b>'+esc(fcName(q.n))+'</b><span><i class="num">'+(q.v!=null?sg(q.v)+'°':'--')+'</i> '+esc(q.sum||'')+'</span></div>').join(''):'';
+    L='<div class="x3"><div class="xc"><div class="hero"><b class="big">'+(o?sg(o.t)+'°':'--°')+'</b><div class="wst"><span class="c1">'+(o?esc(o.cond||'--'):'ECCC '+(s[1]==='err'?'UNREACHABLE':'pending'))+'</span><span>FEELS '+(o?(o.feels!=null?sg(o.feels)+'°':'= TEMP'):'--')+'</span><span>'+(o?needle(o)+' ':'')+wind+'</span></div></div><div class="g2">'+kvh('HUMIDITY',o?num(o.hum)+'%':'--')+kvh('PRESSURE',o?num(o.pr,1)+' kPa '+tendA(o.tend):'--')+kvh('DEWPOINT',o?sg(o.dew)+'°':'--')+kvh('VISIBILITY',o?(o.vis!=null?num(o.vis)+' km':'not reported'):'--')+kvh('GUST',o?(o.gust!=null?num(o.gust)+' km/h':'none'):'--')+kvh('GATINEAU',g[0],g[1])+kvh('OBSERVED',o?obs+' · ECCC':'--')+kvh('SUNSET',w&&w.ss?hm(w.ss):'--')+'</div></div>'+
+      '<div class="xc fcl">'+(fc||'<div class="kv fcr"><span class="k">FORECAST</span><span class="v dm">none received from ECCC</span></div>')+'</div><div class="xc">'+dsgHTML()+strip+'<div class="g2">'+plowCells(kvh)+'<div class="kv s2"><span class="k">ECCC ALERTS</span><span class="v '+alC+'">'+alV+'</span></div></div></div></div>'}
+  else if(!pl){const t=w&&w.fc[0],t2=w&&w.fc[1],gp=gatParts();
+    L='<div class="hero"><b class="big">'+(o?sg(o.t)+'°':'--°')+'</b><div class="wst">'+(o?'<span class="c1">'+esc(o.cond||'--')+'</span><span>FEELS '+(o.feels!=null?sg(o.feels)+'°':'= TEMP')+'</span><span>'+needle(o)+' '+wind+'</span>':'<span class="c1">ECCC '+(s[1]==='err'?'UNREACHABLE':'pending')+'</span><span>last good: '+(H.wx.at?hm(H.wx.at):'never')+'</span><span>retry every 10 min</span>')+'</div><div class="gatb"><span class="k">GATINEAU</span><b class="'+gp.k+'">'+gp.t+'</b><span class="'+gp.k+'">'+gp.c+'</span></div></div>'+
+      '<div class="cd tr">'+(t?esc(fcName(t.n))+': '+esc(t.sum||'')+' '+(t.v!=null?sg(t.v)+'°':''):'forecast unavailable — ECCC not reached')+'</div>'+
+      '<div class="g3">'+kv1('HUM',o?num(o.hum)+'%':'--')+kv1('PRES',o?num(o.pr,1):'--')+kv1('DEW',o?sg(o.dew)+'°':'--')+kv1('VIS',o?(o.vis!=null?num(o.vis)+' km':'n/r'):'--')+kv1('GUST',o?(o.gust!=null?num(o.gust):'none'):'--')+(t2?kv1(esc(fcName(t2.n)),t2.v!=null?sg(t2.v)+'°':'--'):kv1('NEXT','--'))+'</div>'}
+  else L=dsgHTML()+'<div class="pgrid">'+plowCells(kvh)+'</div><div class="pbot">'+strip+kv1('ALERTS',alV,alC)+'</div>';
+  setH($('#wx .bd'),x?L:'<div class="wxl'+(pl?' plow':'')+'">'+L+'</div>'+seg2())
+  {const gp3=gatParts(),_wt=$('#ckwx-t'),_wc=$('#ckwx-c');if(_wt){_wt.textContent=gp3.t;_wc.textContent=String(gp3.c||'OTTAWA').toUpperCase().slice(0,16)}}}
+/* ---------- commute + traffic cameras (camera status derived from config/state — CERT PENDING flow) ---------- */
+const tevK=r=>r.t==='INCIDENT'?0:r.c==='ROAD_CLOSED'?1:r.c==='LANES_CLOSED'?2:3;
+function camState(c){const f=frameOf(c.id),stale=f&&camStale(f);return f?(stale?['STALE '+hm(f.ts),'am',f]:['SNAP '+hms(f.ts),'em',f]):!CFG.cam.live?['FEED OFF','dm']:camReady()?(!D.camList?['AWAITING LIST','am']:camNo(c.id)==null?['NOT IN CITY LIST','dm']:['AWAITING FRAME','am']):['CERT PENDING','am']}
+function rCm(){const t=D.tev,s=H.tev,x=X('cc');
+  const st=!t?(s.st==='err'?['EVENTS UNREACHABLE','err']:['PENDING','pend']):Date.now()-t.at>CFG.ev.staleMs?['STALE '+hm(t.at),'stale']:['LIVE · '+t.rows.length+' ACTIVE','live'];
+  hdw('cc','COMMUTE + CAMERAS',bdg(st));
+  const tag=r=>r.t==='INCIDENT'?['INCIDENT','cr']:r.t==='CONSTRUCTION'?['WORKS','am']:[String(r.t||'EVENT').slice(0,8),'ic'];
+  const eff=r=>r.c==='ROAD_CLOSED'?['CLOSED','cr']:r.c==='LANES_CLOSED'?['LANES CUT','am']:['NOTICE','dm'];
+  let ev='',sm='';const n=x?10:2;
+  if(t){const rk=t.rows.slice().sort((a,b)=>tevK(a)-tevK(b)||((b.pr==='HIGH')-(a.pr==='HIGH'))||b.u-a.u).slice(0,n);
+    ev=rk.map(r=>{const g=tag(r),e=eff(r),d=dirOf(r.h);return '<div class="ce" title="'+esc(r.ln||'')+'"><b class="'+g[1]+'">'+g[0]+'</b><span class="tr">'+(d?'<b class="dir">'+d+'</b> ':'')+esc(r.h)+(x&&r.ln?' · '+esc(r.ln):'')+'</span><em class="'+e[1]+'">'+e[0]+'</em></div>'}).join('')||'<div class="ce"><b class="em">CLEAR</b><span class="tr">no active City traffic events</span><em></em></div>';
+    const cl=t.rows.filter(r=>r.c==='ROAD_CLOSED').length;sm=cl+' closed'}
+  else ev='<div class="ce"><b class="dm">--</b><span class="dm tr">City traffic events not received</span><em></em></div>';
+  const cams=SET.map(c=>{const k=camState(c);return '<div class="cam'+(k[2]?' has':'')+'" data-cid="'+c.id+'">'+(k[2]?'<img alt="" src="'+k[2].src+'">':camIcon)+'<span class="cn tr">'+esc(c.s)+'</span><span class="cs '+k[1]+'">'+k[0]+'</span></div>'}).join('');
+  const hd='<div class="ch"><span>KIND</span><span>ROAD · DIRECTION · BETWEEN</span><span>STATUS</span></div>';
+  const dl='<div class="cl sp"><span class="tr"><b>DELAY</b> n/a'+(sm?' · '+sm:'')+'</span><span><b>ONTARIO 511</b> · KEY PENDING</span></div>';
+  const cl='<div class="cl cl2 sp"><span class="tr"><b>CITY CAMERAS</b></span><span>'+(!CFG.cam.live?'feed off':camReady()?'snapshots · 1 request/min'+(D.camNext?' · next '+hm(D.camNext):''):'certificate pending · no requests')+'</span></div>';
+  setH($('#cc .bd'),x?'<div class="x2"><div class="xc">'+hd+'<div class="ces fl1">'+ev+'</div>'+dl+'</div><div class="xc">'+cl+'<div class="cg">'+cams+'</div></div></div>':hd+'<div class="ces">'+ev+'</div>'+dl+'<div class="cg">'+cams+'</div>')}
+function paintCam(){rCm()}
+/* ---------- team usage · one round gauge per member (honest snapshot labels) ---------- */
+const hfLive=()=>D.hubfeed&&D.hubfeed.lanes&&Date.now()-D.hubfeed.at<CFG.hubfeed.staleMs;
+function asShort(ts){const d=new Date(ts);return sameDay(d,new Date())?'as '+hm(ts):pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+hm(ts)}
+function rsShort(ts){const d=new Date(ts),dt=ts-Date.now();return '⟲ '+(dt>0&&dt<864e5?hm(ts):DOW[d.getDay()].slice(0,1)+DOW[d.getDay()].slice(1).toLowerCase()+' '+hm(ts))}
+function teamRows(){const o=D.hubfeed,live=hfLive();
+  return CFG.team.members.map(m=>{let r=Object.assign({},m,{snap:true,asTs:Date.parse(CFG.team.asOf.slice(0,4)+'-'+m.as.replace(' ','T'))});
+    if(live){const l=o.lanes.find(z=>String(z.name||'').toUpperCase().indexOf(m.n)===0);if(l){const ra=l.resetAt?Date.parse(l.resetAt):null,at=Date.parse(o.asOf)||o.at;r=Object.assign(r,{snap:false,src:'hub team feed',ss:'hub feed',as:hm(at),asTs:at,pct:l.pct!=null?l.pct:r.pct,lab:(l.state||'')+(l.pct!=null?' · '+l.pct+'% used':''),resetAt:l.resetAt||null,rl:ra?['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new Date(ra).getDay()]+' '+hm(ra):''})}}
+    const ra=r.resetAt?Date.parse(r.resetAt):null,passed=!!(ra&&ra<Date.now());
+    return Object.assign(r,{passed,stale:r.snap,asD:isFinite(r.asTs)?asShort(r.asTs):r.as,rsT:ra?rsShort(ra):'no reset',rsS:passed?'PASSED':ra?'upcoming':(r.pct==null?(r.cntl||'—'):'none published')})})}
+function gauge(m,big){const p=m.pct,cls=m.stale?'stl':p>=80?'cx':p>=60?'hi':'ok';
+  const ctr=p==null?'<b><span>'+esc(m.cnt||'n/a')+'</span><small>left</small></b>':'<b><span>'+p+'%</span><small>'+esc(m.win||'')+'</small></b>';
+  if(!big)return '<div class="gm" title="'+esc(m.nm+' · '+m.lab+' · source: '+m.src+' · as of '+m.as+(m.resetAt?' · reset '+m.rl+(m.passed?' (passed)':''):' · no reset published'))+'"><span class="gn">'+esc(m.nm)+'</span><div class="ring '+cls+(p==null?' na':'')+'" style="--p:'+(p==null?0:Math.min(100,p))+'">'+ctr+'</div><div class="gls"><span class="gsr">'+esc(m.ss)+'</span></div></div>';
+  return '<div class="gm big"><span class="gn gw2">'+esc(m.nm)+' <i>· '+esc(m.kd)+'</i></span><div class="ring '+cls+(p==null?' na':'')+'" style="--p:'+(p==null?0:Math.min(100,p))+'">'+ctr+'</div><span class="gl gw">'+esc(m.lab)+'</span><span class="gl">source: '+esc(m.src)+'</span><span class="gl">as of '+esc(m.as)+(m.stale?' · SNAPSHOT':' · live')+'</span><span class="gl'+(m.passed?' am':'')+'">'+(m.resetAt?'reset '+esc(m.rl)+(m.passed?' — PASSED, re-capture':' — upcoming'):'no reset published')+'</span></div>'}
+function rTm(){const rows=teamRows(),x=X('tm');hdw('tm','TEAM USAGE',bdg(['SNAPSHOT','stale']));
+  setH($('#tm .bd'),'<div class="tg'+(x?' big':'')+'">'+rows.map(m=>gauge(m,x)).join('')+'</div>'+(x?'<div class="tnote">Values are snapshots copied from each service’s own usage screen on '+CFG.team.asOf+' unless the hub team feed is live. ⟲ = window reset; “passed” means the reset time has gone by, so the value needs re-capturing.</div>':''))}
+/* ---------- live TV card: 16:9 stage (the video fills its area) + LOCAL/WORLD bars ---------- */
+const barHTML=(k,n,c)=>'<div class="bar2 '+c+'" data-bar="'+k+'"><span class="bg2">'+n+'</span><span class="bst"></span><div class="win"><div class="trk"></div></div></div>';
+function nwInit(){setH($('#nw'),'<div class="hdw"></div><div class="nwm"><div class="stage" id="plv"></div><div class="nxs" id="nxs"></div></div><div class="tks">'+barHTML('local','LOCAL','lo')+barHTML('world','WORLD','wo')+'</div>');setStation()}
+function rNews(){const el=$('#nw .hdw');if(!el)return;const st=UI.stn==='dw'?ytSt():['LINK-OUT','pend'];
+  setH(el,'<div class="hd tall"><span class="ttl"><i class="led"></i><span class="tt">LIVE TV</span></span><span class="stn">'+STN.map(t=>'<button class="btn st" data-a="st:'+t.k+'" aria-pressed="'+(UI.stn===t.k)+'" aria-label="'+t.t+(t.k==='dw'?' — embedded stream':' — opens '+t.site)+'">'+t.n+(t.k==='dw'?' ▶':' ↗')+'</button>').join('')+'</span><span class="hr">'+bdg(st)+xbtns('nw')+'</span></div>');
+  if(X('nw')){const s=STN.find(x=>x.k===UI.stn),lst=k=>D.news[k].length?D.news[k].slice(0,5).map(x=>'<div class="hl"><b>'+esc(x.o)+'</b><span>'+esc(x.t)+'</span><i>'+(x.ts?ago(x.ts)+' ago':'')+'</i></div>').join(''):'<div class="hl"><span class="dm">'+esc(barOff(k)[1])+'</span></div>';
+    setH($('#nxs'),'<div class="nxh"><span class="k">ON AIR</span><b>'+esc(s.t)+'</b><span>'+esc(s.w)+'</span></div><div class="nxl"><span class="k lo">LOCAL HEADLINES</span>'+lst('local')+'</div><div class="nxl"><span class="k wo">WORLD HEADLINES</span>'+lst('world')+'</div>')}
+  else setH($('#nxs'),'')}
+/* ---------- world view: layer toggles with ticking counts · layered severity markers on the map · tap for detail ---------- */
+const sevN=['INFO','ELEVATED','CRITICAL'];
+const LAY=[{k:'eq',n:'QUAKES',g:'●',sh:'q',src:'USGS',get:()=>D.wmi.usgs,h:()=>H.wm.usgs},
+  {k:'ds',n:'DISASTER',g:'◆',sh:'d',src:'GDACS · PTWC',get:()=>D.wmi.gdacs.concat(D.tsu?D.tsu.items:[]),h:()=>{const a=H.wm.gdacs,b=H.tsu;return a.st==='live'||b.st==='live'?{st:'live'}:a.st==='stale'||b.st==='stale'?{st:'stale'}:a.st==='pend'&&b.st==='pend'?{st:'pend'}:{st:a.st==='blocked'||b.st==='blocked'?'blocked':'err'}}},
+  {k:'ev',n:'EVENTS',g:'▲',sh:'e',src:'NASA EONET',get:()=>D.wmi.eonet,h:()=>H.wm.eonet},
+  {k:'ca',n:'CA ALERTS',g:'■',sh:'a',src:'ECCC',get:caItems,h:()=>{const a=H.alr;return D.wx&&a.st!=='live'?{st:'live'}:a}}];
+const LAYX={};LAY.forEach(l=>LAYX[l.k]=l);
+function caItems(){const w=D.wx;return D.alr.concat((w&&w.warn||[]).map((x,i)=>({src:'ECCC',id:'cp'+i,c:[HOME.lon,HOME.lat],t:w.upd||w.at,sev:1,txt:'OTTAWA · '+x,link:''})))}
+function allEv(){const a=[];LAY.forEach(l=>{if(UI.lay[l.k])l.get().forEach(i=>a.push(Object.assign({ly:l.k,key:l.k+':'+i.id},i)))});return a.sort((x,y)=>y.sev-x.sev||y.t-x.t)}
+const lyN=l=>{const h=l.h()||{},n=l.get().length;return (h.st==='err'||h.st==='blocked')&&!n?null:h.st==='pend'&&!n?undefined:n};
+/* fresh-event ripple: only for events that arrive after the first successful load of their layer (true and live) */
+const LSEEN={},FRESH=new Map();
+function markFresh(){const now=Date.now();LAY.forEach(l=>{const it=l.get(),h=l.h()||{};if(!LSEEN[l.k]){if(h.st==='live'||it.length){LSEEN[l.k]=new Set(it.map(i=>l.k+':'+i.id))}return}it.forEach(i=>{const k=l.k+':'+i.id;if(!LSEEN[l.k].has(k)){LSEEN[l.k].add(k);FRESH.set(k,now)}})});FRESH.forEach((t,k)=>{if(now-t>20000)FRESH.delete(k)})}
+/* count ticking: numbers count up/down only when the real count changes */
+const PREV={};
+function tickCounts(){$$('[data-ct]').forEach(el=>{const k=el.dataset.ct,to=+el.dataset.v;if(!isFinite(to)){PREV[k]=null;return}const from=PREV[k];PREV[k]=to;if(from==null||from===to||rm())return;const g=el.dataset.g||'',t0=performance.now(),dur=700;
+  el.classList.add('tk');const step=t=>{const p=Math.min(1,(t-t0)/dur),v=Math.round(from+(to-from)*(1-Math.pow(1-p,3)));if(el.isConnected)el.innerHTML='<i class="gg">'+g.trim()+'</i> '+v;if(p<1)requestAnimationFrame(step);else setTimeout(()=>el.classList.remove('tk'),600)};requestAnimationFrame(step)})}
+function rWmHead(){const tot=LAY.reduce((a,l)=>a+(UI.lay[l.k]?(lyN(l)||0):0),0);
+  setH($('#wm .hdw'),'<div class="hd slim"><span class="ttl"><i class="led"></i><span class="tt">WORLD</span></span><span class="lyr">'+LAY.map(l=>{const n=lyN(l);return '<button class="btn ly" data-a="ly:'+l.k+'" aria-pressed="'+(!!UI.lay[l.k])+'" aria-label="'+l.n+' layer ('+l.src+')'+(n==null?' — OFF: source not answering':'')+'" title="'+l.n+' layer ('+l.src+')'+(n==null?' — OFF: source not answering':'')+'"><span>'+l.n+'</span><b class="'+(n==null?'cr':n===undefined?'dm':'')+'" data-ct="'+l.k+'" data-g="'+l.g+' " data-v="'+(n==null||n===undefined?'':n)+'"><i class="gg">'+l.g+'</i> '+(n==null?'<i class="of">OFF</i>':n===undefined?'…':n)+'</b></button>'}).join('')+'<span class="ltot"><span>EVENTS</span><b data-ct="tot" data-v="'+tot+'">'+tot+'</b></span></span><span class="hr">'+xbtns('wm')+'</span></div>');tickCounts()}
+function rEv(){const l=$('#evl');if(!l)return;const a=allEv(),x=X('wm');const rem=remPx(),gap=.2*rem,h=l.clientHeight||1,per=Math.max(1,Math.floor((h+gap)/(2.75*rem+gap)));
+  let pg=a.slice(0,per);const sel=UI.sel&&a.find(e=>e.key===UI.sel);if(sel&&!pg.includes(sel))pg=[sel].concat(pg.slice(0,per-1));
+  const row=e=>{const s=UI.sel===e.key,ll=e.c?(Math.abs(e.c[1]).toFixed(1)+(e.c[1]>=0?'N ':'S ')+Math.abs(e.c[0]).toFixed(1)+(e.c[0]>=0?'E':'W')):'no position';const L1=LAYX[e.ly];
+    return '<button class="ev s'+e.sev+(s?' sel':'')+(FRESH.has(e.key)?' nw':'')+'" data-a="ev:'+esc(e.key)+'"><span class="h tr"><i>'+L1.g+' '+sevN[e.sev]+'</i> '+esc(e.txt)+'</span><span class="p tr">'+(s?hm(e.t)+' · '+e.src+' · '+ll+(e.mag?' · M'+(+e.mag).toFixed(1):''):ago(e.t)+' ago · '+e.src+' · '+L1.n.toLowerCase())+'</span></button>'};
+  let html=pg.map(row).join('');
+  if(!a.length){const off=LAY.filter(z=>UI.lay[z.k]&&(z.h()||{}).st&&/err|blocked/.test(z.h().st)).map(z=>z.n);html='<div class="ev0">'+(Object.values(UI.lay).some(Boolean)?(off.length?'NO EVENTS RECEIVED · '+off.join(', ')+' offline':'NO EVENTS IN THE ENABLED LAYERS'):'ALL LAYERS OFF — tap a layer to switch it on')+'</div>'}
+  setH(l,html);setH($('#evp'),a.length?Math.min(per,a.length)+' of '+a.length+(x?' · most severe first':' · tap for all'):'')}
+function rWm(){if(!$('#evl'))return;markFresh();rWmHead();rEv();scopeUpd();plot();if(X('wm'))rSrcX()}
+function rSrcX(){const S=[['USGS · quakes',H.wm.usgs],['GDACS · disasters',H.wm.gdacs],['PTWC · tsunami',H.tsu],['NASA EONET · events',H.wm.eonet],['ECCC · Canada alerts',H.alr],['ECCC · radar',{st:geSt()[1]==='live'?'live':geSt()[1]==='err'?'err':'stale'}]];
+  setH($('#wsx'),S.map(r=>{const h=r[1]||{},c=h.st==='live'?'em':h.st==='pend'?'dm':h.st==='stale'||h.st==='part'?'am':'cr';return '<div class="rw '+(c==='em'?'on':c==='am'?'wa':c==='cr'?'er':'')+'"><b>'+esc(r[0])+'</b><span class="'+c+'">'+({live:'LIVE',stale:'STALE',part:'PARTIAL',pend:'PENDING',err:'OFFLINE',blocked:'BLOCKED — needs hub proxy'}[h.st]||h.st||'')+(h.at?' · '+hm(h.at):'')+'</span></div>'}).join(''))}
+function plot(){if(!GE.map||!GE.qg)return;GE.qg.clearLayers();const reg=UI.sm==='reg';
+  allEv().filter(x=>x.c&&isFinite(x.c[0])&&isFinite(x.c[1])).forEach(x=>{const L1=LAYX[x.ly],z=x.ly==='eq'&&x.mag?.5+Math.max(0,x.mag-4.5)*.22:.55+x.sev*.18,fr=FRESH.has(x.key)&&!rm();
+    const m=L.marker([x.c[1],x.c[0]],{icon:L.divIcon({className:'',html:'<i class="mk '+L1.sh+' s'+x.sev+(UI.sel===x.key?' sel':'')+(fr?' fr':'')+'" style="--z:'+(z*1.45*(reg?1.2:1)).toFixed(2)+'rem"><b></b></i>',iconSize:[0,0]}),keyboard:false,riseOnHover:true,zIndexOffset:x.sev*100+(UI.sel===x.key?1000:0)}).addTo(GE.qg);
+    m.on('click',()=>{UI.sel=UI.sel===x.key?null:x.key;UI.tap=Date.now();rEv();plot()})});
+  if(reg&&D.tev)D.tev.rows.filter(r=>r.ll).slice(0,40).forEach(r=>L.marker([r.ll[1],r.ll[0]],{icon:L.divIcon({className:'',html:'<i class="tv'+(r.t==='INCIDENT'?' i':'')+'"></i>',iconSize:[0,0]}),interactive:false,keyboard:false}).addTo(GE.qg));
+  if(GE.cov&&GE.cov.setOpacity)GE.cov.setOpacity(reg?.4:0);if(GE.radar&&GE.radar.setOpacity)GE.radar.setOpacity(reg?.8:.55);
+  if(GE.rg){if(reg&&!GE.map.hasLayer(GE.rg))GE.rg.addTo(GE.map);if(!reg&&GE.map.hasLayer(GE.rg))GE.map.removeLayer(GE.rg)}}
+function scopeView(){if(!GE.map)return;const el=$('#sm'),d=el.clientWidth,hh=el.clientHeight;if(d<20||hh<20)return;GE.map.invalidateSize({animate:false});
+  if(UI.sm==='reg'){const res=150000/Math.min(d,hh*1.6),z=Math.round(Math.max(3,Math.min(10,Math.log2(156543.03*Math.cos(HOME.lat*Math.PI/180)/res)))*4)/4;GE.map.setView([HOME.lat,HOME.lon],z,{animate:false})}
+  else{const z=Math.max(0,Math.round(Math.log2(Math.max(d/1.15,hh*1.6)/256)*4)/4);GE.map.setView([24,-35],z,{animate:false})}
+  GE.dz=UI.sm+d+'x'+hh}
+function geSt(){if(!window.L)return['MAP BLOCKED','err'];if(GE.mode==='none')return['NO RADAR','err'];if(GE.mode==='rv')return['RAINVIEWER','stale'];if(!D.radar)return['PENDING','pend'];return Date.now()-D.radar.t>1800000?['STALE '+hm(D.radar.t),'stale']:['ECCC RADAR','live']}
+const geT=()=>GE.mode==='rv'&&GE.rv?hm(GE.rv.t):D.radar?hm(D.radar.t):'--';
+function scopeUpd(){const s=geSt(),el=$('#sm');if(!el)return;const n=allEv().filter(x=>x.c).length;
+  setH($('#shud'),!window.L?'<span>MAP LIBRARY BLOCKED — events list still live</span>':UI.sm==='reg'?'<span><b>OTTAWA–GATINEAU</b> · radar '+(GE.mode==='rv'?'RainViewer':geK()==='RSNO'?'snow':'rain')+' '+(s[1]==='live'?geT():esc(s[0]))+'</span><span class="mt">© OSM</span>':'<span><b>WORLD</b> · '+n+' on map</span><span class="mt">© OSM</span>');
+  setH($('#smt'),UI.sm==='reg'?'REGION ⇄':'WORLD ⇄');
+  if(GE.map&&GE.dz!==UI.sm+el.clientWidth+'x'+el.clientHeight){scopeView();plot()}}
+function ping(kind){}
+/* ---------- markets: TradingView tape (DELAYED) + real-data chart tiles, every series labelled LIVE / DELAYED / STALE ---------- */
+function tape(){const cfg={symbols:[{proName:'FOREXCOM:SPXUSD',title:'S&P 500'},{proName:'TSX:TSX',title:'S&P/TSX'},{proName:'FX:USDCAD',title:'USD/CAD'},{proName:'BITSTAMP:BTCUSD',title:'BTC/USD'},{proName:'TVC:GOLD',title:'Gold'},{proName:'TVC:USOIL',title:'WTI'}],showSymbolLogo:false,colorTheme:'dark',isTransparent:true,displayMode:'compact',locale:'en'};
+  const t=$('#tape');t.innerHTML='<iframe title="TradingView ticker tape (delayed)" src="https://s.tradingview.com/embed-widget/ticker-tape/?locale=en#'+encodeURIComponent(JSON.stringify(cfg))+'" referrerpolicy="origin" sandbox="allow-scripts allow-same-origin allow-popups"></iframe><div class="tvm">TradingView tape did not load (blocked or offline) — the chart tiles below still run on their own feeds</div>';
+  const f=$('iframe',t);f.addEventListener('load',()=>{f.dataset.l=1});setTimeout(()=>{if(!f.dataset.l)t.classList.add('fail')},15000)}
+/* chart tiles: four fixed slots, each with a persistent chart layer (so a TradingView frame is never rebuilt on repaint) and a text layer.
+   Every tile always shows a chart area — a real line from its own source, a TradingView mini chart (delayed) where our own source is browser-blocked, or an honest hatched "no chart" state with the reason. Never blank, never a fake line. */
+const MKS=['btc','cad','tsx','spx'];
+function tvMini(sym){return 'https://s.tradingview.com/embed-widget/mini-symbol-overview/?locale=en#'+encodeURIComponent(JSON.stringify({symbol:sym,width:'100%',height:'100%',locale:'en',dateRange:CFG.markets.tvRange,colorTheme:'dark',isTransparent:true,autosize:true,largeChartUrl:'',chartOnly:true,noTimeScale:true,trendLineColor:'rgba(250, 204, 21, 1)',underLineColor:'rgba(250, 204, 21, 0.2)',underLineBottomColor:'rgba(250, 204, 21, 0)'}))}
+function setChart(k,o){const el=$('#mt-'+k+' .chl');if(!el)return;
+  if(o.ck==='tv'){if(el.dataset.k==='tv'&&el.dataset.s===o.sym)return;el.dataset.k='tv';el.dataset.s=o.sym;el.classList.remove('tvf');
+    el.innerHTML='<iframe title="'+esc(o.lb)+' mini chart — TradingView (delayed)" src="'+tvMini(o.sym)+'" referrerpolicy="origin" sandbox="allow-scripts allow-same-origin" tabindex="-1"></iframe>';
+    const f=$('iframe',el);f.addEventListener('load',()=>{f.dataset.l=1});setTimeout(()=>{if(f.isConnected&&!f.dataset.l){el.classList.add('tvf');rMk()}},15000);return}
+  el.dataset.k=o.ck;el.dataset.s='';el.classList.remove('tvf');setH(el,o.ck==='svg'?spk(o.ser,o.cst,o.chg==null||o.chg>=0):'')}
+function putTile(k,o){const t=$('#mt-'+k);if(!t)return;const up=o.chg==null?null:o.chg>=0;
+  t.className='mt4 c-'+o.ck+(o.dim?' stl':'');if(o.tip)t.title=o.tip;else t.removeAttribute('title');setChart(k,o);
+  setH($('.txl',t),'<span class="a"><b>'+o.lb+'</b><i class="tag '+o.tc+'">'+o.tag+'</i></span><span class="b"><b class="num">'+(o.val||'')+'</b>'+(o.cstx?'<i class="cst">'+o.cstx+'</i>':o.note?'<i class="cnt">'+o.note+'</i>':'<i class="'+(o.dim||up==null?'dm':up?'em':'cr')+'">'+(o.chg==null?'':(up?'▲':'▼')+Math.abs(o.chg).toFixed(2)+'%')+'</i>')+'</span>')}
+const lastCh=p=>{const a=p[p.length-1][1],b=p[p.length-2][1];return[a,(a-b)/b*100]};
+/* daily series age by the observation date in the data (not by when we fetched it): an observation more than 4 days old is STALE */
+const obsT=d=>Date.parse(d+'T16:30:00'),dailyStale=d=>Date.now()-obsT(d)>4*864e5;
+function dailyO(lb,p,src,x,dec,long){const last=p[p.length-1][0],st=dailyStale(last),f=lastCh(p);
+  return {lb,val:dec?f[0].toFixed(dec):f[0].toLocaleString('en-CA',{maximumFractionDigits:1}),chg:f[1],ck:'svg',ser:p.map(r=>r[1]),cst:st,tag:st?'STALE '+last.slice(5):'DELAYED'+(x?' · '+src+' '+last.slice(5):''),tc:st?'st':'dl',dim:st,
+    tip:long+' — observation '+last+(st?' — STALE: no newer observation':' — delayed daily value')}}
+const noChart=(lb,err,why)=>({lb,val:'—',tag:err?'OFFLINE':'PENDING',tc:err?'of':'pd',dim:1,ck:'none',note:'∿ '+(err?'no chart · '+why:'chart pending')});
+/* BTC: the price and the chart each age on their own clock (price: its source's last-updated time; chart: its own last data point) */
+function rMk(){const now=Date.now(),x=X('mk'),b=D.btc,bs=D.btcS,bo=D.boc,q=D.stq;
+  const cAt=bs?bs.p[bs.p.length-1][0]:null,cst=!!(bs&&now-cAt>CFG.markets.chartStaleMs);
+  if(b){const pt=b.t||b.at,pst=now-pt>CFG.markets.btcStaleMs,span=bs&&bs.p.length>1?bs.p[bs.p.length-1][0]-bs.p[0][0]:0,ch=b.ch!=null?b.ch:span>20*36e5?(b.usd-bs.p[0][1])/bs.p[0][1]*100:null;   // a non-CoinGecko price: change vs the 24 h chart's first point
+    putTile('btc',{lb:'BTC/USD',val:Math.round(b.usd).toLocaleString('en-CA'),chg:ch,ck:bs?'svg':'none',ser:bs?bs.p.map(r=>r[1]):null,cst,tag:pst?'STALE '+hm(pt):'LIVE'+(x?' · '+b.src+' '+hm(pt):''),tc:pst?'st':'lv',dim:pst,
+      cstx:cst?(x?'chart STALE since '+hm(cAt):'∿ STALE'):null,note:bs?null:'∿ '+(H.mk.btcSErr?'no chart · sources down':'chart pending'),
+      tip:'BTC/USD price: '+b.src+' as of '+hm(pt)+(pst?' (STALE)':'')+(b.ch==null&&ch!=null?' · change vs the 24 h chart start':'')+' · 24 h chart: '+(bs?bs.src+' to '+hm(cAt)+(cst?' (chart STALE)':''):(H.mk.btcSErr||'pending'))})}
+  else putTile('btc',bs?{lb:'BTC/USD',val:'—',tag:H.mk.btcErr?'OFFLINE':'PENDING',tc:H.mk.btcErr?'of':'pd',dim:1,ck:'svg',ser:bs.p.map(r=>r[1]),cst:1,note:'price '+(H.mk.btcErr?'offline':'pending')}:noChart('BTC/USD',H.mk.btcErr,'sources down'));
+  if(bo&&bo.fx.length>1)putTile('cad',dailyO('USD/CAD',bo.fx,bo.src==='ECB'?'ECB ref':'BoC',x,4,bo.src==='ECB'?'USD/CAD — ECB reference rate via Frankfurter (Bank of Canada '+(CFG.PROXY?'unavailable':'blocked in this browser; hub proxy at integration')+')':'USD/CAD — Bank of Canada daily rate'));
+  else if(q.cad&&q.cad.p.length>1)putTile('cad',dailyO('USD/CAD',q.cad.p,'Stooq',x,4,'USD/CAD — Stooq daily close'));
+  else putTile('cad',noChart('USD/CAD',H.mk.fxErr,'BoC + ECB down'));
+  [['tsx','TSX'],['spx','S&P 500']].forEach(([k,n])=>{const d=q[k];
+    if(d&&d.p.length>1){putTile(k,dailyO(n,d.p,'Stooq',x,null,n+' — Stooq daily close'));return}
+    const fl=$('#mt-'+k+' .chl.tvf');
+    putTile(k,{lb:n,val:'',ck:'tv',sym:CFG.markets.tv[k],tag:fl?'OFFLINE':'DELAYED',tc:fl?'of':'dl',dim:!!fl,note:fl?'∿ chart did not load':(x?'TradingView mini chart · '+CFG.markets.tvRange+' · delayed':'TradingView · '+CFG.markets.tvRange),
+      tip:n+' — TradingView mini chart ('+CFG.markets.tvRange+', delayed). Our own Stooq daily closes: '+(D.stqE[k]==='blocked'?'blocked in this browser (no CORS) — the hub proxy enables them at integration':D.stqE[k]?'unreachable':'pending')})});
+  const srcs=[b&&b.src,bs&&bs.src!==(b&&b.src)?bs.src:null,bo?(bo.src==='ECB'?'ECB':'BoC'):null,(!q.tsx||!q.spx)?'TradingView':null,(q.tsx||q.spx)?'Stooq':null].filter(Boolean);
+  hdw('mk','MARKETS',(srcs.length?'<span class="msrc" title="data now drawing: '+[...new Set(srcs)].join(' · ')+'">'+[...new Set(srcs)].join(' · ')+'</span>':'')+bdg(['TAPE DELAYED','stale']))}
+/* ---------- security: CAMERAS (one box per zone; state derived from config / hub) ⇄ HOME MONITORING ---------- */
+const secStale=()=>D.sec&&Date.now()-D.sec.at>CFG.security.staleMs;
+const HOMEM=[['DOOR/WIN','DOORS / WINDOWS','doors','needs contact sensors'],['LOCKS','LOCKS','locks','needs smart locks'],['SMOKE/CO','SMOKE / CO','smoke','needs detectors'],['WATER','WATER / LEAK','water','needs leak sensors'],['TEMP','TEMPERATURE','temp','needs a thermostat or sensor'],['ALARM','ALARM STATE','alarm','needs an alarm panel']];
+function zoneCam(z,i){const hub=D.sec&&D.sec.cams&&D.sec.cams.find(c=>String(c.name||'').toUpperCase()===z.n),loc=D.hcam[i];
+  if(hub&&hub.src){const ts=Date.parse(hub.ts)||D.sec.at,st=Date.now()-ts>CFG.homecams.staleMs;return{img:hub.src,s:st?'STALE '+hm(ts):'SNAP '+hm(ts),c:st?'am':'em',why:'hub-supplied frame'}}
+  if(z.url){if(loc&&loc.src&&!(loc.err>loc.ts)){const st=Date.now()-loc.ts>CFG.homecams.staleMs;return{img:loc.src,s:st?'STALE '+hm(loc.ts):'SNAP '+hm(loc.ts),c:st?'am':'em',why:'camera URL configured'}}return{s:loc&&loc.err?'NO SIGNAL':'CONNECTING',c:loc&&loc.err?'cr':'am',why:'camera URL configured'}}
+  return{s:'NO CAMERA',c:'dm',why:'no camera configured for this zone'}}
+function rSc(){const x=X('sc'),cam=UI.fl==='cam',hs=D.sec&&D.sec.home;
+  setH($('#sc .hdw'),'<div class="hd slim"><span class="ttl"><i class="led"></i><span class="tt">SECURITY</span></span><span class="hr flip"><button class="btn" data-a="sf:cam" aria-pressed="'+cam+'">CAMERAS</button><button class="btn" data-a="sf:home" aria-pressed="'+!cam+'">HOME MONITORING</button>'+xbtns('sc')+'</span></div>');
+  let t;
+  if(cam){const zs=CFG.homecams.zones;t='<div class="cbx">'+zs.map((z,i)=>{const k=zoneCam(z,i);return '<div class="cb'+(k.img?' on':'')+'">'+(k.img?'<img alt="" src="'+esc(k.img)+'">':camIcon)+'<b>'+esc(z.n)+'</b><span class="'+k.c+'">'+k.s+'</span>'+(x?'<small>'+esc(k.why)+(secStale()?' · hub STALE':'')+'</small>':'')+'</div>'}).join('')+'</div>'}
+  else t='<div class="sg h2">'+HOMEM.map(m=>{const v=hs&&hs[m[2]]&&hs[m[2]].v!=null?hs[m[2]]:null;return '<div class="zt rowz'+(v?' on':'')+'"><b>'+(x?m[1]:m[0])+'</b><span>'+(v?esc(String(v.v))+(secStale()?' · STALE':''):(x?'NOT CONNECTED':'NO SENSOR'))+'</span>'+(x?'<span>'+(v?'hub-supplied '+(v.ts?hm(Date.parse(v.ts)):''):'no sensor · '+m[3])+'</span>':'')+'</div>'}).join('')+'</div>';
+  setH($('#sc .bd'),t)}
+/* ---------- calendar (privacy-gated): real week strip + next ---------- */
+const DOW=['SUN','MON','TUE','WED','THU','FRI','SAT'],MON=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+const sameDay=(a,b)=>a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();
+function rCl(){const c=D.cal,x=X('cl'),now=new Date(),evs=c&&c.events?c.events:[];
+  hdw('cl','CALENDAR',bdg(c?(Date.now()-c.at>CFG.cal.everyMs*5?['STALE '+hm(c.at),'stale']:['CONNECTED','live']):['NOT CONNECTED','pend']));
+  const cell=(d,i,big)=>{const n=evs.filter(e=>{const t=new Date(Date.parse(e.start));return sameDay(t,d)}).length,we=d.getDay()===0||d.getDay()===6;return '<div class="dy'+(i===0?' td':'')+(we?' we':'')+'"><span>'+(i===0?'TODAY':DOW[d.getDay()])+'</span><b>'+d.getDate()+'</b>'+(big?'<i>'+(c?(n?n+' ev':'—'):MON[d.getMonth()])+'</i>':c&&n?'<i class="ec" title="'+n+' event'+(n>1?'s':'')+' on the calendar">'+n+'</i>':'')+'</div>'};
+  const days=[...Array(x?14:7)].map((_,i)=>{const d=new Date(now);d.setDate(now.getDate()+i);return d});
+  const nxt=evs.filter(e=>Date.parse(e.end||e.start)>Date.now()).sort((a,b)=>Date.parse(a.start)-Date.parse(b.start))[0];
+  const nx=c?(Date.now()-c.at>CFG.cal.everyMs*5?'<b class="am">STALE since '+hm(c.at)+'</b> · no event shown as current':nxt?(nxt.allDay?'all day':hm(Date.parse(nxt.start)))+' · '+(CFG.cal.private&&nxt.title?esc(nxt.title):'title hidden (private)'):'nothing further this week'):'not connected · privacy-gated';
+  setH($('#cl .bd'),'<div class="wk'+(x?' big':'')+'">'+days.map((d,i)=>cell(d,i,x)).join('')+'</div><div class="rows">'+'<div class="rw '+(c?'on':'wa')+'"><b>NEXT</b><span>'+nx+'</span></div>'+(x?'<div class="rw"><b>TODAY</b><span>'+(c?evs.filter(e=>sameDay(new Date(Date.parse(e.start)),now)).length+' events today':'no events shown · nothing invented')+'</span></div><div class="rw"><b>GATE</b><span>titles show only when the private presentation is on (CFG.cal.private)</span></div><div class="rw"><b>SOURCE</b><span>hub-supplied calendar JSON at app integration (CFG.cal.url)</span></div>':'')+'</div>')}
+/* ---------- scanner: real public-source summary + identified link-outs (no invented calls, no fake audio) ---------- */
+function rSn(){const x=X('sn'),t=D.tev,inc=t?t.rows.filter(r=>r.t==='INCIDENT').length:null,cl=t?t.rows.filter(r=>r.c==='ROAD_CLOSED').length:0,stl=!!(t&&Date.now()-t.at>CFG.ev.staleMs);
+  hdw('sn','SCANNER',bdg(['ENCRYPTED · NO TEXT FEED','pend']));
+  const L=(u,k,n,w)=>'<a class="btn lk" href="'+u+'" target="_blank" rel="noopener noreferrer" title="'+n+' — '+w+' (opens a new tab)"><b>'+k+'</b><span class="ar">↗</span>'+(x?'<small>'+n+'</small><i>'+w+'</i>':'')+'</a>';
+  const lks='<div class="lks">'+L(CFG.links.bcast,'AUDIO','Broadcastify','third-party scanner audio')+L(CFG.links.fire,'FIRE','Ottawa Fire Services','official page')+L(CFG.links.police,'POLICE','Ottawa Police Service','official page')+'</div>';
+  if(!x){const n=t?'<b'+(stl?' class="am"':'')+'>'+inc+(stl?' · STALE '+hm(t.at):'')+'</b>':'<b>—</b> feed not received';
+    setH($('#sn .bd'),'<div class="snr"><div class="ssum one"><span>City traffic incidents · '+n+' · not a dispatch feed</span></div></div>');return}
+  const cnt=t?'<b'+(stl?' class="am"':'')+'>City traffic incidents: '+inc+(stl?' (STALE '+hm(t.at)+')':'')+'</b>':'<b>City traffic incidents: —</b> feed not received';
+  setH($('#sn .bd'),'<div class="ssum">'+cnt+' · not a dispatch feed</div><div class="rows"><div class="rw wa"><b>STATUS</b><span>Ottawa police &amp; fire radio is encrypted — there is no public text dispatch feed</span></div><div class="rw '+(t?'on':'er')+'"><b>COUNT</b><span>'+(t?inc+' City of Ottawa traffic incident'+(inc===1?'':'s')+' · '+cl+' road closure'+(cl===1?'':'s')+' — from the City traffic feed, not emergency calls':'City traffic events not received')+'</span></div><div class="rw"><b>LINKS</b><span>Broadcastify (third-party scanner audio) · Ottawa Fire Services · Ottawa Police Service — official pages, open in a new tab</span></div><div class="rw"><b>RULE</b><span>no invented calls, no fake audio — link-outs only</span></div></div>'+lks)}
+/* ---------- YOW: identity + city weather (explicitly not an airport feed); flights NOT CONNECTED ---------- */
+function rYw(){const o=D.wx&&D.wx.o,x=X('yw');hdw('yw','YOW · AIRPORT',bdg(['NO FLIGHT FEED','pend']));
+  setH($('#yw .bd'),'<div class="rows"><div class="rw on"><b>CYOW</b><span>Macdonald-Cartier Intl</span></div><div class="rw"><b>CITY WX</b><span><em>not an airport feed</em> · '+(o?num(o.t)+'° '+esc(o.cond||''):'weather pending')+'</span></div>'+(x?'<div class="rw wa"><b>FLIGHTS</b><span>NOT CONNECTED — live flights are a paid route, pending Grant’s call. No flights are invented.</span></div><div class="rw"><b>SOURCE</b><span>ECCC Ottawa city page'+(o&&o.stn?' (observed at '+esc(o.stn)+')':'')+' — public city weather, not an airport or aviation (METAR) feed</span></div>':'')+'</div>')}
+/* ---------- paint dispatch · expand/collapse · navigation ---------- */
+function renderAll(){rWx();rCm();rTm();rNews();rWm();rMk();rSc();rCl();rSn();rYw();rDoors();if(SV)renderSV()}
+function paint(id){const f={wx:()=>{rWx();rYw();rWm()},ge:()=>{scopeUpd();rCm()},trf:()=>{rCm();rSn();plot()},mk:rMk,news:()=>{rNews()},wm:()=>{rWm()},sec:rSc,os:rTm,cal:()=>{rCl();rDoors()},scn:rSn,brief:rDoors}[id];if(f)f()}
+function healthRender(){}
+function xpSet(id){XP.id=id;CARDS.forEach(c=>$('#'+c).classList.toggle('xp',c===id));$('#deck').classList.toggle('xo',!!id);document.documentElement.classList.toggle('xpo',!!id);renderAll();setTimeout(()=>{GE.dz='';scopeUpd();rEv();BARS.forEach(e=>{const t=$('.trk',e);if(t){stopBar(t);runBar(e)}})},80)}
+function clock(){const d=new Date();$('#ck').textContent=pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());$('#dt').textContent=d.toLocaleDateString('en-CA',{weekday:'short',day:'2-digit',month:'short'}).toUpperCase().replace(/\./g,'');$('#ut').textContent=pad(d.getUTCHours())+':'+pad(d.getUTCMinutes())+'Z'}
+/* sizing: the wall fills one screen at 1024×600 and up; below that (phones, small windows) it stacks into a scrolling column (2 columns when wide enough) so nothing is crushed */
+function fit(){const w=innerWidth,h=innerHeight,stk=w<1024||h<600,R=document.documentElement;R.classList.toggle('stk',stk);R.classList.toggle('c2',stk&&w>=700);
+  const s=stk?1:Math.min(w/1024,h/600);R.style.fontSize=(16*s)+'px';R.style.setProperty('--s',s);GE.dz='';scopeUpd();rEv();BARS.forEach(e=>{if(e.isConnected){const t=$('.trk',e);if(t){stopBar(t);runBar(e)}}})}
+let fitT=0;addEventListener('resize',()=>{clearTimeout(fitT);fitT=setTimeout(fit,120)});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(SV)closeSuite(false);else if(XP.id)xpSet(null)}});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');
+  if(b){const a=b.dataset.a,i=a.indexOf(':'),k=a.slice(0,i),v=a.slice(i+1);
+    if(k==='wx'){UI.wx=v;rWx()}else if(k==='st'){UI.stn=v;setStation()}else if(k==='sm'){UI.sm=UI.sm==='reg'?'world':'reg';GE.dz='';scopeUpd();plot()}
+    else if(k==='ly'){UI.lay[v]=UI.lay[v]?0:1;if(UI.sel&&UI.sel.indexOf(v+':')===0)UI.sel=null;rWm()}else if(k==='ev'){UI.sel=UI.sel===v?null:v;UI.tap=Date.now();rEv();plot();const e2=allEv().find(z=>z.key===UI.sel);if(e2&&e2.c&&GE.map&&UI.sm==='world')GE.map.panTo([e2.c[1],e2.c[0]],{animate:!rm()})}
+    else if(k==='sf'){UI.fl=v;rSc()}else if(k==='xp'){xpSet(null)}
+    else if(k==='go'){const en=ENTRY[v];if(en)openSuite(en[0],en[1],v)}
+    else if(k==='door'){openSuite(v,null,null)}
+    else if(k==='sv'){closeSuite(v==='home')}
+    return}
+  if(e.target.closest('a,iframe,#sv'))return;
+  const c=e.target.closest('.card');if(c){xpSet(XP.id?null:c.id);return}
+  if(XP.id&&!e.target.closest('#doors'))xpSet(null)});
+setInterval(()=>{clock();const m=Math.floor(Date.now()/60000);if(m!==D._m){D._m=m;rWx();rCm();rMk();rWm();rCl();rDoors();rTm();rYw()}const sk=secStale();if(sk!==D._sk){D._sk=sk;rSc()}if(FRESH.size){const n=FRESH.size;markFresh();if(FRESH.size!==n)plot()}},1000);
+/* ---------- boot ---------- */
+['wx','cc','tm','sc','cl','sn','yw'].forEach(id=>setH($('#'+id),'<div class="hdw"></div><div class="bd"></div>'));
+setH($('#mk'),'<div class="hdw"></div><div class="bd"><div class="tape" id="tape"></div><div class="mkt" id="mkt">'+MKS.map(k=>'<div class="mt4" id="mt-'+k+'"><div class="chl"></div><div class="txl"></div></div>').join('')+'</div></div>'+barHTML('mkts','MARKETS','mq'));
+setH($('#wm'),'<div class="hdw"></div><div class="wbody"><div class="mapw" id="sm"><div class="mtg"><button class="btn" id="smt" data-a="sm:tog"></button></div><div class="mov" id="shud"></div></div><div class="evc"><div class="evl" id="evl"></div><div class="evp" id="evp"></div></div><div class="wsx" id="wsx"></div></div>');
+nwInit();SET=camSet();renderAll();clock();fit();tape();
+/* bars pause while hovered (mouse) and on tap (touch; second tap or 10 s resumes) */
+$$('[data-bar]').forEach(el=>{const hold=v=>{el._hold=v;clearTimeout(el._ht);if(v&&el._pt!=='mouse')el._ht=setTimeout(()=>{el._hold=0;applyRate(el)},10000);applyRate(el)};
+ el.addEventListener('pointerdown',e=>{el._pt=e.pointerType});
+ el.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse'){el._pt='mouse';hold(1)}});
+ el.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')hold(0)});
+ el.addEventListener('click',e=>{if(el._pt==='touch'||el._pt==='pen'){e.stopPropagation();hold(el._hold?0:1)}})});
+/* the World View event list shows only the rows that fit: re-count whenever its height changes (fonts, bars or a resize settling late) */
+if(window.ResizeObserver)new ResizeObserver(()=>{const l=$('#evl');if(l&&l.clientHeight!==l._h){l._h=l.clientHeight;rEv()}}).observe($('#evl'));
+if(geInit()){scopeView()}scopeUpd();setInterval(geWatch,3000);setInterval(geRefresh,CFG.ge.refreshMs);
+window.__home={ui:UI,data:D,health:H,cfg:CFG,paint,xpSet,XP,GE,desig,plot,runBar,allEv,teamRows,openSuite,fit};
+getWx();getWxg();getTev();getNews();getQuakes();getGdacs();getEonet();getAlerts();getTsu();getRate();getBtc();getBoc();['spx','tsx','cad'].forEach(getStq);getCamList();['hubfeed','security','cal','scn','brief'].forEach(getHub);hcamTick();
+setInterval(getWx,CFG.wx.everyMs);setInterval(getWxg,CFG.wx.everyMs);setInterval(getTev,CFG.ev.everyMs);setInterval(getNews,CFG.news.everyMs);setInterval(getQuakes,CFG.quakes.everyMs);setInterval(getGdacs,CFG.wm.everyMs);setInterval(getEonet,CFG.wm.everyMs);setInterval(getAlerts,CFG.alerts.everyMs);setInterval(getTsu,CFG.tsu.everyMs);setInterval(getRate,CFG.rate.everyMs);setInterval(getBtc,CFG.markets.btcEveryMs);setInterval(getBoc,CFG.markets.bocEveryMs);setInterval(()=>['spx','tsx','cad'].forEach(getStq),CFG.stooq.everyMs);setInterval(hcamTick,CFG.homecams.everyMs);
+if(CFG.hubfeed.url)setInterval(()=>getHub('hubfeed'),CFG.hubfeed.everyMs);if(CFG.security.url)setInterval(()=>getHub('security'),15000);if(CFG.cal.url)setInterval(()=>getHub('cal'),CFG.cal.everyMs);if(CFG.scn.url)setInterval(()=>getHub('scn'),CFG.scn.everyMs);if(CFG.brief.url)setInterval(()=>getHub('brief'),CFG.brief.everyMs);
+setTimeout(camTick,1500);setInterval(camTick,CFG.cam.intervalMs);
+
+/* ---------- Talk to Oakley (Phase 0): the family's honest SHELL state — the service joins in Phase 3 ---------- */
+(function(){const h=document.getElementById('tkh');if(!h)return;const open=()=>{h.hidden=false;const b=h.querySelector('.btn.q,.tkf .btn');if(b)b.focus()},close=()=>{h.hidden=true;const t=document.getElementById('tk-btn');if(t)t.focus()};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-a^="tk:"]');if(!b)return;e.stopPropagation();if(b.dataset.a==='tk:open')open();else close()},true);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!h.hidden){e.stopPropagation();close()}},true)})();
+</script></body></html>

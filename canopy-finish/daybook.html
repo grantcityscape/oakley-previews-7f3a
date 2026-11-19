@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<!-- PACKAGED COPY · daybook.html (Daybook) · source: daybook-v1.1.2.html (frozen master, untouched) · Canopy Phase 0 wiring, 2026-11-18 -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; connect-src https:">
+<title>Daybook v1.1.2</title>
+<style>
+:root{
+  --void:#050506; --hull:#0b0b0d; --cell:#111114; --well:#18181c;
+  --ink:#f7f5f2; --ink2:#e6e3de; --mut:#aba69f; --line:#2a2a30;
+  --red:#ef4444; --red-dk:#7f1d1d; --gold:#c9a227; --gold2:#facc15;
+  --grn:#1e4d2b; --grn2:#14532d; --cream:#f5efe0; --cream2:#e9dfc8;
+  --blue:rgb(59 130 246); --deck:#6c8574; --silver:#c5cdd8;
+  --carbon: repeating-linear-gradient(45deg,#17110d 0 6px,#1d1510 6px 12px), repeating-linear-gradient(-45deg,#17110d 0 6px,#140f0b 6px 12px);
+}
+*{box-sizing:border-box} html,body{height:100%}
+body{margin:0;background:var(--void);color:var(--ink);font-family:"Chakra Petch","Segoe UI",system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+a{color:inherit}
+/* ---------- header: doors + home controls (app-wide pattern) ---------- */
+header{display:flex;align-items:stretch;gap:.5rem;padding:.45rem .6rem;background:var(--hull);border-bottom:1px solid var(--line)}
+.hctl{display:flex;align-items:center;gap:.5rem;padding:.15rem .4rem}
+#hm-logo{display:flex;align-items:center;gap:.45rem;text-decoration:none}
+.logo-mark{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#2c5a3a,#12291a 70%);border:1px solid var(--deck);display:flex;align-items:center;justify-content:center;font-size:.62rem;color:#d4e8db;letter-spacing:.04em}
+.logo-word{font-weight:700;letter-spacing:.14em;font-size:.8rem;color:var(--ink2)}
+.logo-word small{display:block;font-weight:400;letter-spacing:.08em;font-size:.56rem;color:var(--mut)}
+#hm-clock{text-align:right;text-decoration:none;line-height:1.05}
+#hm-clock .t{font-size:1.02rem;font-weight:700;color:var(--ink)}
+#hm-clock .d{font-size:.6rem;color:var(--mut);letter-spacing:.08em}
+#hm-clock .wx{display:inline-flex;flex-direction:row;align-items:center;gap:.32rem;vertical-align:middle;margin-left:.5rem}
+#hm-clock .wx svg{width:2rem;height:1.3rem;flex:none;display:block}
+#hm-clock .wxl{display:flex;flex-direction:column;font-size:.54rem;font-weight:700;letter-spacing:.13em;color:var(--mut);text-align:left;line-height:1.3}
+#hm-clock .wxl i{font-style:normal;white-space:nowrap}
+#hm-clock .wx .rays{transform-box:fill-box;transform-origin:center;animation:wxr 30s linear infinite}
+#hm-clock .wx .cld{animation:wxd 9s ease-in-out infinite alternate}
+@keyframes wxr{to{transform:rotate(360deg)}}
+@keyframes wxd{from{transform:translateX(0)}to{transform:translateX(1.5px)}}
+@media (prefers-reduced-motion:reduce){#hm-clock .wx .rays,#hm-clock .wx .cld{animation:none}}
+#sr-ret{align-self:center;flex:none;border:1px solid rgba(250,204,21,.5);border-radius:.25rem;color:var(--gold2);padding:.3rem .55rem;font-size:.66rem;font-weight:700;letter-spacing:.14em;text-decoration:none;text-transform:uppercase;white-space:nowrap}
+nav#doors{flex:1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem}
+.door{display:flex;align-items:center;justify-content:space-between;gap:.5rem;background:linear-gradient(160deg,color-mix(in srgb,var(--dc,#444) 34%,transparent),transparent 78%),var(--cell);border:1px solid color-mix(in srgb,var(--dc,#444) 55%,var(--line));border-top:3px solid var(--dc,#444);border-radius:.45rem;padding:.42rem .7rem;text-align:left;min-width:0}
+.door .nm{font-weight:700;letter-spacing:.1em;font-size:.82rem;white-space:nowrap;color:color-mix(in srgb,var(--dc,#ddd) 42%,#fff)}
+.door .ln{font-size:.6rem;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.door.on{background:linear-gradient(160deg,#8c1d28,#571016);border-color:#b03a44;box-shadow:inset 0 2px 10px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.07)}
+.door.on .nm{font-size:.95rem}
+.door.on .ln{color:#f3cdd0}
+.door.on .go{color:#f3cdd0}
+.door .go{color:var(--dc,var(--mut));font-weight:700}
+/* ---------- layout ---------- */
+main{flex:1;min-height:0;display:flex;flex-direction:column;padding:.55rem .6rem;gap:.55rem}
+.view{display:none;flex:1;min-height:0;flex-direction:column;gap:.55rem}
+.view.on{display:flex}
+.card{background:var(--cell);border:1px solid var(--line);border-radius:.55rem;padding:.6rem .75rem;min-width:0}
+.card h3{margin:0 0 .45rem;font-size:.72rem;letter-spacing:.14em;color:var(--ink2);display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.pill{font-size:.56rem;letter-spacing:.1em;padding:.1rem .42rem;border-radius:1rem;border:1px solid var(--gold);color:var(--gold2)}
+.pill.red{border-color:var(--red);color:var(--red)}
+.pill.grn{border-color:#3f7a52;color:#9fd3ae}
+.nc{color:var(--mut);font-size:.78rem}
+.nc b{color:var(--ink2)}
+.ukb{display:block;background:#2a1215;border:1px solid var(--red-dk);color:#f3b4b4;font-size:.62rem;letter-spacing:.1em;padding:.22rem .5rem;border-radius:.35rem;margin-bottom:.45rem}
+/* ---------- day page ---------- */
+#v-day .pagehead{display:flex;align-items:baseline;gap:.8rem;flex-wrap:wrap}
+#v-day .pagehead .dt{font-size:1.28rem;font-weight:700;letter-spacing:.02em}
+#v-day .pagehead .sub{color:var(--mut);font-size:.74rem}
+.carbon{background:var(--carbon);border:1px solid #3a2a18;border-top:3px solid var(--red);border-radius:.55rem;padding:.55rem .75rem}
+.capture{display:flex;gap:.5rem}
+.capture input{flex:1;background:#0d0b09;border:1px solid #3a2a18;border-radius:.4rem;color:var(--ink);padding:.5rem .65rem;font:inherit;font-size:.85rem;min-width:0}
+.capture input::placeholder{color:#8a7a5f}
+.seg{display:flex;gap:.3rem;flex:none}
+.seg button{background:#171310;border:1px solid #3a2a18;color:var(--mut);border-radius:.4rem;padding:.42rem .6rem;font:inherit;font-size:.72rem;cursor:pointer;white-space:nowrap}
+.seg button.on{background:#571016;border-color:#b03a44;color:#f6d9db;font-weight:700}
+.btn{background:var(--red-dk);border:1px solid var(--red);color:#fff;border-radius:.4rem;padding:.45rem .8rem;font-weight:600;letter-spacing:.05em}
+.btn.ghost{background:transparent;border-color:var(--line);color:var(--ink2)}
+.daygrid{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:.55rem}
+.daylower{min-height:0}
+.stream{display:flex;flex-direction:column;gap:.55rem;min-height:0;overflow:hidden}
+.stream .card{flex:1;display:flex;flex-direction:column;min-height:0}
+.entries{overflow:auto;min-height:0;display:flex;flex-direction:column;gap:.3rem;padding-right:.2rem}
+.ent{display:flex;gap:.55rem;align-items:baseline;font-size:.84rem;padding:.34rem .45rem;border-radius:.35rem;background:var(--well)}
+.ent .tag{font-size:.56rem;letter-spacing:.1em;padding:.08rem .4rem;border-radius:1rem;flex:none}
+.ent.rec .tag{border:1px solid #3f7a52;color:#9fd3ae}
+.ent.plan .tag{border:1px solid var(--gold);color:var(--gold2)}
+.ent .tm{color:var(--mut);font-size:.72rem;flex:none;min-width:3.1rem}
+.ent .prov{color:var(--mut);font-size:.68rem;font-style:italic}
+.ent.done{opacity:.55}.ent.done .tx{text-decoration:line-through}
+.secttl{font-size:.62rem;letter-spacing:.14em;color:var(--mut);margin:.15rem 0 -.1rem}
+.rail{display:flex;flex-direction:column;gap:.55rem;min-height:0;overflow:hidden}
+.marg{background:#161310;border:1px dashed #6b5518;border-radius:.5rem;padding:.55rem .7rem;font-size:.8rem}
+.marg h4{margin:0 0 .3rem;font-size:.64rem;letter-spacing:.13em;color:var(--gold2)}
+.marg .x{float:right;color:var(--mut)}
+.carry .ent{background:transparent;border:1px solid var(--line)}
+.wall{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:.5rem}
+.box{display:flex;flex-direction:column;gap:.22rem;background:var(--cell);border:1px solid var(--line);border-top:3px solid var(--pc,var(--red));border-radius:.5rem;padding:.5rem .65rem;text-align:left;min-width:0}
+.box .pn{font-weight:700;letter-spacing:.07em;font-size:.82rem;color:var(--ink)}
+.box .pd{font-size:.7rem;color:var(--mut);line-height:1.35}
+.box .pd b{color:var(--ink2)}
+.box.big{grid-column:span 2;border-top-color:var(--red)}
+.box.fin{background:linear-gradient(160deg,#12291a,#0d1f13);border:2px solid var(--red);border-top:3px solid var(--gold2);box-shadow:inset 0 0 0 1px rgba(250,204,21,.28)}
+.box.fin .pn{color:var(--cream)}
+.box.fin .pd b{color:var(--gold2)}
+.box.rd{border-color:#5c2320;border-top:3px solid var(--red)}
+.box.rd .pn{color:#f6d9db}
+.box.rd .pd b{color:#f0a3a3}
+.box.gd{background:linear-gradient(160deg,#241c07,#171204);border-color:#6b5518;border-top:3px solid var(--gold2)}
+.box.gd .pn{color:var(--gold2)}
+.box.gd .pd b{color:var(--gold2)}
+.secttl{color:#e8a0a0}
+.fin{background:linear-gradient(160deg,#12291a,#0d1f13);border-color:var(--red)}
+.fin .pn{color:var(--cream)} .fin .pd{color:var(--cream2)}
+/* ---------- portal views ---------- */
+.backrow{display:flex;align-items:center;gap:.6rem}
+.backrow .bk{color:var(--gold2);font-size:.8rem;letter-spacing:.06em}
+.backrow h2{margin:0;font-size:1.05rem;letter-spacing:.08em}
+.cols{flex:1;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem}
+.cols4{flex:1;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:1fr 1fr;gap:.55rem}
+.cols4 .card{overflow:auto}
+.cols .card{overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+td,th{padding:.32rem .4rem;border-bottom:1px solid var(--line);text-align:left}
+th{font-size:.62rem;letter-spacing:.12em;color:var(--mut)}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.camgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem}
+@media (max-width:700px){ .camgrid{grid-template-columns:1fr 1fr} }
+.cam{background:#000;border:1px solid var(--line);border-radius:.45rem;aspect-ratio:16/8.2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.25rem;color:var(--mut)}
+.cam .cl{font-size:.68rem;letter-spacing:.12em;color:var(--ink2)}
+.cam .cs{font-size:.58rem;letter-spacing:.14em;border:1px solid var(--mut);padding:.06rem .4rem;border-radius:1rem}
+.flip{display:flex;gap:.45rem}
+.flip button{border:1px solid var(--line);border-radius:1rem;padding:.25rem .8rem;font-size:.72rem;letter-spacing:.08em;color:var(--mut)}
+.flip button.on{border-color:var(--red);color:#fff;background:var(--red-dk)}
+.horiz{display:flex;gap:.45rem;margin-bottom:.45rem}
+.horiz button{border:1px solid var(--line);border-radius:1rem;padding:.25rem .8rem;font-size:.72rem;letter-spacing:.08em;color:var(--mut)}
+.horiz button.on{border-color:var(--gold);color:var(--gold2)}
+footer{display:flex;justify-content:space-between;gap:1rem;padding:.32rem .65rem;background:var(--hull);border-top:1px solid var(--line);font-size:.62rem;color:var(--mut);letter-spacing:.05em}
+#talkbar{display:flex;gap:.5rem;align-items:center}
+#talkbar input{flex:1;background:var(--well);border:1px solid var(--line);border-radius:.4rem;color:var(--ink);padding:.42rem .6rem;font:inherit;font-size:.8rem;min-width:0}
+@media (max-width:1100px){ .daygrid{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr)} .logo-word{display:none} }
+/* short screens: the rail re-flows into a bottom band — nothing clips, type never shrinks */
+@media (max-height:700px){
+  .daygrid{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto}
+  .rail{flex-direction:row;align-items:stretch}
+  .rail .marg{flex:1.15}
+  .rail .carry{flex:1.3}
+  .wall{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .box{padding:.38rem .55rem}
+  .box .pd{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+  main{padding:.4rem .5rem;gap:.4rem}
+  .carbon{padding:.4rem .6rem}
+  #v-budget td,#v-budget th{padding:.2rem .4rem}
+}
+/* Packaged-copy fix (Grant-approved 2026-11-18; frozen master untouched): four inherited min-content
+   spills overflow phone widths. (1) The header doors cannot sit beside the logo/clock row — their
+   nowrap name/sub lines need ~560px of nav — so below 900px the header wraps, the doors take their
+   own full-width row, their names may wrap, their sub-lines ellipsize (as the base design intends),
+   and the decorative go-arrow yields its width; below 384px even that row is too narrow for the
+   longest name (WORKBENCH), so the doors stack full-width, one per row, arrows restored.
+   (2) Entry rows (.ent) in the narrow rail/portal columns cannot fit tag + text + provenance on
+   one line, so those rows wrap and the provenance drops to its own line.
+   (3) The footer talk bar's input carries a ~162px intrinsic minimum, so the bar may shrink below it.
+   (4) The portal wall's six columns shrink to ~55px at phone width — narrower than the longest
+   unbreakable portal name (AUTOMATION) — so the wall steps down to three columns, then two.
+   (5) Even spill-free, the day view (capture card + portal wall) is taller than a phone screen,
+   so below 900px a view may scroll vertically; desktop keeps the one-screen fit.
+   Placed after the short-screen block so it also holds on short phones.
+   Layout only: no type shrinks, no name or text is cut — the only yield is the doors' arrow glyph. */
+@media (max-width:900px){
+  header{flex-wrap:wrap}
+  nav#doors{flex:1 1 100%}
+  .door{padding:.28rem .4rem}
+  .door>span:first-child{min-width:0}
+  .door .nm{white-space:normal;overflow-wrap:anywhere}
+  .door .nm,.door .ln{display:block;overflow:hidden}
+  .door .go{display:none}
+  .rail .ent,.cols .ent,.cols4 .ent{flex-wrap:wrap}
+  #talkbar{min-width:0}
+  .view{overflow-y:auto}
+  .wall{grid-template-columns:repeat(3,minmax(0,1fr));gap:.35rem}
+  .box{padding:.5rem .45rem}
+}
+@media (max-width:384px){
+  nav#doors{grid-template-columns:minmax(0,1fr)}
+  .door{padding:.42rem .7rem}
+  .door .go{display:block}
+  .wall{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+/* Header fix (Grant, 2026-11-18 ~19:10 live review): Canopy's own sections do NOT carry the slim
+   top strip — it belongs only on Workbench apps as their way back into Canopy — so the strip is
+   removed here. The header is the logo + CANOPY with the time/weather cluster, and is the Home tab.
+   The SITREP return door (Phase 0) now appends to the header itself (see #sr-ret above). */
+</style>
+<style>
+/* ===== header-door snapshots · Home tab treatment · weather door · SITREP door (Grant 2026-11-18, 19:21-19:26 rulings) ===== */
+nav#doors{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:384px){nav#doors{grid-template-columns:minmax(0,1fr)}}
+.logo-mark{width:44px;height:44px;font-size:.82rem}
+.logo-word{font-size:1.02rem;font-weight:800;letter-spacing:.2em;background:linear-gradient(180deg,#fdfdff 0%,#c9d4e2 30%,#7e8ea6 48%,#e8eef7 52%,#93a5bd 72%,#f4f8ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 1px rgba(0,0,0,.5))}
+.wxdoor{display:inline-flex;align-items:center;gap:.35rem;text-decoration:none;padding:.2rem .45rem;border:1px solid var(--line);border-radius:.4rem;align-self:center}
+.wxdoor .wx{display:inline-flex;flex-direction:row;align-items:center;gap:.32rem}
+.wxdoor .wx svg{width:2rem;height:1.3rem;flex:none;display:block}
+.wxdoor .wxl{display:flex;flex-direction:column;font-size:.54rem;font-weight:700;letter-spacing:.13em;color:var(--mut);text-align:left;line-height:1.3}
+.wxdoor .wxl i{font-style:normal;white-space:nowrap}
+.wxdoor .wx .rays{transform-box:fill-box;transform-origin:center;animation:wxr 30s linear infinite}
+.wxdoor .wx .cld{animation:wxd 9s ease-in-out infinite alternate}
+@media (prefers-reduced-motion:reduce){.wxdoor .wx .rays,.wxdoor .wx .cld{animation:none}}
+.wxdoor .wxg{color:var(--gold2);font-weight:700}
+.wxdoor:hover{border-color:var(--gold);background:rgba(250,204,21,.06)}
+.door .snap{display:flex;flex-wrap:wrap;gap:.26rem .7rem;align-items:flex-start;margin-top:.34rem;padding-top:.3rem;border-top:1px solid color-mix(in srgb,var(--dc,#444) 40%,transparent);font-size:.62rem;line-height:1.3;color:var(--mut)}
+.door .snap .stag{font-size:.54rem;font-weight:700;letter-spacing:.12em;color:var(--ink2);white-space:nowrap}
+.door .snap .pt b{color:var(--ink2)}
+.door .snap .gg{display:inline-flex;flex-direction:column;gap:.13rem}
+.door .snap .gg .gn{font-size:.54rem;font-weight:700;letter-spacing:.09em;color:var(--mut)}
+.door .snap .gg .gr{display:inline-flex;align-items:center;gap:.3rem}
+.door .snap .gg .gb{width:1.6rem;height:.34rem;border-radius:1rem;background:color-mix(in srgb,var(--dc,#444) 18%,transparent);overflow:hidden;display:inline-block;flex:none}
+.door .snap .gg .gb i{display:block;height:100%;background:var(--dc,#444);border-radius:1rem}
+.door .snap .gg .gp{font-size:.6rem;font-weight:700;color:var(--ink2);white-space:nowrap}
+@media (max-width:900px){.hctl{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+<header>
+  <div class="hctl">
+    <a id="hm-logo" href="./index.html" aria-label="Home">
+      <span class="logo-mark"><svg class="husk" viewBox="1450 158 392 378" aria-hidden="true"><g id="husky"><path id="husky-outline" fill="#F2EDDB" fill-rule="evenodd" d="M1541.6 348.4C1606.6 321.7 1464.1 380 1543.1 348.3C1545.1 347.5 1562.8 320.9 1565 317.3C1566.6 314.6 1570 309.5 1568.8 306.2C1567.1 301.3 1552.4 294.6 1552.2 282.4C1552.1 275.7 1559.6 272.8 1561.3 266.5C1565.2 252.5 1563.8 224.4 1567.6 214.5C1579.3 221.8 1596 258.6 1596.6 272.4C1596.8 277.1 1590 291.4 1590.2 292.1C1590.3 292.4 1591 292.4 1591 292.7C1598.7 286.9 1607.6 279.3 1613.5 271.6C1609.7 259.2 1605.5 247 1599.8 235.3C1596.2 227.8 1592.3 220.4 1587.8 213.4C1584.8 208.8 1571.4 190 1566 191.4C1559.3 193.1 1551.7 220.7 1549.9 227.3C1544.9 244.8 1539.1 274.6 1542.7 292.4C1544.5 301.4 1549.8 308.9 1552.4 317.5C1554.3 323.8 1548.2 334.4 1544.7 338.6C1544.3 333.3 1545.1 326.9 1543.1 321.8C1539.1 311.6 1533.2 303.3 1531.9 292.1C1530.2 278.7 1535.3 280.6 1535.9 275.6C1536.6 269 1536.1 262.2 1536.7 255.6C1538 241.4 1541.1 226.2 1545.2 212.5C1547.6 204.5 1558.3 174.1 1568.8 175.6C1575 176.4 1584.7 188.6 1588.7 193.3C1596.1 201.9 1603.4 210.8 1609.5 220.2C1616.8 231.5 1622.5 244.6 1632.1 254.2C1637.2 254 1642.4 251.6 1647.6 250.7C1657.1 249 1666.7 248.3 1676.4 248.7C1685.1 249.1 1694.7 250.1 1703 252.8C1708.4 254.5 1713.7 257 1719 258.2C1722.9 254.1 1725.1 248.7 1728.6 244.2C1734.5 237 1741.2 230.4 1747.1 223.2C1754 214.6 1760.8 206 1768.4 198C1774.8 191.3 1782 181.9 1790.4 178.2C1800.8 184.1 1803.8 200.7 1806.9 211.3C1815.6 241.7 1819.2 274 1813.7 305.2C1812.8 310.2 1812.2 316 1809.8 320.3C1808 318.7 1803.7 315.9 1802.8 313.4C1799.9 305.5 1809.2 293.8 1808.9 287.6C1808.2 266.4 1803.4 245.1 1798.7 224.6C1796.8 216.3 1795.2 204.8 1789.6 198.5C1779.6 201.2 1772.1 214.1 1766 222C1758.3 232 1732.9 261.3 1735.5 273.5C1737 280.4 1746.2 286.7 1751.1 291.4C1755.1 295.3 1759.8 300.9 1764.6 302C1763.6 291.4 1757.3 286.1 1751.3 278.4C1757.3 258.9 1770.3 230.9 1786.5 218.2C1790 229.9 1790 243.6 1790.3 255.9C1790.5 262.5 1789.7 270.3 1791.5 276.8C1792.5 280.2 1794.8 282.4 1797 284.9C1790.6 296.1 1772.8 311.1 1783.1 325.1C1792 325.4 1803.6 323.6 1811.6 326C1803.6 329.3 1792.1 325.5 1783.4 327.7C1783.1 330.1 1783.5 333.2 1782.8 335.5C1779.8 345.2 1772.1 353.6 1770.1 363.4C1768.2 371.9 1771.2 385.6 1767.8 392.6C1766.5 390.4 1766.6 388.6 1766.2 385.6C1763.3 386.2 1760.9 387.5 1758.2 389C1759.6 382.2 1764.6 376.1 1766.3 369.1C1767.1 365.6 1767.4 357.5 1765.4 354.3C1761.3 347.8 1748.1 341.4 1740.9 339.6C1735.6 338.3 1730.1 340.5 1725.2 338.2C1723.5 331.6 1730.5 327.4 1727.3 320.5C1717.5 299.4 1695.7 314.2 1689 328.9C1703.9 338 1706.8 341.5 1716.5 355.4C1726.6 353.4 1737.3 352.7 1745.9 358.9C1741.2 366.8 1739.6 378.3 1730.7 382.8C1722.5 387 1711.8 379.2 1704.3 384.5C1701.1 386.7 1700.5 390.6 1698.9 393.2C1694.9 380.5 1701.7 369.2 1710.7 360.5C1705.7 350.8 1696.8 341.1 1686 337.4C1681.3 346 1680 358.8 1681.8 368.6C1682.4 371.6 1684.2 375.3 1683.6 378.3C1683 381.6 1678.9 387.9 1677.7 392C1674.3 403.1 1673.1 414.9 1671 426.3C1668.9 415.8 1670.2 404.1 1670.5 393.4C1671.1 370.7 1671.7 348.1 1672.9 325.5C1673.4 316.4 1675.8 290.1 1671.9 283.4C1662.1 307.5 1670.1 334.8 1666 359.8C1664.2 370.5 1660.2 379 1653 387.3C1652.6 387.7 1651.7 389.4 1651 389.5C1650.7 389.6 1650.5 388.9 1650.2 389.1C1658.4 373.2 1662.2 350.9 1654.5 334.1C1640.9 331.8 1626 342.6 1617.2 352C1620.5 354 1624.9 355.4 1628.4 358C1637 364.5 1646.9 380.1 1640.7 390.4C1632.6 369.7 1618.9 396 1603.2 374.2C1588.8 396.3 1599.1 448.4 1614.7 468C1615.2 461.9 1613.8 455.1 1614.7 448.7C1617.1 452.9 1618.4 459.7 1619.6 465C1623.9 482.9 1628.2 504.6 1648.9 509.8C1654.8 511.2 1662.1 510.7 1667 507.1C1663.9 502.5 1656.5 501.9 1652 498.3C1645.1 492.8 1640.4 480.8 1641.2 472.2C1641.9 464.1 1650.3 461.2 1657 459.2C1676.9 452.9 1710.2 460.6 1695.2 487.9C1687.3 502.4 1679 498.8 1672 506.9C1678 513.7 1693.7 511 1700.6 505.9C1717.7 493.1 1716.1 468.8 1725.2 451.7C1726.7 458.8 1725 467.2 1723.7 474.4C1718.4 505.4 1700.9 523.2 1668 522.4C1659.7 522.1 1650.4 519.9 1643.3 515.2C1641.5 514 1639.9 511.9 1637.9 510.9C1632.2 508.1 1626.6 505.7 1621.3 501.9C1593.6 482.4 1576 447.5 1575.5 413.7C1575.4 406.6 1576.2 398.7 1578 391.9C1578.6 389.3 1580.3 385.8 1580.2 383.2C1580.1 378.3 1566.2 371.3 1561.9 370.8C1559.5 370.5 1556.1 372.4 1554 371.6C1548.7 369.4 1542.6 353.6 1541.6 348.4ZM1650.2 325C1649 321.8 1646 318.7 1643.1 316C1635 308.7 1622.2 303.8 1614.5 314.6C1612.9 316.7 1611.7 319.3 1612 322C1612.5 326.5 1615.5 330.8 1617.9 334.5C1628.8 330.7 1638.5 326.4 1650.2 325ZM1611.3 338.6C1601.3 334.5 1579.3 346.7 1572.4 354.3C1573.6 361.3 1577.3 370.5 1582.3 375.5C1586.7 369.6 1589.6 362.2 1594.4 356.2C1599.5 349.9 1606.5 344.6 1611.3 338.6ZM1690.2 473.1C1684.4 468.1 1671.5 467.4 1664.9 471C1669.4 471.5 1674.2 471.6 1678.6 472.8C1681.4 473.6 1683.7 477 1686.4 477.1C1688.7 477.2 1689.4 474.7 1690.2 473.1ZM1749 502.4C1746.8 499.3 1746.8 496.5 1749.2 493.3C1750.8 494.7 1749.6 491.4 1750.9 493.9C1751.5 495.1 1751.5 500.7 1750.8 501.8C1749.6 503.6 1750.4 501.3 1749 502.4Z"/><g id="under-eye-marks" fill="#91A495"><path id="under-eye-mark-left" d="M1605.5 395.5C1613.78 395.33 1628.96 403.4 1637 409C1629.22 408.02 1612.97 402.42 1605.5 395.5Z"/><path id="under-eye-mark-right" d="M1736.5 395.5C1728.22 395.33 1713.04 403.4 1705 409C1712.78 408.02 1729.03 402.42 1736.5 395.5Z"/></g>
+<g id="under-eye-marks" fill="#91A495"><path id="under-eye-mark-left" d="M1605.5 395.5C1613.78 395.33 1628.96 403.4 1637 409C1629.22 408.02 1612.97 402.42 1605.5 395.5Z"/><path id="under-eye-mark-right" d="M1736.5 395.5C1728.22 395.33 1713.04 403.4 1705 409C1712.78 408.02 1729.03 402.42 1736.5 395.5Z"/></g>
+<g id="accent-eyes" fill="#8BD3FF" fill-rule="evenodd"><path d="M1608.6 359.6C1610.9 359.2 1612.1 359.3 1614.4 359.9C1614.7 361.8 1614.4 363.8 1614.7 365.7C1616.3 374.2 1625.3 367.6 1629.9 368.7C1633.3 384.5 1597.7 376 1608.6 359.6ZM1709.9 369.7C1713.9 366.5 1715.2 369.1 1718.8 371.6C1726 370.1 1726.1 366.5 1726.7 360.3C1729.6 359.4 1731.4 359.3 1734.4 360C1735.1 364.8 1734.2 372.3 1729.7 375.5C1723.3 380 1710.2 378.9 1709.9 369.7Z"/></g></svg></span>
+      <span class="logo-word">CANOPY</span>
+    </a>
+    <a id="hm-clock" href="./index.html" aria-label="Home" title="Home (clock shows this device's time; weather is a snapshot, Ottawa — not live)">
+      <span class="t" id="clock-t">--:--</span><br><span class="d" id="clock-d"></span>
+    </a>
+    <a class="wxdoor" href="./index.html#win=weather" aria-label="Weather — snapshot, Ottawa; opens the Weather window on Canopy Home" title="Weather — snapshot, Ottawa · opens the Weather window"><span class="wx" aria-hidden="true"><svg viewBox="0 0 48 30"><g class="rays" stroke="var(--gold2)" stroke-width="1.7" stroke-linecap="round"><path d="M23.5 12h3M21.3 17.3l2.1 2.1M16 19.5v3M10.7 17.3l-2.1 2.1M8.5 12h-3M10.7 6.7L8.6 4.6M16 4.5v-3M21.3 6.7l2.1-2.1"/></g><circle cx="16" cy="12" r="5.4" fill="var(--gold2)"/><g class="cld"><path d="M24.5 25.5h17.2a4.6 4.6 0 0 0 .9-9.1A7.2 7.2 0 0 0 29 12.6a5.6 5.6 0 0 0-4.5 12.9z" fill="var(--silver)"/></g></svg><span class="wxl"><i>SNAPSHOT</i><i>OTTAWA</i></span></span><span class="wxg" aria-hidden="true">▸</span></a>
+  </div>
+  <nav id="doors" aria-label="Sections"></nav>
+</header>
+<main>
+  <!-- ============ DAY TO DAY (the dated page) ============ -->
+  <section class="view on" id="v-day">
+    <div class="carbon">
+      <div class="pagehead">
+        <span class="dt" id="page-date">Today</span>
+        <span class="sub">Day to Day — the dated page. What happened and what's planned stay in separate ink.</span>
+        <span class="pill">SAMPLE CONTENT</span>
+      </div>
+      <form class="capture" id="capture-f">
+        <input id="capture-i" type="text" placeholder="Capture it now, organise it later — a task, a note, a spend, a plan…" aria-label="Capture an entry">
+        <span class="seg" role="group" aria-label="Did it happen, or is it planned?"><button type="button" id="cap-rec" class="on">It happened</button><button type="button" id="cap-plan">It’s planned</button></span>
+        <button class="btn" type="submit">Add to today</button>
+      </form>
+    </div>
+    <div class="daygrid">
+      <div class="stream">
+        <div class="card">
+          <h3>THE DAY'S STREAM</h3>
+          <div class="secttl">RECORDED — it happened</div>
+          <div class="entries" id="stream-rec"></div>
+          <div class="secttl">PLANNED — it hasn't yet</div>
+          <div class="entries" id="stream-plan"></div>
+        </div>
+      </div>
+      <div class="rail">
+        <div class="marg" id="marg-opt">
+          <button class="x" id="marg-x" aria-label="Dismiss note">✕</button>
+          <h4>MARGIN NOTE — OPTIMIZER · SAMPLE</h4>
+          <div>Winter tire swap is booking up at two local shops. Review this option — flyer checked <span id="marg-date"></span>, prices as listed there. A suggestion, not an instruction.</div>
+        </div>
+        <div class="card carry">
+          <h3>CARRIED FORWARD</h3>
+          <div class="entries" id="carry-list"></div>
+        </div>
+      </div>
+    </div>
+    <div class="wall" id="portal-grid"></div>
+  </section>
+  <!-- ============ BUDGETING ============ -->
+  <section class="view" id="v-budget">
+    <div class="backrow"><button class="bk" data-go="day">◂ DAY TO DAY</button><h2>BUDGETING — THE MONEY BOOK</h2><span class="pill grn">SAMPLE FIGURES ONLY</span><span class="pill">RECORDS ONLY · NO MONEY MOVES</span></div>
+    <div class="horiz" id="fin-tabs"><button data-f="book" class="on">THE MONEY BOOK</button><button data-f="pot">TEAM POT</button></div>
+    <div id="fin-book">
+    <div class="cols4">
+      <div class="card"><h3>PAYDAY &amp; RECURRING</h3>
+        <p class="nc">Payday cycle: <b>day 9 of 14</b> — next payday <b>Friday</b> (every second Friday). <span class="pill">SAMPLE</span></p>
+        <div class="ent plan"><span class="tag">RECURRING</span><span class="tx">Rent — due on payday</span><span class="prov">set up once, repeats</span></div>
+        <div class="ent plan"><span class="tag">RECURRING</span><span class="tx">Savings transfer — payday</span><span class="prov">set up once, repeats</span></div>
+        <div class="ent plan"><span class="tag">RECURRING</span><span class="tx">Mileage claim — submit on payday</span><span class="prov">from Truck → mileage</span></div></div>
+      <div class="card"><h3>ACCOUNTS — WHERE THE MONEY SITS</h3>
+        <div class="ent rec"><span class="tag">ACCOUNT</span><span class="tx">Chequing — the working account</span><span class="prov">sample balance ••••</span></div>
+        <div class="ent rec"><span class="tag">ACCOUNT</span><span class="tx">Savings — the cushion</span><span class="prov">sample balance ••••</span></div>
+        <div class="ent rec"><span class="tag">ACCOUNT</span><span class="tx">Investing fund — the $10K project</span><span class="prov">detail lives in Investments</span></div></div>
+      <div class="card"><h3>BILLS — PAID AND DUE STAY APART</h3><div id="budget-book"></div><p class="nc">Auto-debit clears at the bank; the rest need your action.</p></div>
+      <div class="card"><h3>LOANS &amp; FINANCING</h3>
+        <div class="ent plan"><span class="tag">LOAN</span><span class="tx">Truck financing — bank-known, feed-owned</span><span class="prov">dates yours</span></div>
+        <div class="ent plan"><span class="tag">LOAN</span><span class="tx">Off-bank loan — the bank can't know this one</span><span class="prov">amount + dates yours</span></div>
+        <div class="secttl" style="margin-top:.55rem">INTAKE &amp; DOORS</div>
+        <p class="nc" style="margin:.25rem 0 0">Statements arrive by <b>bank feed · edit here · tell Oakley · the Drive intake folder · email</b>. Six stages: received → pulled → matched → ready → filed → stored. Hand-typed wins; a disagreeing feed is <b>flagged for review</b>, never silently replaced. Real figures: Oakley's entries only, at integration — none here.</p></div>
+    </div>
+    </div>
+    <div id="fin-pot" hidden>
+      <div class="cols">
+        <div class="card"><h3>TEAM POT — CARD LEDGER</h3><div id="pot-list"></div>
+          <form id="pot-f" style="display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.5rem">
+            <input id="pot-item" type="text" placeholder="What was it?" aria-label="Ledger item" style="flex:2;min-width:8rem;background:var(--well);border:1px solid var(--line);border-radius:.4rem;color:var(--ink);padding:.42rem .6rem;font:inherit;font-size:.8rem">
+            <input id="pot-amt" type="number" step="0.01" min="0" placeholder="$" aria-label="Amount" style="width:6rem;background:var(--well);border:1px solid var(--line);border-radius:.4rem;color:var(--ink);padding:.42rem .6rem;font:inherit;font-size:.8rem">
+            <select id="pot-dir" aria-label="In or out" style="background:var(--well);border:1px solid var(--line);border-radius:.4rem;color:var(--ink);padding:.42rem;font:inherit;font-size:.8rem"><option value="out">out</option><option value="in">in</option></select>
+            <label style="font-size:.75rem;color:var(--mut);display:flex;align-items:center;gap:.3rem"><input type="checkbox" id="pot-rcpt"> receipt</label>
+            <button class="btn" type="submit">Add</button>
+          </form></div>
+        <div class="card"><h3>BALANCES — CALCULATED VS CONFIRMED</h3>
+          <p class="nc">The ledger adds itself up: <b id="pot-calc">—</b>. The confirmed balance is what the card itself says, typed in by hand:</p>
+          <p style="display:flex;gap:.5rem;align-items:center"><input id="pot-conf" type="number" step="0.01" placeholder="Confirmed $" aria-label="Confirmed balance" style="width:8rem;background:var(--well);border:1px solid var(--line);border-radius:.4rem;color:var(--ink);padding:.42rem .6rem;font:inherit;font-size:.85rem"><span class="nc">← the card's own number</span></p>
+          <p class="nc" id="pot-warn" style="color:#f0b44c"></p>
+          <p class="nc">The two numbers are kept apart on purpose. When they disagree, the pot reads <b>BALANCE UNVERIFIED</b> until someone finds the difference — it never quietly picks one. Every entry carries its receipt state: ATTACHED or MISSING. Sample entries; the pot holds team money only, never personal accounts.</p></div>
+      </div>
+    </div>
+    </section>
+  <!-- ============ INVESTMENTS ============ -->
+  <section class="view" id="v-invest">
+    <div class="backrow"><button class="bk" data-go="day">◂ DAY TO DAY</button><h2>INVESTMENTS</h2><span class="pill grn">SAMPLE ONLY</span></div>
+    <div class="cols">
+      <div class="card"><h3>REVIEW NOTES — NOT A SCOREBOARD</h3><div id="invest-notes"></div>
+        <p class="nc">Investments live here as review appointments and notes — never as a performance banner.</p></div>
+      <div class="card"><h3>NEXT REVIEW</h3>
+        <p class="nc"><b>Feed:</b> NOT CONNECTED — holdings and prices appear when an account is linked. Nothing on this page is live, and nothing here is advice.</p>
+        <div class="ent plan"><span class="tag">PLANNED</span><span class="tx">Quarterly review — sit down with the statements and the plan</span></div></div>
+    </div>
+  </section>
+  <!-- ============ SECURITY / HOME ============ -->
+  <section class="view" id="v-security">
+    <div class="backrow"><button class="bk" data-go="day">◂ DAY TO DAY</button><h2>SECURITY &amp; HOME</h2><span class="pill red">DAYBOOK OWNS THIS FACE</span></div>
+    <div class="card" style="flex:1;display:flex;flex-direction:column;min-height:0">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap">
+        <h3 style="margin:0">ONE BOX, TWO VIEWS</h3>
+        <div class="flip"><button id="flip-cam" class="on">CAMERAS</button><button id="flip-mon">HOME MONITORING</button></div>
+      </div>
+      <div id="sec-cams" style="margin-top:.55rem">
+        <span class="ukb">UNKNOWN · NO SOURCE — camera feed not linked; frames shown are placeholders, never presented as live</span>
+        <div class="camgrid">
+          <div class="cam"><span class="cl">FRONT</span><span class="cs">SNAPSHOT</span><span class="nc">no frame — feed not connected</span></div>
+          <div class="cam"><span class="cl">GARAGE</span><span class="cs">SNAPSHOT</span><span class="nc">no frame — feed not connected</span></div>
+          <div class="cam"><span class="cl">BACK</span><span class="cs">SNAPSHOT</span><span class="nc">no frame — feed not connected</span></div>
+          <div class="cam"><span class="cl">BASEMENT</span><span class="cs">SNAPSHOT</span><span class="nc">no frame — feed not connected</span></div>
+        </div>
+      </div>
+      <div id="sec-mon" style="margin-top:.55rem;display:none">
+        <p class="nc"><b>Home monitoring:</b> NOT CONNECTED — door, motion and environment sensors report here when the home system is linked. Nothing is inferred in the meantime.</p>
+        <div class="ent rec"><span class="tag">RECORDED</span><span class="tx">Automation placeholder — no devices linked yet</span><span class="pill">SAMPLE</span></div>
+      </div>
+    </div>
+  </section>
+  <!-- ============ CALENDAR ============ -->
+  <section class="view" id="v-calendar">
+    <div class="backrow"><button class="bk" data-go="day">◂ DAY TO DAY</button><h2>CALENDAR</h2><span class="pill red">THE ONLY PLACE THE DAY IS EDITED</span></div>
+    <div class="card" style="flex:1;min-height:0;overflow:auto">
+      <div class="horiz"><button data-h="day" class="on">DAY</button><button data-h="week">WEEK</button><button data-h="month">MONTH</button></div>
+      <div id="cal-body"></div>
+      <p class="nc" style="margin-top:.5rem"><b>Aggregation:</b> this calendar gathers the personal calendar plus every linked Workbench business calendar. <b>Feeds:</b> NOT CONNECTED — events appear when calendars are linked; the sample below is illustrative only.</p>
+    </div>
+  </section>
+  <!-- ============ NOTES & TO-DO ============ -->
+  <section class="view" id="v-notes">
+    <div class="backrow"><button class="bk" data-go="day">◂ DAY TO DAY</button><h2>NOTES &amp; TO-DO</h2><span class="pill">SAMPLE CONTENT</span></div>
+    <div class="cols">
+      <div class="card"><h3>TO-DO — KEPT, MOVED, OR DONE. NEVER PUNISHED.</h3><div id="todo-list"></div></div>
+      <div class="card"><h3>NOTES — COLLECTIONS POINT BACK TO THEIR DAY</h3><div id="note-list"></div></div>
+    </div>
+  </section>
+  <!-- ============ SHOPPING ============ -->
+  <section class="view" id="v-shopping">
+    <div class="backrow"><button class="bk" data-go="day">◂ DAY TO DAY</button><h2>SHOPPING</h2><span class="pill">SAMPLE CONTENT</span></div>
+    <div class="cols">
+      <div class="card"><h3>THE LIST</h3><div id="shop-list"></div></div>
+      <div class="card"><h3>BOUGHT — RECORDED, WITH THE DAY IT HAPPENED</h3><div id="shop-done"></div></div>
+    </div>
+  </section>
+  <!-- ============ HOME AUTOMATION ============ -->
+  <section class="view" id="v-automation">
+    <div class="backrow"><button class="bk" data-go="day">◂ DAY TO DAY</button><h2>HOME AUTOMATION</h2><span class="pill red">ITS OWN BOX — SEPARATE FROM SECURITY</span></div>
+    <div class="cols">
+      <div class="card"><h3>DEVICES</h3>
+        <p class="nc"><b>Feed:</b> NOT CONNECTED — lights, thermostat, locks and plugs report here when the home system is linked.</p>
+        <div class="ent rec"><span class="tag">SAMPLE</span><span class="tx">Living-room lights — off</span><span class="prov">placeholder state</span></div>
+        <div class="ent rec"><span class="tag">SAMPLE</span><span class="tx">Thermostat — holding</span><span class="prov">placeholder state</span></div>
+        <div class="ent rec"><span class="tag">SAMPLE</span><span class="tx">Front door lock — locked</span><span class="prov">placeholder state</span></div></div>
+      <div class="card"><h3>SCENES &amp; ROUTINES</h3>
+        <div class="ent plan"><span class="tag">SCENE</span><span class="tx">Leaving home — lights off, lock checked, cameras armed</span></div>
+        <div class="ent plan"><span class="tag">SCENE</span><span class="tx">Evening — porch on, living room low</span></div>
+        <p class="nc">Scenes are set here; Security next door keeps the watching.</p></div>
+    </div>
+  </section>
+  <!-- ============ COMMUTE ============ -->
+  <section class="view" id="v-commute">
+    <div class="backrow"><button class="bk" data-go="day">◂ DAY TO DAY</button><h2>COMMUTE</h2><span class="pill">SAMPLE CONTENT</span></div>
+    <div class="cols">
+      <div class="card"><h3>TODAY'S GETTING-AROUND</h3>
+        <div id="commute-legs"></div>
+        <p class="nc">Drawn from today's calendar, not typed twice: change the calendar and the commute redraws itself. A work day draws the work run; a plow shift would draw the route instead.</p></div>
+      <div class="card"><h3>ROADS</h3>
+        <p class="nc"><b>Feed:</b> NOT CONNECTED — live traffic and road conditions appear when a roads feed is linked. In snow season this box carries the plow layer.</p></div>
+    </div>
+  </section>
+  <!-- ============ TRUCK ============ -->
+  <section class="view" id="v-truck">
+    <div class="backrow"><button class="bk" data-go="day">◂ DAY TO DAY</button><h2>TRUCK</h2><span class="pill">SAMPLE CONTENT</span></div>
+    <div class="cols">
+      <div class="card"><h3>2026 FORD RANGER — 2.3L ECOBOOST</h3>
+        <div class="ent rec"><span class="tag">RECORD</span><span class="tx">The truck's own page: service, mileage, and its paperwork</span></div>
+        <div class="ent plan"><span class="tag">PLANNED</span><span class="tx">Winter tire swap — booked through the tire shop</span><span class="prov">from today's margin note</span></div>
+        <div class="ent plan"><span class="tag">MILEAGE</span><span class="tx">Work mileage → the payday claim in Budgeting</span><span class="prov">a door, not a copy</span></div></div>
+      <div class="card"><h3>FORDPASS</h3>
+        <p class="nc"><b>Feed:</b> NOT CONNECTED — fuel, odometer and health land here when FordPass is linked in the full shell. Plain limit, stated once: FordPass on the web can't remote-start the truck; that lives in Ford's own app.</p></div>
+    </div>
+  </section>
+  <!-- ============ SOCIAL ============ -->
+  <section class="view" id="v-social">
+    <div class="backrow"><button class="bk" data-go="day">◂ DAY TO DAY</button><h2>SOCIAL — MESSAGES &amp; NOTIFICATIONS</h2><span class="pill">SAMPLE CONTENT</span></div>
+    <div class="cols">
+      <div class="card"><h3>LINKED ACCOUNTS</h3>
+        <div class="ent plan"><span class="tag">LINK</span><span class="tx">Messenger — messages land here</span><span class="prov">not connected in this surface</span></div>
+        <div class="ent plan"><span class="tag">LINK</span><span class="tx">Instagram — messages + notifications</span><span class="prov">not connected in this surface</span></div>
+        <div class="ent plan"><span class="tag">LINK</span><span class="tx">Facebook — notifications</span><span class="prov">not connected in this surface</span></div>
+        <div class="ent plan"><span class="tag">LINK</span><span class="tx">Threads — notifications</span><span class="prov">not connected in this surface</span></div></div>
+      <div class="card"><h3>THE INBOX IDEA</h3>
+        <p class="nc">Link an account and its messages and notifications join the day — read them here, answer from here in the full shell, and let the day page's Social box show what's waiting. Nothing is linked yet, and nothing is inferred in the meantime.</p></div>
+    </div>
+  </section>
+</main>
+<footer>
+  <span id="integ">Archival integrity: entries are kept as written; corrections are new entries, never silent rewrites.</span>
+  <span id="talkbar"><span>TALK TO OAKLEY</span><input id="talk-i" type="text" placeholder="Ask from anywhere — answers cite their source (Daybook · this page)"><button class="btn ghost" id="talk-b">Ask</button></span>
+</footer>
+<script>
+'use strict';
+const $=(s,r)=>(r||document).querySelector(s), $$=(s,r)=>[...(r||document).querySelectorAll(s)];
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const KEY='daybook.entries.v1';
+let store={captures:[]};
+try{const raw=localStorage.getItem(KEY); if(raw){const p=JSON.parse(raw); if(p&&Array.isArray(p.captures)) store=p;}}catch(e){}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(store));}catch(e){}}
+/* ---------- doors (same row, order and labels as Home/Deck; doors show only where you can GO — the current surface is not in the row, Grant 2026-11-18; each door carries its section colour) ---------- */
+const DOORS=[
+ {k:'deck',n:'COMMAND DECK',ln:'Team on · meters watched · Deck closed',href:'./deck.html',c:'var(--grn)'},
+ {k:'wb',n:'WORKBENCH',ln:'BluePrint · Northbirch · apps in build',href:'./workbench.html',c:'var(--blue)'}];
+const TEAMSNAP=[['OAKLEY',59],['CLAUDE',0],['CHATGPT',82],['GEMINI',25],['PERPLEXITY',null]];
+const WBPTS=[['BLUEPRINT','own app'],['KÜL','LIVE PWA'],['TRELLIS','7 planned'],['SITEVISION','ground-up'],['NB APP','not built']];
+const SRPTS=['WEATHER','CAMERAS','AIRPORT','WORLD'];
+function doorSnap(d){if(d.k==='deck')return '<span class="snap"><span class="stag">SNAPSHOT · 2026-11-05</span>'+TEAMSNAP.map(g=>g[1]==null?'<span class="gg"><span class="gn">'+g[0]+'</span><span class="gp">400 PRO LEFT</span></span>':'<span class="gg"><span class="gn">'+g[0]+'</span><span class="gr"><span class="gb"><i style="width:'+g[1]+'%"></i></span><span class="gp">'+g[1]+'%</span></span></span>').join('')+'</span>';
+ if(d.k==='wb')return '<span class="snap"><span class="stag">APPS · SNAPSHOT</span>'+WBPTS.map(q=>'<span class="pt"><b>'+q[0]+'</b> '+q[1]+'</span>').join('')+'</span>';
+ if(d.k==='sitrep')return '<span class="snap"><span class="stag">SECTIONS · SNAPSHOT</span>'+SRPTS.map(q=>'<span class="pt"><b>'+q+'</b></span>').join('')+'</span>';return ''}
+$('#doors').innerHTML=DOORS.map(d=>{
+  const body='<span class="din"><span class="nm">'+d.n+'</span><br><span class="ln">'+d.ln+'</span>'+doorSnap(d)+'</span><span class="go">'+(d.cur?'●':'▸')+'</span>';
+  return d.cur?'<button class="door on" style="--dc:'+d.c+'" aria-current="page">'+body+'</button>'
+    : d.href?'<a class="door" style="--dc:'+d.c+';text-decoration:none" href="'+d.href+'">'+body+'</a>'
+    : '<button class="door" style="--dc:'+d.c+'" aria-label="'+d.n+' — opens in the full app">'+body+'</button>'}).join('');
+/* ---------- clock + dated page ---------- */
+const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MON=['January','February','March','April','May','June','July','August','September','October','November','December'];
+function tick(){const n=new Date();
+  $('#clock-t').textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');
+  $('#clock-d').textContent=(DAYS[n.getDay()]+' '+MON[n.getMonth()]+' '+n.getDate()).toUpperCase();
+  $('#page-date').textContent=DAYS[n.getDay()]+', '+MON[n.getMonth()]+' '+n.getDate()+', '+n.getFullYear();
+  $('#marg-date').textContent=MON[n.getMonth()]+' '+n.getDate();}
+tick(); setInterval(tick,20000);
+/* ---------- sample day (internally consistent, clearly labelled) ---------- */
+const REC=[
+ {tm:'07:10',tx:'Coffee on, truck warmed up',tag:'RECORDED'},
+ {tm:'09:25',tx:'Paid — hydro bill, $86.40 (money book → Budgeting)',tag:'RECORDED'},
+ {tm:'12:40',tx:'Note captured: “gate latch at the side door is sticking”',tag:'RECORDED'}];
+const PLAN=[
+ {tm:'15:00',tx:'Call the tire shop about the winter swap',tag:'PLANNED'},
+ {tm:'18:30',tx:'Groceries — the list is in Shopping',tag:'PLANNED'},
+ {tm:'—',tx:'Lottery ticket check — a private record, kept in Notes',tag:'PLANNED'}];
+const CARRY=[
+ {tx:'Measure the basement hatch for the water shut-off',prov:'carried from Saturday — kept, not forgotten'},
+ {tx:'Return the borrowed extension ladder',prov:'carried from last week'}];
+function entHTML(e,cls){return '<div class="ent '+(cls||'')+'"><span class="tag">'+esc(e.tag||'ENTRY')+'</span>'+(e.tm?'<span class="tm">'+esc(e.tm)+'</span>':'')+'<span class="tx">'+esc(e.tx)+'</span>'+(e.prov?'<span class="prov">'+esc(e.prov)+'</span>':'')+'</div>'}
+function renderDay(){
+  $('#stream-rec').innerHTML=REC.map(e=>entHTML(e,'rec')).join('')||'<span class="nc">Nothing recorded yet today.</span>';
+  const rc=store.captures.filter(c=>c.kind==='rec').map(c=>({tm:'✎',tx:c.text,tag:'CAPTURED'}));
+  const pc=store.captures.filter(c=>c.kind!=='rec').map(c=>({tm:'✎',tx:c.text,tag:'CAPTURED'}));
+  if(rc.length) $('#stream-rec').innerHTML+=rc.map(e=>entHTML(e,'rec')).join('');
+  $('#stream-plan').innerHTML=pc.map(e=>entHTML(e,'plan')).join('')+PLAN.map(e=>entHTML(e,'plan')).join('');
+  $('#carry-list').innerHTML=CARRY.map(e=>entHTML(e,'')).join('');}
+renderDay();
+let capKind='rec';
+$('#cap-rec').addEventListener('click',()=>{capKind='rec';$('#cap-rec').classList.add('on');$('#cap-plan').classList.remove('on');});
+$('#cap-plan').addEventListener('click',()=>{capKind='plan';$('#cap-plan').classList.add('on');$('#cap-rec').classList.remove('on');});
+$('#capture-f').addEventListener('submit',ev=>{ev.preventDefault();const v=$('#capture-i').value.trim();if(!v)return;
+  store.captures.unshift({text:v,kind:capKind,at:new Date().toISOString()}); persist(); $('#capture-i').value=''; renderDay();});
+$('#marg-x').addEventListener('click',()=>{$('#marg-opt').style.display='none';});
+/* ---------- portals ---------- */
+const PORTALS=[
+ {v:'budget',n:'BUDGETING',cls:'fin big',pc:'var(--red)',d:'<b>Day 9 of 14</b> in the pay cycle · next payday <b>Friday</b><br>In this cycle: <b>$1,940 in</b> · <b>$612 out</b> (sample figures)<br>Due: truck payment (Fri) · phone plan (next week) — paid stays listed apart<br>Balances at a glance: chequing •••• · savings •••• · investing fund ••••'},
+ {v:'invest',n:'INVESTMENTS',cls:'fin',pc:'var(--gold2)',d:'Review notes, not a scoreboard.<br>Next review: <b>the quarterly sit-down</b>.'},
+ {v:'security',n:'SECURITY',cls:'rd',pc:'var(--red)',d:'Cameras ⇄ monitoring.<br>Frames: <b>SNAPSHOT</b> · feed not connected.'},
+ {v:'automation',n:'HOME AUTOMATION',cls:'rd',pc:'var(--red)',d:'Lights · thermostat · locks.<br>Feed: <b>not connected</b>.'},
+ {v:'calendar',n:'CALENDAR',cls:'rd',pc:'var(--red)',d:'Today: <b>2 planned</b> · personal + every business calendar.'},
+ {v:'commute',n:'COMMUTE',cls:'gd',pc:'var(--gold)',d:'First leg <b>08:10</b> → Cityscape office · home by <b>17:50</b>.<br>Drawn straight from the calendar.'},
+ {v:'truck',n:'TRUCK',cls:'gd',pc:'var(--gold)',d:'<b>2026 Ranger</b> · 2.3L EcoBoost.<br>FordPass: not connected.'},
+ {v:'social',n:'SOCIAL',cls:'gd',pc:'var(--gold)',d:'Messages + notifications land here.<br><b>4 accounts</b> ready to link.'},
+ {v:'notes',n:'NOTES & TO-DO',cls:'gd',pc:'var(--gold)',d:'<b>3 open</b> · collections point back to their day.'},
+ {v:'shopping',n:'SHOPPING',cls:'gd',pc:'var(--gold)',d:'<b>4 on the list</b> · spending lands in Budgeting.'}];
+$('#portal-grid').innerHTML=PORTALS.map(p=>'<button class="box '+(p.cls||'')+'" style="--pc:'+p.pc+'" data-go="'+p.v+'"><span class="pn">'+p.n+'</span><span class="pd">'+p.d+'</span></button>').join('');
+/* ---------- views ---------- */
+function go(v){$$('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v)); window.scrollTo(0,0);}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-go]'); if(b) go(b.dataset.go);});
+/* ---------- budgeting (sample) ---------- */
+$('#budget-book').innerHTML='<table><tr><th>ITEM</th><th>STATE</th><th class="num">AMOUNT</th></tr>'+
+ [['Hydro bill','PAID','$86.40'],['Groceries — weekly','PAID','$132.18'],['Truck payment','DUE FRI','$—'],['Phone plan','DUE NEXT WEEK','$—']]
+ .map(r=>'<tr><td>'+r[0]+'</td><td>'+(r[1]==='PAID'?'<span style="color:#9fd3ae">'+r[1]+'</span>':'<span style="color:var(--gold2)">'+r[1]+'</span>')+'</td><td class="num">'+r[2]+'</td></tr>').join('')+'</table>';
+if($('#budget-due'))$('#budget-due').innerHTML=[['Truck payment','Friday'],['Phone plan','Next week'],['Insurance','Monthly']]
+ .map(r=>'<div class="ent plan"><span class="tag">DUE</span><span class="tx">'+r[0]+'</span><span class="prov">'+r[1]+'</span></div>').join('');
+/* ---------- investments (review notes only) ---------- */
+$('#invest-notes').innerHTML=[
+ {tm:'NOTE',tx:'Review the drip contributions at the quarterly sit-down — no changes until then.'},
+ {tm:'NOTE',tx:'Rebalance question parked for the review: keep it written, decide it there.'},
+ {tm:'NOTE',tx:'Statements for the quarter are filed under Notes → Finance.'}]
+ .map(e=>entHTML({tag:e.tm,tx:e.tx},'plan')).join('');
+/* ---------- security flip ---------- */
+$('#flip-cam').addEventListener('click',()=>{$('#flip-cam').classList.add('on');$('#flip-mon').classList.remove('on');$('#sec-cams').style.display='';$('#sec-mon').style.display='none';});
+$('#flip-mon').addEventListener('click',()=>{$('#flip-mon').classList.add('on');$('#flip-cam').classList.remove('on');$('#sec-mon').style.display='';$('#sec-cams').style.display='none';});
+/* ---------- calendar horizons: three readings, not one rescaled card ---------- */
+const EVENTS=[
+ {start:'09:00',end:'17:00',title:'Work — Cityscape office',place:'Cityscape office',travel:50,cal:'Workbench · Cityscape'},
+ {start:'15:00',end:'',title:'Call the tire shop',place:'Home',travel:0,cal:'Personal'},
+ {start:'18:30',end:'',title:'Groceries',place:'The store',travel:15,cal:'Personal'}];
+function t2m(t){const a=t.split(':');return (+a[0])*60+(+a[1]);}
+function m2t(m){return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');}
+function commuteLegs(){
+  const legs=[]; let here='Home';
+  EVENTS.filter(e=>e.place&&e.place!=='Home').forEach(e=>{
+    const back=e.end?t2m(e.end):t2m(e.start)+45;
+    legs.push({tm:m2t(t2m(e.start)-e.travel),tx:here+' → '+e.place+' — leave in time for '+e.start});
+    legs.push({tm:m2t(back),tx:e.place+' → Home — back by '+m2t(back+e.travel)});
+  });
+  return legs;
+}
+const CAL={
+ day:EVENTS.map(e=>'<div class="ent plan"><span class="tag">PLANNED</span><span class="tm">'+e.start+'</span><span class="tx">'+e.title+'</span><span class="prov">'+e.cal+'</span></div>').join('')+'<p class="nc">The day reading: what today holds, in order. The Commute page is drawn from this same list.</p>',
+ week:'<div class="ent plan"><span class="tag">WEEK</span><span class="tx">Two evenings booked, three open — the week reading shows shape, not hours.</span></div><div class="ent plan"><span class="tag">WEEK</span><span class="tx">One business-calendar item would appear here when a Workbench calendar is linked.</span></div>',
+ month:'<div class="ent plan"><span class="tag">MONTH</span><span class="tx">The month reading: paydays, due dates and the quarterly review — landmarks only.</span></div><div class="ent rec"><span class="tag">RHYTHM</span><span class="tx">Rent and the truck payment keep their rhythm; nothing else repeats.</span></div>'};
+function setH(h){$$('#v-calendar [data-h]').forEach(b=>b.classList.toggle('on',b.dataset.h===h)); $('#cal-body').innerHTML=CAL[h];}
+$$('#v-calendar [data-h]').forEach(b=>b.addEventListener('click',()=>setH(b.dataset.h))); setH('day');
+/* ---------- notes / to-do / shopping (samples) ---------- */
+$('#todo-list').innerHTML=[
+ {tx:'Shut off the two basement water taps',prov:'from Saturday — still open, kept visible'},
+ {tx:'Book the winter tire swap',prov:'from today’s margin note'},
+ {tx:'File the quarter’s statements',prov:'collection: Finance'}]
+ .map(e=>entHTML({tag:'TO-DO',tx:e.tx,prov:e.prov},'plan')).join('');
+$('#note-list').innerHTML=[
+ {tx:'Gate latch measurements — side door',prov:'written today, 12:40'},
+ {tx:'Lottery ticket check — private record',prov:'kept here, shown nowhere else'},
+ {tx:'Costa Rica trip ideas',prov:'collection: Travel'}]
+ .map(e=>entHTML({tag:'NOTE',tx:e.tx,prov:e.prov},'rec')).join('');
+$('#shop-list').innerHTML=['Eggs','Coffee','Winter washer fluid','AA batteries']
+ .map(x=>entHTML({tag:'LIST',tx:x},'plan')).join('');
+$('#shop-done').innerHTML=[{tx:'Milk',prov:'bought yesterday'},].map(e=>entHTML({tag:'BOUGHT',tx:e.tx,prov:e.prov},'rec done')).join('');
+/* ---------- finance tabs + team pot (a working ledger, restored from the old portal) ---------- */
+$$('#fin-tabs [data-f]').forEach(b=>b.addEventListener('click',()=>{
+  $$('#fin-tabs [data-f]').forEach(x=>x.classList.toggle('on',x===b));
+  const pot=b.dataset.f==='pot';
+  $('#fin-book').hidden=pot; $('#fin-pot').hidden=!pot; if(pot) renderPot();
+}));
+const POTKEY='daybook.teampot.v1';
+let pot={entries:[
+ {item:'Grant top-up',amt:200,dir:'in',receipt:true},
+ {item:'Team lunch — site visit',amt:86.40,dir:'out',receipt:true},
+ {item:'Fuel — shared truck run',amt:64.10,dir:'out',receipt:false}],confirmed:'49.50'};
+try{const raw=localStorage.getItem(POTKEY); if(raw){const q=JSON.parse(raw); if(q&&Array.isArray(q.entries)) pot=q;}}catch(e){}
+function potPersist(){try{localStorage.setItem(POTKEY,JSON.stringify(pot));}catch(e){}}
+function potCalc(){return pot.entries.reduce((a,e)=>a+(e.dir==='in'?e.amt:-e.amt),0);}
+function renderPot(){
+  $('#pot-list').innerHTML=pot.entries.map(e=>'<div class="ent '+(e.dir==='in'?'rec':'plan')+'"><span class="tag">'+(e.dir==='in'?'IN':'OUT')+'</span><span class="tx">'+esc(e.item)+' — $'+e.amt.toFixed(2)+'</span><span class="prov">receipt: '+(e.receipt?'ATTACHED':'MISSING')+'</span></div>').join('')||'<span class="nc">No entries yet.</span>';
+  const c=potCalc(); $('#pot-calc').textContent='$'+c.toFixed(2)+' calculated';
+  const conf=$('#pot-conf'); if(document.activeElement!==conf) conf.value=pot.confirmed;
+  const w=$('#pot-warn');
+  if(pot.confirmed!==''&&Math.abs(c-parseFloat(pot.confirmed))>0.005){w.textContent='⚠ BALANCE UNVERIFIED — the ledger says $'+c.toFixed(2)+', the confirmed balance says $'+parseFloat(pot.confirmed).toFixed(2)+'. Kept apart until they agree.';}
+  else if(pot.confirmed!==''){w.textContent='✓ Ledger and confirmed balance agree.'; w.style.color='#7fc98f';}
+  else {w.textContent=''; w.style.color='#f0b44c';}
+}
+$('#pot-f').addEventListener('submit',ev=>{ev.preventDefault();const it=$('#pot-item').value.trim();const am=parseFloat($('#pot-amt').value);
+  if(!it||!(am>0))return; pot.entries.push({item:it,amt:am,dir:$('#pot-dir').value,receipt:$('#pot-rcpt').checked});
+  potPersist(); $('#pot-item').value=''; $('#pot-amt').value=''; $('#pot-rcpt').checked=false; renderPot();});
+$('#pot-conf').addEventListener('change',()=>{pot.confirmed=$('#pot-conf').value; potPersist(); renderPot();});
+
+$('#commute-legs').innerHTML=commuteLegs().map(l=>'<div class="ent plan"><span class="tag">PLANNED</span><span class="tm">'+l.tm+'</span><span class="tx">'+l.tx+'</span></div>').join('');
+
+/* ---------- talk (entry present app-wide; honest about connection) ---------- */
+$('#talk-b').addEventListener('click',()=>{const q=$('#talk-i').value.trim();
+  $('#integ').textContent='Oakley (Daybook · this page): talk isn’t connected in this standalone build yet — nothing was sent. Your words stay on this page.'+(q?' You asked: “'+q+'”':'');
+  $('#talk-i').value='';});
+
+/* ---------- Phase 0: entry by address + return door (map 1.4–1.6, 7.8). #view=<budget|invest|security|automation|calendar|commute|truck|social|notes|shopping|day>[&from=sitrep&sec=<id>&fb=<box>] ---------- */
+(function(){const SEC={weather:'WEATHER',cams:'COMMUTE + CAMERAS',airport:'AIRPORT',tv:'LIVE TV',world:'WORLD'};
+function apply(){const p=new URLSearchParams(location.hash.replace(/^#/,'')),v=p.get('view');
+ if(v&&document.getElementById('v-'+v))go(v);
+ const old=document.getElementById('sr-ret');if(old)old.remove();
+ if((p.get('from')==='home'||p.get('from')==='sitrep')&&SEC[p.get('sec')]){const a=document.createElement('a');a.id='sr-ret';a.className='ret';a.href='./index.html#win='+p.get('sec');a.textContent='◂ BACK TO CANOPY HOME · '+SEC[p.get('sec')]+' WINDOW';const s=document.querySelector('header');if(s)s.appendChild(a)}}
+apply();addEventListener('hashchange',apply)})();
+</script>
+<style>
+/* ============ CANOPY FINISH PASS (2026-11-18) — Daybook: husky-face logo, no SITREP door, floating bubble + neon wheel ============ */
+.logo-mark .husk{width:88%;height:88%}
+
+/* Floating assistant — 3D husky-face bubble, draggable */
+.abub{position:fixed;right:.9rem;bottom:.9rem;z-index:320;width:3.6rem;height:3.6rem;border-radius:50%;border:1px solid rgba(255,255,255,.28);background:radial-gradient(circle at 34% 28%,#2f6b4e,#173c2a 55%,#0a1f14 100%);box-shadow:0 .45rem 1.1rem rgba(0,0,0,.55),inset 0 .18rem .35rem rgba(255,255,255,.35),inset 0 -.5rem .8rem rgba(0,0,0,.5);cursor:grab;display:flex;align-items:center;justify-content:center;padding:0;touch-action:none}
+.abub:active{cursor:grabbing}
+.abub .husk{width:82%;height:82%;filter:drop-shadow(0 .08rem .12rem rgba(0,0,0,.5))}
+.abub::after{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 30% 22%,rgba(255,255,255,.35),transparent 42%);pointer-events:none}
+
+/* Neon section wheel — Canopy's own phone navigation */
+.wheelbtn{position:fixed;left:50%;transform:translateX(-50%);bottom:.7rem;z-index:230;width:3.4rem;height:3.4rem;border-radius:50%;border:2px solid rgba(245,197,66,.8);background:radial-gradient(circle at 35% 28%,#2a2d33,#0c0d10 75%);box-shadow:0 0 1rem rgba(245,197,66,.45),inset 0 .15rem .3rem rgba(255,255,255,.25);cursor:pointer;display:none;flex-direction:column;align-items:center;justify-content:center;gap:0;padding:0}
+.wheelbtn .husk{width:64%;height:64%}
+.wheelbtn span{font:700 .48rem var(--fm);letter-spacing:.14em;color:#e8e4d8}
+@media (max-width:760px){.wheelbtn{display:flex}#doors{display:none!important}}
+.nwheel{position:fixed;inset:0;z-index:330;background:rgba(4,5,7,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.1rem}
+.nwheel[hidden]{display:none}
+.nw-dial{position:relative;width:min(78vw,21rem);height:min(78vw,21rem);flex:none}
+.nwheel:not([hidden]) .nw-dial{animation:nwIn .55s cubic-bezier(.2,1.35,.3,1)}
+@keyframes nwIn{from{transform:rotate(-140deg) scale(.55);opacity:0}to{transform:rotate(0deg) scale(1);opacity:1}}
+.nw-ring{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from -45deg,#f5c542 0 25%,#35d07f 0 50%,#4da3ff 0 75%,#ff5a5a 0 100%);opacity:.30}
+.nw-ring2{position:absolute;inset:5.5%;border-radius:50%;border:2px solid rgba(255,255,255,.16);background:radial-gradient(circle,#14161a 58%,#0a0b0d)}
+.nw-hub{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:27%;height:27%;border-radius:50%;background:radial-gradient(circle at 35% 28%,#2f6b4e,#0d2417 75%);border:1px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;z-index:2}
+.nw-hub .husk{width:84%;height:84%}
+.nw-st{position:absolute;width:27.5%;aspect-ratio:1;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.08rem;text-decoration:none;color:#e8e4d8;background:rgba(16,18,22,.94);font:700 .56rem var(--fm);letter-spacing:.07em;text-align:center;padding:.2rem;z-index:2}
+.nw-st svg{width:36%;height:36%}
+.nw-st .husk{width:54%;height:54%}
+.nw-home{left:50%;top:0;transform:translateX(-50%);border:2px solid #f5c542;box-shadow:0 0 1rem rgba(245,197,66,.55)}
+.nw-deck{right:0;top:50%;transform:translateY(-50%);border:2px solid #35d07f;box-shadow:0 0 1rem rgba(53,208,127,.55)}
+.nw-wb{left:50%;bottom:0;transform:translateX(-50%);border:2px solid #4da3ff;box-shadow:0 0 1rem rgba(77,163,255,.55)}
+.nw-day{left:0;top:50%;transform:translateY(-50%);border:2px solid #ff5a5a;box-shadow:0 0 1rem rgba(255,90,90,.55)}
+.nw-st.cur{outline:2px solid #fff;outline-offset:2px}
+.nw-x{font:700 .72rem var(--fm);letter-spacing:.1em;color:#e8e4d8;background:#121316;border:1px solid #2c2c31;border-radius:.3rem;padding:.5rem 1rem;cursor:pointer;min-height:2.4rem}
+@media (prefers-reduced-motion:reduce){.nwheel:not([hidden]) .nw-dial{animation:none}}
+
+</style>
+<button id="abub" class="abub" aria-label="Talk to Oakley — tap to open, drag to move" title="Talk to Oakley"><svg class="husk" viewBox="1450 158 392 378" aria-hidden="true"><g id="husky"><path id="husky-outline" fill="#F2EDDB" fill-rule="evenodd" d="M1541.6 348.4C1606.6 321.7 1464.1 380 1543.1 348.3C1545.1 347.5 1562.8 320.9 1565 317.3C1566.6 314.6 1570 309.5 1568.8 306.2C1567.1 301.3 1552.4 294.6 1552.2 282.4C1552.1 275.7 1559.6 272.8 1561.3 266.5C1565.2 252.5 1563.8 224.4 1567.6 214.5C1579.3 221.8 1596 258.6 1596.6 272.4C1596.8 277.1 1590 291.4 1590.2 292.1C1590.3 292.4 1591 292.4 1591 292.7C1598.7 286.9 1607.6 279.3 1613.5 271.6C1609.7 259.2 1605.5 247 1599.8 235.3C1596.2 227.8 1592.3 220.4 1587.8 213.4C1584.8 208.8 1571.4 190 1566 191.4C1559.3 193.1 1551.7 220.7 1549.9 227.3C1544.9 244.8 1539.1 274.6 1542.7 292.4C1544.5 301.4 1549.8 308.9 1552.4 317.5C1554.3 323.8 1548.2 334.4 1544.7 338.6C1544.3 333.3 1545.1 326.9 1543.1 321.8C1539.1 311.6 1533.2 303.3 1531.9 292.1C1530.2 278.7 1535.3 280.6 1535.9 275.6C1536.6 269 1536.1 262.2 1536.7 255.6C1538 241.4 1541.1 226.2 1545.2 212.5C1547.6 204.5 1558.3 174.1 1568.8 175.6C1575 176.4 1584.7 188.6 1588.7 193.3C1596.1 201.9 1603.4 210.8 1609.5 220.2C1616.8 231.5 1622.5 244.6 1632.1 254.2C1637.2 254 1642.4 251.6 1647.6 250.7C1657.1 249 1666.7 248.3 1676.4 248.7C1685.1 249.1 1694.7 250.1 1703 252.8C1708.4 254.5 1713.7 257 1719 258.2C1722.9 254.1 1725.1 248.7 1728.6 244.2C1734.5 237 1741.2 230.4 1747.1 223.2C1754 214.6 1760.8 206 1768.4 198C1774.8 191.3 1782 181.9 1790.4 178.2C1800.8 184.1 1803.8 200.7 1806.9 211.3C1815.6 241.7 1819.2 274 1813.7 305.2C1812.8 310.2 1812.2 316 1809.8 320.3C1808 318.7 1803.7 315.9 1802.8 313.4C1799.9 305.5 1809.2 293.8 1808.9 287.6C1808.2 266.4 1803.4 245.1 1798.7 224.6C1796.8 216.3 1795.2 204.8 1789.6 198.5C1779.6 201.2 1772.1 214.1 1766 222C1758.3 232 1732.9 261.3 1735.5 273.5C1737 280.4 1746.2 286.7 1751.1 291.4C1755.1 295.3 1759.8 300.9 1764.6 302C1763.6 291.4 1757.3 286.1 1751.3 278.4C1757.3 258.9 1770.3 230.9 1786.5 218.2C1790 229.9 1790 243.6 1790.3 255.9C1790.5 262.5 1789.7 270.3 1791.5 276.8C1792.5 280.2 1794.8 282.4 1797 284.9C1790.6 296.1 1772.8 311.1 1783.1 325.1C1792 325.4 1803.6 323.6 1811.6 326C1803.6 329.3 1792.1 325.5 1783.4 327.7C1783.1 330.1 1783.5 333.2 1782.8 335.5C1779.8 345.2 1772.1 353.6 1770.1 363.4C1768.2 371.9 1771.2 385.6 1767.8 392.6C1766.5 390.4 1766.6 388.6 1766.2 385.6C1763.3 386.2 1760.9 387.5 1758.2 389C1759.6 382.2 1764.6 376.1 1766.3 369.1C1767.1 365.6 1767.4 357.5 1765.4 354.3C1761.3 347.8 1748.1 341.4 1740.9 339.6C1735.6 338.3 1730.1 340.5 1725.2 338.2C1723.5 331.6 1730.5 327.4 1727.3 320.5C1717.5 299.4 1695.7 314.2 1689 328.9C1703.9 338 1706.8 341.5 1716.5 355.4C1726.6 353.4 1737.3 352.7 1745.9 358.9C1741.2 366.8 1739.6 378.3 1730.7 382.8C1722.5 387 1711.8 379.2 1704.3 384.5C1701.1 386.7 1700.5 390.6 1698.9 393.2C1694.9 380.5 1701.7 369.2 1710.7 360.5C1705.7 350.8 1696.8 341.1 1686 337.4C1681.3 346 1680 358.8 1681.8 368.6C1682.4 371.6 1684.2 375.3 1683.6 378.3C1683 381.6 1678.9 387.9 1677.7 392C1674.3 403.1 1673.1 414.9 1671 426.3C1668.9 415.8 1670.2 404.1 1670.5 393.4C1671.1 370.7 1671.7 348.1 1672.9 325.5C1673.4 316.4 1675.8 290.1 1671.9 283.4C1662.1 307.5 1670.1 334.8 1666 359.8C1664.2 370.5 1660.2 379 1653 387.3C1652.6 387.7 1651.7 389.4 1651 389.5C1650.7 389.6 1650.5 388.9 1650.2 389.1C1658.4 373.2 1662.2 350.9 1654.5 334.1C1640.9 331.8 1626 342.6 1617.2 352C1620.5 354 1624.9 355.4 1628.4 358C1637 364.5 1646.9 380.1 1640.7 390.4C1632.6 369.7 1618.9 396 1603.2 374.2C1588.8 396.3 1599.1 448.4 1614.7 468C1615.2 461.9 1613.8 455.1 1614.7 448.7C1617.1 452.9 1618.4 459.7 1619.6 465C1623.9 482.9 1628.2 504.6 1648.9 509.8C1654.8 511.2 1662.1 510.7 1667 507.1C1663.9 502.5 1656.5 501.9 1652 498.3C1645.1 492.8 1640.4 480.8 1641.2 472.2C1641.9 464.1 1650.3 461.2 1657 459.2C1676.9 452.9 1710.2 460.6 1695.2 487.9C1687.3 502.4 1679 498.8 1672 506.9C1678 513.7 1693.7 511 1700.6 505.9C1717.7 493.1 1716.1 468.8 1725.2 451.7C1726.7 458.8 1725 467.2 1723.7 474.4C1718.4 505.4 1700.9 523.2 1668 522.4C1659.7 522.1 1650.4 519.9 1643.3 515.2C1641.5 514 1639.9 511.9 1637.9 510.9C1632.2 508.1 1626.6 505.7 1621.3 501.9C1593.6 482.4 1576 447.5 1575.5 413.7C1575.4 406.6 1576.2 398.7 1578 391.9C1578.6 389.3 1580.3 385.8 1580.2 383.2C1580.1 378.3 1566.2 371.3 1561.9 370.8C1559.5 370.5 1556.1 372.4 1554 371.6C1548.7 369.4 1542.6 353.6 1541.6 348.4ZM1650.2 325C1649 321.8 1646 318.7 1643.1 316C1635 308.7 1622.2 303.8 1614.5 314.6C1612.9 316.7 1611.7 319.3 1612 322C1612.5 326.5 1615.5 330.8 1617.9 334.5C1628.8 330.7 1638.5 326.4 1650.2 325ZM1611.3 338.6C1601.3 334.5 1579.3 346.7 1572.4 354.3C1573.6 361.3 1577.3 370.5 1582.3 375.5C1586.7 369.6 1589.6 362.2 1594.4 356.2C1599.5 349.9 1606.5 344.6 1611.3 338.6ZM1690.2 473.1C1684.4 468.1 1671.5 467.4 1664.9 471C1669.4 471.5 1674.2 471.6 1678.6 472.8C1681.4 473.6 1683.7 477 1686.4 477.1C1688.7 477.2 1689.4 474.7 1690.2 473.1ZM1749 502.4C1746.8 499.3 1746.8 496.5 1749.2 493.3C1750.8 494.7 1749.6 491.4 1750.9 493.9C1751.5 495.1 1751.5 500.7 1750.8 501.8C1749.6 503.6 1750.4 501.3 1749 502.4Z"/><g id="under-eye-marks" fill="#91A495"><path id="under-eye-mark-left" d="M1605.5 395.5C1613.78 395.33 1628.96 403.4 1637 409C1629.22 408.02 1612.97 402.42 1605.5 395.5Z"/><path id="under-eye-mark-right" d="M1736.5 395.5C1728.22 395.33 1713.04 403.4 1705 409C1712.78 408.02 1729.03 402.42 1736.5 395.5Z"/></g>
+<g id="under-eye-marks" fill="#91A495"><path id="under-eye-mark-left" d="M1605.5 395.5C1613.78 395.33 1628.96 403.4 1637 409C1629.22 408.02 1612.97 402.42 1605.5 395.5Z"/><path id="under-eye-mark-right" d="M1736.5 395.5C1728.22 395.33 1713.04 403.4 1705 409C1712.78 408.02 1729.03 402.42 1736.5 395.5Z"/></g>
+<g id="accent-eyes" fill="#8BD3FF" fill-rule="evenodd"><path d="M1608.6 359.6C1610.9 359.2 1612.1 359.3 1614.4 359.9C1614.7 361.8 1614.4 363.8 1614.7 365.7C1616.3 374.2 1625.3 367.6 1629.9 368.7C1633.3 384.5 1597.7 376 1608.6 359.6ZM1709.9 369.7C1713.9 366.5 1715.2 369.1 1718.8 371.6C1726 370.1 1726.1 366.5 1726.7 360.3C1729.6 359.4 1731.4 359.3 1734.4 360C1735.1 364.8 1734.2 372.3 1729.7 375.5C1723.3 380 1710.2 378.9 1709.9 369.7Z"/></g></svg></button>
+<button id="wheelbtn" class="wheelbtn" aria-label="Open the Canopy section wheel"><svg class="husk" viewBox="1450 158 392 378" aria-hidden="true"><g id="husky"><path id="husky-outline" fill="#F2EDDB" fill-rule="evenodd" d="M1541.6 348.4C1606.6 321.7 1464.1 380 1543.1 348.3C1545.1 347.5 1562.8 320.9 1565 317.3C1566.6 314.6 1570 309.5 1568.8 306.2C1567.1 301.3 1552.4 294.6 1552.2 282.4C1552.1 275.7 1559.6 272.8 1561.3 266.5C1565.2 252.5 1563.8 224.4 1567.6 214.5C1579.3 221.8 1596 258.6 1596.6 272.4C1596.8 277.1 1590 291.4 1590.2 292.1C1590.3 292.4 1591 292.4 1591 292.7C1598.7 286.9 1607.6 279.3 1613.5 271.6C1609.7 259.2 1605.5 247 1599.8 235.3C1596.2 227.8 1592.3 220.4 1587.8 213.4C1584.8 208.8 1571.4 190 1566 191.4C1559.3 193.1 1551.7 220.7 1549.9 227.3C1544.9 244.8 1539.1 274.6 1542.7 292.4C1544.5 301.4 1549.8 308.9 1552.4 317.5C1554.3 323.8 1548.2 334.4 1544.7 338.6C1544.3 333.3 1545.1 326.9 1543.1 321.8C1539.1 311.6 1533.2 303.3 1531.9 292.1C1530.2 278.7 1535.3 280.6 1535.9 275.6C1536.6 269 1536.1 262.2 1536.7 255.6C1538 241.4 1541.1 226.2 1545.2 212.5C1547.6 204.5 1558.3 174.1 1568.8 175.6C1575 176.4 1584.7 188.6 1588.7 193.3C1596.1 201.9 1603.4 210.8 1609.5 220.2C1616.8 231.5 1622.5 244.6 1632.1 254.2C1637.2 254 1642.4 251.6 1647.6 250.7C1657.1 249 1666.7 248.3 1676.4 248.7C1685.1 249.1 1694.7 250.1 1703 252.8C1708.4 254.5 1713.7 257 1719 258.2C1722.9 254.1 1725.1 248.7 1728.6 244.2C1734.5 237 1741.2 230.4 1747.1 223.2C1754 214.6 1760.8 206 1768.4 198C1774.8 191.3 1782 181.9 1790.4 178.2C1800.8 184.1 1803.8 200.7 1806.9 211.3C1815.6 241.7 1819.2 274 1813.7 305.2C1812.8 310.2 1812.2 316 1809.8 320.3C1808 318.7 1803.7 315.9 1802.8 313.4C1799.9 305.5 1809.2 293.8 1808.9 287.6C1808.2 266.4 1803.4 245.1 1798.7 224.6C1796.8 216.3 1795.2 204.8 1789.6 198.5C1779.6 201.2 1772.1 214.1 1766 222C1758.3 232 1732.9 261.3 1735.5 273.5C1737 280.4 1746.2 286.7 1751.1 291.4C1755.1 295.3 1759.8 300.9 1764.6 302C1763.6 291.4 1757.3 286.1 1751.3 278.4C1757.3 258.9 1770.3 230.9 1786.5 218.2C1790 229.9 1790 243.6 1790.3 255.9C1790.5 262.5 1789.7 270.3 1791.5 276.8C1792.5 280.2 1794.8 282.4 1797 284.9C1790.6 296.1 1772.8 311.1 1783.1 325.1C1792 325.4 1803.6 323.6 1811.6 326C1803.6 329.3 1792.1 325.5 1783.4 327.7C1783.1 330.1 1783.5 333.2 1782.8 335.5C1779.8 345.2 1772.1 353.6 1770.1 363.4C1768.2 371.9 1771.2 385.6 1767.8 392.6C1766.5 390.4 1766.6 388.6 1766.2 385.6C1763.3 386.2 1760.9 387.5 1758.2 389C1759.6 382.2 1764.6 376.1 1766.3 369.1C1767.1 365.6 1767.4 357.5 1765.4 354.3C1761.3 347.8 1748.1 341.4 1740.9 339.6C1735.6 338.3 1730.1 340.5 1725.2 338.2C1723.5 331.6 1730.5 327.4 1727.3 320.5C1717.5 299.4 1695.7 314.2 1689 328.9C1703.9 338 1706.8 341.5 1716.5 355.4C1726.6 353.4 1737.3 352.7 1745.9 358.9C1741.2 366.8 1739.6 378.3 1730.7 382.8C1722.5 387 1711.8 379.2 1704.3 384.5C1701.1 386.7 1700.5 390.6 1698.9 393.2C1694.9 380.5 1701.7 369.2 1710.7 360.5C1705.7 350.8 1696.8 341.1 1686 337.4C1681.3 346 1680 358.8 1681.8 368.6C1682.4 371.6 1684.2 375.3 1683.6 378.3C1683 381.6 1678.9 387.9 1677.7 392C1674.3 403.1 1673.1 414.9 1671 426.3C1668.9 415.8 1670.2 404.1 1670.5 393.4C1671.1 370.7 1671.7 348.1 1672.9 325.5C1673.4 316.4 1675.8 290.1 1671.9 283.4C1662.1 307.5 1670.1 334.8 1666 359.8C1664.2 370.5 1660.2 379 1653 387.3C1652.6 387.7 1651.7 389.4 1651 389.5C1650.7 389.6 1650.5 388.9 1650.2 389.1C1658.4 373.2 1662.2 350.9 1654.5 334.1C1640.9 331.8 1626 342.6 1617.2 352C1620.5 354 1624.9 355.4 1628.4 358C1637 364.5 1646.9 380.1 1640.7 390.4C1632.6 369.7 1618.9 396 1603.2 374.2C1588.8 396.3 1599.1 448.4 1614.7 468C1615.2 461.9 1613.8 455.1 1614.7 448.7C1617.1 452.9 1618.4 459.7 1619.6 465C1623.9 482.9 1628.2 504.6 1648.9 509.8C1654.8 511.2 1662.1 510.7 1667 507.1C1663.9 502.5 1656.5 501.9 1652 498.3C1645.1 492.8 1640.4 480.8 1641.2 472.2C1641.9 464.1 1650.3 461.2 1657 459.2C1676.9 452.9 1710.2 460.6 1695.2 487.9C1687.3 502.4 1679 498.8 1672 506.9C1678 513.7 1693.7 511 1700.6 505.9C1717.7 493.1 1716.1 468.8 1725.2 451.7C1726.7 458.8 1725 467.2 1723.7 474.4C1718.4 505.4 1700.9 523.2 1668 522.4C1659.7 522.1 1650.4 519.9 1643.3 515.2C1641.5 514 1639.9 511.9 1637.9 510.9C1632.2 508.1 1626.6 505.7 1621.3 501.9C1593.6 482.4 1576 447.5 1575.5 413.7C1575.4 406.6 1576.2 398.7 1578 391.9C1578.6 389.3 1580.3 385.8 1580.2 383.2C1580.1 378.3 1566.2 371.3 1561.9 370.8C1559.5 370.5 1556.1 372.4 1554 371.6C1548.7 369.4 1542.6 353.6 1541.6 348.4ZM1650.2 325C1649 321.8 1646 318.7 1643.1 316C1635 308.7 1622.2 303.8 1614.5 314.6C1612.9 316.7 1611.7 319.3 1612 322C1612.5 326.5 1615.5 330.8 1617.9 334.5C1628.8 330.7 1638.5 326.4 1650.2 325ZM1611.3 338.6C1601.3 334.5 1579.3 346.7 1572.4 354.3C1573.6 361.3 1577.3 370.5 1582.3 375.5C1586.7 369.6 1589.6 362.2 1594.4 356.2C1599.5 349.9 1606.5 344.6 1611.3 338.6ZM1690.2 473.1C1684.4 468.1 1671.5 467.4 1664.9 471C1669.4 471.5 1674.2 471.6 1678.6 472.8C1681.4 473.6 1683.7 477 1686.4 477.1C1688.7 477.2 1689.4 474.7 1690.2 473.1ZM1749 502.4C1746.8 499.3 1746.8 496.5 1749.2 493.3C1750.8 494.7 1749.6 491.4 1750.9 493.9C1751.5 495.1 1751.5 500.7 1750.8 501.8C1749.6 503.6 1750.4 501.3 1749 502.4Z"/><g id="under-eye-marks" fill="#91A495"><path id="under-eye-mark-left" d="M1605.5 395.5C1613.78 395.33 1628.96 403.4 1637 409C1629.22 408.02 1612.97 402.42 1605.5 395.5Z"/><path id="under-eye-mark-right" d="M1736.5 395.5C1728.22 395.33 1713.04 403.4 1705 409C1712.78 408.02 1729.03 402.42 1736.5 395.5Z"/></g>
+<g id="under-eye-marks" fill="#91A495"><path id="under-eye-mark-left" d="M1605.5 395.5C1613.78 395.33 1628.96 403.4 1637 409C1629.22 408.02 1612.97 402.42 1605.5 395.5Z"/><path id="under-eye-mark-right" d="M1736.5 395.5C1728.22 395.33 1713.04 403.4 1705 409C1712.78 408.02 1729.03 402.42 1736.5 395.5Z"/></g>
+<g id="accent-eyes" fill="#8BD3FF" fill-rule="evenodd"><path d="M1608.6 359.6C1610.9 359.2 1612.1 359.3 1614.4 359.9C1614.7 361.8 1614.4 363.8 1614.7 365.7C1616.3 374.2 1625.3 367.6 1629.9 368.7C1633.3 384.5 1597.7 376 1608.6 359.6ZM1709.9 369.7C1713.9 366.5 1715.2 369.1 1718.8 371.6C1726 370.1 1726.1 366.5 1726.7 360.3C1729.6 359.4 1731.4 359.3 1734.4 360C1735.1 364.8 1734.2 372.3 1729.7 375.5C1723.3 380 1710.2 378.9 1709.9 369.7Z"/></g></svg><span>SECTIONS</span></button>
+<div id="nwheel" class="nwheel" hidden role="dialog" aria-modal="true" aria-label="Canopy sections">
+ <div class="nw-dial">
+  <div class="nw-ring"></div><div class="nw-ring2"></div>
+  <button class="nw-hub" data-nw="close" aria-label="Close the wheel"><svg class="husk" viewBox="1450 158 392 378" aria-hidden="true"><g id="husky"><path id="husky-outline" fill="#F2EDDB" fill-rule="evenodd" d="M1541.6 348.4C1606.6 321.7 1464.1 380 1543.1 348.3C1545.1 347.5 1562.8 320.9 1565 317.3C1566.6 314.6 1570 309.5 1568.8 306.2C1567.1 301.3 1552.4 294.6 1552.2 282.4C1552.1 275.7 1559.6 272.8 1561.3 266.5C1565.2 252.5 1563.8 224.4 1567.6 214.5C1579.3 221.8 1596 258.6 1596.6 272.4C1596.8 277.1 1590 291.4 1590.2 292.1C1590.3 292.4 1591 292.4 1591 292.7C1598.7 286.9 1607.6 279.3 1613.5 271.6C1609.7 259.2 1605.5 247 1599.8 235.3C1596.2 227.8 1592.3 220.4 1587.8 213.4C1584.8 208.8 1571.4 190 1566 191.4C1559.3 193.1 1551.7 220.7 1549.9 227.3C1544.9 244.8 1539.1 274.6 1542.7 292.4C1544.5 301.4 1549.8 308.9 1552.4 317.5C1554.3 323.8 1548.2 334.4 1544.7 338.6C1544.3 333.3 1545.1 326.9 1543.1 321.8C1539.1 311.6 1533.2 303.3 1531.9 292.1C1530.2 278.7 1535.3 280.6 1535.9 275.6C1536.6 269 1536.1 262.2 1536.7 255.6C1538 241.4 1541.1 226.2 1545.2 212.5C1547.6 204.5 1558.3 174.1 1568.8 175.6C1575 176.4 1584.7 188.6 1588.7 193.3C1596.1 201.9 1603.4 210.8 1609.5 220.2C1616.8 231.5 1622.5 244.6 1632.1 254.2C1637.2 254 1642.4 251.6 1647.6 250.7C1657.1 249 1666.7 248.3 1676.4 248.7C1685.1 249.1 1694.7 250.1 1703 252.8C1708.4 254.5 1713.7 257 1719 258.2C1722.9 254.1 1725.1 248.7 1728.6 244.2C1734.5 237 1741.2 230.4 1747.1 223.2C1754 214.6 1760.8 206 1768.4 198C1774.8 191.3 1782 181.9 1790.4 178.2C1800.8 184.1 1803.8 200.7 1806.9 211.3C1815.6 241.7 1819.2 274 1813.7 305.2C1812.8 310.2 1812.2 316 1809.8 320.3C1808 318.7 1803.7 315.9 1802.8 313.4C1799.9 305.5 1809.2 293.8 1808.9 287.6C1808.2 266.4 1803.4 245.1 1798.7 224.6C1796.8 216.3 1795.2 204.8 1789.6 198.5C1779.6 201.2 1772.1 214.1 1766 222C1758.3 232 1732.9 261.3 1735.5 273.5C1737 280.4 1746.2 286.7 1751.1 291.4C1755.1 295.3 1759.8 300.9 1764.6 302C1763.6 291.4 1757.3 286.1 1751.3 278.4C1757.3 258.9 1770.3 230.9 1786.5 218.2C1790 229.9 1790 243.6 1790.3 255.9C1790.5 262.5 1789.7 270.3 1791.5 276.8C1792.5 280.2 1794.8 282.4 1797 284.9C1790.6 296.1 1772.8 311.1 1783.1 325.1C1792 325.4 1803.6 323.6 1811.6 326C1803.6 329.3 1792.1 325.5 1783.4 327.7C1783.1 330.1 1783.5 333.2 1782.8 335.5C1779.8 345.2 1772.1 353.6 1770.1 363.4C1768.2 371.9 1771.2 385.6 1767.8 392.6C1766.5 390.4 1766.6 388.6 1766.2 385.6C1763.3 386.2 1760.9 387.5 1758.2 389C1759.6 382.2 1764.6 376.1 1766.3 369.1C1767.1 365.6 1767.4 357.5 1765.4 354.3C1761.3 347.8 1748.1 341.4 1740.9 339.6C1735.6 338.3 1730.1 340.5 1725.2 338.2C1723.5 331.6 1730.5 327.4 1727.3 320.5C1717.5 299.4 1695.7 314.2 1689 328.9C1703.9 338 1706.8 341.5 1716.5 355.4C1726.6 353.4 1737.3 352.7 1745.9 358.9C1741.2 366.8 1739.6 378.3 1730.7 382.8C1722.5 387 1711.8 379.2 1704.3 384.5C1701.1 386.7 1700.5 390.6 1698.9 393.2C1694.9 380.5 1701.7 369.2 1710.7 360.5C1705.7 350.8 1696.8 341.1 1686 337.4C1681.3 346 1680 358.8 1681.8 368.6C1682.4 371.6 1684.2 375.3 1683.6 378.3C1683 381.6 1678.9 387.9 1677.7 392C1674.3 403.1 1673.1 414.9 1671 426.3C1668.9 415.8 1670.2 404.1 1670.5 393.4C1671.1 370.7 1671.7 348.1 1672.9 325.5C1673.4 316.4 1675.8 290.1 1671.9 283.4C1662.1 307.5 1670.1 334.8 1666 359.8C1664.2 370.5 1660.2 379 1653 387.3C1652.6 387.7 1651.7 389.4 1651 389.5C1650.7 389.6 1650.5 388.9 1650.2 389.1C1658.4 373.2 1662.2 350.9 1654.5 334.1C1640.9 331.8 1626 342.6 1617.2 352C1620.5 354 1624.9 355.4 1628.4 358C1637 364.5 1646.9 380.1 1640.7 390.4C1632.6 369.7 1618.9 396 1603.2 374.2C1588.8 396.3 1599.1 448.4 1614.7 468C1615.2 461.9 1613.8 455.1 1614.7 448.7C1617.1 452.9 1618.4 459.7 1619.6 465C1623.9 482.9 1628.2 504.6 1648.9 509.8C1654.8 511.2 1662.1 510.7 1667 507.1C1663.9 502.5 1656.5 501.9 1652 498.3C1645.1 492.8 1640.4 480.8 1641.2 472.2C1641.9 464.1 1650.3 461.2 1657 459.2C1676.9 452.9 1710.2 460.6 1695.2 487.9C1687.3 502.4 1679 498.8 1672 506.9C1678 513.7 1693.7 511 1700.6 505.9C1717.7 493.1 1716.1 468.8 1725.2 451.7C1726.7 458.8 1725 467.2 1723.7 474.4C1718.4 505.4 1700.9 523.2 1668 522.4C1659.7 522.1 1650.4 519.9 1643.3 515.2C1641.5 514 1639.9 511.9 1637.9 510.9C1632.2 508.1 1626.6 505.7 1621.3 501.9C1593.6 482.4 1576 447.5 1575.5 413.7C1575.4 406.6 1576.2 398.7 1578 391.9C1578.6 389.3 1580.3 385.8 1580.2 383.2C1580.1 378.3 1566.2 371.3 1561.9 370.8C1559.5 370.5 1556.1 372.4 1554 371.6C1548.7 369.4 1542.6 353.6 1541.6 348.4ZM1650.2 325C1649 321.8 1646 318.7 1643.1 316C1635 308.7 1622.2 303.8 1614.5 314.6C1612.9 316.7 1611.7 319.3 1612 322C1612.5 326.5 1615.5 330.8 1617.9 334.5C1628.8 330.7 1638.5 326.4 1650.2 325ZM1611.3 338.6C1601.3 334.5 1579.3 346.7 1572.4 354.3C1573.6 361.3 1577.3 370.5 1582.3 375.5C1586.7 369.6 1589.6 362.2 1594.4 356.2C1599.5 349.9 1606.5 344.6 1611.3 338.6ZM1690.2 473.1C1684.4 468.1 1671.5 467.4 1664.9 471C1669.4 471.5 1674.2 471.6 1678.6 472.8C1681.4 473.6 1683.7 477 1686.4 477.1C1688.7 477.2 1689.4 474.7 1690.2 473.1ZM1749 502.4C1746.8 499.3 1746.8 496.5 1749.2 493.3C1750.8 494.7 1749.6 491.4 1750.9 493.9C1751.5 495.1 1751.5 500.7 1750.8 501.8C1749.6 503.6 1750.4 501.3 1749 502.4Z"/><g id="under-eye-marks" fill="#91A495"><path id="under-eye-mark-left" d="M1605.5 395.5C1613.78 395.33 1628.96 403.4 1637 409C1629.22 408.02 1612.97 402.42 1605.5 395.5Z"/><path id="under-eye-mark-right" d="M1736.5 395.5C1728.22 395.33 1713.04 403.4 1705 409C1712.78 408.02 1729.03 402.42 1736.5 395.5Z"/></g>
+<g id="under-eye-marks" fill="#91A495"><path id="under-eye-mark-left" d="M1605.5 395.5C1613.78 395.33 1628.96 403.4 1637 409C1629.22 408.02 1612.97 402.42 1605.5 395.5Z"/><path id="under-eye-mark-right" d="M1736.5 395.5C1728.22 395.33 1713.04 403.4 1705 409C1712.78 408.02 1729.03 402.42 1736.5 395.5Z"/></g>
+<g id="accent-eyes" fill="#8BD3FF" fill-rule="evenodd"><path d="M1608.6 359.6C1610.9 359.2 1612.1 359.3 1614.4 359.9C1614.7 361.8 1614.4 363.8 1614.7 365.7C1616.3 374.2 1625.3 367.6 1629.9 368.7C1633.3 384.5 1597.7 376 1608.6 359.6ZM1709.9 369.7C1713.9 366.5 1715.2 369.1 1718.8 371.6C1726 370.1 1726.1 366.5 1726.7 360.3C1729.6 359.4 1731.4 359.3 1734.4 360C1735.1 364.8 1734.2 372.3 1729.7 375.5C1723.3 380 1710.2 378.9 1709.9 369.7Z"/></g></svg></button>
+  <a class="nw-st nw-home" href="./index.html"><svg class="husk" viewBox="1450 158 392 378" aria-hidden="true"><g id="husky"><path id="husky-outline" fill="#F2EDDB" fill-rule="evenodd" d="M1541.6 348.4C1606.6 321.7 1464.1 380 1543.1 348.3C1545.1 347.5 1562.8 320.9 1565 317.3C1566.6 314.6 1570 309.5 1568.8 306.2C1567.1 301.3 1552.4 294.6 1552.2 282.4C1552.1 275.7 1559.6 272.8 1561.3 266.5C1565.2 252.5 1563.8 224.4 1567.6 214.5C1579.3 221.8 1596 258.6 1596.6 272.4C1596.8 277.1 1590 291.4 1590.2 292.1C1590.3 292.4 1591 292.4 1591 292.7C1598.7 286.9 1607.6 279.3 1613.5 271.6C1609.7 259.2 1605.5 247 1599.8 235.3C1596.2 227.8 1592.3 220.4 1587.8 213.4C1584.8 208.8 1571.4 190 1566 191.4C1559.3 193.1 1551.7 220.7 1549.9 227.3C1544.9 244.8 1539.1 274.6 1542.7 292.4C1544.5 301.4 1549.8 308.9 1552.4 317.5C1554.3 323.8 1548.2 334.4 1544.7 338.6C1544.3 333.3 1545.1 326.9 1543.1 321.8C1539.1 311.6 1533.2 303.3 1531.9 292.1C1530.2 278.7 1535.3 280.6 1535.9 275.6C1536.6 269 1536.1 262.2 1536.7 255.6C1538 241.4 1541.1 226.2 1545.2 212.5C1547.6 204.5 1558.3 174.1 1568.8 175.6C1575 176.4 1584.7 188.6 1588.7 193.3C1596.1 201.9 1603.4 210.8 1609.5 220.2C1616.8 231.5 1622.5 244.6 1632.1 254.2C1637.2 254 1642.4 251.6 1647.6 250.7C1657.1 249 1666.7 248.3 1676.4 248.7C1685.1 249.1 1694.7 250.1 1703 252.8C1708.4 254.5 1713.7 257 1719 258.2C1722.9 254.1 1725.1 248.7 1728.6 244.2C1734.5 237 1741.2 230.4 1747.1 223.2C1754 214.6 1760.8 206 1768.4 198C1774.8 191.3 1782 181.9 1790.4 178.2C1800.8 184.1 1803.8 200.7 1806.9 211.3C1815.6 241.7 1819.2 274 1813.7 305.2C1812.8 310.2 1812.2 316 1809.8 320.3C1808 318.7 1803.7 315.9 1802.8 313.4C1799.9 305.5 1809.2 293.8 1808.9 287.6C1808.2 266.4 1803.4 245.1 1798.7 224.6C1796.8 216.3 1795.2 204.8 1789.6 198.5C1779.6 201.2 1772.1 214.1 1766 222C1758.3 232 1732.9 261.3 1735.5 273.5C1737 280.4 1746.2 286.7 1751.1 291.4C1755.1 295.3 1759.8 300.9 1764.6 302C1763.6 291.4 1757.3 286.1 1751.3 278.4C1757.3 258.9 1770.3 230.9 1786.5 218.2C1790 229.9 1790 243.6 1790.3 255.9C1790.5 262.5 1789.7 270.3 1791.5 276.8C1792.5 280.2 1794.8 282.4 1797 284.9C1790.6 296.1 1772.8 311.1 1783.1 325.1C1792 325.4 1803.6 323.6 1811.6 326C1803.6 329.3 1792.1 325.5 1783.4 327.7C1783.1 330.1 1783.5 333.2 1782.8 335.5C1779.8 345.2 1772.1 353.6 1770.1 363.4C1768.2 371.9 1771.2 385.6 1767.8 392.6C1766.5 390.4 1766.6 388.6 1766.2 385.6C1763.3 386.2 1760.9 387.5 1758.2 389C1759.6 382.2 1764.6 376.1 1766.3 369.1C1767.1 365.6 1767.4 357.5 1765.4 354.3C1761.3 347.8 1748.1 341.4 1740.9 339.6C1735.6 338.3 1730.1 340.5 1725.2 338.2C1723.5 331.6 1730.5 327.4 1727.3 320.5C1717.5 299.4 1695.7 314.2 1689 328.9C1703.9 338 1706.8 341.5 1716.5 355.4C1726.6 353.4 1737.3 352.7 1745.9 358.9C1741.2 366.8 1739.6 378.3 1730.7 382.8C1722.5 387 1711.8 379.2 1704.3 384.5C1701.1 386.7 1700.5 390.6 1698.9 393.2C1694.9 380.5 1701.7 369.2 1710.7 360.5C1705.7 350.8 1696.8 341.1 1686 337.4C1681.3 346 1680 358.8 1681.8 368.6C1682.4 371.6 1684.2 375.3 1683.6 378.3C1683 381.6 1678.9 387.9 1677.7 392C1674.3 403.1 1673.1 414.9 1671 426.3C1668.9 415.8 1670.2 404.1 1670.5 393.4C1671.1 370.7 1671.7 348.1 1672.9 325.5C1673.4 316.4 1675.8 290.1 1671.9 283.4C1662.1 307.5 1670.1 334.8 1666 359.8C1664.2 370.5 1660.2 379 1653 387.3C1652.6 387.7 1651.7 389.4 1651 389.5C1650.7 389.6 1650.5 388.9 1650.2 389.1C1658.4 373.2 1662.2 350.9 1654.5 334.1C1640.9 331.8 1626 342.6 1617.2 352C1620.5 354 1624.9 355.4 1628.4 358C1637 364.5 1646.9 380.1 1640.7 390.4C1632.6 369.7 1618.9 396 1603.2 374.2C1588.8 396.3 1599.1 448.4 1614.7 468C1615.2 461.9 1613.8 455.1 1614.7 448.7C1617.1 452.9 1618.4 459.7 1619.6 465C1623.9 482.9 1628.2 504.6 1648.9 509.8C1654.8 511.2 1662.1 510.7 1667 507.1C1663.9 502.5 1656.5 501.9 1652 498.3C1645.1 492.8 1640.4 480.8 1641.2 472.2C1641.9 464.1 1650.3 461.2 1657 459.2C1676.9 452.9 1710.2 460.6 1695.2 487.9C1687.3 502.4 1679 498.8 1672 506.9C1678 513.7 1693.7 511 1700.6 505.9C1717.7 493.1 1716.1 468.8 1725.2 451.7C1726.7 458.8 1725 467.2 1723.7 474.4C1718.4 505.4 1700.9 523.2 1668 522.4C1659.7 522.1 1650.4 519.9 1643.3 515.2C1641.5 514 1639.9 511.9 1637.9 510.9C1632.2 508.1 1626.6 505.7 1621.3 501.9C1593.6 482.4 1576 447.5 1575.5 413.7C1575.4 406.6 1576.2 398.7 1578 391.9C1578.6 389.3 1580.3 385.8 1580.2 383.2C1580.1 378.3 1566.2 371.3 1561.9 370.8C1559.5 370.5 1556.1 372.4 1554 371.6C1548.7 369.4 1542.6 353.6 1541.6 348.4ZM1650.2 325C1649 321.8 1646 318.7 1643.1 316C1635 308.7 1622.2 303.8 1614.5 314.6C1612.9 316.7 1611.7 319.3 1612 322C1612.5 326.5 1615.5 330.8 1617.9 334.5C1628.8 330.7 1638.5 326.4 1650.2 325ZM1611.3 338.6C1601.3 334.5 1579.3 346.7 1572.4 354.3C1573.6 361.3 1577.3 370.5 1582.3 375.5C1586.7 369.6 1589.6 362.2 1594.4 356.2C1599.5 349.9 1606.5 344.6 1611.3 338.6ZM1690.2 473.1C1684.4 468.1 1671.5 467.4 1664.9 471C1669.4 471.5 1674.2 471.6 1678.6 472.8C1681.4 473.6 1683.7 477 1686.4 477.1C1688.7 477.2 1689.4 474.7 1690.2 473.1ZM1749 502.4C1746.8 499.3 1746.8 496.5 1749.2 493.3C1750.8 494.7 1749.6 491.4 1750.9 493.9C1751.5 495.1 1751.5 500.7 1750.8 501.8C1749.6 503.6 1750.4 501.3 1749 502.4Z"/><g id="under-eye-marks" fill="#91A495"><path id="under-eye-mark-left" d="M1605.5 395.5C1613.78 395.33 1628.96 403.4 1637 409C1629.22 408.02 1612.97 402.42 1605.5 395.5Z"/><path id="under-eye-mark-right" d="M1736.5 395.5C1728.22 395.33 1713.04 403.4 1705 409C1712.78 408.02 1729.03 402.42 1736.5 395.5Z"/></g>
+<g id="under-eye-marks" fill="#91A495"><path id="under-eye-mark-left" d="M1605.5 395.5C1613.78 395.33 1628.96 403.4 1637 409C1629.22 408.02 1612.97 402.42 1605.5 395.5Z"/><path id="under-eye-mark-right" d="M1736.5 395.5C1728.22 395.33 1713.04 403.4 1705 409C1712.78 408.02 1729.03 402.42 1736.5 395.5Z"/></g>
+<g id="accent-eyes" fill="#8BD3FF" fill-rule="evenodd"><path d="M1608.6 359.6C1610.9 359.2 1612.1 359.3 1614.4 359.9C1614.7 361.8 1614.4 363.8 1614.7 365.7C1616.3 374.2 1625.3 367.6 1629.9 368.7C1633.3 384.5 1597.7 376 1608.6 359.6ZM1709.9 369.7C1713.9 366.5 1715.2 369.1 1718.8 371.6C1726 370.1 1726.1 366.5 1726.7 360.3C1729.6 359.4 1731.4 359.3 1734.4 360C1735.1 364.8 1734.2 372.3 1729.7 375.5C1723.3 380 1710.2 378.9 1709.9 369.7Z"/></g></svg>HOME</a>
+  <a class="nw-st nw-deck" href="./deck.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 15a8 8 0 1 1 16 0"/><path d="M12 15l4.2-4.2"/><circle cx="12" cy="15" r="1.3" fill="currentColor" stroke="none"/></svg>DECK</a>
+  <a class="nw-st nw-wb" href="./workbench.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M9 8V6a3 3 0 0 1 6 0v2M3 13h18"/></svg>WORKBENCH</a>
+  <span class="nw-st nw-day cur" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M8 3v4M16 3v4"/></svg>DAYBOOK</span>
+ </div>
+ <button class="nw-x" data-nw="close">✕ CLOSE</button>
+</div>
+<script>
+/* ================= CANOPY FINISH PASS (2026-11-18) ================= */
+(function(){'use strict';
+var $=function(s,r){return (r||document).querySelector(s)},$$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var bub=$('#abub');
+if(bub){var sx=0,sy=0,ox=0,oy=0,moved=false,drag=false;
+bub.addEventListener('pointerdown',function(e){drag=true;moved=false;sx=e.clientX;sy=e.clientY;var r=bub.getBoundingClientRect();ox=r.left;oy=r.top;try{bub.setPointerCapture(e.pointerId)}catch(err){}bub.style.right='auto';bub.style.bottom='auto';bub.style.left=ox+'px';bub.style.top=oy+'px';e.preventDefault()});
+bub.addEventListener('pointermove',function(e){if(!drag)return;var dx=e.clientX-sx,dy=e.clientY-sy;if(Math.abs(dx)+Math.abs(dy)>6)moved=true;if(moved){bub.style.left=Math.min(Math.max(0,ox+dx),window.innerWidth-58)+'px';bub.style.top=Math.min(Math.max(0,oy+dy),window.innerHeight-58)+'px'}});
+bub.addEventListener('pointerup',function(){drag=false;if(!moved){var i=$('#talk-i');if(i){i.scrollIntoView({block:'center'});i.focus()}}});}
+var nwEl=$('#nwheel'),wbtn=$('#wheelbtn');
+function wheelClose(){nwEl.hidden=true}
+if(wbtn)wbtn.addEventListener('click',function(){nwEl.hidden=false});
+$$('[data-nw="close"]',nwEl).forEach(function(b){b.addEventListener('click',wheelClose)});
+nwEl.addEventListener('click',function(e){if(e.target===nwEl)wheelClose()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!nwEl.hidden)wheelClose()});
+})();
+</script>
+</body>
+</html>

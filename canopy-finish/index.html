@@ -518,6 +518,7 @@ const CFG={
   security:{url:'',staleMs:60000},    // HUB: JSON {asOf, zones:[{n,s}], cams:[{name,src,ts}], home:{doors:{v,ts},locks:{v,ts},smoke:{v,ts},water:{v,ts},temp:{v,ts},alarm:{v,ts}}}
   wxg:{url:'https://api.weather.gc.ca/collections/citypageweather-realtime/items/qc-126?f=json&lang=en',name:'GATINEAU · ECCC qc-126',staleMs:1800000},
   ev:{url:'https://traffic.ottawa.ca/map/service/events?accept-language=en&version=v2&format=geojson',everyMs:300000,staleMs:900000},   // City traffic-events v2 GeoJSON (no key, CORS-open)
+  yow:{url:'https://www.yow.ca/api/flights/get',name:'Ottawa International Airport Authority · FIDS',everyMs:600000,staleMs:1800000},   // YOW FIDS — the airport's own FREE flight board (Grant 2026-11-21: no paid flight data). No key, no CORS: direct → hub proxy → ./data/yow-flights.json snapshot (field-trimmed by the seeder)
   i511:{key:''},   // HUB: Ontario 511 key lives in the hub's secure keeping, NEVER in this file; 511 events stay PENDING until the hub supplies them
   cal:{url:'',private:false,everyMs:60000},   // HUB at app integration: JSON {asOf, events:[{start,end,title,allDay}]}; titles shown only when private:true (private presentation)
   scn:{url:'',everyMs:120000,staleMs:600000},   // OPTIONAL public-source feed: JSON {asOf, items:[{svc:'FIRE|POLICE|PARAMEDIC',t,msg}]} — none verified, stays NOT AVAILABLE
@@ -534,8 +535,8 @@ const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const NIGHT=()=>{const h=new Date().getHours();return h<6};
 const ST={m:'wall',id:null};
 const UI={gwv:'map',wx:'reg',camMode:4,camCur:0,stn:'dw',yt:'idle',ytAt:0};
-const D={seen:new Set(),seenInit:false,wx:null,camList:null,frames:{},camReq:0,camNext:0,news:{local:[],world:[]},nsrc:{},nat:{local:0,world:0},quakes:null,btc:null,hubfeed:null,brief:null,hcam:{},sec:null,wxg:null,tev:null,cal:null,scn:null,wmi:{usgs:[],gdacs:[],cap:[],eonet:[]},radar:null,events:[],log:[]};
-const H={wx:{st:'pend'},cams:{st:'pend'},news:{st:'pend'},quakes:{st:'pend'},mk:{st:'dly'},ge:{st:'pend'},wxg:{st:'pend'},tev:{st:'pend'},wm:{usgs:{st:'pend'},gdacs:{st:'pend'},cap:{st:'pend'},eonet:{st:'pend'}}};
+const D={seen:new Set(),seenInit:false,wx:null,camList:null,frames:{},camReq:0,camNext:0,news:{local:[],world:[]},nsrc:{},nat:{local:0,world:0},quakes:null,btc:null,hubfeed:null,brief:null,hcam:{},sec:null,wxg:null,tev:null,yow:null,cal:null,scn:null,wmi:{usgs:[],gdacs:[],cap:[],eonet:[]},radar:null,events:[],log:[]};
+const H={wx:{st:'pend'},cams:{st:'pend'},news:{st:'pend'},quakes:{st:'pend'},mk:{st:'dly'},ge:{st:'pend'},wxg:{st:'pend'},tev:{st:'pend'},yow:{st:'pend'},wm:{usgs:{st:'pend'},gdacs:{st:'pend'},cap:{st:'pend'},eonet:{st:'pend'}}};
 /* ---- log (real events only) ---- */
 const PINGS={WX:'wx',WXG:'wx',EVENTS:'trf',CAM:'trf',CAMS:'trf',WM:'gw',MKT:'mk',NEWS:'news'};
 function log(msg,bad){{const m=/^(WXG|WX|EVENTS|CAMS|CAM|WM|MKT|NEWS)\b/.exec(msg);if(m&&!bad&&PINGS[m[1]]&&typeof ping==='function')ping(PINGS[m[1]])}D.log.unshift({t:Date.now(),m:msg,bad:!!bad});D.log.length=Math.min(D.log.length,40);const e=$('#log');if(e)e.innerHTML='&gt; SYS.LOG [<b>'+hms(D.log[0].t)+'</b>] '+(bad?'<span class="e">'+esc(msg)+'</span>':esc(msg))}
@@ -1114,9 +1115,34 @@ function rCl(){const c=D.cal,x=X('cl'),now=new Date(),evs=c&&c.events?c.events:[
   const nxt=evs.filter(e=>Date.parse(e.end||e.start)>Date.now()).sort((a,b)=>Date.parse(a.start)-Date.parse(b.start))[0];
   const nx=c?(Date.now()-c.at>CFG.cal.everyMs*5?'<b class="am">STALE since '+hm(c.at)+'</b> · no event shown as current':nxt?(nxt.allDay?'all day':hm(Date.parse(nxt.start)))+' · '+(CFG.cal.private&&nxt.title?esc(nxt.title):'title hidden (private)'):'nothing further this week'):'not connected · privacy-gated';
   setH($('#cl .bd'),'<div class="wk'+(x?' big':'')+'">'+days.map((d,i)=>cell(d,i,x)).join('')+'</div><div class="rows">'+'<div class="rw '+(c?'on':'wa')+'"><b>NEXT</b><span>'+nx+'</span></div>'+(x?'<div class="rw"><b>TODAY</b><span>'+(c?evs.filter(e=>sameDay(new Date(Date.parse(e.start)),now)).length+' events today':'no events shown · nothing invented')+'</span></div><div class="rw"><b>GATE</b><span>titles show only when the private presentation is on (CFG.cal.private)</span></div><div class="rw"><b>SOURCE</b><span>hub-supplied calendar JSON at app integration (CFG.cal.url)</span></div>':'')+'</div>')}
-/* ---------- YOW: identity + city weather (explicitly not an airport feed); flights NOT CONNECTED ---------- */
-function rYw(){const o=D.wx&&D.wx.o,x=X('yw');hdw('yw','YOW · AIRPORT',bdg(['NO FLIGHT FEED','pend']));
-  setH($('#yw .bd'),'<div class="rows"><div class="rw on"><b>CYOW</b><span>Macdonald-Cartier Intl</span></div><div class="rw"><b>CITY WX</b><span><em>not an airport feed</em> · '+(o?num(o.t)+'° '+esc(o.cond||''):'weather pending')+'</span></div>'+(x?'<div class="rw wa"><b>FLIGHTS</b><span>NOT CONNECTED — live flights are a paid route, pending Grant’s call. No flights are invented.</span></div><div class="rw"><b>SOURCE</b><span>ECCC Ottawa city page'+(o&&o.stn?' (observed at '+esc(o.stn)+')':'')+' — public city weather, not an airport or aviation (METAR) feed</span></div>':'')+'</div>')}
+/* ---------- YOW: the airport's own FREE FIDS board (direct → hub proxy → snapshot) + city weather (explicitly not an airport feed) ---------- */
+async function getYow(){
+  try{let j=null,via='',asOf=null;
+    try{j=await jget(CFG.yow.url,'json',15000);via='direct'}catch(e1){
+      if(CFG.PROXY){try{j=await jget(CFG.PROXY+encodeURIComponent(CFG.yow.url),'json',15000);via='hub proxy'}catch(e2){}}
+      if(!j){const sr=await snapGet('yow-flights.json');j=JSON.parse(sr.t);via='snapshot';asOf=sr.asOf}}
+    if(!j||typeof j!=='object'||(!j.departures&&!j.arrivals))throw new Error('unexpected YOW payload shape');
+    const now=new Date(),day=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()),today=day(now),tom=day(new Date(Date.now()+86400000)),nowSec=now.getHours()*3600+now.getMinutes()*60+now.getSeconds();
+    const pick=(o,dy)=>((o&&o[dy])||[]).filter(f=>f&&f.DisplayFlight!==false).slice().sort((a,b)=>(+a.SecondsInDay||0)-(+b.SecondsInDay||0));
+    let dep=pick(j.departures,today);const arr=pick(j.arrivals,today);
+    if(!dep.length||dep.every(f=>(+f.SecondsInDay||0)<nowSec-1800)){const td=pick(j.departures,tom);if(td.length)dep=td}   // past the last flight of the day: tomorrow's first departures
+    D.yow={dep,arr};
+    if(asOf==null){const yowT=s=>{const m=/^(\d{4})-(\d{2})-(\d{2}) (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/.exec(String(s||''));if(!m)return null;let h=+m[4]%12;if(m[7]==='PM')h+=12;return new Date(+m[1],+m[2]-1,+m[3],h,+m[5],+m[6]).getTime()};let mx=0;dep.concat(arr).forEach(f=>{const t=yowT(f.UpdateTime);if(t&&t>mx)mx=t});asOf=mx||Date.now()}
+    H.yow={st:via==='snapshot'?'snapshot':'live',at:Date.now(),asOf,via};log('YOW OK · FIDS '+(dep.length+arr.length)+' flights · '+via)}
+  catch(e){H.yow={st:D.yow&&(D.yow.dep.length||D.yow.arr.length)?'stale':'err',at:H.yow.at||0,msg:String(e.message||e)};log('YOW FAIL · '+(e.message||e),1)}
+  rYw()}
+function rYw(){const o=D.wx&&D.wx.o,x=X('yw'),h=H.yow,y=D.yow;
+  hdw('yw','YOW · AIRPORT',!y?(h.st==='err'?bdg(['FLIGHTS OFFLINE','err']):bdg(['CHECKING','pend'])):h.st==='stale'?bdg(['STALE','stale']):h.via==='snapshot'?bdg(['SNAPSHOT · '+(h.asOf?hm(h.asOf):'--:--'),'stale']):bdg(['LIVE','live']));
+  const nowD=new Date(),nowSec=nowD.getHours()*3600+nowD.getMinutes()*60+nowD.getSeconds();
+  const nx=(list,grace)=>{if(!list||!list.length)return null;return list.find(f=>(+f.SecondsInDay||0)>=nowSec-grace)||list[0]};
+  const frow=(tag,f,kind)=>{if(!f)return'';const exp=f.ExpectedTime||f.ScheduledTime||'--:--';const tm=f.ScheduledTime&&f.ExpectedTime&&f.ScheduledTime!==f.ExpectedTime?esc(f.ScheduledTime)+' → '+esc(exp):esc(exp);const gb=kind==='dep'?(f.ActualGate?' · Gate '+esc(f.ActualGate):''):(f.ActualCarousels!==false&&f.ActualCarousels!=null&&f.ActualCarousels!==''?' · Belt '+esc(f.ActualCarousels):'');return '<div class="rw"><b>'+tag+' '+tm+'</b><span>'+esc(f.MasterFlight||'')+' · '+esc(f.ActualCities||'')+(f.IATA?' ('+esc(f.IATA)+')':'')+' · '+esc(f.Status||'')+gb+'</span></div>'};
+  let fl='';
+  if(y&&(y.dep.length||y.arr.length)){
+    fl=x?y.dep.slice(0,6).map(f=>frow('DEP',f,'dep')).join('')+y.arr.slice(0,6).map(f=>frow('ARR',f,'arr')).join(''):frow('DEP',nx(y.dep,1800),'dep')+frow('ARR',nx(y.arr,7200),'arr');
+    fl+='<div class="rw"><b>SOURCE</b><span>Ottawa International Airport Authority · FIDS'+(h.via?' · via '+esc(h.via):'')+(h.asOf?' · as of '+hm(h.asOf):'')+' — the airport’s own board, free; no flights are invented</span></div>';
+  }else{
+    fl='<div class="rw wa"><b>FLIGHTS</b><span>'+(h.st==='err'?'OFFLINE — the airport feed did not answer; no flights are shown or invented.':'Checking the airport’s own flight board…')+'</span></div>'}
+  setH($('#yw .bd'),'<div class="rows"><div class="rw on"><b>CYOW</b><span>Macdonald-Cartier Intl</span></div><div class="rw"><b>CITY WX</b><span><em>not an airport feed</em> · '+(o?num(o.t)+'° '+esc(o.cond||''):'weather pending')+'</span></div>'+fl+(x?'<div class="rw"><b>WX SOURCE</b><span>ECCC Ottawa city page'+(o&&o.stn?' (observed at '+esc(o.stn)+')':'')+' — public city weather, not an airport or aviation (METAR) feed</span></div>':'')+'</div>')}
 /* ---------- paint dispatch · expand/collapse · navigation ---------- */
 function renderAll(){rWx();rCm();rTm();rNews();rWm();rMk();rSc();rCl();rYw();rDoors();if(SV)renderSV()}
 function paint(id){const f={wx:()=>{rWx();rYw();rWm()},ge:()=>{scopeUpd();rCm()},trf:()=>{rCm();plot()},mk:rMk,news:()=>{rNews()},wm:()=>{rWm()},sec:rSc,os:rTm,cal:()=>{rCl();rDoors()},brief:rDoors}[id];if(f)f()}
@@ -1156,8 +1182,8 @@ $$('[data-bar]').forEach(el=>{const hold=v=>{el._hold=v;clearTimeout(el._ht);if(
 if(window.ResizeObserver)new ResizeObserver(()=>{const l=$('#evl');if(l&&l.clientHeight!==l._h){l._h=l.clientHeight;rEv()}}).observe($('#evl'));
 if(geInit()){scopeView()}scopeUpd();setInterval(geWatch,3000);setInterval(geRefresh,CFG.ge.refreshMs);
 window.__home={ui:UI,data:D,health:H,cfg:CFG,paint,xpSet,XP,GE,desig,plot,runBar,allEv,teamRows,openSuite,fit};
-getWx();getWxg();getTev();getNews();getQuakes();getGdacs();getEonet();getAlerts();getTsu();getRate();getBtc();getBoc();['spx','tsx','cad'].forEach(getStq);getCamList();['hubfeed','security','cal','scn','brief'].forEach(getHub);hcamTick();
-setInterval(getWx,CFG.wx.everyMs);setInterval(getWxg,CFG.wx.everyMs);setInterval(getTev,CFG.ev.everyMs);setInterval(getNews,CFG.news.everyMs);setInterval(getQuakes,CFG.quakes.everyMs);setInterval(getGdacs,CFG.wm.everyMs);setInterval(getEonet,CFG.wm.everyMs);setInterval(getAlerts,CFG.alerts.everyMs);setInterval(getTsu,CFG.tsu.everyMs);setInterval(getRate,CFG.rate.everyMs);setInterval(getBtc,CFG.markets.btcEveryMs);setInterval(getBoc,CFG.markets.bocEveryMs);setInterval(()=>['spx','tsx','cad'].forEach(getStq),CFG.stooq.everyMs);setInterval(hcamTick,CFG.homecams.everyMs);
+getWx();getWxg();getTev();getYow();getNews();getQuakes();getGdacs();getEonet();getAlerts();getTsu();getRate();getBtc();getBoc();['spx','tsx','cad'].forEach(getStq);getCamList();['hubfeed','security','cal','scn','brief'].forEach(getHub);hcamTick();
+setInterval(getWx,CFG.wx.everyMs);setInterval(getWxg,CFG.wx.everyMs);setInterval(getTev,CFG.ev.everyMs);setInterval(getYow,CFG.yow.everyMs);setInterval(getNews,CFG.news.everyMs);setInterval(getQuakes,CFG.quakes.everyMs);setInterval(getGdacs,CFG.wm.everyMs);setInterval(getEonet,CFG.wm.everyMs);setInterval(getAlerts,CFG.alerts.everyMs);setInterval(getTsu,CFG.tsu.everyMs);setInterval(getRate,CFG.rate.everyMs);setInterval(getBtc,CFG.markets.btcEveryMs);setInterval(getBoc,CFG.markets.bocEveryMs);setInterval(()=>['spx','tsx','cad'].forEach(getStq),CFG.stooq.everyMs);setInterval(hcamTick,CFG.homecams.everyMs);
 if(CFG.hubfeed.url)setInterval(()=>getHub('hubfeed'),CFG.hubfeed.everyMs);if(CFG.security.url)setInterval(()=>getHub('security'),15000);if(CFG.cal.url)setInterval(()=>getHub('cal'),CFG.cal.everyMs);if(CFG.scn.url)setInterval(()=>getHub('scn'),CFG.scn.everyMs);if(CFG.brief.url)setInterval(()=>getHub('brief'),CFG.brief.everyMs);
 setTimeout(camTick,1500);setInterval(camTick,CFG.cam.intervalMs);
 
@@ -1328,7 +1354,7 @@ html.stk .sitrep-band .sb-p{white-space:normal;overflow:visible;text-overflow:cl
   <svg class="road-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polyline points="16.6,24 50,24 83.3,24 83.3,76 50,76 16.6,76" fill="none" stroke="#FACC15" stroke-width="1.6" stroke-dasharray="5 4" vector-effect="non-scaling-stroke" opacity="0.65"/></svg>
   <div class="road-grid">
    <div class="rnode" style="border-top-color:#ff5a5a"><h4><span class="rn">1</span>CALENDAR — DAYBOOK</h4><p><span class="fridate">The trip day</span> — Flight <b>AC 452</b>, YOW → YYZ, departs <b>08:35</b>. The calendar event starts the chain; everything else hangs off it. Its home is Daybook · Calendar.</p></div>
-   <div class="rnode"><h4><span class="rn">2</span>AIRPORT — CANOPY HOME · YOW BOX</h4><p>The YOW box flags the flight on its face. Gate and delay watch join when a flight feed connects — the paid data route is Grant's call, so the box says so instead of guessing.</p></div>
+   <div class="rnode"><h4><span class="rn">2</span>AIRPORT — CANOPY HOME · YOW BOX</h4><p>The YOW box flags the flight on its face. Gate and delay watch ride the airport's own free FIDS feed, shown in the box with its snapshot time.</p></div>
    <div class="rnode"><h4><span class="rn">3</span>COMMUTE + CAMERAS — CANOPY HOME</h4><p>Leave by <b>07:05</b> · Hwy 417 · about <b>38 min</b>, counted back from the 08:35 departure. Route camera snapshots join once the City of Ottawa camera-API certificate lands — CERT PENDING (free request form on traffic.ottawa.ca).</p></div>
    <div class="rnode"><h4><span class="rn">4</span>WEATHER — CANOPY HOME</h4><p>Road weather for the drive and departure conditions ride along from the ECCC Ottawa feed — the same box, seen from inside the chain.</p></div>
    <div class="rnode" style="border-top-color:#35d07f"><h4><span class="rn">5</span>OAKLEY — COMMAND DECK</h4><p>Oakley watches the whole chain from the Deck. A delay or a weather alert re-times the leave-by and re-flags every box in the chain.</p></div>

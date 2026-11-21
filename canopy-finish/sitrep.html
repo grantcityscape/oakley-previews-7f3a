@@ -299,7 +299,8 @@ const CFG={
  quakes:{everyMs:300000,staleMs:900000},   // cadence/staleness for the OSIRIS · USGS quake path — quakes arrive via Osiris only; there is no direct USGS fetch
  wm:{everyMs:600000,staleMs:1800000,gdacs:'https://www.gdacs.org/xml/rss.xml',eonet:'https://eonet.gsfc.nasa.gov/api/v3/events?status=open&days=30&limit=100',cap:'https://dd.weather.gc.ca/today/alerts/cap/',capHours:6,fallback:{}},
  osiris:{base:'https://osirisai.live',everyMs:600000,staleMs:1800000},   // Osiris world layer — data feeds only, via the hub-proxy pattern (the hosted API sends no CORS headers); self-hosting later = change base only. No keys: none exist for these reads.
- snapshot:{'https://osirisai.live/api/earthquakes':'osiris-earthquakes.json','https://osirisai.live/api/conflicts':'osiris-conflicts.json','https://osirisai.live/api/fires':'osiris-fires.json','https://osirisai.live/api/gdelt-events':'osiris-gdelt-events.json','https://osirisai.live/api/health':'osiris-health.json','https://osirisai.live/api/stats':'osiris-stats.json','https://www.gdacs.org/xml/rss.xml':'gdacs.xml','https://www.cbc.ca/webfeed/rss/rss-canada-ottawa':'news-cbc-ottawa.xml','https://feeds.bbci.co.uk/news/world/rss.xml':'news-bbc-world.xml'},   // SNAPSHOT layer (2026-11-21): verbatim bodies in ./data/, seeded by the hub; /api/flights is deliberately NOT mapped — snapshot positions would mislead on a map
+ yow:{url:'https://www.yow.ca/api/flights/get',name:'Ottawa International Airport Authority · FIDS',everyMs:600000,staleMs:1800000},   // YOW FIDS — the airport's own FREE flight board (Grant 2026-11-21: no paid flight data). No key, no CORS: reads ride direct → hub proxy → snapshot (yow-flights.json, field-trimmed by the seeder)
+ snapshot:{'https://osirisai.live/api/earthquakes':'osiris-earthquakes.json','https://osirisai.live/api/conflicts':'osiris-conflicts.json','https://osirisai.live/api/fires':'osiris-fires.json','https://osirisai.live/api/gdelt-events':'osiris-gdelt-events.json','https://osirisai.live/api/health':'osiris-health.json','https://osirisai.live/api/stats':'osiris-stats.json','https://www.gdacs.org/xml/rss.xml':'gdacs.xml','https://www.cbc.ca/webfeed/rss/rss-canada-ottawa':'news-cbc-ottawa.xml','https://feeds.bbci.co.uk/news/world/rss.xml':'news-bbc-world.xml','https://www.yow.ca/api/flights/get':'yow-flights.json'},   // SNAPSHOT layer (2026-11-21): verbatim bodies in ./data/, seeded by the hub; /api/flights is deliberately NOT mapped — snapshot positions would mislead on a map
  ge:{tile:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',rv:'https://api.rainviewer.com/public/weather-maps.json',refreshMs:360000,staleMs:1800000,z:6},
  official:{yow:'https://www.ottawa-airport.ca/',cityMap:'https://traffic.ottawa.ca/'},
  doors:{home:'./index.html',canopy:'./index.html',deck:'./deck.html',wb:'./workbench.html',daybook:'./daybook.html',security:'./daybook.html#view=security',markets:'./index.html#box=mk',flurryDispatch:'',flurryOps:''}  // HUB: destination URLs; empty = honest "address supplied at integration" sheet
@@ -332,8 +333,8 @@ function save(){try{localStorage.setItem(SK,JSON.stringify(store));saveErr=false
 const SEC=[{id:'weather',n:'WEATHER',box:'WEATHER',bx:'wx'},{id:'cams',n:'COMMUTE + CAMERAS',box:'COMMUTE + CAMERAS',bx:'cams'},{id:'airport',n:'AIRPORT',box:'AIRPORT / YOW',bx:'yow'},{id:'tv',n:'LIVE TV',box:'LIVE TV',bx:'tv'},{id:'world',n:'WORLD',box:'WORLD',bx:'world'}];
 const SECI=Object.fromEntries(SEC.map(s=>[s.id,s]));
 const UI={sec:'weather',from:null,sel:{cam:null,ev:null,hl:null},pg:{}};
-const D={wx:null,camList:null,tev:null,news:{local:[],world:[]},nsrc:{},wmi:{gdacs:[],cap:[],eonet:[],osiris:{conf:[],fires:[],gdelt:[],quakes:[]}},radar:null,frames:{},fetchedAt:0,flights:[],osirisStats:null};
-const H={wx:{st:'pend'},camlist:{st:'pend'},tev:{st:'pend'},news:{st:'pend'},gdacs:{st:'pend'},eonet:{st:'pend'},cap:{st:'pend'},radar:{st:'pend'},cams:{st:'pend'},osirisConf:{st:'pend'},osirisFires:{st:'pend'},osirisGdelt:{st:'pend'},osirisQuakes:{st:'pend'},osirisApi:{st:'pend'},osirisFlights:{st:'pend'}};
+const D={wx:null,camList:null,tev:null,news:{local:[],world:[]},nsrc:{},wmi:{gdacs:[],cap:[],eonet:[],osiris:{conf:[],fires:[],gdelt:[],quakes:[]}},radar:null,frames:{},fetchedAt:0,flights:[],osirisStats:null,ap:{dep:[],arr:[]}};
+const H={wx:{st:'pend'},camlist:{st:'pend'},tev:{st:'pend'},news:{st:'pend'},gdacs:{st:'pend'},eonet:{st:'pend'},cap:{st:'pend'},radar:{st:'pend'},cams:{st:'pend'},osirisConf:{st:'pend'},osirisFires:{st:'pend'},osirisGdelt:{st:'pend'},osirisQuakes:{st:'pend'},osirisApi:{st:'pend'},osirisFlights:{st:'pend'},yow:{st:'pend'}};
 const SM=()=>!!store.ui.sample;
 /* ===== SAMPLE (layout demonstration only; every face carries the SAMPLE badge) ===== */
 const NOW=Date.now();
@@ -453,6 +454,21 @@ async function getOsirisApi(){try{const r=await pubGetJ(CFG.osiris.base+'/api/he
 async function getOsirisFlights(){try{const r=await pubGetJ(CFG.osiris.base+'/api/flights',30000);const j=r.j;
  D.flights=(j.commercial_flights||[]).filter(f=>isFinite(+f.lat)&&isFinite(+f.lng)).map(f=>({c:[+f.lng,+f.lat],t:((f.callsign||'').trim()||'Flight')+(f.airline_code?' · '+f.airline_code:'')}));
  H.osirisFlights={st:'live',at:Date.now(),asOf:null,via:r.via,n:D.flights.length}}catch(e){H.osirisFlights=osiFail(H.osirisFlights,D.flights,e)}paint(['wmap'])}
+/* ===== YOW FIDS — the Ottawa airport's own free flight board (Grant 2026-11-21: free feed, never paid data).
+   The endpoint sends no CORS header, so reads ride pubGetJ: direct → hub proxy → snapshot (yow-flights.json).
+   Times are Ottawa wall-clock strings ("2026-11-21 5:00:00 AM") — never Date.parse them raw: SecondsInDay is
+   the sort key, ExpectedTime the display string, UpdateTime parsed deliberately by yowT when an as-of is needed. ===== */
+const yowDay=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const yowT=s=>{const m=/^(\d{4})-(\d{2})-(\d{2}) (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/.exec(String(s||''));if(!m)return null;let h=+m[4]%12;if(m[7]==='PM')h+=12;return new Date(+m[1],+m[2]-1,+m[3],h,+m[5],+m[6]).getTime()};
+async function getYow(){try{const r=await pubGetJ(CFG.yow.url,20000);const j=r.j;if(!j||typeof j!=='object'||(!j.departures&&!j.arrivals))throw new Error('unexpected YOW payload shape');
+ const now=new Date(),today=yowDay(now),tom=yowDay(new Date(Date.now()+86400000)),nowSec=now.getHours()*3600+now.getMinutes()*60+now.getSeconds();
+ const pick=(o,day)=>((o&&o[day])||[]).filter(f=>f&&f.DisplayFlight!==false).slice().sort((a,b)=>(+a.SecondsInDay||0)-(+b.SecondsInDay||0));
+ let dep=pick(j.departures,today);const arr=pick(j.arrivals,today);
+ if(!dep.length||dep.every(f=>(+f.SecondsInDay||0)<nowSec-1800)){const td=pick(j.departures,tom);if(td.length)dep=td}   // past the last flight of the day: tomorrow's first departures, never a blank board
+ D.ap={dep,arr};
+ let asOf=r.via==='snapshot'?(r.asOf||null):null;   // snapshot boards carry the snapshot's true fetch time as the as-of
+ if(asOf==null){let mx=0;dep.concat(arr).forEach(f=>{const t=yowT(f.UpdateTime);if(t&&t>mx)mx=t});asOf=mx||Date.now()}
+ H.yow={st:'live',at:Date.now(),asOf,via:r.via,n:dep.length+arr.length}}catch(e){H.yow=(D.ap.dep.length||D.ap.arr.length)?kept(H.yow,{msg:String(e.message||e)}):{st:'err',msg:/HTTP/.test(String(e.message||e))?String(e.message||e):offMsg()}}paint(['ap_dep','ap_arr'])}
 const xt=(el,tag)=>{const e=el.getElementsByTagName(tag)[0];return e?e.textContent.trim():''};
 async function wmText(key,url){try{const r=await pubGet(url,20000);return{text:r.t,via:r.via,asOf:r.asOf}}catch(e1){const fb=CFG.wm.fallback[key];if(fb&&fb.text)return{text:fb.text,via:'hub-supplied',asOf:Date.parse(fb.asOf)||0};const er=new Error(e1 instanceof TypeError?offMsg():String(e1.message||e1));throw er}}
 async function getGdacs(){try{const r=await wmText('gdacs',CFG.wm.gdacs);const d=new DOMParser().parseFromString(r.text.replace(/^﻿/,''),'text/xml');if(d.querySelector('parsererror'))throw new Error('bad XML');
@@ -522,9 +538,16 @@ PN.events=()=>{const h=H.tev,items=SM()?SD.tev.rows:(D.tev?D.tev.rows:[]);
  return{t:'ROAD EVENTS · CITY',pgid:'events',chip:chipH(h,CFG.ev.staleMs),body:'<div class="fl" data-fl="events"></div>',src:srcLine('City of Ottawa events',h)}};
 PN['cam-doors']=()=>doorsPn('CHAIN DOORS',[doorHTML('Daybook · Security','security','Home cameras stay in Daybook'),goDoor('◂ Weather','weather','Snow and wind'),goDoor('Airport · YOW','airport','Flights and facts'),extDoor('City traffic map',CFG.official.cityMap,'ottawa traffic site')]);
 /* ===== AIRPORT ===== */
-const bd=(kind)=>{const cols=kind==='dep'?['TIME','FLIGHT','TO','GATE','STATUS']:['TIME','FLIGHT','FROM','BELT','STATUS'];const items=Array.from({length:8},(_,i)=>i);
- FL['ap_'+kind]={items,rowFn:()=>'<div class="bd-r"><span>--:--</span><span>------</span><span>—</span><span>--</span><span>NOT CONNECTED</span></div>',opt:{}};if(!(('ap_'+kind) in UI.pg))UI.pg['ap_'+kind]=0;
- return{t:kind==='dep'?'DEPARTURES · YOW':'ARRIVALS · YOW',pgid:'ap_'+kind,chip:SM()?chip('samp','SAMPLE'):chip('nc','NOT CONNECTED'),body:'<div class="bd-h">'+cols.map(c=>'<span>'+c+'</span>').join('')+'</div><div class="fl" data-fl="ap_'+kind+'"></div>',src:SM()?srcLine('',null):'<b>No flight-data source connected</b> · board shape only — no flights are shown'}};
+const yowRow=(r,kind)=>{const exp=r.ExpectedTime||r.ScheduledTime||'--:--';const tm=r.ScheduledTime&&r.ExpectedTime&&r.ScheduledTime!==r.ExpectedTime?'<s style="opacity:.6">'+esc(r.ScheduledTime)+'</s><br>'+esc(exp):esc(exp);
+ const gb=kind==='dep'?(r.ActualGate||'--'):(r.ActualCarousels===false||r.ActualCarousels==null||r.ActualCarousels===''?'--':r.ActualCarousels);
+ return'<div class="bd-r"><span>'+tm+'</span><span>'+esc(r.MasterFlight||'------')+'</span><span>'+esc((r.ActualCities||'—')+(r.IATA?' ('+r.IATA+')':''))+'</span><span>'+esc(gb)+'</span><span>'+esc(r.Status||'--')+'</span></div>'};
+const bd=(kind)=>{const cols=kind==='dep'?['TIME','FLIGHT','TO','GATE','STATUS']:['TIME','FLIGHT','FROM','BELT','STATUS'];const h=H.yow;
+ if(SM()){const items=Array.from({length:8},(_,i)=>i);
+  FL['ap_'+kind]={items,rowFn:()=>'<div class="bd-r"><span>--:--</span><span>------</span><span>—</span><span>--</span><span>NOT CONNECTED</span></div>',opt:{}};if(!(('ap_'+kind) in UI.pg))UI.pg['ap_'+kind]=0;
+  return{t:kind==='dep'?'DEPARTURES · YOW':'ARRIVALS · YOW',pgid:'ap_'+kind,chip:chip('samp','SAMPLE'),body:'<div class="bd-h">'+cols.map(c=>'<span>'+c+'</span>').join('')+'</div><div class="fl" data-fl="ap_'+kind+'"></div>',src:srcLine('',null)}}
+ const items=D.ap[kind]||[];
+ FL['ap_'+kind]={items,rowFn:r=>yowRow(r,kind),opt:{empty:'<div class="dim">'+(h.st==='err'?'Flight feed offline — no flights are shown.':'No flights listed for today.')+'</div>'}};if(!(('ap_'+kind) in UI.pg))UI.pg['ap_'+kind]=0;
+ return{t:kind==='dep'?'DEPARTURES · YOW':'ARRIVALS · YOW',pgid:'ap_'+kind,chip:chipH(h,CFG.yow.staleMs),body:'<div class="bd-h">'+cols.map(c=>'<span>'+c+'</span>').join('')+'</div><div class="fl" data-fl="ap_'+kind+'"></div>',src:srcLine(CFG.yow.name,h)}};
 PN.ap_dep=()=>bd('dep');PN.ap_arr=()=>bd('arr');
 PN.ap_facts=()=>{const w=dwx(),o=w&&w.o,h=H.wx;const items=[['AIRPORT','Ottawa Macdonald–Cartier International'],['CODES','IATA YOW · ICAO CYOW'],['WEATHER (CITY)',o?(T(o.t,'°')+' · '+(o.cond||'--')+' · wind '+(o.wd||'')+' '+T(o.ws,' km/h')):'--'],['VISIBILITY (CITY)',o?T(o.vis,' km'):'--'],['NOTE','City observation, not an airport METAR.']];
  FL.ap_facts={items,rowFn:r=>'<div class="row" style="grid-template-columns:8.5rem 1fr;cursor:default">'+nw(esc(r[0]),'k')+cw(esc(r[1]),'a')+'</div>',opt:{}};if(!('ap_facts' in UI.pg))UI.pg.ap_facts=0;
@@ -599,7 +622,7 @@ function render(){wallStop();const L=LAY[UI.sec],s=$('#stage');s.style.gridTempl
 const _rl=relayout;relayout=function(){clearTimeout(layTimer);layTimer=setTimeout(()=>{$$('.fl,.hr-s,#mapbox').forEach(n=>RO.observe(n));flLayout();hourlyLayout();mapPaint();tapeFit()},30)};
 function crumb(){const s=SECI[UI.sec];$('#cr').textContent='HOME › SITREP › '+s.n;const f=fromSec();$('#b-back').textContent='◂ BACK TO '+f.box}
 function fromSec(){const f=UI.from;return SEC.find(s=>s.id===f||s.bx===f)||SECI[UI.sec]}
-function tabs(){const h={weather:H.wx,cams:H.tev,airport:{st:'nc'},tv:H.news,world:H.osirisQuakes};$('#tabs').innerHTML=SEC.map(s=>'<button class="tab cap" role="tab" data-a="tab:'+s.id+'" aria-selected="'+(UI.sec===s.id)+'"><i class="'+tabDot(h[s.id])+'"></i><span>'+esc(s.n)+'</span></button>').join('')}
+function tabs(){const h={weather:H.wx,cams:H.tev,airport:H.yow,tv:H.news,world:H.osirisQuakes};$('#tabs').innerHTML=SEC.map(s=>'<button class="tab cap" role="tab" data-a="tab:'+s.id+'" aria-selected="'+(UI.sec===s.id)+'"><i class="'+tabDot(h[s.id])+'"></i><span>'+esc(s.n)+'</span></button>').join('')}
 function foot(){const v=$('#sv');if(!v||foot._hold)return;if(saveErr){v.textContent='NOT SAVED — browser storage is unavailable; settings last this visit only';v.classList.add('bad')}else{v.classList.remove('bad');v.textContent='SITREP v1.0.0 · '+(SM()?'SAMPLE DATA ON — layout check only':'live-world surface · feeds carry source and time')}
  const b=$('#sm');if(b)b.setAttribute('aria-pressed',SM())}
 /* ===== navigation ===== */
@@ -651,7 +674,7 @@ function boot(){let th='dark';try{th=localStorage.getItem(TK)||'dark'}catch(e){s
  setTheme(th==='light'?'light':'dark');save();/* persists on BOOT; catch path sets saveErr and the footer says NOT SAVED */
  render();clock();setInterval(clock,1000);
  const run=(f,ms)=>{f();setInterval(f,ms)};
- run(getWx,CFG.wx.everyMs);run(getEv,CFG.ev.everyMs);getCamList();run(getNews,CFG.news.everyMs);run(getOsirisQuakes,CFG.quakes.everyMs);run(getOsirisConf,CFG.osiris.everyMs);run(getOsirisFires,CFG.osiris.everyMs);run(getOsirisGdelt,CFG.osiris.everyMs);run(getOsirisApi,CFG.osiris.everyMs);run(getOsirisFlights,CFG.osiris.everyMs);run(getGdacs,CFG.wm.everyMs);run(getEonet,CFG.wm.everyMs);run(getCap,CFG.wm.everyMs);run(getRadar,CFG.ge.refreshMs);setInterval(camTick,5000);
+ run(getWx,CFG.wx.everyMs);run(getEv,CFG.ev.everyMs);getCamList();run(getNews,CFG.news.everyMs);run(getOsirisQuakes,CFG.quakes.everyMs);run(getOsirisConf,CFG.osiris.everyMs);run(getOsirisFires,CFG.osiris.everyMs);run(getOsirisGdelt,CFG.osiris.everyMs);run(getOsirisApi,CFG.osiris.everyMs);run(getOsirisFlights,CFG.osiris.everyMs);run(getYow,CFG.yow.everyMs);run(getGdacs,CFG.wm.everyMs);run(getEonet,CFG.wm.everyMs);run(getCap,CFG.wm.everyMs);run(getRadar,CFG.ge.refreshMs);setInterval(camTick,5000);
  setInterval(()=>{paint(['tapes'].filter(()=>false));glyphPaint()},60000);
  if(o&&o.cam&&o.secId==='cams')setTimeout(()=>sheetRow('cam',o.cam),200)}
 boot();

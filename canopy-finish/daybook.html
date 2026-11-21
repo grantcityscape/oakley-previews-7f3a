@@ -253,6 +253,139 @@ body .tag{box-shadow:0 .06rem .2rem rgb(0 0 0/.35),inset 0 1px 0 rgb(255 255 255
   body .card,body .door,body .btn,body .ent{transition:none}
 }
 </style>
+<style id="daybook-wall-pass">
+/* ===== DAYBOOK WALL PASS (2026-11-21) — Grant's Nov 18 size/content rulings, ledger group 3.
+   Wall = 12-column grid: Commute/Calendar/Security/Truck doubled, Social/Notes/Shopping a
+   little bigger, whole-month Calendar in its box, ALL camera boxes in the Security box
+   (honest NOT SET — no snapshot addresses supplied yet), graphs in Budgeting + Investments,
+   Home Automation favourites on the box with an in-place grown state, day stream slimmed
+   to two side-by-side ink columns. Colour correction per the same review: Truck · Social ·
+   Notes & To-Do · Shopping are ALL RED (Daybook things), superseding their gold treatment.
+   No type shrinks anywhere; spans re-tile at phone widths, where the view scrolls by design. */
+.wall{grid-template-columns:repeat(12,minmax(0,1fr));gap:.45rem}
+.box.s4{grid-column:span 4}
+.box.s3{grid-column:span 3}
+.box{padding:.45rem .6rem}
+.box .pd{font-size:.74rem;color:#b9b4ab;line-height:1.4}
+.box .pd b{color:var(--ink)}
+.box.rd .pd b{color:#f0a3a3}
+.box.fin .pd b{color:var(--gold2)}
+/* whole-month mini calendar (Calendar box) */
+.mcal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.1rem;margin-top:.35rem}
+.mcal .dh{font-size:.52rem;letter-spacing:.05em;color:var(--mut);text-align:center}
+.mcal .dc{font-size:.6rem;text-align:center;padding:.05rem 0;border-radius:.25rem;background:var(--well);color:var(--ink2);font-variant-numeric:tabular-nums}
+.mcal .dc.off{opacity:.3}
+.mcal .dc.ev{box-shadow:inset 0 -2px 0 var(--gold2)}
+.mcal .dc.today{background:var(--red-dk);color:#fff;font-weight:700;box-shadow:0 0 0 1px var(--red)}
+.mcal .dc.today.ev{box-shadow:0 0 0 1px var(--red),inset 0 -2px 0 var(--gold2)}
+/* camera minis (Security box + Commute route cameras) */
+.bcams{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.3rem;margin-top:.35rem}
+.bcams.two{grid-template-columns:1fr 1fr}
+.bcam{background:#000;border:1px solid var(--line);border-radius:.35rem;aspect-ratio:16/6.2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.14rem;padding:.15rem}
+.bcam .cl{font-size:.58rem;letter-spacing:.12em;color:var(--ink2)}
+.bcam .cs{font-size:.5rem;letter-spacing:.12em;border:1px solid var(--mut);color:var(--mut);padding:.04rem .34rem;border-radius:1rem;white-space:nowrap}
+/* graphs (Budgeting + Investments boxes and views) */
+.bgraph{display:block;margin-top:.4rem}
+.bgraph svg{width:100%;height:2.3rem;display:block}
+.bgraph.tall svg{height:4.4rem}
+.bgraph .gl{display:block;font-size:.56rem;letter-spacing:.1em;color:var(--mut);margin-top:.22rem}
+/* commute legs on the wall box */
+.blegs{display:grid;grid-template-columns:1fr 1fr;gap:.18rem .5rem;margin-top:.3rem}
+.bleg{display:block;font-size:.72rem;color:var(--ink2);line-height:1.35}
+.bleg b{color:var(--gold2);font-variant-numeric:tabular-nums}
+/* home automation box: favourites on the box, grown state, named tab in */
+.box.auto{cursor:default}
+.auto-top{display:flex;gap:.55rem;align-items:flex-start}
+.auto-top .pd{flex:1}
+.auto-top .favctl{flex:1.15}
+.favctl{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.35rem}
+.auto-top .favctl{margin-top:.1rem}
+.favctl button{border:1px solid var(--line);border-radius:1rem;padding:.24rem .62rem;font-size:.68rem;letter-spacing:.05em;color:var(--mut);background:var(--well);cursor:pointer}
+.favctl button.on{border-color:var(--red);color:#fff;background:var(--red-dk);font-weight:700}
+.autox{margin-top:.45rem;align-self:flex-start;border:1px solid var(--line);border-radius:.4rem;padding:.3rem .6rem;font-size:.66rem;letter-spacing:.1em;color:var(--ink2);cursor:pointer}
+.auto-more{display:none;margin-top:.45rem}
+.box.auto.xp{grid-column:span 12}
+.box.auto.xp .auto-more{display:block}
+/* while the automation box is grown, the day view scrolls internally and the day band
+   keeps its fitted height — the collapsed wall is the one-screen state */
+#v-day.growscroll{overflow-y:auto}
+#v-day.growscroll .daygrid{flex:none;height:5.6rem}
+.autotab{display:block;margin-top:.45rem;border:1px solid var(--gold);color:var(--gold2);background:transparent;border-radius:.4rem;padding:.4rem .65rem;font-size:.68rem;letter-spacing:.08em;font-weight:700;cursor:pointer;text-align:left}
+/* day stream: two ink columns side by side — a little stream section, small footprint */
+.streamcols{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;flex:1;min-height:0}
+.streamcol{display:flex;flex-direction:column;min-height:0;gap:.3rem}
+.streamcol .entries{flex:1}
+/* commute view: weather snapshot strip */
+.wxstrip{border:1px solid var(--line);border-left:3px solid var(--gold2);border-radius:.35rem;background:var(--well);padding:.4rem .55rem;font-size:.76rem;color:var(--ink2);line-height:1.4;margin-bottom:.5rem}
+.wxstrip b{color:var(--gold2)}
+.srlink{color:var(--gold2);font-size:.74rem;letter-spacing:.04em}
+/* day area = one slim band: the stream (little, per Grant) + margin note + carried forward,
+   each panel scrolling internally. This is what funds the bigger wall inside one screen. */
+.daygrid{grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1fr)}
+.daygrid .stream,.daygrid .marg,.daygrid .carry{min-height:0}
+.daygrid .stream .card{height:100%}
+.daygrid .marg{overflow:auto}
+.daygrid .carry{display:flex;flex-direction:column}
+.daygrid .carry .entries{overflow:auto;min-height:0}
+/* wall boxes with content beside the wording: text one side, data the other — very easy
+   to read and to tell apart (Grant's readability + distinctness standard for the wall) */
+.split{display:flex;gap:.55rem;align-items:flex-start}
+.split .pd{flex:1.1}
+.split .side{flex:1;display:block}
+.split .side.wide{flex:1.5}
+.split .side.mid{flex:1.25}
+.split .side.narrow{flex:.85}
+.mcal .dc{line-height:1.05}
+.split .side .bgraph,.split .side .bcams,.split .side .mcal,.split .side .blegs{margin-top:0}
+.split .side .blegs{display:flex;flex-direction:column;gap:.2rem}
+/* automation box: expand affordance rides on the title row */
+.pnrow{display:flex;justify-content:space-between;align-items:center;gap:.5rem}
+.pnrow .autox{margin-top:0;flex:none}
+@media (max-width:1100px){
+  #v-day{overflow-y:auto}
+  .daygrid{flex:none;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .daygrid .stream{grid-column:span 2}
+}
+@media (max-width:900px){
+  .wall{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .box.s4{grid-column:span 3}
+  .box.s3{grid-column:span 1}
+  .box.auto{grid-column:span 3}
+  .box.auto.xp{grid-column:span 3}
+  .streamcols{grid-template-columns:1fr}
+  .bcams{grid-template-columns:1fr 1fr}
+  .daygrid{grid-template-columns:minmax(0,1fr)}
+  .daygrid .stream{grid-column:auto}
+  .daygrid .stream .card{height:auto}
+  .streamcol .entries{max-height:9rem}
+  .daygrid .carry .entries{max-height:7rem}
+  .split{flex-direction:column}
+  .split .side{width:100%}
+}
+@media (max-width:384px){
+  .wall{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .box.s4{grid-column:span 2}
+  .box.s3{grid-column:span 1}
+  .box.auto{grid-column:span 2}
+  .box.auto.xp{grid-column:span 2}
+}
+@media (max-height:700px){
+  #v-day{overflow-y:auto}
+  .daygrid{flex:none;grid-template-columns:minmax(0,1fr);grid-template-rows:none}
+  .daygrid .stream{grid-column:auto}
+  .daygrid .stream .card{height:auto}
+  .streamcol .entries{max-height:6rem}
+  .daygrid .carry .entries{max-height:5rem}
+  .mcal{gap:.09rem;margin-top:.22rem}
+  .mcal .dc{font-size:.54rem;padding:.04rem 0}
+  .bcams{gap:.2rem;margin-top:.22rem}
+  .bcam{aspect-ratio:16/7.6}
+  .bgraph{margin-top:.22rem}
+  .bgraph svg{height:1.9rem}
+  .blegs{margin-top:.18rem;gap:.1rem}
+  .favctl{margin-top:.2rem}
+}
+</style>
 </head>
 <body>
 <header>
@@ -287,22 +420,26 @@ body .tag{box-shadow:0 .06rem .2rem rgb(0 0 0/.35),inset 0 1px 0 rgb(255 255 255
       <div class="stream">
         <div class="card">
           <h3>THE DAY'S STREAM</h3>
-          <div class="secttl">RECORDED — it happened</div>
-          <div class="entries" id="stream-rec"></div>
-          <div class="secttl">PLANNED — it hasn't yet</div>
-          <div class="entries" id="stream-plan"></div>
+          <div class="streamcols">
+            <div class="streamcol">
+              <div class="secttl">RECORDED — it happened</div>
+              <div class="entries" id="stream-rec"></div>
+            </div>
+            <div class="streamcol">
+              <div class="secttl">PLANNED — it hasn't yet</div>
+              <div class="entries" id="stream-plan"></div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="rail">
-        <div class="marg" id="marg-opt">
-          <button class="x" id="marg-x" aria-label="Dismiss note">✕</button>
-          <h4>MARGIN NOTE — OPTIMIZER · SAMPLE</h4>
-          <div>Winter tire swap is booking up at two local shops. Review this option — flyer checked <span id="marg-date"></span>, prices as listed there. A suggestion, not an instruction.</div>
-        </div>
-        <div class="card carry">
-          <h3>CARRIED FORWARD</h3>
-          <div class="entries" id="carry-list"></div>
-        </div>
+      <div class="marg" id="marg-opt">
+        <button class="x" id="marg-x" aria-label="Dismiss note">✕</button>
+        <h4>MARGIN NOTE — OPTIMIZER · SAMPLE</h4>
+        <div>Winter tire swap is booking up at two local shops. Review this option — flyer checked <span id="marg-date"></span>, prices as listed there. A suggestion, not an instruction.</div>
+      </div>
+      <div class="card carry">
+        <h3>CARRIED FORWARD</h3>
+        <div class="entries" id="carry-list"></div>
       </div>
     </div>
     <div class="wall" id="portal-grid"></div>
@@ -317,7 +454,8 @@ body .tag{box-shadow:0 .06rem .2rem rgb(0 0 0/.35),inset 0 1px 0 rgb(255 255 255
         <p class="nc">Payday cycle: <b>day 9 of 14</b> — next payday <b>Friday</b> (every second Friday). <span class="pill">SAMPLE</span></p>
         <div class="ent plan"><span class="tag">RECURRING</span><span class="tx">Rent — due on payday</span><span class="prov">set up once, repeats</span></div>
         <div class="ent plan"><span class="tag">RECURRING</span><span class="tx">Savings transfer — payday</span><span class="prov">set up once, repeats</span></div>
-        <div class="ent plan"><span class="tag">RECURRING</span><span class="tx">Mileage claim — submit on payday</span><span class="prov">from Truck → mileage</span></div></div>
+        <div class="ent plan"><span class="tag">RECURRING</span><span class="tx">Mileage claim — submit on payday</span><span class="prov">from Truck → mileage</span></div>
+        <span class="bgraph tall" id="v-bgraph"></span></div>
       <div class="card"><h3>ACCOUNTS — WHERE THE MONEY SITS</h3>
         <div class="ent rec"><span class="tag">ACCOUNT</span><span class="tx">Chequing — the working account</span><span class="prov">sample balance ••••</span></div>
         <div class="ent rec"><span class="tag">ACCOUNT</span><span class="tx">Savings — the cushion</span><span class="prov">sample balance ••••</span></div>
@@ -356,7 +494,8 @@ body .tag{box-shadow:0 .06rem .2rem rgb(0 0 0/.35),inset 0 1px 0 rgb(255 255 255
         <p class="nc">Investments live here as review appointments and notes — never as a performance banner.</p></div>
       <div class="card"><h3>NEXT REVIEW</h3>
         <p class="nc"><b>Feed:</b> NOT CONNECTED — holdings and prices appear when an account is linked. Nothing on this page is live, and nothing here is advice.</p>
-        <div class="ent plan"><span class="tag">PLANNED</span><span class="tx">Quarterly review — sit down with the statements and the plan</span></div></div>
+        <div class="ent plan"><span class="tag">PLANNED</span><span class="tx">Quarterly review — sit down with the statements and the plan</span></div>
+        <span class="bgraph tall" id="v-igraph"></span></div>
     </div>
   </section>
   <!-- ============ SECURITY / HOME ============ -->
@@ -368,12 +507,12 @@ body .tag{box-shadow:0 .06rem .2rem rgb(0 0 0/.35),inset 0 1px 0 rgb(255 255 255
         <div class="flip"><button id="flip-cam" class="on">CAMERAS</button><button id="flip-mon">HOME MONITORING</button></div>
       </div>
       <div id="sec-cams" style="margin-top:.55rem">
-        <span class="ukb">UNKNOWN · NO SOURCE — camera feed not linked; frames shown are placeholders, never presented as live</span>
+        <span class="ukb">NOT SET · NO SOURCE — no snapshot addresses supplied yet; frames shown are placeholders, never presented as live</span>
         <div class="camgrid">
-          <div class="cam"><span class="cl">FRONT</span><span class="cs">SNAPSHOT</span><span class="nc">no frame — feed not connected</span></div>
-          <div class="cam"><span class="cl">GARAGE</span><span class="cs">SNAPSHOT</span><span class="nc">no frame — feed not connected</span></div>
-          <div class="cam"><span class="cl">BACK</span><span class="cs">SNAPSHOT</span><span class="nc">no frame — feed not connected</span></div>
-          <div class="cam"><span class="cl">BASEMENT</span><span class="cs">SNAPSHOT</span><span class="nc">no frame — feed not connected</span></div>
+          <div class="cam"><span class="cl">FRONT</span><span class="cs">NOT SET</span><span class="nc">no snapshot address yet — frame stays dark</span></div>
+          <div class="cam"><span class="cl">GARAGE</span><span class="cs">NOT SET</span><span class="nc">no snapshot address yet — frame stays dark</span></div>
+          <div class="cam"><span class="cl">BACK</span><span class="cs">NOT SET</span><span class="nc">no snapshot address yet — frame stays dark</span></div>
+          <div class="cam"><span class="cl">BASEMENT</span><span class="cs">NOT SET</span><span class="nc">no snapshot address yet — frame stays dark</span></div>
         </div>
       </div>
       <div id="sec-mon" style="margin-top:.55rem;display:none">
@@ -427,10 +566,14 @@ body .tag{box-shadow:0 .06rem .2rem rgb(0 0 0/.35),inset 0 1px 0 rgb(255 255 255
     <div class="backrow"><button class="bk" data-go="day">◂ DAY TO DAY</button><h2>COMMUTE</h2><span class="pill">SAMPLE CONTENT</span></div>
     <div class="cols">
       <div class="card"><h3>TODAY'S GETTING-AROUND</h3>
+        <div class="wxstrip"><b>WEATHER — SNAPSHOT · OTTAWA (SAMPLE):</b> −2°, light snow, wind NW 18 km/h. Roads: snow-covered patches on the run in. A snapshot, not live — the live picture lives in SITREP.</div>
         <div id="commute-legs"></div>
         <p class="nc">Drawn from today's calendar, not typed twice: change the calendar and the commute redraws itself. A work day draws the work run; a plow shift would draw the route instead.</p></div>
       <div class="card"><h3>ROADS</h3>
-        <p class="nc"><b>Feed:</b> NOT CONNECTED — live traffic and road conditions appear when a roads feed is linked. In snow season this box carries the plow layer.</p></div>
+        <p class="nc"><b>Feed:</b> NOT CONNECTED — live traffic and road conditions appear when a roads feed is linked. In snow season this box carries the plow layer.</p>
+        <div class="secttl" style="margin-top:.55rem">ROUTE CAMERAS — ALONG THE COMMUTE</div>
+        <span class="bcams two"><span class="bcam"><span class="cl">ROUTE CAMERA 1</span><span class="cs">NOT SET</span></span><span class="bcam"><span class="cl">ROUTE CAMERA 2</span><span class="cs">NOT SET</span></span></span>
+        <p class="nc" style="margin-top:.45rem">No camera addresses set here yet. The live frames live next door: <a class="srlink" href="./sitrep.html#tab=1">SITREP · Commute + Cameras ▸</a></p></div>
     </div>
   </section>
   <!-- ============ TRUCK ============ -->
@@ -440,7 +583,8 @@ body .tag{box-shadow:0 .06rem .2rem rgb(0 0 0/.35),inset 0 1px 0 rgb(255 255 255
       <div class="card"><h3>2026 FORD RANGER — 2.3L ECOBOOST</h3>
         <div class="ent rec"><span class="tag">RECORD</span><span class="tx">The truck's own page: service, mileage, and its paperwork</span></div>
         <div class="ent plan"><span class="tag">PLANNED</span><span class="tx">Winter tire swap — booked through the tire shop</span><span class="prov">from today's margin note</span></div>
-        <div class="ent plan"><span class="tag">MILEAGE</span><span class="tx">Work mileage → the payday claim in Budgeting</span><span class="prov">a door, not a copy</span></div></div>
+        <div class="ent plan"><span class="tag">MILEAGE</span><span class="tx">Work mileage → the payday claim in Budgeting</span><span class="prov">a door, not a copy</span></div>
+        <div class="ent rec"><span class="tag">RECORD</span><span class="tx">Odometer (sample): 18,240 km — winter tires on, next rotation in spring</span></div></div>
       <div class="card"><h3>FORDPASS</h3>
         <p class="nc"><b>Feed:</b> NOT CONNECTED — fuel, odometer and health land here when FordPass is linked in the full shell. Plain limit, stated once: FordPass on the web can't remote-start the truck; that lives in Ford's own app.</p></div>
     </div>
@@ -523,18 +667,57 @@ $('#capture-f').addEventListener('submit',ev=>{ev.preventDefault();const v=$('#c
   store.captures.unshift({text:v,kind:capKind,at:new Date().toISOString()}); persist(); $('#capture-i').value=''; renderDay();});
 $('#marg-x').addEventListener('click',()=>{$('#marg-opt').style.display='none';});
 /* ---------- portals ---------- */
+const CAMMINIS=['FRONT','GARAGE','BACK','BASEMENT'].map(c=>'<span class="bcam"><span class="cl">'+c+'</span><span class="cs">NOT SET</span></span>').join('');
 const PORTALS=[
- {v:'budget',n:'BUDGETING',cls:'fin big',pc:'var(--red)',d:'<b>Day 9 of 14</b> in the pay cycle · next payday <b>Friday</b><br>In this cycle: <b>$1,940 in</b> · <b>$612 out</b> (sample figures)<br>Due: truck payment (Fri) · phone plan (next week) — paid stays listed apart<br>Balances at a glance: chequing •••• · savings •••• · investing fund ••••'},
- {v:'invest',n:'INVESTMENTS',cls:'fin',pc:'var(--gold2)',d:'Review notes, not a scoreboard.<br>Next review: <b>the quarterly sit-down</b>.'},
- {v:'security',n:'SECURITY',cls:'rd',pc:'var(--red)',d:'Cameras ⇄ monitoring.<br>Frames: <b>SNAPSHOT</b> · feed not connected.'},
- {v:'automation',n:'HOME AUTOMATION',cls:'rd',pc:'var(--red)',d:'Lights · thermostat · locks.<br>Feed: <b>not connected</b>.'},
- {v:'calendar',n:'CALENDAR',cls:'rd',pc:'var(--red)',d:'Today: <b>2 planned</b> · personal + every business calendar.'},
- {v:'commute',n:'COMMUTE',cls:'gd',pc:'var(--gold)',d:'First leg <b>08:10</b> → Cityscape office · home by <b>17:50</b>.<br>Drawn straight from the calendar.'},
- {v:'truck',n:'TRUCK',cls:'gd',pc:'var(--gold)',d:'<b>2026 Ranger</b> · 2.3L EcoBoost.<br>FordPass: not connected.'},
- {v:'social',n:'SOCIAL',cls:'gd',pc:'var(--gold)',d:'Messages + notifications land here.<br><b>4 accounts</b> ready to link.'},
- {v:'notes',n:'NOTES & TO-DO',cls:'gd',pc:'var(--gold)',d:'<b>3 open</b> · collections point back to their day.'},
- {v:'shopping',n:'SHOPPING',cls:'gd',pc:'var(--gold)',d:'<b>4 on the list</b> · spending lands in Budgeting.'}];
-$('#portal-grid').innerHTML=PORTALS.map(p=>'<button class="box '+(p.cls||'')+'" style="--pc:'+p.pc+'" data-go="'+p.v+'"><span class="pn">'+p.n+'</span><span class="pd">'+p.d+'</span></button>').join('');
+ {v:'budget',n:'BUDGETING',cls:'fin s4',pc:'var(--red)',d:'<b>Day 9 of 14</b> in the pay cycle · next payday <b>Friday</b><br>In this cycle: <b>$1,940 in</b> · <b>$612 out</b><br>Due: truck payment (Fri) · phone plan (next week)',body:'<span class="bgraph" id="wall-bgraph"></span>',side:'narrow'},
+ {v:'invest',n:'INVESTMENTS',cls:'fin s4',pc:'var(--gold2)',d:'Review notes, not a scoreboard.<br>Next review: <b>the quarterly sit-down</b>.',body:'<span class="bgraph" id="wall-igraph"></span>'},
+ {v:'security',n:'SECURITY',cls:'rd s4',pc:'var(--red)',d:'All the camera boxes, as on the Home screen.<br>Snapshot addresses: <b>not supplied yet</b>.',body:'<span class="bcams">'+CAMMINIS+'</span>',side:'mid'},
+ {v:'calendar',n:'CALENDAR',cls:'rd s4',pc:'var(--red)',d:'The whole month, at a glance.<br>Today: <b>2 planned</b> · gold underline = something on.',body:'<span class="mcal" id="wall-mcal"></span>',side:'wide'},
+ {v:'automation',n:'HOME AUTOMATION',cls:'rd s4',pc:'var(--red)',auto:true},
+ {v:'commute',n:'COMMUTE',cls:'gd s4',pc:'var(--gold)',d:'The day’s getting-around — appointments, work, everything in the day.<br>Drawn straight from the calendar; cameras + weather ride along inside.',body:'<span class="blegs" id="wall-legs"></span>'},
+ {v:'truck',n:'TRUCK',cls:'rd s3',pc:'var(--red)',d:'<b>2026 Ranger</b> · 2.3L EcoBoost — the truck’s whole home.<br>Odometer (sample): <b>18,240 km</b> · winter tires on<br>FordPass: <b>not connected</b> · mileage claim rides to Budgeting.'},
+ {v:'social',n:'SOCIAL',cls:'rd s3',pc:'var(--red)',d:'Messages + notifications land here.<br><b>4 waiting</b> (sample): Messenger 2 · Instagram 1 · Facebook 1<br><b>4 accounts</b> ready to link.'},
+ {v:'notes',n:'NOTES & TO-DO',cls:'rd s3',pc:'var(--red)',d:'<b>3 open</b> · collections point back to their day.<br>Top of the list: basement water taps · tire-swap booking.'},
+ {v:'shopping',n:'SHOPPING',cls:'rd s3',pc:'var(--red)',d:'<b>4 on the list</b> · spending lands in Budgeting.<br>Eggs · coffee · winter washer fluid · AA batteries.'}];
+function autoBoxHTML(p){
+  return '<div class="box '+(p.cls||'')+' auto" style="--pc:'+p.pc+'" id="auto-box"><span class="pnrow"><span class="pn">'+p.n+'</span><button type="button" class="autox" id="auto-x" aria-expanded="false">MORE SETTINGS ▾</button></span>'
+  +'<span class="auto-top"><span class="pd">Favourites, right here on the box. Feed: <b>not connected</b> — controls show sample state only.</span>'
+  +'<span class="favctl" role="group" aria-label="Favourite controls — sample state">'
+  +'<button type="button" class="fav" aria-pressed="false">Porch light</button>'
+  +'<button type="button" class="fav on" aria-pressed="true">Living-room lights</button>'
+  +'<button type="button" class="fav" aria-pressed="false">Thermostat hold</button>'
+  +'<button type="button" class="fav on" aria-pressed="true">Front lock</button></span></span>'
+  +'<span class="auto-more"><span class="secttl">MORE SETTINGS — SAMPLE</span>'
+  +'<span class="pd" style="display:block">Scenes: <b>Leaving home</b> · <b>Evening</b><br>Devices: lights · thermostat · locks · plugs — every state is a placeholder until the home system links.</span>'
+  +'<button type="button" class="autotab" data-go="automation">OPEN · DAYBOOK — HOME AUTOMATION &amp; SECURITY ▸</button></span></div>';
+}
+$('#portal-grid').innerHTML=PORTALS.map(p=>p.auto?autoBoxHTML(p):'<button class="box '+(p.cls||'')+'" style="--pc:'+p.pc+'" data-go="'+p.v+'"><span class="pn">'+p.n+'</span>'+(p.body?'<span class="split"><span class="pd">'+p.d+'</span><span class="side '+(p.side||'')+'">'+p.body+'</span></span>':'<span class="pd">'+p.d+'</span>')+'</button>').join('');
+/* ---------- wall pass: whole-month calendar, box graphs, automation box behaviour ---------- */
+(function(){
+  const mc=document.getElementById('wall-mcal');
+  if(mc){const n=new Date(),y=n.getFullYear(),m=n.getMonth(),today=n.getDate();
+    const first=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate(),prev=new Date(y,m,0).getDate();
+    const ev=new Set([1,15]);
+    const probe=new Date(y,m,today);let add=(5-probe.getDay()+7)%7;if(add===0)add=7;
+    const pf=new Date(y,m,today+add);if(pf.getMonth()===m)ev.add(pf.getDate());
+    let h=['S','M','T','W','T','F','S'].map(x=>'<span class="dh">'+x+'</span>').join('');
+    for(let i=0;i<first;i++)h+='<span class="dc off">'+(prev-first+1+i)+'</span>';
+    for(let dnum=1;dnum<=dim;dnum++)h+='<span class="dc'+(dnum===today?' today':'')+(ev.has(dnum)?' ev':'')+'">'+dnum+'</span>';
+    const tail=(first+dim)%7;if(tail)for(let i=1;i<=7-tail;i++)h+='<span class="dc off">'+i+'</span>';
+    mc.innerHTML=h;}
+  function bars(id,hs,goldIdx,cap){const el=document.getElementById(id);if(!el)return;
+    let r='';hs.forEach((v,i)=>{r+='<rect x="'+(i*10+1.5)+'" y="'+(44-v)+'" width="7" height="'+v+'" rx="1" fill="'+(i===goldIdx?'var(--gold2)':'rgba(159,211,174,.72)')+'"/>';});
+    el.innerHTML='<svg viewBox="0 0 140 48" preserveAspectRatio="none" aria-hidden="true">'+r+'<line x1="0" y1="44.5" x2="140" y2="44.5" stroke="#2a2a30"/></svg><span class="gl">'+cap+'</span>';}
+  bars('wall-bgraph',[10,6,14,8,6,26,9,7,40,11,8,16,9,20],8,'BY DAY · GOLD = TODAY');
+  bars('v-bgraph',[12,7,16,9,7,30,10,8,44,12,9,18,10,22],8,'THE CYCLE AT A GLANCE — MONEY MOVEMENT BY DAY · SAMPLE FIGURES · GOLD = TODAY (DAY 9 OF 14)');
+  const vig=document.getElementById('v-igraph');
+  if(vig)vig.innerHTML='<svg viewBox="0 0 140 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0 44 L20 44 L20 37 L45 37 L45 30 L70 30 L70 23 L95 23 L95 16 L120 16 L120 9 L140 9 L140 44 Z" fill="rgba(250,204,21,.13)"/><polyline points="0,44 20,44 20,37 45,37 45,30 70,30 70,23 95,23 95,16 120,16 120,9 140,9" fill="none" stroke="var(--gold2)" stroke-width="2"/></svg><span class="gl">CONTRIBUTIONS OVER TIME — NOT RETURNS · SAMPLE SHAPE · THE REVIEW DECIDES, THE GRAPH ONLY REMEMBERS</span>';
+  const ig=document.getElementById('wall-igraph');
+  if(ig)ig.innerHTML='<svg viewBox="0 0 140 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0 44 L20 44 L20 37 L45 37 L45 30 L70 30 L70 23 L95 23 L95 16 L120 16 L120 9 L140 9 L140 44 Z" fill="rgba(250,204,21,.13)"/><polyline points="0,44 20,44 20,37 45,37 45,30 70,30 70,23 95,23 95,16 120,16 120,9 140,9" fill="none" stroke="var(--gold2)" stroke-width="2"/></svg><span class="gl">CONTRIBUTIONS — NOT RETURNS</span>';
+  $$('#auto-box .fav').forEach(b=>b.addEventListener('click',()=>{b.classList.toggle('on');b.setAttribute('aria-pressed',b.classList.contains('on'));}));
+  const ax=document.getElementById('auto-x'),abox=document.getElementById('auto-box');
+  if(ax&&abox)ax.addEventListener('click',()=>{const open=abox.classList.toggle('xp');ax.setAttribute('aria-expanded',open);ax.textContent=open?'FEWER SETTINGS ▴':'MORE SETTINGS ▾';const vd=document.getElementById('v-day');if(vd)vd.classList.toggle('growscroll',open);if(open)setTimeout(()=>abox.scrollIntoView({block:'nearest'}),30);});
+})();
 /* ---------- views ---------- */
 function go(v){$$('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v)); window.scrollTo(0,0);}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-go]'); if(b) go(b.dataset.go);});
@@ -618,6 +801,8 @@ $('#pot-f').addEventListener('submit',ev=>{ev.preventDefault();const it=$('#pot-
 $('#pot-conf').addEventListener('change',()=>{pot.confirmed=$('#pot-conf').value; potPersist(); renderPot();});
 
 $('#commute-legs').innerHTML=commuteLegs().map(l=>'<div class="ent plan"><span class="tag">PLANNED</span><span class="tm">'+l.tm+'</span><span class="tx">'+l.tx+'</span></div>').join('');
+/* wall pass: the wall Commute box carries the same legs, drawn from the same calendar source */
+(function(){const wl=document.getElementById('wall-legs');if(wl)wl.innerHTML=commuteLegs().map(l=>'<span class="bleg"><b>'+l.tm+'</b> — '+esc(l.tx.split(' — ')[0])+'</span>').join('');})();
 
 /* ---------- talk (entry present app-wide; honest about connection) ---------- */
 $('#talk-b').addEventListener('click',()=>{const q=$('#talk-i').value.trim();

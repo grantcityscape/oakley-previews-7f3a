@@ -6,13 +6,24 @@
       <link>https://www.cbc.ca/news/business/?cmp=rss</link>
       <copyright><![CDATA[Copyright: (C) Canadian Broadcasting Corporation, http://www.cbc.ca/aboutcbc/discover/termsofuse.html#Rss]]></copyright>
       <docs><![CDATA[https://www.cbc.ca/rss]]></docs>
-      <lastBuildDate>Fri, 20 Nov 2026 16:54:02 EST</lastBuildDate>
+      <lastBuildDate>Sat, 21 Nov 2026 14:43:13 EST</lastBuildDate>
       <atom:link href="https://www.cbc.ca/webfeed/rss/rss-business" rel="self" type="application/rss+xml"/>
       <image>
          <title><![CDATA[CBC | Business News]]></title>
          <url>https://www.cbc.ca/rss/image/cbc_144.gif</url>
          <link>https://www.cbc.ca/news/business/?cmp=rss</link>
       </image>
+      <item>
+         <title><![CDATA[Etsy faces backlash over including AI model training in new policy update]]></title>
+         <link>https://www.cbc.ca/news/canada/british-columbia/etsy-ai-model-training-backlash-9.7431142?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/a45acf27-0545-43c5-8988-078833aed0d6,1795288309177/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C187%2C2000%2C1125%29%3B' alt='An orange square says &quot;Etsy.&quot;' width='620' height='349' title='This Jan. 6, 2015, file photo shows an Etsy mobile credit card reader, in New York. The online company is facing criticism after introducing AI model training in a recent policy change.'/><p>Some Etsy sellers across Canada are removing products from the platform amid criticism for introducing AI model training as part of a policy change.</p>]]></description>
+         <pubDate>Sat, 21 Nov 2026 14:30:46 EST</pubDate>
+         <category>News/Canada/British Columbia</category>
+         <guid isPermaLink="false">9.7431142</guid>
+         <dc:creator>Arden McLeod</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
       <item>
          <title><![CDATA[Nasdaq wipes out 2026 gains, TSX, Dow and S&P 500 fall into correction territory]]></title>
          <link>https://www.cbc.ca/news/business/anthropic-ipo-markets-today-9.7429534?cmp=rss</link>
@@ -214,16 +225,6 @@
          <category>News/Canada/British Columbia</category>
          <guid isPermaLink="false">9.7424536</guid>
          <dc:creator>Ruby Cornish</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Canadian home sales edged up in October amid overall flat housing market: CREA]]></title>
-         <link>https://www.cbc.ca/news/business/crea-october-home-sales-numbers-9.7424208?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/4641409d-5d9d-4cd9-881d-fd65d97874e8,1794868188239/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C273%2C5249%2C2952%29%3B' alt='A sign outside of a home with For Sale - and Sold on it' width='620' height='349' title='A for sale sign stands on the lawn of a single family home, in north Toronto, on April 30, 2026.'/><p>Home sales across Canada edged up slightly in October — defying the expectations of some analysts — but remained below levels from October 2025, according to the Canadian Real Estate Association (CREA).</p>]]></description>
-         <pubDate>Tue, 17 Nov 2026 05:00:00 EST</pubDate>
-         <category>News/Business</category>
-         <guid isPermaLink="false">9.7424208</guid>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>

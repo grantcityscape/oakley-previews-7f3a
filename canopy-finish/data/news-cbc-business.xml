@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+   <channel>
+      <title><![CDATA[CBC | Business News]]></title>
+      <description><![CDATA[FOR PERSONAL USE ONLY]]></description>
+      <link>https://www.cbc.ca/news/business/?cmp=rss</link>
+      <copyright><![CDATA[Copyright: (C) Canadian Broadcasting Corporation, http://www.cbc.ca/aboutcbc/discover/termsofuse.html#Rss]]></copyright>
+      <docs><![CDATA[https://www.cbc.ca/rss]]></docs>
+      <lastBuildDate>Fri, 20 Nov 2026 16:54:02 EST</lastBuildDate>
+      <atom:link href="https://www.cbc.ca/webfeed/rss/rss-business" rel="self" type="application/rss+xml"/>
+      <image>
+         <title><![CDATA[CBC | Business News]]></title>
+         <url>https://www.cbc.ca/rss/image/cbc_144.gif</url>
+         <link>https://www.cbc.ca/news/business/?cmp=rss</link>
+      </image>
+      <item>
+         <title><![CDATA[Nasdaq wipes out 2026 gains, TSX, Dow and S&P 500 fall into correction territory]]></title>
+         <link>https://www.cbc.ca/news/business/anthropic-ipo-markets-today-9.7429534?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/f8903dd6-402a-4fdf-a6ba-91d99b3208b3,1795202814223/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C525%2C6000%2C3375%29%3B' alt='A bald man in a blue trading jacket scratches his head while seated at a desk with four monitors displaying charts and other graphics.' width='620' height='349' title='Traders work on the floor of the New York Stock Exchange (NYSE) on Nov. 19, 2026 in New York City. Stocks continued steep losses across markets Thursday as investors remained concerned about AI profits and the ongoing turmoil at chipmaker Nvidia.'/><p>A sharp tech-driven sell-off hit North American stocks on Friday, sending U.S. and Canadian indices tumbling into correction territory, as artificial intelligence and technology stocks booked heavy losses.</p>]]></description>
+         <pubDate>Fri, 20 Nov 2026 08:37:59 EST</pubDate>
+         <category>News/Business</category>
+         <guid isPermaLink="false">9.7429534</guid>
+         <dc:creator>Jeff Lagerquist</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Bell says it's investigating cyberattack that led to potential theft of business customer data]]></title>
+         <link>https://www.cbc.ca/news/business/bell-agentic-cyber-attack-9.7430468?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/68587c1c-7e2e-406e-88db-f49b0427f489,1795209221806/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C187%2C3287%2C1848%29%3B' alt='a silhouette of a person as they walk past a building with the Bell name and logo' width='620' height='349' title='People walk past a Bell store in downtown Montreal on Wednesday, May 7, 2025. The company says it is investigating an agentic attack that led to the theft of some business client data earlier this week.'/><p>Bell says it's investigating a cyber incident in which some enterprise client data may have been stolen. A spokesperson confirmed an "agentic" threat actor was able to access some of the company's systems, including one used for ordering and supplying telecommunication networks.</p>]]></description>
+         <pubDate>Fri, 20 Nov 2026 16:54:02 EST</pubDate>
+         <category>News/Business</category>
+         <guid isPermaLink="false">9.7430468</guid>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Large AI companies 'desperate for compute' are crowding out Canadian startups at home]]></title>
+         <link>https://www.cbc.ca/news/business/compute-canada-sovereignty-ai-9.7428523?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/bf337caa-b480-4c8b-8d88-5a28f9b09f94,1795116901062/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C208%2C4000%2C2250%29%3B' alt='Wiring sits inside of the Data Hall of the Microsoft data center campus in Mount Pleasant, Wisconsin, U.S. on Sept. 18, 2025.' width='620' height='349' title='Wiring sits inside of the Data Hall of the Microsoft data center campus in Mount Pleasant, Wisconsin, U.S. on Sept. 18, 2025.'/><p>Ottawa's new budget promises to help Canadian AI companies access AI processing power on home soil — something that's been a challenge as smaller startups face fierce competition from larger AI companies that are "desperate for compute."</p>]]></description>
+         <pubDate>Fri, 20 Nov 2026 04:00:00 EST</pubDate>
+         <category>News/Business</category>
+         <guid isPermaLink="false">9.7428523</guid>
+         <dc:creator>Rukhsar Ali</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Anthropic stock soars by double-digits, a 'big near-term win' for a 'very nervous' tech sector]]></title>
+         <link>https://www.cbc.ca/news/business/anthropic-first-day-trading-9.7428367?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/c40bb9fb-692d-4d72-8fc2-bc88a8873d67,1795121319517/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C656%2C3000%2C1687%29%3B' alt='Robotic hand rests on phone screen with Open AI and Anthropic logos against a white background.' width='620' height='349' title='Anthropic priced its initial public offering at $83 US per share late Wednesday, above the $70 to $78 US range stated by the company in recent regulatory filings.'/><p>Shares of Anthropic rose on their first day of trading, as investors weighted AI enthusiasm against a massive valuation and uncertain path to profitability.</p>]]></description>
+         <pubDate>Thu, 19 Nov 2026 12:37:14 EST</pubDate>
+         <category>News/Business</category>
+         <guid isPermaLink="false">9.7428367</guid>
+         <dc:creator>Jeff Lagerquist</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Rancher says Alberta well cleanup fund a positive step, but litany of concerns remain]]></title>
+         <link>https://www.cbc.ca/news/canada/calgary/alberta-well-clean-up-9.7429047?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/3bc8e886-5713-4f87-9707-e3e91dc637cd,1795128385866/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C365%2C5999%2C3374%29%3B' alt='The Reid family harvest their wheat crop as pumpjacks draw oil from well heads.' width='620' height='349' title='The Reid family harvest their wheat crop as pumpjacks draw oil from well heads near Cremona, Alta., Tuesday, Sept. 19, 2023.'/><p>Alberta legislation that would require oil and gas companies to pay upfront for the eventual cleanup of each well seems positive on the surface, but much will depend on how it's implemented and enforced, says a rancher and landowner advocate.</p>]]></description>
+         <pubDate>Thu, 19 Nov 2026 19:10:45 EST</pubDate>
+         <category>News/Canada/Calgary</category>
+         <guid isPermaLink="false">9.7429047</guid>
+         <dc:creator>Lauren Krugel</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Reaching interim U.S. trade agreement would kickstart new CUSMA talks, minister says]]></title>
+         <link>https://www.cbc.ca/news/politics/canada-seeking-interim-trade-arrangment-9.7428540?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/16d3b3d3-9946-4196-9946-fa4fdde33cd3,1795114459825/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C412%2C7526%2C4233%29%3B' alt='A man in a suit walks past a row of cameras.' width='620' height='349' title='Canada-U.S. Trade Minister Dominic LeBlanc makes his way to a meeting of the Liberal caucus on Parliament Hill in Ottawa, on Wednesday, Nov. 18, 2026.'/><p>Canada-U.S. Trade Minister Dominic LeBlanc says if Canada can reach an interim agreement with the Trump administration, then that would likely kickstart formal talks around reviewing the trilateral trade pact with the U.S. and Mexico.</p>]]></description>
+         <pubDate>Thu, 19 Nov 2026 14:04:59 EST</pubDate>
+         <category>News/Politics</category>
+         <guid isPermaLink="false">9.7428540</guid>
+         <dc:creator>Darren Major, Kate McKenna</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Ubisoft cuts 166 jobs at Montreal and Quebec City video game studios]]></title>
+         <link>https://www.cbc.ca/news/business/ubisoft-layoffs-166-montreal-quebec-city-9.7428473?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/ca552ad8-2840-4809-8abb-f017e108440f,1795112282135/full/max/0/default.jpg?im=Crop%2Crect%3D%281874%2C0%2C2682%2C1508%29%3B' alt='Ubisoft&apos;s name and logo are pictured on the facade of a grey building' width='620' height='349' title='The Ubisoft building, Tuesday, May 7, 2024 in Quebec City. The company said Thursday it was laying off 166 employees at its Montreal and Quebec City offices.'/><p>Ubisoft's head of public relations told Radio-Canada that the cuts impacted production teams as well as some workers who support production. The cuts aren't the first this year for Ubisoft's Canadian workforce — nor for the broader video game industry.</p>]]></description>
+         <pubDate>Thu, 19 Nov 2026 14:04:08 EST</pubDate>
+         <category>News/Business</category>
+         <guid isPermaLink="false">9.7428473</guid>
+         <dc:creator>Abby Hughes</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[KPMG Canada client documents accessed in cybersecurity breach, accounting firm says]]></title>
+         <link>https://www.cbc.ca/news/business/kpmg-cybersecurity-breach-9.7427838?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/b4aca990-af02-4f7a-a324-a348d6cfb8f8,1795097628082/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C292%2C5616%2C3159%29%3B' alt='KPMG&apos;s blue and white name is spelled out on the front of a grey building, against a bright blue sky' width='620' height='349' title='Signage at the KPMG offices in Ottawa on Friday, June 28, 2024. KPMG Canada said some client documents were accessed in a recent data breach.'/><p>KPMG did not provide details about the breach, including the scope or nature of the attack. But a spokesperson says the company is confident that the accessed data is not available online, or being misused for any purpose.</p>]]></description>
+         <pubDate>Thu, 19 Nov 2026 09:34:37 EST</pubDate>
+         <category>News/Business</category>
+         <guid isPermaLink="false">9.7427838</guid>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[It's costing you less to fill up your gas tank. What's behind falling pump prices?]]></title>
+         <link>https://www.cbc.ca/news/business/gas-prices-falling-canada-9.7426928?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/e94b71fc-1a4d-4825-8a8d-8495d351d9c9,1795031713435/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C382%2C6179%2C3475%29%3B' alt='a man in a black jacket is pictured from shoulders down, holding a gas pump as he fills up his car' width='620' height='349' title='A man fuels up at a gas station in Surrey, British Columbia, on Friday, Mar. 13, 2026. Drivers across Canada will be paying less to fill their tanks this week, thanks to easing tensions in Iran and seasonal factors that are causing gas prices to dip.'/><p>While gas prices are still higher than they were a year ago, a litre of gas will cost you nearly 30 cents less than it did a month ago, based on national average prices. A mix of seasonal factors and more oil moving out of the Middle East are to thank, according to analysts.</p>]]></description>
+         <pubDate>Thu, 19 Nov 2026 04:00:00 EST</pubDate>
+         <category>News/Business</category>
+         <guid isPermaLink="false">9.7426928</guid>
+         <dc:creator>Abby Hughes</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Calgary’s condo market is shifting as supply outpaces demand]]></title>
+         <link>https://www.cbc.ca/news/canada/calgary/sidhu-calgary-condo-building-boom-price-drop-9.7426910?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/deb4d0b3-04b9-4451-b938-c89ab1956632,1795042887131/full/max/0/default.jpg?im=Crop%2Crect%3D%28154%2C0%2C1765%2C992%29%3B' alt='The outside of a new condo building in northeast Calgary' width='620' height='349' title='Calgary is seeing a surge in new condos. Prices in this new northeast Calgary development have dropped up to $85,000.'/><p>After years of increases, some sellers are now cutting asking prices by tens of thousands of dollars to attract buyers. And with more housing on the way, the pressure on prices may not be over.</p>]]></description>
+         <pubDate>Thu, 19 Nov 2026 06:00:00 EST</pubDate>
+         <category>News/Canada/Calgary</category>
+         <guid isPermaLink="false">9.7426910</guid>
+         <dc:creator>Ina Sidhu</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Anthropic prices IPO at $83 US per share, valuing AI giant at $1.51 trillion US]]></title>
+         <link>https://www.cbc.ca/news/business/anthropic-ipo-share-price-nasdaq-9.7426856?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/4fed3498-d2a6-4964-8762-1d91ebb7f3b7,1795046620119/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C294%2C3000%2C1687%29%3B' alt='Dario Amodei, CEO &amp; Co-Founder of Anthropic, attends the Annual Meeting of World Economic Forum in Davos, Switzerland' width='620' height='349' title='Dario Amodei, CEO &amp; Co-Founder of Anthropic, attends the Annual Meeting of World Economic Forum in Davos, Switzerland, Thursday, Jan. 23, 2025. (AP Photo/Markus Schreiber)'/><p>Anthropic has set a stock price of $83 US per share for its hotly anticipated initial public offering, with shares of the U.S. artificial intelligence giant set to debut on the Nasdaq exchange on Thursday.</p>]]></description>
+         <pubDate>Wed, 18 Nov 2026 18:58:12 EST</pubDate>
+         <category>News/Business</category>
+         <guid isPermaLink="false">9.7426856</guid>
+         <dc:creator>Jeff Lagerquist</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Toys 'R' Us partnership has Staples Canada playing around with its business model]]></title>
+         <link>https://www.cbc.ca/news/canada/toronto/toys-r-us-partnership-staples-9.7427933?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/4b10fc8e-cfb9-400c-b2f5-76c394dcd7e8,1795098961674/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C846%2C8127%2C4571%29%3B' alt='A man digs through a bin of stuffed animals with Toys &quot;R&quot; Us branding around him.' width='620' height='349' title='A customer shops for Toys &quot;R&quot; Us Canada products at a Staples Canada store in Richmond Hill, Ont., on Tuesday, Nov. 17, 2026.'/><p>In a bid to bring back the beloved brand, Toys "R" Us and Parties "R" Us departments are moving into portions of 300 Staples Canada stores by the end of next year. Retail consultants say the office supply company is responding to the shrinking of the core business it's known for.</p>]]></description>
+         <pubDate>Thu, 19 Nov 2026 10:32:41 EST</pubDate>
+         <category>News/Canada/Toronto</category>
+         <guid isPermaLink="false">9.7427933</guid>
+         <dc:creator>Tara Deschamps</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[If Quebecor buys Telus, less competition could mean higher cellphone bills, experts say]]></title>
+         <link>https://www.cbc.ca/news/business/quebecor-telus-proposal-could-mean-higher-bills-experts-9.7425945?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/b34ecbe6-3e36-46ca-a0b1-09b1795bd3dd,1794943910772/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C625%2C6000%2C3375%29%3B' alt='A man in a suit and black glasses holds his chin pensively.' width='620' height='349' title='President and CEO of Quebecor Pierre Karl Péladeau looks on during the company&apos;s annual general meeting in Montreal on Thursday, May 8, 2025.'/><p>Quebecor says its proposal to acquire one of the four main Canadian telecoms will lead to lower costs for consumers, but policy analysts and competition advocates aren't quite buying it.</p>]]></description>
+         <pubDate>Wed, 18 Nov 2026 15:40:00 EST</pubDate>
+         <category>News/Business</category>
+         <guid isPermaLink="false">9.7425945</guid>
+         <dc:creator>Verity Stevenson</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Competition Bureau examining marketing practices by Gap, Old Navy]]></title>
+         <link>https://www.cbc.ca/news/business/competition-bureau-gap-old-navy-advertising-9.7426966?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/1.7452028,1738855093000/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1919%2C1079%29%3B' alt='The outside of an old Navy retail store. Red sale signs hang in the window advertising up to 70% off.' width='620' height='349' title='An Old Navy location in the Greater Toronto Area.'/><p>The Competition Bureau is moving ahead with an investigation into whether clothing giants Gap and Old Navy are violating marketing regulations by making potentially false or misleading claims in their advertising.</p>]]></description>
+         <pubDate>Wed, 18 Nov 2026 15:21:02 EST</pubDate>
+         <category>News/Business</category>
+         <guid isPermaLink="false">9.7426966</guid>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Waymo temporarily pulls robotaxis from U.S. highways]]></title>
+         <link>https://www.cbc.ca/news/business/waymo-california-ban-9.7426164?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/515a7fba-4920-4521-a315-d8f8c761884c,1795005051960/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C577%2C5542%2C3117%29%3B' alt='The back of a small vehicle is the focus on a roadway, with two other cars shown on either side of it.' width='620' height='349' title='The Waymo Ojai autonomous vehicle, a Chinese-made electric vehicle manufactured by Zeekr, travels along a major Los Angeles freeway through Hawthorne, California, US, October 13, 2026. A person sits in the driver&apos;s seat. REUTERS/Mike Blake'/><p>Waymo has temporarily stopped offering driverless taxi rides on freeways after California banned the vehicles from state freeways following recent traffic incidents.</p>]]></description>
+         <pubDate>Wed, 18 Nov 2026 07:45:44 EST</pubDate>
+         <category>News/Business</category>
+         <guid isPermaLink="false">9.7426164</guid>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[No plans to reinstate CEO Jensen Huang, Nvidia chair tells investors]]></title>
+         <link>https://www.cbc.ca/news/business/nvidia-earnings-jensen-huang-9.7425620?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/9ed44bef-8351-444e-856b-4fb4aada6b01,1794951507238/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C156%2C3000%2C1687%29%3B' alt='A green logo and word against a black background' width='620' height='349' title='FILE PHOTO: Nvidia logo is seen in this illustration taken, January 27, 2025.'/><p>Nvidia board chair Harvey Jones opened an investor conference call on Tuesday by saying the AI chip company would ‌not rehire co-founder Jensen Huang as CEO and would not take questions on the matter.</p>]]></description>
+         <pubDate>Tue, 17 Nov 2026 17:56:59 EST</pubDate>
+         <category>News/Business</category>
+         <guid isPermaLink="false">9.7425620</guid>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Canada has extended and expanded its deal with China. Here's how it affects different sectors]]></title>
+         <link>https://www.cbc.ca/news/politics/china-canada-tariffs-deal-extended-expanded-trade-pork-seafood-9.7424993?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/40cafb53-5d84-408b-a2ff-40fadec574bb,1794928349110/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C108%2C2048%2C1152%29%3B' alt='Two hands reach out for a handshake with a Canadian flag in the background.' width='620' height='349' title='Prime Minister Mark Carney, left, shakes hands with Chinese President Xi Jinping at the Great Hall of the People in Beijing on Jan. 1'/><p>Prime Minister Mark Carney and Chinese President Xi Jinping agreed to deepen economic and trade ties at a bilateral meeting in Shenzhen, China, on Tuesday, expanding a tariff deal to include relief on Canadian exports worth roughly $400 million, including some pork and seafood products. Here's a breakdown.</p>]]></description>
+         <pubDate>Tue, 17 Nov 2026 13:52:05 EST</pubDate>
+         <category>News/Politics</category>
+         <guid isPermaLink="false">9.7424993</guid>
+         <dc:creator>John Mazerolle</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[TC Energy plans Alberta pipeline expansion to serve natural gas demand]]></title>
+         <link>https://www.cbc.ca/news/canada/edmonton/tc-energy-pipeline-expansion-9.7425116?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/f978e355-02c8-4fcd-9a89-9207153dda58,1794933540765/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C299%2C4500%2C2531%29%3B' alt='A silver-blue skyscraper view of a downtown street.' width='620' height='349' title='TC Energy headquarters in Calgary, Alta., Tuesday, July 30, 2024.'/><p>TC Energy Corp. is looking to seize on booming natural gas demand in Alberta, announcing plans Monday to expand its pipeline network to add an initial billion cubic feet per day of new capacity.</p>]]></description>
+         <pubDate>Tue, 17 Nov 2026 11:42:25 EST</pubDate>
+         <category>News/Canada/Edmonton</category>
+         <guid isPermaLink="false">9.7425116</guid>
+         <dc:creator>Lauren Krugel</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Telus abandons involvement in 2 Vancouver AI data centres]]></title>
+         <link>https://www.cbc.ca/news/canada/british-columbia/ai-data-centre-telus-vancouver-9.7424536?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/dc1b8076-8041-4d73-a680-dea1263ca1b0,1794922863904/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C265%2C3000%2C1687%29%3B' alt='A large metal facility is shown with a sports stadium in the background.' width='620' height='349' title='A rendering of a proposed Telus data centre near B.C. Place in downtown Vancouver.'/><p>Telus says it's decided not to proceed with co-developing two Vancouver data centres, and will instead turn its focus to expanding an existing data centre in Kamloops, B.C.</p>]]></description>
+         <pubDate>Tue, 17 Nov 2026 09:00:00 EST</pubDate>
+         <category>News/Canada/British Columbia</category>
+         <guid isPermaLink="false">9.7424536</guid>
+         <dc:creator>Ruby Cornish</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Canadian home sales edged up in October amid overall flat housing market: CREA]]></title>
+         <link>https://www.cbc.ca/news/business/crea-october-home-sales-numbers-9.7424208?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/4641409d-5d9d-4cd9-881d-fd65d97874e8,1794868188239/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C273%2C5249%2C2952%29%3B' alt='A sign outside of a home with For Sale - and Sold on it' width='620' height='349' title='A for sale sign stands on the lawn of a single family home, in north Toronto, on April 30, 2026.'/><p>Home sales across Canada edged up slightly in October — defying the expectations of some analysts — but remained below levels from October 2025, according to the Canadian Real Estate Association (CREA).</p>]]></description>
+         <pubDate>Tue, 17 Nov 2026 05:00:00 EST</pubDate>
+         <category>News/Business</category>
+         <guid isPermaLink="false">9.7424208</guid>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+   </channel>
+</rss>

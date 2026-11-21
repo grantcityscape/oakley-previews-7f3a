@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-21T06:00:48Z",
+ "generated_at": "2026-11-21T08:23:30Z",
  "feeds": {
   "news-cbc-ottawa.xml": {
    "source": "https://www.cbc.ca/webfeed/rss/rss-canada-ottawa",
@@ -78,6 +78,12 @@
    "fetched_at": "2026-11-21T06:00:48Z",
    "status": 200,
    "bytes": 132
+  },
+  "yow-flights.json": {
+   "source": "https://www.yow.ca/api/flights/get",
+   "fetched_at": "2026-11-21T08:21:16Z",
+   "status": 200,
+   "bytes": 140326
   }
  }
 }

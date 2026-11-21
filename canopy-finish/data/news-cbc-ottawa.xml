@@ -6,13 +6,24 @@
       <link>https://www.cbc.ca/news/canada/ottawa/?cmp=rss</link>
       <copyright><![CDATA[Copyright: (C) Canadian Broadcasting Corporation, http://www.cbc.ca/aboutcbc/discover/termsofuse.html#Rss]]></copyright>
       <docs><![CDATA[https://www.cbc.ca/rss]]></docs>
-      <lastBuildDate>Fri, 20 Nov 2026 23:27:27 EST</lastBuildDate>
+      <lastBuildDate>Sat, 21 Nov 2026 04:00:00 EST</lastBuildDate>
       <atom:link href="https://www.cbc.ca/webfeed/rss/rss-canada-ottawa" rel="self" type="application/rss+xml"/>
       <image>
          <title><![CDATA[CBC | Ottawa News]]></title>
          <url>https://www.cbc.ca/rss/image/cbc_144.gif</url>
          <link>https://www.cbc.ca/news/canada/ottawa/?cmp=rss</link>
       </image>
+      <item>
+         <title><![CDATA[Ontario Liberals to elect new leader today after lengthy race]]></title>
+         <link>https://www.cbc.ca/news/canada/toronto/ontario-liberal-leadership-race-9.7430331?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/1.6779579,1678895638000/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C315%2C6016%2C3384%29%3B' alt='People walk in a room near a red-and-white sign saying &quot;Liberal.&quot;' width='620' height='349' title='Signage is photographed at the Ontario Liberal Party&apos;s 2023 Annual Meeting at the Hamilton Convention Centre in Hamilton, Ont., on Sunday, March 5, 2023. '/><p>Ontario Liberals will choose their new leader today as the once dominant party makes its latest attempt to escape the political wilderness and insiders say no "runaway winner" has emerged over the course of the lenghty race.</p>]]></description>
+         <pubDate>Sat, 21 Nov 2026 04:00:00 EST</pubDate>
+         <category>News/Canada/Toronto</category>
+         <guid isPermaLink="false">9.7430331</guid>
+         <dc:creator>Shawn Jeffords</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
       <item>
          <title><![CDATA[University of Ottawa contract professor charged with voyeurism offences in downtown Ottawa]]></title>
          <link>https://www.cbc.ca/news/canada/ottawa/ottawa-university-of-ottawa-contract-professor-charged-voyeurism-offences-9.7431132?cmp=rss</link>
@@ -203,16 +214,6 @@
          <pubDate>Thu, 19 Nov 2026 16:57:12 EST</pubDate>
          <guid isPermaLink="false">9.7428768</guid>
          <dc:type>video</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Motorist charged after 3 vehicles hit same deer on Highway 416]]></title>
-         <link>https://www.cbc.ca/news/canada/ottawa/deer-collision-9.7428433?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/5b03f4ef-f572-4d6b-9328-a7ea274b3779,1793398209344/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C522%2C4032%2C2268%29%3B' alt='Closeup of an OPP sign.' width='620' height='349' title='The Leamington OPP detachment seen in a file photo from Oct. 30, 2026.'/><p>Ontario Provincial Police have charged a motorist with careless driving causing bodily harm after he struck a deer on Highway 416 Wednesday night and some of his passengers suffered serious — and in one case life-altering — injuries.</p>]]></description>
-         <pubDate>Thu, 19 Nov 2026 13:37:51 EST</pubDate>
-         <category>News/Canada/Ottawa</category>
-         <guid isPermaLink="false">9.7428433</guid>
-         <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
    </channel>

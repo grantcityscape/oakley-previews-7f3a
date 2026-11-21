@@ -1,0 +1,169 @@
+# Canopy feeds snapshot — refreshes the static-preview feed snapshots.
+#
+# Target repo: grantcityscape/oakley-previews-7f3a
+# Placement: this file must live at .github/workflows/canopy-feeds.yml
+# in the repo root, on the default branch, before it takes effect.
+#
+# Every 10 minutes (and on manual dispatch) this fetches the 9 Canopy
+# feeds into canopy-finish/data/ and commits only if the data changed.
+# It mirrors feeds-workflow/refresh-snapshots.sh (same feed list, same
+# honesty rules) inline, so the runner needs nothing beyond curl and
+# python3, which ubuntu-latest already provides.
+#
+# Honesty rules (same as the script):
+#   * A file's fetched_at is that file's own actual successful fetch time.
+#   * A failed/invalid fetch (non-200, curl failure, unparseable JSON)
+#     keeps the previous file AND its previous fetched_at, and marks the
+#     meta status with the error. A failed feed never fails the job and
+#     old data is never stamped with a new time.
+
+name: Canopy feeds snapshot
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: canopy-feeds
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Refresh feed snapshots
+        shell: bash
+        run: |
+          set -u
+          DATA_DIR="canopy-finish/data"
+          mkdir -p "$DATA_DIR"
+          WORK_DIR="$(mktemp -d)"
+          RESULTS="$WORK_DIR/results.tsv"
+          : > "$RESULTS"
+
+          fetch_feed() {
+            fname="$1"; source="$2"; kind="$3"
+            tmp="$WORK_DIR/$fname.tmp"
+            http_code="$(curl -sS -L --max-time 60 -A "CanopyHubProxy/1.0" \
+              -o "$tmp" -w '%{http_code}' "$source" 2>"$WORK_DIR/curl.err")"
+            curl_rc=$?
+            status=""
+            if [ $curl_rc -ne 0 ]; then
+              status="fetch_failed"
+              echo "FAIL $fname: curl exit $curl_rc"
+            elif [ "$http_code" != "200" ]; then
+              status="$http_code"
+              echo "FAIL $fname: HTTP $http_code from $source"
+            elif [ "$kind" = "json" ]; then
+              if python3 -c 'import json,sys; json.load(open(sys.argv[1],"rb"))' "$tmp" 2>/dev/null; then
+                status="200"
+              else
+                status="invalid_json"
+                echo "FAIL $fname: response is not valid JSON"
+              fi
+            else
+              status="200"
+            fi
+            if [ "$status" = "200" ]; then
+              fetched_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+              bytes="$(wc -c < "$tmp" | tr -d ' ')"
+              mv "$tmp" "$DATA_DIR/$fname"
+              printf '%s\t%s\t%s\t%s\t%s\n' "$fname" "$source" "200" "$fetched_at" "$bytes" >> "$RESULTS"
+              echo "OK   $fname: 200, $bytes bytes, $fetched_at"
+            else
+              printf '%s\t%s\t%s\t%s\t%s\n' "$fname" "$source" "$status" "" "" >> "$RESULTS"
+            fi
+          }
+
+          fetch_feed "news-cbc-ottawa.xml"    "https://www.cbc.ca/webfeed/rss/rss-canada-ottawa" "xml"
+          fetch_feed "news-bbc-world.xml"     "https://feeds.bbci.co.uk/news/world/rss.xml"      "xml"
+          fetch_feed "news-cbc-business.xml"  "https://www.cbc.ca/webfeed/rss/rss-business"       "xml"
+          fetch_feed "news-bbc-business.xml"  "https://feeds.bbci.co.uk/news/business/rss.xml"    "xml"
+          fetch_feed "tsunami-pheb.xml"       "https://www.tsunami.gov/events/xml/PHEBAtom.xml"   "xml"
+          fetch_feed "tsunami-paaq.xml"       "https://www.tsunami.gov/events/xml/PAAQAtom.xml"   "xml"
+          fetch_feed "gdacs.xml"              "https://www.gdacs.org/xml/rss.xml"                "xml"
+          fetch_feed "osiris-conflicts.json"  "https://osirisai.live/api/conflicts"              "json"
+          fetch_feed "osiris-fires.json"      "https://osirisai.live/api/fires"                  "json"
+          fetch_feed "osiris-gdelt-events.json" "https://osirisai.live/api/gdelt-events"         "json"
+          fetch_feed "osiris-earthquakes.json"  "https://osirisai.live/api/earthquakes"          "json"
+          fetch_feed "osiris-health.json"     "https://osirisai.live/api/health"                 "json"
+          fetch_feed "osiris-stats.json"      "https://osirisai.live/api/stats"                  "json"
+
+          DATA_DIR="$DATA_DIR" RESULTS="$RESULTS" python3 - <<'PYEOF'
+          import json, os
+          from datetime import datetime, timezone
+
+          data_dir = os.environ["DATA_DIR"]
+          meta_path = os.path.join(data_dir, "meta.json")
+
+          prev_feeds = {}
+          if os.path.exists(meta_path):
+              try:
+                  with open(meta_path, "r", encoding="utf-8") as f:
+                      prev_feeds = json.load(f).get("feeds", {}) or {}
+              except (OSError, ValueError):
+                  prev_feeds = {}
+
+          feeds = {}
+          with open(os.environ["RESULTS"], "r", encoding="utf-8") as f:
+              for line in f:
+                  line = line.rstrip("\n")
+                  if not line:
+                      continue
+                  parts = (line.split("\t") + ["", "", "", "", ""])[:5]
+                  fname, source, status, fetched_at, nbytes = parts
+                  if status == "200":
+                      feeds[fname] = {
+                          "source": source,
+                          "fetched_at": fetched_at,
+                          "status": 200,
+                          "bytes": int(nbytes),
+                      }
+                  else:
+                      prev = prev_feeds.get(fname, {})
+                      fpath = os.path.join(data_dir, fname)
+                      if os.path.exists(fpath):
+                          actual_bytes = os.path.getsize(fpath)
+                      else:
+                          actual_bytes = prev.get("bytes", 0)
+                      try:
+                          status_val = int(status)
+                      except ValueError:
+                          status_val = status
+                      feeds[fname] = {
+                          "source": source,
+                          "fetched_at": prev.get("fetched_at"),
+                          "status": status_val,
+                          "bytes": actual_bytes,
+                      }
+
+          meta = {
+              "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+              "feeds": feeds,
+          }
+          tmp_path = meta_path + ".tmp"
+          with open(tmp_path, "w", encoding="utf-8") as f:
+              json.dump(meta, f, indent=1)
+          os.replace(tmp_path, meta_path)
+          print("meta.json written:", meta["generated_at"])
+          PYEOF
+
+      - name: Commit and push if the data changed
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add canopy-finish/data
+          if git diff --cached --quiet; then
+            echo "Snapshots unchanged — nothing to commit."
+          else
+            git commit -m "canopy feeds snapshot"
+            git push
+          fi

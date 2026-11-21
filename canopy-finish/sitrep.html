@@ -249,9 +249,9 @@ body .strip{box-shadow:0 .2rem .55rem rgb(0 0 0/.4)}
 </style>
 </head><body>
 <div class="app" id="app">
- <nav class="strip" id="strip" aria-label="Canopy destinations"><button class="sd cap" data-a="door:canopy"><svg class="sl-logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="1.5" y="1.5" width="29" height="29" rx="5" fill="#1E4D2B" stroke="#6C8574"/><path d="M13 27V12M19 27V8" stroke="#e8f1ea" stroke-width="3" stroke-linecap="round"/><path d="M13 15l-4-3M13 21l4-2M19 12l4-3M19 19l-3-2M19 23l4-1" stroke="#a9efc3" stroke-width="1.6" stroke-linecap="round"/><path d="M13 19v.01M19 15v.01" stroke="#1E4D2B" stroke-width="2" stroke-linecap="round"/></svg><span class="chrome-wm">CANOPY</span></button><span class="sd cap" aria-current="page" style="color:var(--gold)">SITREP</span><button class="sd cap" data-a="door:deck">COMMAND DECK</button><button class="sd cap" data-a="door:daybook">DAYBOOK</button><button class="sd cap" data-a="door:wb">WORKBENCH</button><span class="sp"></span><span class="ssnap cap" aria-hidden="true">WEATHER · CAMS · AIRPORT · TV · WORLD</span><span class="sn cap">SITREP · LIVE-WORLD SURFACE</span></nav>
+ <nav class="strip" id="strip" aria-label="Canopy destinations"><button class="sd cap" data-a="door:canopy"><img class="sl-logo" src="./assets/northbirch-head-only-v11-clear.svg" alt="" aria-hidden="true"><span class="chrome-wm">CANOPY</span></button><span class="sd cap" aria-current="page" style="color:var(--gold)">SITREP</span><button class="sd cap" data-a="door:deck">COMMAND DECK</button><button class="sd cap" data-a="door:daybook">DAYBOOK</button><button class="sd cap" data-a="door:wb">WORKBENCH</button><span class="sp"></span><span class="ssnap cap" aria-hidden="true">WEATHER · CAMS · AIRPORT · TV · WORLD</span><span class="sn cap">SITREP · LIVE-WORLD SURFACE</span></nav>
  <header class="top">
-  <button class="mast" id="mast" data-a="home" aria-label="Northbirch — return to Home" title="Home"></button>
+  <button class="mast" id="mast" data-a="home" aria-label="Canopy — return to Home" title="Home"></button>
   <div class="clk"><b class="num" id="ck">--:--:--</b><span class="ci"><i id="dt">---</i><i>DEVICE TIME</i></span><button class="wgw" data-a="go:weather" aria-label="Weather — go to the weather section"><div class="wg" id="wg" aria-hidden="true"></div><span class="wgl cap" id="wgl">WX · SNAPSHOT</span></button></div>
   <div class="tt"><span class="h1 cap">SITREP</span><span class="cr cap" id="cr"></span></div>
   <div class="hd"><button class="btn" id="b-back" data-a="back"></button><button class="btn" data-a="home">⌂ HOME</button><button class="btn q" id="th" data-a="theme" aria-label="Switch theme">☾ NIGHT</button></div>
@@ -330,7 +330,7 @@ let store={v:1,doors:{},ui:{sample:false,sec:'weather'},flt:{}};
 try{const r=JSON.parse(localStorage.getItem(SK)||'null');if(r&&r.v===1){store.doors=r.doors||{};store.ui=Object.assign(store.ui,r.ui||{});store.flt=r.flt||{}}}catch(e){saveErr=true}
 function save(){try{localStorage.setItem(SK,JSON.stringify(store));saveErr=false}catch(e){saveErr=true}foot()}
 /* ===== state ===== */
-const SEC=[{id:'weather',n:'WEATHER',box:'WEATHER',bx:'wx'},{id:'cams',n:'COMMUTE + CAMERAS',box:'COMMUTE + CAMERAS',bx:'cams'},{id:'airport',n:'AIRPORT',box:'AIRPORT / YOW',bx:'yow'},{id:'tv',n:'LIVE TV',box:'LIVE TV',bx:'tv'},{id:'world',n:'WORLD',box:'WORLD',bx:'world'}];
+const SEC=[{id:'home',n:'SITREP HOME',box:'HOME',bx:'home'},{id:'weather',n:'WEATHER',box:'WEATHER',bx:'wx'},{id:'cams',n:'COMMUTE + CAMERAS',box:'COMMUTE + CAMERAS',bx:'cams'},{id:'airport',n:'AIRPORT',box:'AIRPORT / YOW',bx:'yow'},{id:'tv',n:'LIVE TV',box:'LIVE TV',bx:'tv'},{id:'world',n:'WORLD',box:'WORLD',bx:'world'}];
 const SECI=Object.fromEntries(SEC.map(s=>[s.id,s]));
 const UI={sec:'weather',from:null,sel:{cam:null,ev:null,hl:null},pg:{}};
 const D={wx:null,camList:null,tev:null,news:{local:[],world:[]},nsrc:{},wmi:{gdacs:[],cap:[],eonet:[],osiris:{conf:[],fires:[],gdelt:[],quakes:[]}},radar:null,frames:{},fetchedAt:0,flights:[],osirisStats:null,ap:{dep:[],arr:[]}};
@@ -411,16 +411,21 @@ async function getWx(){try{const j=await jget(CFG.wx.url);const p=j.properties,c
  const warn=(p.warnings||[]).map(w=>EN(w.description)||EN(w.type)||'ALERT');
  const upd=Date.parse(EN(p.lastUpdated))||Date.parse(p.lastUpdated)||0;
  D.wx={o,fc,hr,warn,upd,sr:Date.parse(EN(g(p,'riseSet.sunrise'))||'')||0,ss:Date.parse(EN(g(p,'riseSet.sunset'))||'')||0};
- H.wx={st:'live',at:Date.now(),asOf:o.ts||upd||null,via:'direct'}}catch(e){H.wx=H.wx.st==='live'||H.wx.have?kept(H.wx,{msg:String(e.message||e)}):{st:'err',msg:/HTTP/.test(String(e.message))?String(e.message):offMsg()}}paint(['now','hourly','alerts','oper','outlook']);glyphPaint()}
-async function getEv(){try{const j=await jget(CFG.ev.url);const rows=(j.features||[]).map(f=>{const p=f.properties||{};return{id:p.id,t:p.eventType,ln:p.lanes||'',c:p.closureType,st:p.status,h:p.headline||p.mainStreet||'',u:Date.parse(String(p.updated||'').replace(' ','T'))||0}}).filter(r=>r.h&&(!r.st||r.st==='ACTIVE')).sort((a,b)=>b.u-a.u);
- D.tev={rows};const mx=rows.reduce((m,r)=>Math.max(m,r.u),0);H.tev={st:'live',at:Date.now(),asOf:mx||null,via:'direct'}}catch(e){H.tev=D.tev?kept(H.tev,{msg:String(e.message||e)}):{st:'err',msg:/HTTP/.test(String(e.message))?String(e.message):offMsg()}}paint(['events'])}
-async function getCamList(){try{const j=await jget(CFG.cam.list);D.camList=(j.cameras||[]).filter(c=>c.latitude&&c.longitude);H.camlist={st:'live',at:Date.now(),via:'direct',asOf:null}}catch(e){H.camlist=D.camList?kept(H.camlist,{msg:String(e.message||e)}):{st:'err',msg:/HTTP/.test(String(e.message))?String(e.message):offMsg()}}paint(['camlist','camtiles'])}
+ H.wx={st:'live',at:Date.now(),asOf:o.ts||upd||null,via:'direct'}}catch(e){H.wx=H.wx.st==='live'||H.wx.have?kept(H.wx,{msg:String(e.message||e)}):{st:'err',msg:/HTTP/.test(String(e.message))?String(e.message):offMsg()}}paint(['now','hourly','alerts','oper','outlook','wxdata','sh-ov']);glyphPaint()}
+async function getEv(){try{const rj=await pubGetJ(CFG.ev.url);const j=rj.j;const rows=(j.features||[]).map(f=>{const p=f.properties||{};return{id:p.id,t:p.eventType,ln:p.lanes||'',c:p.closureType,st:p.status,h:p.headline||p.mainStreet||'',u:Date.parse(String(p.updated||'').replace(' ','T'))||0}}).filter(r=>r.h&&(!r.st||r.st==='ACTIVE')).sort((a,b)=>b.u-a.u);
+ D.tev={rows};const mx=rows.reduce((m,r)=>Math.max(m,r.u),0);H.tev={st:'live',at:Date.now(),asOf:mx||null,via:rj.via}}catch(e){H.tev=D.tev?kept(H.tev,{msg:String(e.message||e)}):{st:'err',msg:/HTTP/.test(String(e.message))?String(e.message):offMsg()}}paint(['events','sh-ov'])}
+async function getCamList(){try{const rj=await pubGetJ(CFG.cam.list);const j=rj.j;D.camList=(j.cameras||[]).filter(c=>c.latitude&&c.longitude);H.camlist={st:'live',at:Date.now(),via:rj.via,asOf:null}}catch(e){H.camlist=D.camList?kept(H.camlist,{msg:String(e.message||e)}):{st:'err',msg:/HTTP/.test(String(e.message))?String(e.message):offMsg()}}paint(['camlist','camtiles','camwall','sh-ov'])}
 const camNo=id=>{const L=D.camList&&D.camList.find(x=>x.id===id);return L?L.camera_number:null};
 function frameOf(id){const hub=CFG.cam.frames[id];return hub&&hub.src?{src:hub.src,ts:Date.parse(hub.ts)||0,how:'hub-supplied'}:null}
 /* camera image fetch exists only behind the certificate placeholder; empty = never requested. One request / 60 s TOTAL, rotating. */
 let camRot=0,camLast=0;
 async function camTick(){if(!CFG.cam.certificate)return;if(Date.now()-camLast<CFG.cam.intervalMs)return;const c=CFG.cam.set[camRot++%CFG.cam.set.length],n=camNo(c.id);if(n==null)return;camLast=Date.now();
- try{const r=await fetch(CFG.cam.base+'?c='+encodeURIComponent(n)+'&certificate='+encodeURIComponent(CFG.cam.certificate)+(CFG.cam.userId?'&id='+encodeURIComponent(CFG.cam.userId):''),{cache:'no-store'});if(!r.ok)throw 0;const lm=Date.parse(r.headers.get('last-modified')||'')||0;const b=await r.blob();const u=await new Promise(res=>{const fr=new FileReader();fr.onload=()=>res(fr.result);fr.readAsDataURL(b)});D.frames[c.id]={src:u,ts:lm};H.cams={st:'live',at:Date.now(),asOf:lm||null,via:'City certificate route'}}catch(e){H.cams={st:'err',msg:'frame request failed'}}paint('camtiles')}
+ const cu=CFG.cam.base+'?c='+encodeURIComponent(n)+'&certificate='+encodeURIComponent(CFG.cam.certificate)+(CFG.cam.userId?'&id='+encodeURIComponent(CFG.cam.userId):'');
+ try{let r;try{r=await fetch(cu,{cache:'no-store'});if(!r.ok)throw 0}catch(e1){if(!CFG.PROXY)throw e1;r=await fetch(CFG.PROXY+encodeURIComponent(cu),{cache:'no-store'});if(!r.ok)throw 0}const lm=Date.parse(r.headers.get('last-modified')||'')||0;const b=await r.blob();const u=await new Promise(res=>{const fr=new FileReader();fr.onload=()=>res(fr.result);fr.readAsDataURL(b)});D.frames[c.id]={src:u,ts:lm};H.cams={st:'live',at:Date.now(),asOf:lm||null,via:'City certificate route'}}
+ catch(e){/* the City image route sends no CORS headers, so a browser fetch is blocked even though the frame itself is served — load it as a plain image instead (display-only), the same fallback Home uses */
+  const ok=await new Promise(res=>{const im=new Image();im.onload=()=>res(true);im.onerror=()=>res(false);im.src=cu});
+  if(ok){D.frames[c.id]={src:cu,ts:Date.now()};H.cams={st:'live',at:Date.now(),asOf:Date.now(),via:'City certificate route · direct image'}}else{H.cams={st:'err',msg:'frame request failed'}}}
+ paint(['camtiles','camwall'])}
 const parseRSS=(xml,o,max)=>{const d=new DOMParser().parseFromString(xml,'text/xml');if(d.querySelector('parsererror'))throw new Error('bad XML');return[...d.querySelectorAll('item')].slice(0,max).map(it=>{const q=n=>{const e=it.querySelector(n);return e?e.textContent.trim():''};return{o,t:q('title'),l:q('link'),ts:Date.parse(q('pubDate'))||0}}).filter(x=>x.t)};
 async function getSrc(s){const mk=(via,xml,asOf)=>{const items=parseRSS(xml,s.o,14);D.nsrc[s.id]={ok:true,n:items.length,at:asOf||Date.now(),via,items};return items};
  try{if(s.pub){const r=await pubGet(s.url);return mk(r.via,r.t,r.asOf)}return mk('direct',await jget(s.url,'text'))}catch(e1){
@@ -429,7 +434,7 @@ async function getSrc(s){const mk=(via,xml,asOf)=>{const items=parseRSS(xml,s.o,
   D.nsrc[s.id]={ok:false,n:0,err:e1 instanceof TypeError?(s.pub?offMsg():'blocked cross-origin (no CORS) — needs hub proxy/feed'):String(e1.message||e1)};return null}}
 async function getNews(){for(const k of['local','world']){await Promise.all(CFG.news[k].map(getSrc));let it=[];CFG.news[k].forEach(s=>{const n=D.nsrc[s.id];if(n&&n.ok)it=it.concat(n.items)});it.sort((a,b)=>b.ts-a.ts);D.news[k]=it}
  const all=[].concat(D.news.local,D.news.world),ok=Object.values(D.nsrc).some(n=>n.ok);const mx=all.reduce((m,x)=>Math.max(m,x.ts),0);
- const vias=[...new Set(Object.values(D.nsrc).filter(n=>n.ok).map(n=>n.via).filter(Boolean))];H.news=ok?{st:'live',at:Date.now(),asOf:mx||null,via:vias.join(' + ')||'direct/proxy'}:{st:'err',msg:'all news sources unreachable'};paint(['hl-local','hl-world','tapes'])}
+ const vias=[...new Set(Object.values(D.nsrc).filter(n=>n.ok).map(n=>n.via).filter(Boolean))];H.news=ok?{st:'live',at:Date.now(),asOf:mx||null,via:vias.join(' + ')||'direct/proxy'}:{st:'err',msg:'all news sources unreachable'};paint(['hl-local','hl-world','tapes','sh-news'])}
 /* ===== OSIRIS world layer — data feeds only. NEVER called: /api/cctv*, /api/proxy-tiles, /api/sentinel, /api/arcgis, /api/live-news (imagery/streams guardrail).
    The hosted API sends no CORS headers, so every read rides direct → hub proxy (CFG.PROXY, set in Phase 3) → honest OFFLINE via offMsg(); last-good rows stay, badged STALE/OFFLINE. ===== */
 async function pubGetJ(url,ms){try{return{j:await jget(url,'json',ms),via:'direct'}}catch(e1){if(CFG.PROXY){try{return{j:await jget(CFG.PROXY+encodeURIComponent(url),'json',ms),via:'hub proxy'}}catch(e2){}}if(CFG.snapshot[url]&&!/\/api\/flights(\?|$)/.test(url)){try{return await snapGet(url,'json')}catch(e3){}}throw e1 instanceof TypeError?new Error(offMsg()):e1}}
@@ -437,20 +442,20 @@ const osiFail=(h,rows,e)=>rows.length?kept(h,{msg:String(e.message||e)}):{st:'er
 const distC=c=>c?Math.round(km(OTT[0],OTT[1],c[1],c[0])):null;
 async function getOsirisQuakes(){try{const r=await pubGetJ(CFG.osiris.base+'/api/earthquakes',20000);const j=r.j;
  const rows=(j.earthquakes||[]).map(q=>{const c=isFinite(+q.lng)&&isFinite(+q.lat)?[+q.lng,+q.lat]:null;const m=num(q.magnitude);return{src:'OSIRIS · USGS',id:q.id,c,t:num(q.time)||null,sev:m!=null&&m>=6?2:m!=null&&m>=5?1:0,txt:'M'+(m==null?'?':m.toFixed(1))+' · '+(q.place||'Unknown place'),link:q.url||'',d:distC(c)}}).sort((a,b)=>(b.t||0)-(a.t||0));
- D.wmi.osiris.quakes=rows;H.osirisQuakes={st:'live',at:Date.now(),asOf:r.via==='snapshot'?(r.asOf||Date.parse(j.timestamp)||null):Date.parse(j.timestamp)||null,via:r.via,n:rows.length}}catch(e){H.osirisQuakes=osiFail(H.osirisQuakes,D.wmi.osiris.quakes,e)}paint(['wevents','whealth','wmap'])}
+ D.wmi.osiris.quakes=rows;H.osirisQuakes={st:'live',at:Date.now(),asOf:r.via==='snapshot'?(r.asOf||Date.parse(j.timestamp)||null):Date.parse(j.timestamp)||null,via:r.via,n:rows.length}}catch(e){H.osirisQuakes=osiFail(H.osirisQuakes,D.wmi.osiris.quakes,e)}paint(['wevents','whealth','wmap','osiris','sh-ov'])}
 async function getOsirisConf(){try{const r=await pubGetJ(CFG.osiris.base+'/api/conflicts',20000);const j=r.j;
  const rows=(j.zones||[]).map(z=>{const c=isFinite(+z.lng)&&isFinite(+z.lat)?[+z.lng,+z.lat]:null;return{src:'OSIRIS · CONFLICT',id:z.id,c,t:null,sev:z.severity==='war'?2:1,txt:z.label||'Conflict zone',link:z.sourceUrl||'',d:distC(c),desc:z.description||'',hl:(z.headlines||[]).map(x=>({t:x.title||'',s:x.source||''}))}});
- D.wmi.osiris.conf=rows;H.osirisConf={st:'live',at:Date.now(),asOf:r.via==='snapshot'?(r.asOf||Date.parse(j.timestamp)||null):Date.parse(j.timestamp)||null,via:r.via,n:rows.length}}catch(e){H.osirisConf=osiFail(H.osirisConf,D.wmi.osiris.conf,e)}paint(['wevents','whealth','wmap'])}
+ D.wmi.osiris.conf=rows;H.osirisConf={st:'live',at:Date.now(),asOf:r.via==='snapshot'?(r.asOf||Date.parse(j.timestamp)||null):Date.parse(j.timestamp)||null,via:r.via,n:rows.length}}catch(e){H.osirisConf=osiFail(H.osirisConf,D.wmi.osiris.conf,e)}paint(['wevents','whealth','wmap','osiris','sh-ov'])}
 const fireT=f=>{if(!f.date)return null;const s=String(f.time==null?'0000':f.time).padStart(4,'0');const t=Date.parse(f.date+'T'+s.slice(0,2)+':'+s.slice(2,4)+':00Z');return isNaN(t)?null:t};
 async function getOsirisFires(){try{const r=await pubGetJ(CFG.osiris.base+'/api/fires',25000);const j=r.j;
  const rows=(j.fires||[]).map(f=>{const c=isFinite(+f.lng)&&isFinite(+f.lat)?[+f.lng,+f.lat]:null;const frp=num(f.frp);return{src:'OSIRIS · FIRMS',id:'',c,t:fireT(f),sev:frp!=null&&frp>=100?2:frp!=null&&frp>=20?1:0,txt:'Fire detection · FRP '+(frp==null?'?':frp)+' · confidence '+(f.confidence==null?'?':f.confidence),link:'',d:distC(c),frp:frp||0}}).sort((a,b)=>b.frp-a.frp).slice(0,100).map(f=>{const o=Object.assign({},f);delete o.frp;return o});
- D.wmi.osiris.fires=rows;H.osirisFires={st:'live',at:Date.now(),asOf:r.via==='snapshot'?(r.asOf||Date.parse(j.timestamp)||null):Date.parse(j.timestamp)||null,via:r.via,n:rows.length,total:(j.fires||[]).length}}catch(e){H.osirisFires=osiFail(H.osirisFires,D.wmi.osiris.fires,e)}paint(['wevents','whealth','wmap'])}
+ D.wmi.osiris.fires=rows;H.osirisFires={st:'live',at:Date.now(),asOf:r.via==='snapshot'?(r.asOf||Date.parse(j.timestamp)||null):Date.parse(j.timestamp)||null,via:r.via,n:rows.length,total:(j.fires||[]).length}}catch(e){H.osirisFires=osiFail(H.osirisFires,D.wmi.osiris.fires,e)}paint(['wevents','whealth','wmap','osiris','sh-ov'])}
 async function getOsirisGdelt(){try{const r=await pubGetJ(CFG.osiris.base+'/api/gdelt-events',25000);const j=r.j;
  const seen=new Set(),rows=[];
  (j.events||[]).forEach(ev=>{const key=(ev.name||'')+'|'+(ev.root_code||'');if(seen.has(key))return;seen.add(key);const gs=num(ev.goldstein);if((num(ev.articles)||0)<=1&&gs!=null&&Math.abs(gs)<3)return;const c=isFinite(+ev.lng)&&isFinite(+ev.lat)?[+ev.lng,+ev.lat]:null;const quad=num(ev.quad);rows.push({src:'OSIRIS · GDELT',id:ev.id,c,t:Date.parse(ev.date)||null,sev:quad===4&&gs!=null&&gs<=-7?2:(quad===3||quad===4)?1:0,txt:(ev.quad_label||'Event')+' · '+(ev.name||'Unknown place'),link:ev.url||'',d:distC(c),gs:gs==null?0:Math.abs(gs)})});
- rows.sort((a,b)=>b.gs-a.gs);D.wmi.osiris.gdelt=rows.slice(0,50).map(x=>{const o=Object.assign({},x);delete o.gs;return o});H.osirisGdelt={st:'live',at:Date.now(),asOf:r.via==='snapshot'?(r.asOf||Date.parse(j.timestamp)||null):Date.parse(j.timestamp)||null,via:r.via,n:D.wmi.osiris.gdelt.length}}catch(e){H.osirisGdelt=osiFail(H.osirisGdelt,D.wmi.osiris.gdelt,e)}paint(['wevents','whealth','wmap'])}
+ rows.sort((a,b)=>b.gs-a.gs);D.wmi.osiris.gdelt=rows.slice(0,50).map(x=>{const o=Object.assign({},x);delete o.gs;return o});H.osirisGdelt={st:'live',at:Date.now(),asOf:r.via==='snapshot'?(r.asOf||Date.parse(j.timestamp)||null):Date.parse(j.timestamp)||null,via:r.via,n:D.wmi.osiris.gdelt.length}}catch(e){H.osirisGdelt=osiFail(H.osirisGdelt,D.wmi.osiris.gdelt,e)}paint(['wevents','whealth','wmap','osiris','sh-ov'])}
 async function getOsirisApi(){try{const r=await pubGetJ(CFG.osiris.base+'/api/health',15000);const j=r.j;H.osirisApi={st:'live',at:Date.now(),asOf:r.via==='snapshot'?(r.asOf||Date.parse(j.timestamp)||null):Date.parse(j.timestamp)||null,via:r.via}}catch(e){H.osirisApi=H.osirisApi.st==='live'?kept(H.osirisApi,{msg:String(e.message||e)}):{st:'err',msg:/HTTP/.test(String(e.message||e))?String(e.message||e):offMsg()}}
- try{const r2=await pubGetJ(CFG.osiris.base+'/api/stats',15000);if(r2.j&&r2.j.stats)D.osirisStats={s:r2.j.stats,ts:Date.parse(r2.j.timestamp)||null}}catch(e){}paint(['whealth'])}
+ try{const r2=await pubGetJ(CFG.osiris.base+'/api/stats',15000);if(r2.j&&r2.j.stats)D.osirisStats={s:r2.j.stats,ts:Date.parse(r2.j.timestamp)||null}}catch(e){}paint(['whealth','osiris','sh-ov'])}
 async function getOsirisFlights(){try{const r=await pubGetJ(CFG.osiris.base+'/api/flights',30000);const j=r.j;
  D.flights=(j.commercial_flights||[]).filter(f=>isFinite(+f.lat)&&isFinite(+f.lng)).map(f=>({c:[+f.lng,+f.lat],t:((f.callsign||'').trim()||'Flight')+(f.airline_code?' · '+f.airline_code:'')}));
  H.osirisFlights={st:'live',at:Date.now(),asOf:null,via:r.via,n:D.flights.length}}catch(e){H.osirisFlights=osiFail(H.osirisFlights,D.flights,e)}paint(['wmap'])}
@@ -468,7 +473,7 @@ async function getYow(){try{const r=await pubGetJ(CFG.yow.url,20000);const j=r.j
  D.ap={dep,arr};
  let asOf=r.via==='snapshot'?(r.asOf||null):null;   // snapshot boards carry the snapshot's true fetch time as the as-of
  if(asOf==null){let mx=0;dep.concat(arr).forEach(f=>{const t=yowT(f.UpdateTime);if(t&&t>mx)mx=t});asOf=mx||Date.now()}
- H.yow={st:'live',at:Date.now(),asOf,via:r.via,n:dep.length+arr.length}}catch(e){H.yow=(D.ap.dep.length||D.ap.arr.length)?kept(H.yow,{msg:String(e.message||e)}):{st:'err',msg:/HTTP/.test(String(e.message||e))?String(e.message||e):offMsg()}}paint(['ap_dep','ap_arr'])}
+ H.yow={st:'live',at:Date.now(),asOf,via:r.via,n:dep.length+arr.length}}catch(e){H.yow=(D.ap.dep.length||D.ap.arr.length)?kept(H.yow,{msg:String(e.message||e)}):{st:'err',msg:/HTTP/.test(String(e.message||e))?String(e.message||e):offMsg()}}paint(['ap_dep','ap_arr','ap_more','sh-ov'])}
 const xt=(el,tag)=>{const e=el.getElementsByTagName(tag)[0];return e?e.textContent.trim():''};
 async function wmText(key,url){try{const r=await pubGet(url,20000);return{text:r.t,via:r.via,asOf:r.asOf}}catch(e1){const fb=CFG.wm.fallback[key];if(fb&&fb.text)return{text:fb.text,via:'hub-supplied',asOf:Date.parse(fb.asOf)||0};const er=new Error(e1 instanceof TypeError?offMsg():String(e1.message||e1));throw er}}
 async function getGdacs(){try{const r=await wmText('gdacs',CFG.wm.gdacs);const d=new DOMParser().parseFromString(r.text.replace(/^﻿/,''),'text/xml');if(d.querySelector('parsererror'))throw new Error('bad XML');
@@ -529,10 +534,10 @@ PN.camtiles=()=>{const items=CFG.cam.set.map(c=>({id:c.id,s:c.s,n:c.n}));
  FL.camtiles={items,rowFn:(r,i)=>{const f=D.frames[r.id]||frameOf(r.id);const th=f?'<img alt="" src="'+esc(f.src)+'" style="width:3.6rem;height:2rem;object-fit:cover;border-radius:.2rem">':'<span class="dim" style="width:3.6rem;text-align:center">NO FRAME</span>';return rowB('3.8rem 1fr auto',th+cw('<b>'+esc(r.s)+'</b><br><small class="dim">'+esc(r.n)+(f&&f.ts?' · '+hm(f.ts):'')+'</small>','a')+camChip(r.id),'cam:'+r.id)},opt:{}};if(!('camtiles' in UI.pg))UI.pg.camtiles=0;
  const hh=H.cams;return{t:'HOME-SET CAMERAS',pgid:'camtiles',body:'<div class="fl" data-fl="camtiles"></div>',src:SM()?srcLine('',null):'<b>City of Ottawa traffic cameras</b> · frames are SNAPSHOTS, never live · '+(CFG.cam.certificate?'1 request / 60 s total, rotating':'CERT PENDING — frames require the City of Ottawa camera-API certificate (the endpoint returns “Invalid or missing certificate” without one); the certificate comes from the City’s free Certificate Request Form on traffic.ottawa.ca, delivered by email · no image request is made until it is supplied')}};
 const camName=c=>c.description||c.name||c.title||('Camera '+(c.camera_number!=null?c.camera_number:c.id));
-PN.camlist=()=>{const flt=store.flt.cams||'all',src=SM()?SD.cams:(D.camList||[]),setIds=new Set(CFG.cam.set.map(x=>x.id));let items=flt==='home'?src.filter(c=>setIds.has(c.id)):src;const h=H.camlist;
+PN.camlist=()=>{const flt=store.flt.cams||'all',src=SM()?SD.cams:(D.camList||[]),setIds=new Set(CFG.cam.set.map(x=>x.id));let items=flt==='home'?src.filter(c=>setIds.has(c.id)):src;const cq=(store.flt.camq||'').trim().toLowerCase();if(cq)items=items.filter(c=>camName(c).toLowerCase().includes(cq)||String(c.camera_number==null?'':c.camera_number).includes(cq));const h=H.camlist;
  FL.camlist={items,rowFn:(r,i)=>rowB('auto 1fr auto',nw(esc(r.camera_number!=null?'#'+r.camera_number:'--'),'k')+cw(esc(camName(r)),'a')+nw(esc((+r.latitude).toFixed(3)+', '+(+r.longitude).toFixed(3)),'b'),'cam:'+r.id),opt:{empty:'<div class="dim">'+(h.st==='err'&&!SM()?'Camera list unavailable.':'No cameras to show.')+'</div>'}};if(!('camlist' in UI.pg))UI.pg.camlist=0;
  const seg='<span class="seg"><button data-a="flt:cams:all" aria-pressed="'+(flt==='all')+'" style="height:1.4rem">ALL</button><button data-a="flt:cams:home" aria-pressed="'+(flt==='home')+'" style="height:1.4rem">HOME SET</button></span>';
- return{t:'CAMERA LIST · '+items.length,pgid:'camlist',hdr:seg,chip:chipH(h,9e9),body:'<div class="fl" data-fl="camlist"></div>',src:srcLine('City of Ottawa camera list',h)}};
+ return{t:'CAMERA LIST · '+items.length,pgid:'camlist',hdr:seg+'<input id="camq" type="search" placeholder="SEARCH CAMERAS" aria-label="Search cameras" value="'+esc(store.flt.camq||'')+'">',chip:chipH(h,9e9),body:'<div class="fl" data-fl="camlist"></div>',src:srcLine('City of Ottawa camera list',h)}};
 PN.events=()=>{const h=H.tev,items=SM()?SD.tev.rows:(D.tev?D.tev.rows:[]);
  FL.events={items,rowFn:(r,i)=>rowB('1fr auto auto',cw(esc(r.h),'a')+nw(esc((r.t||'')+(r.ln?' · '+r.ln:'')),'b')+nw(tmTxt(r.u),'b'),'row:ev:'+i),opt:{empty:'<div class="dim">'+(h.st==='err'&&!SM()?'City events unavailable.':'No active City events reported.')+'</div>'}};if(!('events' in UI.pg))UI.pg.events=0;
  return{t:'ROAD EVENTS · CITY',pgid:'events',chip:chipH(h,CFG.ev.staleMs),body:'<div class="fl" data-fl="events"></div>',src:srcLine('City of Ottawa events',h)}};
@@ -580,7 +585,7 @@ function wallStart(){wallStop();$$('#pn-wall .wtile').forEach(t=>{const id=t.id.
  setTimeout(()=>{if(!T.playing&&!t.classList.contains('dead')){const st=$('.wstate',t);if(st)st.textContent='STILL CONNECTING — the feed is slow to start.'}},25000)})}
 function wallAudio(id){const T=WALL.tiles[id];if(!T)return;WALL.aud=WALL.aud===id?null:id;Object.entries(WALL.tiles).forEach(([k,x])=>{const hear=k===WALL.aud;x.video.muted=!hear;if(hear){x.video.volume=1;const p=x.video.play();if(p&&p.catch)p.catch(()=>{})}x.tile.classList.toggle('aud',hear);const b=$('.waud',x.tile);if(b){b.textContent=hear?'🔊 AUDIO ON':'🔇 LISTEN';b.setAttribute('aria-pressed',String(hear))}})}
 function hlPn(k,title){const h=H.news,items=newsRows(k).filter(x=>x.t);const id='hl-'+k;
- FL[id]={items,rowFn:(r,i)=>rowB('1fr auto','<span class="l2 a" style="font-size:.76rem"><b class="gt">'+esc(r.o)+'</b> '+esc(r.t)+'</span>'+nw(tmTxt(r.ts),'b'),'row:hl:'+k+':'+i),opt:{empty:'<div class="dim">No headlines available.</div>'}};if(!(id in UI.pg))UI.pg[id]=0;
+ FL[id]={items,rowFn:(r,i)=>{const rb=rowB('1fr','<span class="hlc"><span class="hlm"><b class="gt">'+esc(r.o)+'</b><span class="dim">'+(r.ts?dayTxt(r.ts):'NO TIMESTAMP')+'</span></span><span class="l2 a hlt">'+esc(r.t)+'</span></span>','row:hl:'+k+':'+i);return i===0?rb.replace('class="row"','class="row lead"'):rb},opt:{empty:'<div class="dim">No headlines available.</div>'}};if(!(id in UI.pg))UI.pg[id]=0;
  return{t:title,pgid:id,chip:chipH(h,CFG.news.staleMs),body:'<div class="fl" data-fl="'+id+'"></div>',src:SM()?srcLine('',null):srcLine(CFG.news[k].map(s=>s.o).join(' · '),h)}}
 PN['hl-local']=()=>hlPn('local','LOCAL NEWS');PN['hl-world']=()=>hlPn('world','WORLD NEWS');
 PN['tv-doors']=()=>doorsPn('CHAIN DOORS',[goDoor('→ World','world','Radar and events'),doorHTML('→ Markets','markets','Markets stays where it is'),doorHTML('→ Workbench','wb','Open a headline first to carry it')]);
@@ -609,12 +614,47 @@ PN.whealth=()=>{const rows=[['OSIRIS · USGS QUAKES',H.osirisQuakes,CFG.quakes.s
  FL.whealth={items:rows,rowFn:r=>rowB('8.5rem auto 1fr',nw(esc(r[0]),'k')+chipH(r[1],r[2])+cw(SM()?'':esc((r[1].via==='snapshot'?'via snapshot · ':'')+(r[3]!=null&&r[1].st!=='pend'&&r[1].st!=='err'?r[3]+' items · ':'')+(r[1].asOf?'feed time '+hm(r[1].asOf):(r[1].st==='live'?'feed time unknown':(r[1].msg||'')))),'b'),null),opt:{}};if(!('whealth' in UI.pg))UI.pg.whealth=0;
  return{t:'SOURCE HEALTH',pgid:'whealth',body:'<div class="fl" data-fl="whealth"></div>',src:'ECCC CAP needs a hub proxy; a 404 for an empty CAP hour is normal · Osiris rows are SITREP\'s own fetch outcomes — the OSIRIS API row proves only that the process answers, never feed health'+(D.osirisStats&&D.osirisStats.ts?' · OSIRIS counters at payload time '+hm(D.osirisStats.ts)+': flights '+D.osirisStats.s.flights+' · incidents '+D.osirisStats.s.incidents:'')}};
 PN['w-doors']=()=>doorsPn('CHAIN DOORS',[goDoor('◂ Weather','weather','Local radar context'),goDoor('Live TV','tv','Headlines'),goDoor('Commute + Cameras','cams','Road events')]);
+/* ===== FIX PASS 2026-11-21 — SITREP HOME · OSIRIS SECTION · RICHER DATA PANELS ===== */
+const viaTxt=h=>h.via==='snapshot'?('SNAPSHOT · as of '+(h.asOf?hm(h.asOf):'unknown')):h.via==='hub proxy'?'LIVE · via hub proxy':'LIVE · direct';
+PN['sh-ov']=()=>{const w=dwx(),o=w&&w.o,h=H.wx,ev=wmItems().length,warn=(w&&w.warn||[]).length;
+ const nowS=new Date().getHours()*3600+new Date().getMinutes()*60+new Date().getSeconds();
+ const nx=(D.ap.dep||[]).find(f=>(+f.SecondsInDay||0)>=nowS-900);
+ const rows=[['WEATHER · OTTAWA',o?(T(o.t,'°')+' · '+(o.cond||'--')+' · feels '+T(o.feels,'°')+' · wind '+(o.wd||'')+' '+T(o.ws,' km/h')):'no observation yet'],
+ ['ALERTS',warn?warn+' active ECCC alert'+(warn>1?'s':''):'none active'],
+ ['WORLD EVENTS',ev+' on the merged board (OSIRIS + GDACS + EONET + ECCC)'],
+ ['CAMERAS',CFG.cam.set.length+' home-set · '+((D.camList||[]).length||'—')+' in the City list'],
+ ['NEXT DEPARTURE · YOW',nx?((nx.MasterFlight||'------')+' → '+(nx.ActualCities||'—')+' · '+(nx.ExpectedTime||nx.ScheduledTime||'--:--')+' · '+(nx.Status||'')):'none listed']];
+ FL.shov={items:rows,rowFn:r=>rowB('8.2rem 1fr',nw(esc(r[0]),'k')+cw(esc(r[1]),'a'),null),opt:{}};if(!('shov' in UI.pg))UI.pg.shov=0;
+ return{t:'SITREP HOME · OTTAWA',pgid:'shov',chip:chipH(h,CFG.wx.staleMs),body:'<div class="shclock"><b class="num" id="sh-clock">--:--:--</b><span>'+esc(new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'}))+'</span></div><div class="fl" data-fl="shov"></div>',src:'<b>The situation picture at a glance</b> · every number here is read from the same feeds as the sections — open a section for its full board'}};
+PN.osiris=()=>{const st=D.osirisStats,srcs=[['USGS QUAKES',H.osirisQuakes,CFG.quakes.staleMs,(D.wmi.osiris.quakes||[]).length],['CONFLICT ZONES',H.osirisConf,CFG.osiris.staleMs,(D.wmi.osiris.conf||[]).length],['WILDFIRES · NASA FIRMS',H.osirisFires,CFG.osiris.staleMs,(D.wmi.osiris.fires||[]).length],['GDELT EVENTS',H.osirisGdelt,CFG.osiris.staleMs,(D.wmi.osiris.gdelt||[]).length],['FLIGHTS (MAP PINS)',H.osirisFlights,CFG.osiris.staleMs,(D.flights||[]).length]];
+ const top=[].concat((D.wmi.osiris.conf||[]).slice(0,3),(D.wmi.osiris.fires||[]).slice(0,2),(D.wmi.osiris.gdelt||[]).slice(0,3));
+ FL.osisrc={items:srcs,rowFn:r=>rowB('8.2rem auto 1fr',nw(esc(r[0]),'k')+chipH(r[1],r[2])+cw(esc(r[1].st==='pend'?'checking…':(r[3]+' items · '+viaTxt(r[1]))),'b'),null),opt:{}};if(!('osisrc' in UI.pg))UI.pg.osisrc=0;
+ FL.ositop={items:top,rowFn:r=>rowB('auto 1fr auto','<span class="k nw" style="color:'+SEVC[r.sev||0]+'">'+esc(r.src)+'</span>'+'<span class="l2 a" style="font-size:.74rem">'+esc(r.txt)+'</span>'+nw(r.t?dayTxt(r.t):'<b class="wn">NO TIME</b>','b'),'row:wi:'+wmItems().indexOf(r)),opt:{empty:'<div class="dim">No OSIRIS items yet.</div>'}};if(!('ositop' in UI.pg))UI.pg.ositop=0;
+ return{t:'OSIRIS · WORLD LAYER',chip:chipH(H.osirisApi,CFG.osiris.staleMs),body:'<div class="osinum"><span><b>'+(st?st.s.flights:'—')+'</b><small>FLIGHTS TRACKED</small></span><span><b>'+(st?st.s.incidents:'—')+'</b><small>INCIDENTS</small></span><span><b>'+(D.flights||[]).length+'</b><small>FLIGHT PINS LOADED</small></span></div><div class="fl" data-fl="osisrc"></div><div class="cap" style="margin:.35rem 0 .1rem">TOP OSIRIS ITEMS</div><div class="fl" data-fl="ositop"></div>',src:'<b>OSIRIS public API</b> · read direct → hub proxy → hub snapshot, labelled per source above · conflict zones are standing conditions — <b>UNKNOWN · NO TIMESTAMP</b> · the full merge lives in the WORLD section'}};
+PN['sh-news']=()=>{const mk=k=>newsRows(k).slice(0,4).map(r=>'<button class="row shn" data-a="go:tv"><span class="l2 a" style="white-space:normal;line-height:1.25"><b class="gt">'+esc(r.o)+'</b> '+esc(r.t)+'</span><span class="nw b">'+(r.ts?hm(r.ts):'NO TIME')+'</span></button>').join('');
+ return{t:'HEADLINES',chip:chipH(H.news,CFG.news.staleMs),body:'<div class="cap" style="margin-bottom:.15rem">LOCAL · OTTAWA</div>'+(mk('local')||'<div class="dim">No local headlines yet.</div>')+'<div class="cap" style="margin:.35rem 0 .15rem">WORLD</div>'+(mk('world')||'<div class="dim">No world headlines yet.</div>'),src:srcLine('CBC Ottawa · CityNews Ottawa · BBC · DW',H.news)}};
+PN['sh-doors']=()=>doorsPn('SECTIONS',[goDoor('Weather','weather','The full ECCC feed, radar and operator layer'),goDoor('Commute + Cameras','cams','Camera wall, searchable list, road events'),goDoor('Airport · YOW','airport','The airport\u2019s own free flight board'),goDoor('Live TV','tv','Four channels playing + headline boards'),goDoor('World','world','Radar, events map and the OSIRIS merge')]);
+PN.wxdata=()=>{const w=dwx(),h=H.wx,rows=w&&w.hr?w.hr.filter(x=>x.ts>=Date.now()-3600000).slice(0,14):[];
+ FL.wxdata={items:rows,rowFn:r=>rowB('4.2rem 3.2rem 3.6rem 5.2rem 1fr',nw(r.ts?hm(r.ts):'--','k')+nw(T(r.t,'°'),'a gt')+nw(r.lop==null?'--':r.lop+'% PoP','b')+nw(esc((r.wd||'')+' '+T(r.ws,' km/h')),'b')+cw(esc(r.cond||''),'a'),null),opt:{empty:'<div class="dim">No hourly data yet.</div>'}};if(!('wxdata' in UI.pg))UI.pg.wxdata=0;
+ const fc0=w&&w.fc&&w.fc[0];
+ return{t:'WEATHER DATA · HOURLY DETAIL',pgid:'wxdata',chip:chipH(h,CFG.wx.staleMs),body:'<div class="note">Sunrise '+(w&&w.sr?hm(w.sr):'--')+' · Sunset '+(w&&w.ss?hm(w.ss):'--')+(fc0?' · <b>'+esc(fc0.n||'')+'</b>: '+esc(fc0.txt||fc0.sum||''):'')+'</div><div class="fl" data-fl="wxdata"></div>',src:srcLine('ECCC hourly forecast · temperature, chance of precipitation, wind and condition for every hour',h)}};
+PN.ap_more=()=>{const h=H.yow,dep=D.ap.dep||[],arr=D.ap.arr||[];
+ const delayed=dep.concat(arr).filter(f=>f.ScheduledTime&&f.ExpectedTime&&f.ScheduledTime!==f.ExpectedTime).length;
+ const landed=arr.filter(f=>/landed|arrived/i.test(f.Status||'')).length;
+ const nowSec=new Date().getHours()*3600+new Date().getMinutes()*60+new Date().getSeconds();
+ const nx=dep.filter(f=>(+f.SecondsInDay||0)>=nowSec-900).slice(0,3).map(f=>esc(f.MasterFlight||'------')+' → '+esc(f.ActualCities||'—')+' · '+esc(f.ExpectedTime||f.ScheduledTime||'--:--')).join('<br>');
+ const dests={};dep.forEach(f=>{const c=f.ActualCities||'—';dests[c]=(dests[c]||0)+1});const topD=Object.entries(dests).sort((a,b)=>b[1]-a[1]).slice(0,3).map(e=>esc(e[0])+' ×'+e[1]).join(' · ');
+ const rows=[['ON THE BOARD TODAY',dep.length+' departures · '+arr.length+' arrivals'],['CHANGED TIMES',delayed+' flights whose expected time differs from scheduled'],['LANDED',landed+' arrivals marked landed / arrived'],['NEXT DEPARTURES',nx||'none listed'],['BUSIEST DESTINATIONS',topD||'—']];
+ return{t:'YOW · MORE FROM THE BOARD',chip:chipH(h,CFG.yow.staleMs),body:rows.map(r=>'<div class="row" style="grid-template-columns:8.5rem 1fr;cursor:default">'+nw(esc(r[0]),'k')+cw(r[1],'a')+'</div>').join(''),src:srcLine(CFG.yow.name+' · the free public board — no paid flight data',h)}};
+PN.camwall=()=>{const tiles=CFG.cam.set.map(c=>{const f=D.frames[c.id]||frameOf(c.id);return '<button class="cwt" data-a="cam:'+c.id+'">'+(f?'<img alt="" src="'+esc(f.src)+'">':'<span class="cwnf">NO FRAME YET</span>')+'<span class="cwb"><b>'+esc(c.s)+'</b>'+camChip(c.id)+'</span></button>'}).join('');
+ return{t:'CAMERA WALL · HOME SET',chip:chipH(H.cams,CFG.cam.staleMs),body:'<div class="camwall">'+tiles+'</div>',src:'<b>City of Ottawa traffic cameras</b> · frames are SNAPSHOTS, never live · the City allows 1 request / 60 s total, so the wall rotates through the set and every tile carries its own frame state'}};
 /* ===== layouts ===== */
 const LAY={
- weather:{c:'minmax(0,1.05fr) minmax(0,1.5fr) minmax(0,1fr)',r:'minmax(0,1fr) minmax(0,1fr) auto',a:'"now hourly alerts" "now outlook oper" "doors doors doors"',p:[['now','now'],['hourly','hourly'],['alerts','alerts'],['outlook','outlook'],['oper','oper'],['wx-doors','doors']]},
- cams:{c:'minmax(0,1fr) minmax(0,1.2fr)',r:'minmax(0,1fr) minmax(0,1fr) auto',a:'"camtiles camlist" "events camlist" "doors doors"',p:[['camtiles','camtiles'],['camlist','camlist'],['events','events'],['cam-doors','doors']]},
- airport:{c:'minmax(0,1fr) minmax(0,1fr)',r:'minmax(0,1.3fr) minmax(0,1fr) auto',a:'"dep arr" "facts facts" "doors doors"',p:[['ap_dep','dep'],['ap_arr','arr'],['ap_facts','facts'],['ap-doors','doors']]},
- tv:{c:'minmax(0,1.5fr) minmax(0,1fr) minmax(0,1fr)',r:'auto minmax(0,1fr) auto',a:'"tapes tapes tapes" "player hl1 hl2" "doors doors doors"',p:[['tapes','tapes'],['wall','player'],['hl-local','hl1'],['hl-world','hl2'],['tv-doors','doors']]},
+ home:{c:'minmax(0,1fr) minmax(0,1.25fr)',r:'minmax(0,1fr) minmax(0,1fr) auto',a:'"ov osiris" "news osiris" "doors doors"',p:[['sh-ov','ov'],['osiris','osiris'],['sh-news','news'],['sh-doors','doors']]},
+ weather:{c:'minmax(0,1.05fr) minmax(0,1.5fr) minmax(0,1fr)',r:'minmax(0,1fr) minmax(0,1fr) minmax(0,1.15fr) auto',a:'"now hourly alerts" "now outlook oper" "data data radar" "doors doors doors"',p:[['now','now'],['hourly','hourly'],['alerts','alerts'],['outlook','outlook'],['oper','oper'],['wxdata','data'],['wmap','radar'],['wx-doors','doors']]},
+ cams:{c:'minmax(0,1.35fr) minmax(0,1fr)',r:'minmax(0,1fr) minmax(0,1fr) auto',a:'"wall list" "wall events" "doors doors"',p:[['camwall','wall'],['camlist','list'],['events','events'],['cam-doors','doors']]},
+ airport:{c:'minmax(0,1fr) minmax(0,1fr)',r:'minmax(0,1.3fr) minmax(0,1fr) auto',a:'"dep arr" "facts more" "doors doors"',p:[['ap_dep','dep'],['ap_arr','arr'],['ap_facts','facts'],['ap_more','more'],['ap-doors','doors']]},
+ tv:{c:'minmax(0,1.7fr) minmax(0,1fr) minmax(0,1fr)',r:'auto minmax(0,1fr) auto',a:'"tapes tapes tapes" "player hl1 hl2" "doors doors doors"',p:[['tapes','tapes'],['wall','player'],['hl-local','hl1'],['hl-world','hl2'],['tv-doors','doors']]},
  world:{c:'minmax(0,1.4fr) minmax(0,1fr)',r:'minmax(0,1fr) minmax(0,1fr) auto',a:'"map ev" "map health" "doors doors"',p:[['wmap','map'],['wevents','ev'],['whealth','health'],['w-doors','doors']]}};
 const RO=new ResizeObserver(()=>relayout());
 function render(){wallStop();const L=LAY[UI.sec],s=$('#stage');s.style.gridTemplateColumns=L.c;s.style.gridTemplateRows=L.r;s.style.gridTemplateAreas=L.a;s.innerHTML=L.p.map(p=>panelShell(p[0],p[1])).join('');mapKey='';
@@ -622,12 +662,12 @@ function render(){wallStop();const L=LAY[UI.sec],s=$('#stage');s.style.gridTempl
 const _rl=relayout;relayout=function(){clearTimeout(layTimer);layTimer=setTimeout(()=>{$$('.fl,.hr-s,#mapbox').forEach(n=>RO.observe(n));flLayout();hourlyLayout();mapPaint();tapeFit()},30)};
 function crumb(){const s=SECI[UI.sec];$('#cr').textContent='HOME › SITREP › '+s.n;const f=fromSec();$('#b-back').textContent='◂ BACK TO '+f.box}
 function fromSec(){const f=UI.from;return SEC.find(s=>s.id===f||s.bx===f)||SECI[UI.sec]}
-function tabs(){const h={weather:H.wx,cams:H.tev,airport:H.yow,tv:H.news,world:H.osirisQuakes};$('#tabs').innerHTML=SEC.map(s=>'<button class="tab cap" role="tab" data-a="tab:'+s.id+'" aria-selected="'+(UI.sec===s.id)+'"><i class="'+tabDot(h[s.id])+'"></i><span>'+esc(s.n)+'</span></button>').join('')}
+function tabs(){const h={home:H.osirisApi,weather:H.wx,cams:H.tev,airport:H.yow,tv:H.news,world:H.osirisQuakes};$('#tabs').innerHTML=SEC.map(s=>'<button class="tab cap" role="tab" data-a="tab:'+s.id+'" aria-selected="'+(UI.sec===s.id)+'"><i class="'+tabDot(h[s.id])+'"></i><span>'+esc(s.n)+'</span></button>').join('')}
 function foot(){const v=$('#sv');if(!v||foot._hold)return;if(saveErr){v.textContent='NOT SAVED — browser storage is unavailable; settings last this visit only';v.classList.add('bad')}else{v.classList.remove('bad');v.textContent='SITREP v1.0.0 · '+(SM()?'SAMPLE DATA ON — layout check only':'live-world surface · feeds carry source and time')}
  const b=$('#sm');if(b)b.setAttribute('aria-pressed',SM())}
 /* ===== navigation ===== */
 function setHash(extra){try{history.replaceState(null,'','#sec='+UI.sec+'&from='+(UI.from||SECI[UI.sec].id)+(extra?'&'+extra:''))}catch(e){}}
-function go(id,extra){if(!SECI[id])id='weather';if(id!==UI.sec&&!(UI.from)){}UI.sec=id;store.ui.sec=id;save();setHash(extra);render()}
+function go(id,extra){if(!SECI[id])id='home';if(id!==UI.sec&&!(UI.from)){}UI.sec=id;store.ui.sec=id;save();setHash(extra);render()}
 const homeBase=()=>doorAddr('home')||'./index.html';
 function toHome(box){const f=fromSec(),u=homeBase()+'#'+(box?'box='+f.bx:'rest');location.href=u}
 function parseHash(){const h=location.hash.replace(/^#/,'');if(!h)return null;const o={};h.split('&').forEach(p=>{const i=p.indexOf('=');if(i<0)o.sec=o.sec||p;else o[p.slice(0,i)]=decodeURIComponent(p.slice(i+1))});const s=SEC.find(x=>x.id===o.sec||x.bx===o.sec);o.secId=s?s.id:null;return o}
@@ -661,16 +701,17 @@ document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!
  else if(k==='theme')setTheme(document.documentElement.dataset.theme==='light'?'dark':'light');
  else if(k==='sample'){store.ui.sample=!store.ui.sample;save();render()}
  else if(k==='talk')talk()});
+document.addEventListener('input',e=>{if(e.target&&e.target.id==='camq'){store.flt.camq=e.target.value;UI.pg.camlist=0;paint('camlist');const nq=$('#camq');if(nq){nq.focus();try{nq.setSelectionRange(nq.value.length,nq.value.length)}catch(err){}}}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('#sheetHost.on'))closeSheet();else toHome(true)}});
 window.addEventListener('resize',()=>{mapKey='';relayout()});
 window.addEventListener('hashchange',()=>{const o=parseHash();if(o&&o.secId){UI.from=o.from||UI.from;go(o.secId);if(o.cam&&o.secId==='cams')sheetRow('cam',o.cam)}});
 /* ===== theme / mast / clock ===== */
 function setTheme(t){document.documentElement.dataset.theme=t;try{localStorage.setItem(TK,t)}catch(e){saveErr=true}$('#th').textContent=t==='light'?'☾ NIGHT':'☀ DAY';mast();mapKey='';mapPaint();foot()}
-function mast(){const t=$('#lk-'+(document.documentElement.dataset.theme==='light'?'cream':'reversed'));if(t)$('#mast').innerHTML=t.innerHTML}
+function mast(){$('#mast').innerHTML='<img class="mface" src="./assets/northbirch-head-only-v11-clear.svg" alt="" aria-hidden="true"><span class="mword">CANOPY</span>'}
 function clock(){const d=new Date();$('#ck').textContent=hms(d);$('#dt').textContent=d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'}).toUpperCase()}
 /* ===== BOOT ===== */
 function boot(){let th='dark';try{th=localStorage.getItem(TK)||'dark'}catch(e){saveErr=true}
- const o=parseHash();UI.sec=(o&&o.secId)||(SECI[store.ui.sec]?store.ui.sec:'weather');UI.from=(o&&o.from)||null;
+ const o=parseHash();UI.sec=(o&&o.secId)||(window.__TAB?'home':(SECI[store.ui.sec]?store.ui.sec:'home'));UI.from=(o&&o.from)||null;
  setTheme(th==='light'?'light':'dark');save();/* persists on BOOT; catch path sets saveErr and the footer says NOT SAVED */
  render();clock();setInterval(clock,1000);
  const run=(f,ms)=>{f();setInterval(f,ms)};
@@ -689,4 +730,36 @@ else if(tries>24)clearInterval(iv)},250)})();
 /* SITREP TAB (Grant ruling 2026-11-21): on narrow screens the strip and the section tabs scroll sideways, so every door and every section stays reachable */
 @media (max-width:760px){.strip{overflow-x:auto;scrollbar-width:none}.strip::-webkit-scrollbar{display:none}.tabs{overflow-x:auto;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}.tabs .tab{flex:none}}
 </style>
+<style>
+/* ===== FIX PASS 2026-11-21 — mast face+CANOPY · tabs in the Home-door treatment · TV room · rich headlines · camera wall + search · SITREP home ===== */
+.mast{height:2.9rem;aspect-ratio:auto;display:flex;align-items:center;gap:.55rem;padding:.15rem .45rem;background:linear-gradient(180deg,#101d16,#0a120d)}
+.mast .mface{height:2.45rem;width:2.45rem;flex:none}
+.mast .mword{font:800 1rem var(--fd);letter-spacing:.3em;color:var(--tp)}
+.strip .sl-logo{width:1.35rem;height:1.35rem}
+.tabs{gap:.3rem}
+.tabs .tab{border:1px solid var(--ln);border-bottom:0;border-radius:.3rem .3rem 0 0;background:linear-gradient(180deg,#141416,#0c0c0e);box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
+.tabs .tab[aria-selected="true"]{color:var(--gold);border-top:2px solid var(--gold)}
+.wall{grid-template-columns:1fr 1fr}
+.hlc{display:flex;flex-direction:column;gap:.12rem;min-width:0}
+.hlm{display:flex;gap:.5rem;align-items:baseline;font-size:.62rem;letter-spacing:.06em}
+.hlt{font-size:.8rem;white-space:normal;line-height:1.25}
+.row.lead .hlt{font-size:.95rem;font-weight:700}
+#camq{background:#0c0d10;border:1px solid var(--ln);color:var(--tp);border-radius:.25rem;padding:.18rem .45rem;font:600 .68rem var(--fm);width:9.5rem;margin-left:.4rem}
+.camwall{display:grid;grid-template-columns:1fr 1fr;gap:.35rem;height:100%}
+.cwt{position:relative;border:1px solid var(--ln);border-radius:.3rem;overflow:hidden;background:#000;padding:0;cursor:pointer;min-height:0;text-align:left}
+.cwt img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cwt .cwnf{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--tm);font:600 .68rem var(--fm)}
+.cwt .cwb{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:.4rem;padding:.2rem .45rem;background:linear-gradient(0deg,rgba(0,0,0,.82),transparent);color:#fff;font:600 .66rem var(--fm)}
+.shclock{display:flex;align-items:baseline;gap:.7rem;margin-bottom:.35rem}
+.shclock b{font:700 1.9rem/1.1 var(--fd);color:#fff7ea}
+.shclock span{font:600 .7rem var(--fm);color:var(--ts);letter-spacing:.06em;text-transform:uppercase}
+.osinum{display:flex;gap:1.2rem;margin-bottom:.35rem}
+.osinum span{display:flex;flex-direction:column}
+.osinum b{font:700 1.35rem var(--fd);color:var(--gold)}
+.osinum small{font:600 .58rem var(--fm);color:var(--ts);letter-spacing:.08em}
+.row.shn{grid-template-columns:minmax(0,1fr) auto;width:100%;text-align:left}
+/* app feel on phone (Grant 2026-11-21): panels stack in ONE column and scroll vertically like an app feed — never a sideways website strip */
+@media (max-width:760px){.stage{display:flex!important;flex-direction:column;overflow-y:auto;overflow-x:hidden}.stage .pn{flex:none;width:100%;max-height:76vh}}
+</style>
+<script>setInterval(function(){var el=document.getElementById('sh-clock');if(el){var d=new Date(),p=function(n){return String(n).padStart(2,'0')};el.textContent=p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds())}},1000);</script>
 </body></html>

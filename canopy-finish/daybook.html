@@ -391,7 +391,7 @@ body .tag{box-shadow:0 .06rem .2rem rgb(0 0 0/.35),inset 0 1px 0 rgb(255 255 255
 <header>
   <div class="hctl">
     <a id="hm-logo" href="./index.html" aria-label="Home">
-      <span class="logo-mark"><img class="nb-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true"></span>
+      <span class="logo-mark"><img class="nb-head" src="./assets/northbirch-head-only-v11.svg" alt="" aria-hidden="true"></span>
       <span class="logo-word">CANOPY</span>
     </a>
     <a id="hm-clock" href="./index.html" aria-label="Home" title="Home (clock shows this device's time; weather is a snapshot, Ottawa — not live)">
@@ -853,13 +853,13 @@ apply();addEventListener('hashchange',apply)})();
 @media (prefers-reduced-motion:reduce){.nwheel:not([hidden]) .nw-dial{animation:none}}
 
 </style>
-<button id="abub" class="abub" aria-label="Talk to Oakley — tap to open, drag to move" title="Talk to Oakley"><img class="nb-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true"></button>
-<button id="wheelbtn" class="wheelbtn" aria-label="Open the Canopy section wheel"><img class="nb-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true"><span>SECTIONS</span></button>
+<button id="abub" class="abub" aria-label="Talk to Oakley — tap to open, drag to move" title="Talk to Oakley"><img class="nb-head" src="./assets/northbirch-head-only-v11-clear.svg" alt="" aria-hidden="true"></button>
+<button id="wheelbtn" class="wheelbtn" aria-label="Open the Canopy section wheel"><img class="nb-head" src="./assets/northbirch-head-only-v11.svg" alt="" aria-hidden="true"><span>SECTIONS</span></button>
 <div id="nwheel" class="nwheel" hidden role="dialog" aria-modal="true" aria-label="Canopy sections">
  <div class="nw-dial">
   <div class="nw-ring"></div><div class="nw-ring2"></div>
-  <button class="nw-hub" data-nw="close" aria-label="Close the wheel"><img class="nb-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true"></button>
-  <a class="nw-st nw-home" href="./index.html"><img class="nb-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true">HOME</a> <a class="nw-st nw-sit" href="./sitrep.html#tab=1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><path d="M8.5 15.5a5 5 0 0 1 0-7M15.5 8.5a5 5 0 0 1 0 7M5.6 18.4a9 9 0 0 1 0-12.8M18.4 5.6a9 9 0 0 1 0 12.8"/></svg>SITREP</a>
+  <button class="nw-hub" data-nw="close" aria-label="Close the wheel"><img class="nb-head" src="./assets/northbirch-head-only-v11.svg" alt="" aria-hidden="true"></button>
+  <a class="nw-st nw-home" href="./index.html"><img class="nb-head" src="./assets/northbirch-head-only-v11.svg" alt="" aria-hidden="true">HOME</a> <a class="nw-st nw-sit" href="./sitrep.html#tab=1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><path d="M8.5 15.5a5 5 0 0 1 0-7M15.5 8.5a5 5 0 0 1 0 7M5.6 18.4a9 9 0 0 1 0-12.8M18.4 5.6a9 9 0 0 1 0 12.8"/></svg>SITREP</a>
   <a class="nw-st nw-deck" href="./deck.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 15a8 8 0 1 1 16 0"/><path d="M12 15l4.2-4.2"/><circle cx="12" cy="15" r="1.3" fill="currentColor" stroke="none"/></svg>DECK</a>
   <a class="nw-st nw-wb" href="./workbench.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M9 8V6a3 3 0 0 1 6 0v2M3 13h18"/></svg>WORKBENCH</a>
   <span class="nw-st nw-day cur" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M8 3v4M16 3v4"/></svg>DAYBOOK</span>
@@ -883,5 +883,12 @@ nwEl.addEventListener('click',function(e){if(e.target===nwEl)wheelClose()});
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!nwEl.hidden)wheelClose()});
 })();
 </script>
+
+<style>
+/* FIX PASS 2026-11-21 — floating assistant: transparent fill, 3D neon outline (green + blue), covers nothing */
+.abub{background:transparent!important;border:0!important;box-shadow:none!important;overflow:visible}
+.abub::after{display:none!important}
+.abub .nb-head{background:transparent!important;width:100%!important;height:100%!important;border-radius:0!important;filter:drop-shadow(0 0 2px rgba(53,208,127,.95)) drop-shadow(0 0 6px rgba(53,208,127,.7)) drop-shadow(2.5px 2.5px 1px rgba(77,163,255,.9)) drop-shadow(0 0 10px rgba(77,163,255,.55))}
+</style>
 </body>
 </html>

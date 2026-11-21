@@ -254,7 +254,7 @@ body .btn:active{transform:scale(.98);transition-duration:100ms}
   <section class="pic" aria-label="The bench at a glance"><div class="ttl"><span class="eb">CANOPY</span><span class="h1" id="h1">THE BENCH</span></div><div class="chips" id="chips"></div><div class="rt"><div class="pager" id="pager" hidden><button class="ib" id="pg-p" aria-label="Previous page">◂</button><span id="pg-n">1/1</span><button class="ib" id="pg-x" aria-label="Next page">▸</button></div><button class="ib egg" id="egg" aria-label="The whole picture" title="the whole picture" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="5" cy="6" r="2.2" fill="currentColor"/><circle cx="19" cy="5" r="2.2" fill="currentColor"/><circle cx="12" cy="19" r="2.2" fill="currentColor"/><circle cx="12" cy="11" r="1.5"/><path d="M6.6 7.3l4.2 2.8M17.4 6.4l-4.2 3.8M12 12.5V16.8"/></svg></button></div></section>
   <section class="shelf" id="shelf" aria-label="Shelf of businesses"></section>
  </main>
- <footer class="foot"><div class="seg" role="group" aria-label="Preview which owner's bench"><button id="i-grant" aria-pressed="true" data-a="inst:grant">GRANT'S BENCH</button><button id="i-johnny" aria-pressed="false" data-a="inst:johnny">JOHNNY'S BENCH</button></div><span class="sv" id="sv"></span><button class="btn q" id="th" data-a="theme" aria-label="Switch theme">☾ NIGHT</button><button class="btn" id="talk" data-a="talk"><span id="talk-n">TALK TO OAKLEY</span><span class="nc">SHELL</span></button></footer>
+ <footer class="foot"><div class="seg" role="group" aria-label="Preview which owner's bench"><button id="i-grant" aria-pressed="true" data-a="inst:grant">GRANT'S BENCH</button><button id="i-johnny" aria-pressed="false" data-a="inst:johnny">JOHNNY'S BENCH</button></div><span class="sv" id="sv"></span><button class="btn q" id="th" data-a="theme" aria-label="Switch theme">☾ NIGHT</button><button class="btn" id="talk" data-a="talk"><span id="talk-n">TALK TO OAKLEY</span><span class="nc">SHELL</span></button><span class="memwm" aria-label="In memory of Oakley"><span>In memory of Oakley</span><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="currentColor"><ellipse cx="12" cy="15.5" rx="4.6" ry="3.8"/><ellipse cx="4.6" cy="10.6" rx="1.9" ry="2.5" transform="rotate(-18 4.6 10.6)"/><ellipse cx="8.6" cy="7.6" rx="2" ry="2.7" transform="rotate(-6 8.6 7.6)"/><ellipse cx="13.4" cy="7.6" rx="2" ry="2.7" transform="rotate(6 13.4 7.6)"/><ellipse cx="17.4" cy="10.6" rx="1.9" ry="2.5" transform="rotate(18 17.4 10.6)"/></g></svg></span></footer>
 </div>
 <div id="sheetHost"></div><div id="toastHost"></div><div id="empHost"></div>
 
@@ -317,7 +317,7 @@ function doorLine(e){const a=addrOf(e);if(e.state==='nobuilt'||e.state==='new')r
 function cardHTML(e,tier){const a=addrOf(e),good=a&&okUrl(a),factsH=(e.facts||[]).map(f=>'<span class="fct"><i>'+esc(f[0])+'</i><b>'+esc(f[1])+'</b></span>').join('');
  const inner='<span class="hd"><span class="pl">'+plate(e)+'</span><span class="nm">'+esc(e.name)+'</span></span><span class="st '+(e.state)+'">'+esc(stateTxt(e))+'</span><span class="ov">'+esc(e.ov)+'</span><span class="ab">'+esc(e.about)+'</span>'+snapCard(e)+'<span class="dr">'+esc(doorLine(e))+'</span><span class="fx">'+factsH+'</span><span class="wm" aria-hidden="true">'+plate(e)+'</span>';
  const st='style="--c:'+esc(e.c)+'"',cls='card t'+tier;
- if(good&&e.state!=='nobuilt'&&e.state!=='external')return '<a class="'+cls+'" '+st+' href="'+esc(ctxUrl(a))+'" data-id="'+esc(e.id)+'" aria-label="'+esc(e.name+' — '+stateTxt(e)+' — open')+'">'+inner+'</a>';
+ if(good&&e.state!=='nobuilt'&&e.state!=='external')return '<a class="'+cls+' linked" '+st+' href="'+esc(ctxUrl(a))+'" data-id="'+esc(e.id)+'" aria-label="'+esc(e.name+' — '+stateTxt(e)+' — open')+'">'+inner+'</a>';
  return '<button class="'+cls+'" '+st+' data-a="sheet:'+esc(e.id)+'" aria-label="'+esc(e.name+' — '+stateTxt(e)+' — details')+'">'+inner+'</button>'}
 function ctxUrl(u){u=String(u).trim();return u+(u.indexOf('?')<0?'?':'&')+'from=workbench'}
 /* ============ fit: grid chosen from real pixel space; type never shrinks ============ */
@@ -344,12 +344,9 @@ function phoneShelf(sh){page=0;const all=entries().map((e,i)=>({e,i})).concat([{
 function paintChips(){const L=entries(),cnt=k=>L.filter(e=>e.state===k||(k==='nobuilt'&&e.state==='new')).length,defs=[['live','LIVE'],['preview','PREVIEW'],['external','EXTERNAL'],['nobuilt','NOT BUILT'],['yours','YOURS']];
  $('#chips').innerHTML='<span class="chip" style="--c:var(--wb)"><b>'+L.length+'</b>ON THE SHELF</span>'+defs.filter(d=>cnt(d[0])).map(d=>'<span class="chip'+(d[0]==='nobuilt'?' nb':'')+'" style="--c:'+STATE_C[d[0]]+'"><b>'+cnt(d[0])+'</b>'+d[1]+'</span>').join('')}
 /* ============ header ============ */
-const DOORS=[{k:'sitrep',n:'SITREP',url:()=>CFG.doors.sitrep},{k:'deck',n:'COMMAND DECK',url:()=>CFG.doors.deck},{k:'day',n:'DAYBOOK',url:()=>CFG.doors.day}];
-/* NO HOME TAB — Home is reached by the clock area or the logo icon only. THE LOOKOUT gets no door here (Amendment A1). DOORS SHOW ONLY WHERE YOU CAN GO (Grant 2026-11-18): this surface IS Workbench, so its own door leaves the row — the row lists destinations only. */
-const SC={deck:'TEAM ON',day:'MONEY BOOK',sitrep:'LIVE WORLD'};
-function paintDoors(){$('#doors').innerHTML=DOORS.map(d=>{const u=d.cur?'':CFG.doors[d.k],body='<span class="tk" aria-hidden="true"></span><span class="nm">'+d.n+'</span>'+(SC[d.k]?'<span class="sc">'+SC[d.k]+'</span>':'')+(d.cur?'':okUrl(u)?'':'<span class="nc">NOT CONNECTED</span>');
- if(d.cur)return '<button id="d-wb" class="sdoor on" data-a="home" aria-current="page" aria-label="Workbench — this surface; returns to the businesses home">'+body+'</button>';
- return okUrl(u)?'<a id="d-'+d.k+'" class="sdoor" href="'+esc(ctxUrl(u))+'" aria-label="'+d.n+'">'+body+'</a>':'<button id="d-'+d.k+'" class="sdoor" data-a="nc:'+d.k+'" aria-label="'+d.n+' — not connected">'+body+'</button>'}).join('');
+/* CORRECTION ROUND — ONE door form on every page (line 1 + F4): all five sections, name + section-colour chip + count chip only, every door flagged (static glow + LINK badge via .cnd.linked). This supersedes this page's older local door conventions (no-Home-tab, destinations-only row) — the gate requires doors + top bar identical on every page. THE LOOKOUT stays not-a-door (Amendment A1). */
+const CNDOORS=[['home','HOME','./index.html','#F5F2EA','LIVE'],['sitrep','SITREP','./sitrep.html?tab=1','#C9A227','6 SECTIONS'],['deck','COMMAND DECK','./deck.html','#2FA866','5 LANES'],['day','DAYBOOK','./daybook.html','#D64541','11 VIEWS'],['wb','WORKBENCH','./workbench.html','#3E8FE0','APP SHELF']];
+function paintDoors(){$('#doors').innerHTML=CNDOORS.map(d=>{const cur=d[0]==='wb';return '<a class="sdoor cnd linked'+(cur?' on':'')+'" href="'+d[2]+'" style="--dc:'+d[3]+'"'+(cur?' aria-current="page"':'')+' aria-label="'+d[1]+'"><span class="chip"></span><span class="nm">'+d[1]+'</span><span class="ct">'+d[4]+'</span></a>'}).join('');
  ['hm-logo','hm-clock'].forEach(id=>{const e=$('#'+id),u=CFG.doors.home;if(okUrl(u)){e.href=ctxUrl(u)}else{e.removeAttribute('href');e.setAttribute('data-a','nc:home');e.setAttribute('role','button');e.setAttribute('tabindex','0')}})}
 function tick(){const d=new Date();$('#ck').textContent=d.toLocaleTimeString([],{hour12:false});$('#dt').textContent=d.toLocaleDateString([],{weekday:'short',month:'short',day:'numeric'}).toUpperCase();$('#ut').textContent='DEVICE TIME'}
 /* ============ sheets + toast ============ */
@@ -571,4 +568,145 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!nwEl.hidde
 .abub::after{display:none!important}
 .abub .nb-head{background:transparent!important;width:100%!important;height:100%!important;border-radius:0!important;filter:drop-shadow(0 0 2px rgba(53,208,127,.95)) drop-shadow(0 0 6px rgba(53,208,127,.7)) drop-shadow(2.5px 2.5px 1px rgba(77,163,255,.9)) drop-shadow(0 0 10px rgba(77,163,255,.55))}
 </style>
+<style id="corr-2026-11-21">
+/* ===== CORRECTION ROUND 2026-11-21 — shared layer: unified doors/top bar (line 1, F4), tactile press + hover (lines 3/4), Canopy phone wheel (two levels, Canopy dial face) ===== */
+#wheelbtn,.wheelbtn,#nwheel,.nwheel{display:none!important}
+.cnd{position:relative;display:flex;align-items:center;gap:.5rem;padding:.3rem .6rem;border-radius:.35rem;text-decoration:none;color:#e8e4d8;background:linear-gradient(180deg,#17181c,#101114);border:1px solid #26262b;transition:transform 150ms ease,box-shadow 150ms ease;min-width:0;cursor:pointer;font-family:var(--fm,ui-monospace,monospace)}
+.cnd .chip{width:.55rem;height:.55rem;border-radius:50%;background:var(--dc);flex:none;box-shadow:0 0 .4rem var(--dc)}
+.cnd .nm{font-weight:800;font-size:.78rem;letter-spacing:.08em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cnd .ct{margin-left:auto;font-weight:700;font-size:.58rem;letter-spacing:.07em;color:#a49e93;border:1px solid #33343a;border-radius:2rem;padding:.08rem .4rem;white-space:nowrap;flex:none}
+.cnd.linked{box-shadow:0 0 0 1px var(--dc),0 0 .8rem -.15rem var(--dc)}
+.cnd.linked::after{content:"LINK";position:absolute;top:-.42rem;right:.4rem;font-weight:700;font-size:.5rem;line-height:1;letter-spacing:.09em;color:#0b0e13;background:rgba(250,204,21,.95);padding:.14rem .3rem;border-radius:.25rem;pointer-events:none}
+.cnd:hover{transform:translateY(-2px);background:var(--dc);color:#0b0e13;filter:brightness(1.12);box-shadow:0 .3rem .7rem rgb(0 0 0/.48),0 0 .85rem var(--dc),inset 0 1px 0 rgb(255 255 255/.06)}
+.cnd:hover .ct{color:#0b0e13;border-color:rgba(0,0,0,.35)}
+.cnd:hover .chip{background:#0b0e13;box-shadow:none}
+.cnd:active{transform:scale(.98);transition-duration:100ms}
+.cnd.on{border-color:var(--dc);background:linear-gradient(180deg,#1e1f26,#121317)}
+button:active,.btn:active{transform:scale(.98);transition-duration:100ms}
+.card{transition:transform 150ms ease,box-shadow 150ms ease,filter 150ms ease}
+.card:hover{transform:translateY(-2px);filter:brightness(1.12);box-shadow:0 .3rem .7rem rgb(0 0 0/.48),0 0 .85rem rgba(62,143,224,.25),inset 0 1px 0 rgb(255 255 255/.06)}
+.card.linked{box-shadow:0 0 0 1px var(--c),0 0 .8rem -.15rem var(--c)}
+.card.linked::after{content:"LINK";position:absolute;top:-.42rem;right:.4rem;font-weight:700;font-size:.5rem;line-height:1;letter-spacing:.09em;color:#0b0e13;background:rgba(250,204,21,.95);padding:.14rem .3rem;border-radius:.25rem;pointer-events:none;z-index:3}
+.cwbar{position:fixed;left:0;right:0;bottom:0;z-index:340;display:none;align-items:center;gap:.6rem;height:calc(64px + env(safe-area-inset-bottom));padding:0 .6rem env(safe-area-inset-bottom);background:#111417;border-top:1px solid #2a2e33}
+@media (max-width:760px){.cwbar{display:flex}}
+.cw-dwrap{display:flex;flex-direction:column;align-items:center;gap:1px;flex:none}
+.cw-open{position:relative;width:56px;height:56px;border-radius:50%;border:0;background:#111417;cursor:pointer;padding:0;flex:none}
+.cw-open:active{transform:scale(.98)}
+.cw-ring{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from -90deg,#F5F2EA 0 72deg,#C9A227 0 144deg,#2FA866 0 216deg,#D64541 0 288deg,#3E8FE0 0 360deg);opacity:.35}
+.cw-ring b{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from var(--rr,-90deg),rgba(255,255,255,.95) 0 72deg,transparent 0 360deg);mix-blend-mode:overlay}
+.cw-open::after{content:"";position:absolute;inset:7px;border-radius:50%;background:#111417}
+.cw-husk{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:32px;height:32px;z-index:1}
+.cw-curlab{font:700 10px var(--fm,ui-monospace,monospace);letter-spacing:.1em;color:#e8e4d8}
+.cw-sbtn{flex:1;display:flex;align-items:center;gap:.5rem;height:44px;border-radius:2rem;border:1px solid #33373d;background:#17191d;color:#a49e93;font:600 13px var(--fm,ui-monospace,monospace);letter-spacing:.06em;padding:0 1rem;cursor:pointer;text-align:left}
+.cw-sbtn:active{transform:scale(.98)}
+.cw-sp{position:fixed;left:0;right:0;bottom:calc(64px + env(safe-area-inset-bottom));z-index:345;background:#14161a;border-top:1px solid #2c2f34;padding:.6rem;box-shadow:0 -.6rem 1.4rem rgba(0,0,0,.5)}
+.cw-sp[hidden]{display:none}
+.cw-sp input{width:100%;height:44px;border-radius:.4rem;border:1px solid #33373d;background:#0d0e11;color:#e8e4d8;font:600 14px var(--fm,ui-monospace,monospace);padding:0 .7rem}
+.cw-sres{max-height:42vh;overflow-y:auto;margin-top:.5rem;display:flex;flex-direction:column;gap:.3rem}
+.cw-sr{display:flex;align-items:center;gap:.6rem;padding:.55rem .6rem;border:1px solid #26262b;border-radius:.35rem;color:#e8e4d8;text-decoration:none;font:600 13px var(--fm,ui-monospace,monospace)}
+.cw-sr i{margin-left:auto;font-style:normal;font-size:10px;letter-spacing:.08em;color:#a49e93}
+.cw-none{padding:.6rem;color:#a49e93;font:600 12px var(--fm,ui-monospace,monospace)}
+.cw-sheet{position:fixed;inset:0;z-index:350}
+.cw-sheet[hidden]{display:none}
+.cw-scrim{position:absolute;inset:0;background:rgba(0,0,0,.4)}
+.cw-panel{position:absolute;left:50%;transform:translateX(-50%);bottom:88px;display:flex;flex-direction:column;align-items:center;gap:.5rem;animation:cwUp 240ms ease-out}
+@keyframes cwUp{from{opacity:0;transform:translateX(-50%) translateY(14px) scale(.96)}to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
+.cw-crumb{font:700 11px var(--fm,ui-monospace,monospace);letter-spacing:.14em;color:#cfd3d8;background:rgba(10,11,13,.85);padding:.3rem .7rem;border-radius:2rem;border:1px solid #2c2f34}
+.cw-dial{position:relative;width:336px;height:336px;max-width:92vw;max-height:92vw;border-radius:50%;background:radial-gradient(circle,#1A1D20 55%,#0B0B0C 82%);border:6px solid #22262b;box-shadow:0 1.2rem 2.6rem rgba(0,0,0,.6),inset 0 0 0 2px var(--rim,#3a3e44)}
+.cw-dial::before{content:"";position:absolute;inset:0;border-radius:50%;background:repeating-conic-gradient(from -90deg,rgba(255,255,255,.13) 0 1deg,transparent 1deg 30deg);-webkit-mask:radial-gradient(circle,transparent 63%,#000 64%,#000 72%,transparent 73%);mask:radial-gradient(circle,transparent 63%,#000 64%,#000 72%,transparent 73%);pointer-events:none}
+.cw-stop{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;display:flex;align-items:center;justify-content:center;background:none;border:0;cursor:pointer;text-decoration:none;padding:0;z-index:2}
+.cw-dot{width:40px;height:40px;border-radius:50%;background:#17191d;border:2px solid var(--sc,#8a857e);color:#e8e4d8;display:flex;align-items:center;justify-content:center;font:700 11px var(--fm,ui-monospace,monospace);overflow:hidden;flex:none}
+.cw-dot img{width:100%;height:100%}
+.cw-lab{position:absolute;top:45px;left:50%;transform:translateX(-50%);width:74px;text-align:center;font:600 9px/1.2 var(--fm,ui-monospace,monospace);color:#cfd3d8;letter-spacing:.02em}
+.cw-stop.on .cw-dot{background:var(--sc);color:#0b0b0c;box-shadow:0 0 0 1px rgba(255,255,255,.55),0 0 12px var(--sc)}
+.cw-stop:active .cw-dot{transform:scale(.96)}
+.cw-bdg{position:absolute;top:-4px;right:-8px;min-width:16px;height:16px;border-radius:2rem;background:#C9A227;color:#0b0b0c;font:800 10px/16px var(--fm,ui-monospace,monospace);text-align:center;padding:0 4px;z-index:3}
+.cw-ptr{position:absolute;left:50%;top:50%;width:0;height:0;z-index:1;transition:transform 200ms ease}
+.cw-ptr::before{content:"";position:absolute;left:-6px;top:-128px;border:6px solid transparent;border-bottom:10px solid #e8e4d8}
+.cw-centre{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:120px;height:120px;border-radius:50%;background:#101215;border:2px solid var(--rim,#3a3e44);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center;color:#e8e4d8;font:700 11px var(--fm,ui-monospace,monospace);letter-spacing:.08em;z-index:2;padding:0}
+.cw-centre img{width:72px;height:72px}
+.cw-centre.back{cursor:pointer;background:#17191d}
+.cw-centre b{font-size:14px;letter-spacing:.1em}
+.cw-x{min-height:44px;padding:.5rem 1.1rem;border-radius:2rem;border:1px solid #33373d;background:#14161a;color:#e8e4d8;font:700 11px var(--fm,ui-monospace,monospace);letter-spacing:.1em;cursor:pointer}
+@media (prefers-reduced-motion:reduce){.cw-panel{animation:cwFade 120ms ease-out}.cw-ptr{transition:none}@keyframes cwFade{from{opacity:0}to{opacity:1}}}
+/* workbench: the sysbar IS the one 60px top bar — brand, then time over weather, then the doors; the duplicate masthead row is retired (its clock/weather move up) */
+.sysbar{display:flex;align-items:center;gap:.6rem;height:60px;padding:0 .5rem}
+.syssep{display:none!important}
+header.top{display:none!important}
+.cl-cluster{display:flex;flex-direction:column;justify-content:center;flex:none}
+.cl-cluster .chrono span{display:none}
+.cl-cluster .wxdoor{border:0;padding:0}
+#doors{display:flex;gap:.45rem;flex:1;min-width:0}
+#doors .cnd{flex:1;height:52px}
+.memwm{display:inline-flex;align-items:center;gap:.35rem;opacity:.38;font:600 .58rem var(--fm,ui-monospace,monospace);letter-spacing:.14em}
+.memwm svg{width:.8rem;height:.8rem;flex:none}
+</style>
+<div id="cwwrap" data-cur="wb">
+ <div class="cwbar">
+  <div class="cw-dwrap"><button class="cw-open" id="cw-open" aria-label="Open the Canopy section wheel"><span class="cw-ring" style="--rr:198deg" aria-hidden="true"><b></b></span><img class="cw-husk" src="./assets/northbirch-head-only-v10.svg" alt=""></button><span class="cw-curlab">WORKBENCH</span></div>
+  <button class="cw-sbtn" id="cw-sopen" aria-label="Search Canopy sections"><span aria-hidden="true">⌕</span> SEARCH SECTIONS</button>
+ </div>
+ <div class="cw-sp" id="cwsp" hidden><input id="cw-sq" type="search" placeholder="Search sections…" aria-label="Search Canopy sections"><div class="cw-sres" id="cw-sres"></div></div>
+ <div class="cw-sheet" id="cwsheet" hidden role="dialog" aria-modal="true" aria-label="Canopy sections">
+  <div class="cw-scrim" data-cw="close"></div>
+  <div class="cw-panel"><div class="cw-crumb" id="cw-crumb">CANOPY</div><div class="cw-dial" id="cw-dial"></div><button class="cw-x" data-cw="close" aria-label="Close the wheel">✕ CLOSE</button></div>
+ </div>
+</div>
+<script id="corr-wb-2026-11-21">
+/* CORRECTION ROUND — one top bar: the clock/weather cluster moves into the sysbar beside the brand; the duplicate masthead row is retired. */
+(function(){var sb=document.querySelector('.sysbar'),ck=document.getElementById('hm-clock'),wx=document.querySelector('header.top .wxdoor');if(!sb||!ck)return;var w=document.createElement('div');w.className='cl-cluster';w.appendChild(ck);if(wx)w.appendChild(wx);sb.insertBefore(w,document.getElementById('doors'))})();
+</script>
+<script id="corr-2026-11-21">
+/* ===== CORRECTION ROUND 2026-11-21 — Canopy phone wheel: two levels, Canopy dial face (wheel audit + face design 2026-11-21).
+   L1 = the five sections, 72° apart clockwise from 12:00 in top-bar order; Home has no L2 (navigates directly).
+   L2 lists are the audit's, verbatim. Bottom bar = wheel + search only, phone widths only; no wheel on big screens. ===== */
+(function(){'use strict';
+var wrap=document.getElementById('cwwrap');if(!wrap)return;
+var $=function(s,r){return (r||document).querySelector(s)},$$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var LOGO='./assets/northbirch-head-only-v10.svg';
+var SEC=[
+ {k:'home',n:'HOME',c:'#F5F2EA',href:'./index.html',stops:null},
+ {k:'sitrep',n:'SITREP',c:'#C9A227',href:'./sitrep.html#tab=1',stops:[['SITREP HOME','./sitrep.html#sec=home'],['WEATHER','./sitrep.html#sec=weather'],['COMMUTE + CAMERAS','./sitrep.html#sec=cams'],['AIRPORT · YOW','./sitrep.html#sec=airport'],['LIVE TV','./sitrep.html#sec=tv'],['WORLD','./sitrep.html#sec=world'],['OSIRIS','./sitrep.html#sec=home&osiris=1']]},
+ {k:'deck',n:'COMMAND DECK',c:'#2FA866',href:'./deck.html',stops:[['DECK HOME','./deck.html#/deck'],['TEAM ROOM','./deck.html#/team'],['CLAUDE','./deck.html#/member/claude','CL','#D97757'],['CHATGPT','./deck.html#/member/chatgpt','CG','#10A37F'],['PERPLEXITY','./deck.html#/member/perplexity','PX','#20808D'],['GEMINI','./deck.html#/member/gemini','GE','#4285F4'],['OAKLEY HUB','./deck.html#/member/oakley','OK','#C9A227']]},
+ {k:'day',n:'DAYBOOK',c:'#D64541',href:'./daybook.html',stops:[['DAYBOOK HOME','./daybook.html#view=day'],['BUDGETING','./daybook.html#view=budget'],['INVESTMENTS','./daybook.html#view=invest'],['SECURITY','./daybook.html#view=security'],['CALENDAR','./daybook.html#view=calendar'],['HOME AUTOMATION','./daybook.html#view=automation'],['COMMUTE','./daybook.html#view=commute'],['TRUCK','./daybook.html#view=truck'],['SOCIAL','./daybook.html#view=social'],['NOTES & TO-DO','./daybook.html#view=notes'],['SHOPPING','./daybook.html#view=shopping']]},
+ {k:'wb',n:'WORKBENCH',c:'#3E8FE0',href:'./workbench.html',stops:[['BLUEPRINT','./workbench.html']]}];
+var CUR=wrap.getAttribute('data-cur')||'home';
+var BADGES=window.CW_BADGES||{};
+var sheet=$('#cwsheet'),dial=$('#cw-dial'),crumb=$('#cw-crumb'),sp=$('#cwsp'),sq=$('#cw-sq'),sres=$('#cw-sres');
+function pos(i,n){var a=(-90+i*360/n)*Math.PI/180,R=40.5;return[50+R*Math.cos(a),50+R*Math.sin(a)]}
+function centre(html,back){var c=document.createElement('div');c.className='cw-centre'+(back?' back':'');c.innerHTML=html;if(back){c.setAttribute('role','button');c.setAttribute('tabindex','0');c.setAttribute('aria-label','Back to all sections')}return c}
+function renderL1(){dial.innerHTML='';dial.style.setProperty('--rim','#3a3e44');crumb.textContent='CANOPY';
+ var curI=0;SEC.forEach(function(s,i){if(s.k===CUR)curI=i});
+ SEC.forEach(function(s,i){var p=pos(i,5),el=document.createElement(s.stops?'button':'a');el.className='cw-stop'+(s.k===CUR?' on':'');el.style.left=p[0]+'%';el.style.top=p[1]+'%';el.style.setProperty('--sc',s.c);el.setAttribute('aria-label',s.n);
+  if(!s.stops)el.href=s.href;
+  el.innerHTML='<span class="cw-dot">'+(s.k==='home'?'<img src="'+LOGO+'" alt="">':s.n.slice(0,2))+'</span><span class="cw-lab">'+s.n+'</span>'+(BADGES[s.k]?'<span class="cw-bdg">'+BADGES[s.k]+'</span>':'');
+  if(s.stops)el.addEventListener('click',function(){renderL2(s)});dial.appendChild(el)});
+ var cs=SEC[curI],c=centre('<img src="'+LOGO+'" alt=""><span style="color:'+cs.c+'">'+cs.n+'</span>');dial.appendChild(c);
+ var pt=document.createElement('div');pt.className='cw-ptr';pt.style.transform='rotate('+(curI*72)+'deg)';dial.appendChild(pt)}
+function renderL2(sec){dial.innerHTML='';dial.style.setProperty('--rim',sec.c);crumb.textContent='CANOPY › '+sec.n;
+ sec.stops.forEach(function(t,i){var p=pos(i,sec.stops.length),el=document.createElement('a');el.className='cw-stop';el.href=t[1];el.style.left=p[0]+'%';el.style.top=p[1]+'%';el.style.setProperty('--sc',t[3]||sec.c);el.setAttribute('aria-label',t[0]);
+  el.innerHTML='<span class="cw-dot">'+(t[2]||t[0].slice(0,2))+'</span><span class="cw-lab">'+t[0]+'</span>';dial.appendChild(el)});
+ var c=centre('<b>◂ BACK</b><span style="color:'+sec.c+'">'+sec.n+'</span>',true);
+ c.addEventListener('click',renderL1);c.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();renderL1()}});dial.appendChild(c)}
+function openSheet(){sp.hidden=true;renderL1();sheet.hidden=false}
+function closeAll(){sheet.hidden=true;sp.hidden=true}
+$('#cw-open').addEventListener('click',openSheet);
+$$('[data-cw="close"]',wrap).forEach(function(b){b.addEventListener('click',closeAll)});
+sheet.addEventListener('click',function(e){if(e.target.closest('a'))closeAll()});
+var ALL=[];SEC.forEach(function(s){ALL.push([s.n,s.n,s.href]);(s.stops||[]).forEach(function(t){ALL.push([t[0],s.n,t[1]])})});
+function sRender(){var q=(sq.value||'').trim().toLowerCase(),list=ALL.filter(function(x){return !q||x[0].toLowerCase().indexOf(q)>=0||x[1].toLowerCase().indexOf(q)>=0});
+ sres.innerHTML=list.length?list.map(function(x){return '<a class="cw-sr" href="'+x[2]+'"><span>'+x[0]+'</span><i>'+x[1]+'</i></a>'}).join(''):'<div class="cw-none">No section matches.</div>'}
+$('#cw-sopen').addEventListener('click',function(){sheet.hidden=true;sp.hidden=!sp.hidden;if(!sp.hidden){sRender();sq.focus()}});
+sq.addEventListener('input',sRender);
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeAll()});
+var ty=null;sheet.addEventListener('touchstart',function(e){ty=e.touches[0].clientY},{passive:true});
+sheet.addEventListener('touchend',function(e){if(ty!=null&&e.changedTouches[0].clientY-ty>60)closeAll();ty=null},{passive:true});
+})();
+</script>
+<script id="corr-wb-wx-2026-11-21">
+/* Top-bar unification: the header weather row renders the one Ottawa ECCC object when the feed answers (10-minute cadence, Stale labelled past 60 minutes); SNAPSHOT stays the honest fallback. */
+(function(){'use strict';var wxl=document.querySelector('.wxdoor .wxl');if(!wxl)return;var i1=wxl.querySelector('i'),fetchedAt=0;
+function wxRow(){fetch('https://geo.weather.gc.ca/geomet/features/collections/citypageweather-realtime/items/on-118?f=json',{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){var cc=j.properties.currentConditions;fetchedAt=Date.now();if(i1)i1.textContent=(Math.round(cc.temperature.value*10)/10)+'° '+String(cc.condition||'').toUpperCase()}).catch(function(){})}
+wxRow();setInterval(wxRow,600000);setInterval(function(){if(fetchedAt&&Date.now()-fetchedAt>3600000&&i1&&!/STALE/.test(i1.textContent))i1.textContent+=' · STALE'},60000)})();
+</script>
 </body></html>

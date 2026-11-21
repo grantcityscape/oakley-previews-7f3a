@@ -355,6 +355,7 @@ body .card:active{transform:scale(.98);transition-duration:100ms}
     <section class="card" id="flags"><div class="hdw"></div><div class="bd" id="flags-bd"></div></section>
     <div class="pcol" id="pcol"></div>
    </div>
+   <div class="memwm" aria-label="In memory of Oakley"><span>In memory of Oakley</span><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="currentColor"><ellipse cx="12" cy="15.5" rx="4.6" ry="3.8"/><ellipse cx="4.6" cy="10.6" rx="1.9" ry="2.5" transform="rotate(-18 4.6 10.6)"/><ellipse cx="8.6" cy="7.6" rx="2" ry="2.7" transform="rotate(-6 8.6 7.6)"/><ellipse cx="13.4" cy="7.6" rx="2" ry="2.7" transform="rotate(6 13.4 7.6)"/><ellipse cx="17.4" cy="10.6" rx="1.9" ry="2.5" transform="rotate(18 17.4 10.6)"/></g></svg></div>
   </section>
   <div id="scrim" hidden></div>
   <section class="view" id="v-member" hidden aria-label="Member — full chat room and code box"></section>
@@ -390,6 +391,11 @@ body .card:active{transform:scale(.98);transition-duration:100ms}
    ------------------------------------------------------------------------------------------- */
 const MEMBERS=[{id:'claude',n:'CLAUDE',nm:'Claude'},{id:'chatgpt',n:'CHATGPT',nm:'ChatGPT'},{id:'perplexity',n:'PERPLEXITY',nm:'Perplexity'},{id:'gemini',n:'GEMINI',nm:'Gemini'},{id:'oakley',n:'OAKLEY',nm:'Oakley',hub:true}];
 const ROOMS=MEMBERS.map(m=>m.id).concat(['eng','media']);
+/* CORRECTION ROUND (Deck QA §3/§12): member identity — avatar initials + member colours, used in boxes, message rows, team-room chips and the wheel. */
+const MCOLID={claude:'#D97757',chatgpt:'#10A37F',perplexity:'#20808D',gemini:'#4285F4',oakley:'#C9A227'};
+const MINIT={claude:'CL',chatgpt:'CG',perplexity:'PX',gemini:'GE',oakley:'OK'};
+const MCOLN={CLAUDE:'#D97757',CHATGPT:'#10A37F',PERPLEXITY:'#20808D',GEMINI:'#4285F4',OAKLEY:'#C9A227',GRANT:'#F5F2EA'};
+const mcolW=who=>MCOLN[String(who||'').toUpperCase()]||'#8a857e';
 const CFG={
   doors:{home:'./index.html',day:'./daybook.html',wb:'./workbench.html',sitrep:'./sitrep.html?tab=1'},   // PACKAGED (Phase 0): stable names — Home, Daybook and Workbench all exist; an empty address would still read NOT CONNECTED
   feeds:{},
@@ -445,23 +451,16 @@ const arr=(k,p)=>{const d=D[k];return d&&d.ok&&d.j&&Array.isArray(d.j[p])?d.j[p]
 const fsrc=k=>{const d=D[k];return d&&d.ok&&d.j&&typeof d.j.source==='string'?clip(d.j.source,60):''};
 
 /* ---------- doors (same row, order and labels as Home; Home first; this surface lit) ---------- */
-const DOORS=[
-  {k:'deck',n:'COMMAND DECK',cur:true},{k:'sitrep',n:'SITREP',ln:'Weather · traffic + cameras · live news · airport · world',url:()=>CFG.doors.sitrep},
-  {k:'day',n:'DAYBOOK',ln:'Day to Day · budget · investing · home',url:()=>CFG.doors.day},
-  {k:'wb',n:'WORKBENCH',ln:'BluePrint · Trellis · SiteVision · Northbirch app',url:()=>CFG.doors.wb}
-  /* THE LOOKOUT is deliberately NOT a door: Amendment A1 / Grant's ruling — its only way in is the grown yellow Home boxes. To add a row door later: {k:'lk',n:'THE LOOKOUT',url:()=>CFG.doors.lk}. */
-];
+const DOORS=[{k:'home',n:'HOME'},{k:'sitrep',n:'SITREP'},{k:'deck',n:'COMMAND DECK'},{k:'day',n:'DAYBOOK'},{k:'wb',n:'WORKBENCH'}];
+/* CORRECTION ROUND — ONE door form on every page (line 1 + F4 + Deck QA §8: SITREP is in the destinations row): name + section-colour chip + count chip only, every door flagged (static glow + LINK badge via .cnd.linked). THE LOOKOUT stays not-a-door (Amendment A1). */
 const ctxUrl=(u,x)=>{if(!okUrl(u))return null;u=u.trim();const p=new URLSearchParams(Object.assign({from:'deck'},x||{}));return u+(u.indexOf('?')<0?'?':'&')+p.toString()};
 const WBPTS=[['BLUEPRINT','own app'],['KÜL','LIVE PWA'],['TRELLIS','7 planned'],['SITEVISION','ground-up'],['NB APP','not built']];
 const DAYPTS=['Day to Day','Calendar','Finance & Investments','Home Automation & Security','Budgeting'];
 /* PASS 2 (2026-11-21): doorGauges/doorStag deleted — usage gauges live ONLY in the Team Usage panel, never inside doors or member boxes. */
-const SRPTS=['WEATHER','TRAFFIC + CAMERAS','LIVE NEWS','AIRPORT','WORLD'];function doorSnap(d){if(d.k==='sitrep')return '<span class="snap">'+'<span class="pt"><b>'+SRPTS.length+' SECTIONS</b></span>'+'</span>';if(d.k==='deck')return '<span class="snap">'+'<span class="pt"><b>2 SECTIONS</b></span>'+'</span>';if(d.k==='wb')return '<span class="snap">'+'<span class="pt"><b>'+WBPTS.length+' APPS</b></span>'+'</span>';if(d.k==='day')return '<span class="snap">'+'<span class="pt"><b>'+DAYPTS.length+' SECTIONS</b></span>'+'</span>';return ''}
-function doorHTML(d){const id='d-'+d.k,u=d.cur?null:ctxUrl(d.url&&d.url());
-  const body='<span class="in"><span class="nm">'+d.n+'</span><span class="ln">'+(d.cur?'you are here':u?d.ln:NC+'not connected')+'</span></span><span class="go">'+(d.cur?'●':'▸')+'</span>'+doorSnap(d);
-  if(d.cur)return '<button id="'+id+'" class="door on" data-a="go:deck" aria-current="page" aria-label="Command Deck — this surface; returns to its primary screen">'+body+'</button>';
-  return u?'<a id="'+id+'" class="door" href="'+esc(u)+'" aria-label="'+d.n+'">'+body+'</a>':'<button id="'+id+'" class="door" data-a="door:'+d.k+'" aria-label="'+d.n+' — not connected">'+body+'</button>'}
+const CNDOORS=[['home','HOME','./index.html','#F5F2EA','LIVE'],['sitrep','SITREP','./sitrep.html?tab=1','#C9A227','6 SECTIONS'],['deck','COMMAND DECK','./deck.html','#2FA866','5 LANES'],['day','DAYBOOK','./daybook.html','#D64541','11 VIEWS'],['wb','WORKBENCH','./workbench.html','#3E8FE0','APP SHELF']];
+function doorHTML(d){const cur=d[0]==='deck';return '<a class="door cnd linked'+(cur?' on':'')+'" href="'+d[2]+'" style="--dc:'+d[3]+'"'+(cur?' aria-current="page"':'')+' aria-label="'+d[1]+'"><span class="chip"></span><span class="nm">'+d[1]+'</span><span class="ct">'+d[4]+'</span></a>'}
 function rHome(){const u=ctxUrl(CFG.doors.home);['hm-logo','hm-clock'].forEach(id=>{const e=$('#'+id);if(!e)return;if(u){e.setAttribute('href',u);e.removeAttribute('data-a')}else{e.removeAttribute('href');e.setAttribute('data-a','homenc:1');e.setAttribute('role','button');e.setAttribute('tabindex','0')}})}
-function rDoors(){rHome();const el=$('#doors');el.style.gridTemplateColumns='repeat('+DOORS.length+',minmax(0,1fr))';setH(el,DOORS.map(doorHTML).join(''))}
+function rDoors(){rHome();setH($('#doors'),CNDOORS.map(doorHTML).join(''))}
 
 /* ---------- team usage rows (same logic as Home's teamRows: snapshot unless the hub feed is live) ---------- */
 const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
@@ -482,12 +481,14 @@ const ageDays=()=>Math.max(0,Math.floor((Date.now()-Date.parse(CFG.team.asOf+'T0
 
 /* ---------- station lamps ---------- */
 function lampOf(m){const f=fs('stations'),r=arr('stations','stations').find(s=>s&&String(s.id||'').toLowerCase()===m.id),st=r?String(r.state||'').toUpperCase():'';
-  if(f.s==='NC'||!r||!LAMPS[st])return{cls:'s-nc',word:f.s==='NC'?'NOT CONNECTED':f.s==='OFFLINE'?'FEED OFFLINE':f.s==='WAIT'?'WAITING':r?'UNKNOWN STATE':'NO STATION DATA',key:'NC',note:'',def:'',f};
+  if(f.s==='NC'||!r||!LAMPS[st])return{cls:'s-nc',word:f.s==='NC'?'NOT CONNECTED':f.s==='OFFLINE'?'FEED OFFLINE':f.s==='WAIT'?'WAITING':r?'UNKNOWN STATE':'NO STATION DATA',key:'NC',note:'',def:f.s==='NC'?'No station feed is set in this build — the hub feed address for station states is empty, so this lamp cannot show a state yet.':f.s==='OFFLINE'?'The station feed is not answering.':'',f};
   const stl=f.s==='STALE',unk=f.s==='UNKNOWN';return{cls:LAMPS[st].c+(stl||unk?' stl':''),word:st+(stl?' · STALE':''),key:st,note:clip(r.note,200),def:LAMPS[st].d,f}}
 const lampCounts=()=>{const c={WORKING:0,IDLE:0,PARKED:0,FLAGGED:0,'NEEDS GRANT':0,NC:0};MEMBERS.forEach(m=>{c[lampOf(m).key]++});return c};
-function rStations(){const c=lampCounts(),it=(k,cls,w)=>'<span class="ki" title="'+esc(w+(LAMPS[w]?' — '+LAMPS[w].d:''))+'"><i class="lamp '+cls+'"></i><b>'+c[k]+'</b>'+w+'</span>';
+function rStations(){const c=lampCounts();
   const on=FEEDKEYS.filter(k=>{const s=fs(k).s;return s==='LIVE'||s==='STALE'||s==='UNKNOWN'}).length;
-  setH($('#stkey'),'<span class="lab">STATION LAMPS</span>'+it('WORKING','s-working','WORKING')+it('IDLE','s-idle','IDLE')+it('PARKED','s-parked','PARKED')+it('FLAGGED','s-flagged','FLAGGED')+it('NEEDS GRANT','s-grant','NEEDS GRANT')+it('NC','s-nc','NOT CONNECTED')+'<span class="sp"></span><span class="ki" title="Feeds with an address that are currently answering">FEEDS <b>'+on+'/'+FEEDKEYS.length+'</b></span>')}
+  /* Deck QA §1: the strip LEADS with the actionable count in gold (not connected + flagged + needs Grant), then one dim line with the full counts. */
+  const act=[];if(c.NC)act.push(c.NC+' NOT CONNECTED');if(c.FLAGGED)act.push(c.FLAGGED+' FLAGGED');if(c['NEEDS GRANT'])act.push(c['NEEDS GRANT']+' NEEDS GRANT');
+  setH($('#stkey'),'<span class="ki act"><b>'+(act.length?act.join(' · '):'NOTHING ACTIONABLE')+'</b></span><span class="ki dim">'+c.WORKING+' working · '+c.IDLE+' idle · '+c.PARKED+' parked · '+c.FLAGGED+' flagged · '+c['NEEDS GRANT']+' needs Grant · Feeds '+on+'/'+FEEDKEYS.length+'</span>')}
 
 /* UNKNOWN feeds: the full 'UNKNOWN · <why>' badge sits as a strip at the top of the panel (headers are too narrow for it), content stays visible below */
 const ukHTML=f=>'<div class="ukb">'+bdg(['UNKNOWN · '+f.why,'err',ptt(f)])+'</div>';
@@ -515,7 +516,11 @@ function hl(line){const s=String(line);let o='',i=0;const n=s.length,w=(c,t)=>{o
     else if((m=/^[=+\-*\/%<>!&|?^~]+/.exec(r))){w('xo',m[0]);i+=m[0].length}
     else{o+=esc(c);i++}}
   return o}
-const msgs=id=>arr('chat:'+id,'messages');
+/* CORRECTION ROUND (F7): the in-app lane store. No external talk address is configured in this standalone build, so a sent message is composed into the app's own data model: it lands in that member's lane (visible in the member box + room) and in the team room, persists on this device, and is labelled in-app. When a hub talk route is configured (CFG.talk[room]), sends go there instead. */
+const LANE_KEY='canopy.laneMsgs.v1';let LANE_LOCAL={};try{const r=localStorage.getItem(LANE_KEY);if(r){const p=JSON.parse(r);if(p&&typeof p==='object')LANE_LOCAL=p}}catch(e){}
+function laneSave(){try{localStorage.setItem(LANE_KEY,JSON.stringify(LANE_LOCAL))}catch(e){}}
+function laneSend(room,text){const m={who:'GRANT',at:hm(Date.now()),text};(LANE_LOCAL[room]=LANE_LOCAL[room]||[]).push(m);if(room!=='team'&&MEMBERS.some(x=>x.id===room)){(LANE_LOCAL.team=LANE_LOCAL.team||[]).push(m)}laneSave();paint()}
+const msgs=id=>arr('chat:'+id,'messages').concat(LANE_LOCAL[id]||[]);
 const codeJ=id=>{const d=D['code:'+id];return d&&d.ok&&d.j?d.j:null};
 const laneName=id=>id==='oakley'?'GRANT ↔ OAKLEY':'OAKLEY ↔ '+(MEMBERS.find(m=>m.id===id)||{n:id.toUpperCase()}).n;
 /* ---------- team-room EXAMPLE content (pass 2, examples doctrine): shown ONLY while a room's live feed is not connected, always under an EXAMPLE pill; the moment a feed answers, real data replaces it. Tasks, flags, lamps and usage keep their honest states — examples never stand in for them. ---------- */
@@ -549,10 +554,10 @@ gemini:["/* SITREP layout spec v2 */",".panel { refresh: repaint-only; } /* neve
 perplexity:["// ECCC citypage — hour-folder pattern","GET dd.weather.gc.ca/today/citypage_weather/ON/{HH}/","// the latest s0000430 file in the folder wins","cameras: inventory keyless · stills via certificate"],
 oakley:["// hub — pass 2 build","rooms: team room + five member boxes on the Deck face","usage: the Team Usage panel ONLY","receipt: every item mapped to code evidence"]};
 const xPill=()=>bdg(['EXAMPLE','ice']);
-const xMsgs=(id,n)=>XCHAT[id].slice(-n).map(x=>'<div class="ml"><b>'+esc(clip(x.who,14))+'</b>'+esc(clip(x.text,160))+'</div>').join('');
-function chatOv(id){const f=chatF(id);if(f.s==='NC')return '<div class="cdx">'+xPill()+'</div>'+xMsgs(id,6);
-  const l=msgs(id).slice(-6);if(!l.length)return (f.s==='UNKNOWN'?ukHTML(f):'')+'<span class="ph">'+laneName(id)+'</span><span class="ph2">'+(f.s==='UNKNOWN'?'age unknown · feed lists nothing':f.s==='OFFLINE'?'feed not answering':f.s==='WAIT'?'waiting for the feed':'no messages in the feed')+'</span>';
-  return (f.s==='UNKNOWN'?ukHTML(f):'')+l.map(x=>'<div class="ml"><b>'+esc(clip(x.who,14))+'</b>'+esc(clip(x.text,160))+'</div>').join('')}
+const xMsgs=(id,n)=>XCHAT[id].slice(-n).map(x=>'<div class="ml"><b style="color:'+mcolW(x.who)+'">'+esc(clip(x.who,14))+'</b>'+esc(clip(x.text,160))+'</div>').join('');
+function chatOv(id){const f=chatF(id);if(f.s==='NC'){const lm=(LANE_LOCAL[id]||[]).slice(-2).map(x=>'<div class="ml"><b style="color:'+mcolW(x.who)+'">'+esc(clip(x.who,14))+'</b>'+esc(clip(x.text,160))+'</div>').join('');return '<div class="cdx">'+xPill()+'</div>'+xMsgs(id,lm?4:6)+lm}
+  const l=msgs(id).slice(-6);if(!l.length)return (f.s==='UNKNOWN'?ukHTML(f):'')+'<span class="ph">'+laneName(id)+'</span><span class="ph2">'+(f.s==='UNKNOWN'?'age unknown · feed lists nothing':f.s==='OFFLINE'?'feed not answering':f.s==='WAIT'?'waiting for the feed':'No messages in this lane yet.')+'</span>';
+  return (f.s==='UNKNOWN'?ukHTML(f):'')+l.map(x=>'<div class="ml"><b style="color:'+mcolW(x.who)+'">'+esc(clip(x.who,14))+'</b>'+esc(clip(x.text,160))+'</div>').join('')}
 function codeOv(id){const f=codeF(id),j=codeJ(id),R=(n,h,c)=>'<div class="ml cn1'+(c?' '+c:'')+'"><i class="ln">'+n+'</i>'+h+'</div>';
   /* every row carries its own line number: header row = 1, code rows follow; the empty state numbers its two rows the same way */
   if(f.s==='NC')return '<div class="cd">'+R(1,'<span class="ph">WORK PANE</span> '+xPill())+(XCODE[id]||[]).map((x,k)=>R(k+2,hl(clip(x,120)))).join('')+'</div>';
@@ -561,7 +566,7 @@ function codeOv(id){const f=codeF(id),j=codeJ(id),R=(n,h,c)=>'<div class="ml cn1
   return '<div class="cd">'+(f.s==='UNKNOWN'?ukHTML(f):'')+R(1,'<span class="ph">'+esc(clip(j.title||j.file||'current work',60))+'</span>')+ls+'</div>'}
 function boxHTML(m){const L=lampOf(m);
   return '<article class="card mbox" tabindex="0" role="button" data-a="m:'+m.id+'" aria-label="Open '+esc(m.nm)+' — full chat room and code box. Station '+esc(L.word)+'">'
-   +'<div class="hd mh"><span class="mt1"><i class="lamp '+L.cls+'"></i><span class="mnm">'+m.n+(m.hub?'<em>HUB</em>':'')+'</span></span><span class="mt2"><span class="stw">'+esc(L.word)+'</span><span class="opn">OPEN ▸</span></span></div>'
+   +'<div class="hd mh"><span class="mt1"><i class="lamp '+L.cls+'"></i><span class="mav" style="background:'+MCOLID[m.id]+'">'+MINIT[m.id]+'</span><span class="mnm" style="color:'+MCOLID[m.id]+'">'+m.n+(m.hub?'<em>HUB</em>':'')+'</span></span><span class="mt2"><span class="stw" title="'+esc(L.def||L.note||'')+'">'+esc(L.word)+'</span><span class="opn">OPEN ▸</span></span></div>'
    +'<div class="bd"><div class="sec"><span>'+(chatF(m.id).s==='UNKNOWN'?'LANE':'HUB LANE')+'</span>'+(chatF(m.id).s==='NC'?xPill():pillFor(chatF(m.id)))+'</div><div class="pane pchat">'+chatOv(m.id)+'</div>'
    +'<div class="sec"><span>CODE</span>'+(codeF(m.id).s==='NC'?xPill():pillFor(codeF(m.id)))+'</div><div class="pane pcode">'+codeOv(m.id)+'</div></div></article>'}
 function rMembers(){setH($('#mrow'),MEMBERS.map(m=>boxHTML(m)).join(''))}
@@ -572,10 +577,10 @@ function uw(w,lb,r){if(!w)return '<div class="uw na"><span class="ul2">'+lb+'</s
   return '<div class="uw"><span class="ul2">'+esc(w.k||lb)+'</span>'+bar+'<b class="up">'+(p==null?'—':p+'%')+'</b><span class="rs">'+(w.resetAt||w.rl?esc(w.rsT)+(w.passed?' <b class="am">PASSED</b>':''):'no reset')+'</span></div>'}
 function ur(r){const asl=r.unk?'<span class="snp">UNKNOWN AGE</span>':'<span class="'+(r.snap?'snp':'snp lv')+'">'+(r.snap?'SNAPSHOT':'LIVE')+'</span> '+esc(r.asD);
   const tip=esc(r.nm+' · source: '+r.src+' · as of '+r.as+(r.unk?' (feed shown, age unknown — not live)':r.snap?' (snapshot — never live)':' (live)')+(r.lab?' · '+r.lab:'')+' · short window '+(r.sw?(r.sw.pct==null?'—':r.sw.pct+'%')+(r.sw.passed?' (reset passed — re-capture)':''):'not recorded')+' · weekly '+(r.ww?(r.ww.pct==null?'—':r.ww.pct+'%')+(r.ww.passed?' (reset passed — re-capture)':''):'not recorded'));
-  if(!r.sw&&!r.ww&&r.cnt)return '<div class="ur" title="'+tip+'"><div class="uh"><span class="un">'+esc(r.n)+'</span><span class="ua">'+asl+'</span></div><div class="uw ct2"><b class="cnt">'+esc(r.cnt)+'</b> '+esc(r.cntl||'')+'</div><div class="uw na"><span class="ul2">DAY·WK</span><span class="nr">not recorded · no cap</span></div></div>';
-  return '<div class="ur '+r.cls+'" title="'+tip+'"><div class="uh"><span class="un">'+esc(r.n)+'</span><span class="ua">'+asl+'</span></div>'+uw(r.sw,'DAY',r)+uw(r.ww,'WK',r)+'</div>'}
+  if(!r.sw&&!r.ww&&r.cnt)return '<div class="ur'+(r.snap?' stale-dim':'')+'" title="'+tip+'"><div class="uh"><span class="un">'+esc(r.n)+'</span><span class="ua">'+asl+'</span></div><div class="uw ct2"><b class="cnt">'+esc(r.cnt)+'</b> '+esc(r.cntl||'')+'</div><div class="uw na"><span class="ul2">DAY·WK</span><span class="nr">not recorded · no cap</span></div></div>';
+  return '<div class="ur '+r.cls+(r.snap?' stale-dim':'')+'" title="'+tip+'"><div class="uh"><span class="un">'+esc(r.n)+'</span><span class="ua">'+asl+'</span></div>'+uw(r.sw,'DAY',r)+uw(r.ww,'WK',r)+'</div>'}
 function rUsage(){const rows=teamRows(),snap=rows.some(r=>r.snap),d=ageDays();
-  setH($('#usage .hdw'),hdr('TEAM USAGE',rows.some(r=>r.unk)?bdg(['UNKNOWN · '+fs('hubfeed').why,'err',ptt(fs('hubfeed'))]):snap?'<span class="pill p-warn" title="Copied from each service’s own usage screen on '+esc(CFG.team.asOf)+' — never shown as live. PASSED = the reset has gone by, so the number needs re-capturing.">SNAPSHOT'+(d>0?' · '+d+(d===1?' DAY':' DAYS')+' OLD':'')+'</span>':bdg(['LIVE','live'])));
+  setH($('#usage .hdw'),hdr('TEAM USAGE',(rows.some(r=>r.unk)?bdg(['UNKNOWN · '+fs('hubfeed').why,'err',ptt(fs('hubfeed'))]):snap?'<span class="pill p-warn" title="Copied from each service’s own usage screen on '+esc(CFG.team.asOf)+' — never shown as live. PASSED = the reset has gone by, so the number needs re-capturing.">SNAPSHOT'+(d>0?' · '+d+(d===1?' DAY':' DAYS')+' OLD':'')+'</span>':bdg(['LIVE','live']))+'<button class="btn sm" data-a="urefresh" style="margin-left:.4rem" title="Re-read the usage snapshot held in this app and update its age in place">REFRESH SNAPSHOT</button>'));
   setH($('#usage-bd'),'<div class="ul">'+rows.map(ur).join('')+'</div>')}
 
 /* ---------- open tasks / flagged projects ---------- */
@@ -597,14 +602,14 @@ function rPortals(){const fe=fs('eng');
   const chain=['ENG','FREECAD','BLENDER','3D'].map(x=>'<span>'+x+'</span>').join('<s>▸</s>');
   setH($('#pcol'),'<div class="portal" id="p-eng" tabindex="0" role="button" data-a="portal:eng" aria-label="Enter the Engineering portal — a whole area"><div class="phd">'+ICON.eng+'<b>ENGINEERING PORTAL</b><span class="go">▸</span></div>'
    +'<div class="pkv"><span><i>PROJECTS</i><b>'+cnt('eng')+'</b></span><span><i>FOLDERS</i><b>'+CFG.spine.eng.length+'</b></span><span><i>APPS</i><b>'+CFG.apps.length+'</b></span></div>'
-   +'<div class="chain">'+chain+'</div><div class="pn">'+(fe.s==='NC'?NC+'not connected':'projects '+esc(fe.s.toLowerCase()))+'</div></div>'
+   +'<div class="chain">'+chain+'</div><div class="pn">'+(fe.s==='NC'?NC+'not connected · no project feed is set — projects show here once the hub feed is connected':'projects '+esc(fe.s.toLowerCase()))+'</div></div>'
    +'<div class="portal" id="p-media" tabindex="0" role="button" data-a="portal:media" aria-label="Enter the Media portal — a whole area"><div class="phd">'+ICON.media+'<b>MEDIA PORTAL</b><span class="go">▸</span></div>'
    +'<div class="pkv"><span><i>VIDEOS</i><b>'+cnt('mvid')+'</b></span><span><i>PICTURES</i><b>'+cnt('mpic')+'</b></span><span><i>AD PROJ.</i><b>'+cnt('mads')+'</b></span></div>'
-   +'<div class="pn">'+(['mvid','mpic','mads'].every(k=>fs(k).s==='NC')?NC+'not connected':'videos · pictures · ad projects')+'</div></div>')}
+   +'<div class="pn">'+(['mvid','mpic','mads'].every(k=>fs(k).s==='NC')?NC+'not connected · no media feeds are set — videos, pictures and ad projects show once the hub feeds are connected':'videos · pictures · ad projects')+'</div></div>')}
 
 /* ---------- view shells ---------- */
 const spineCard=p=>'<section class="card" id="'+p+'-spine" style="flex:none;height:12.2rem"><div class="hdw"></div><div class="spine"></div></section>';
-const chatCard=(room,ttl)=>'<section class="card" id="'+room+'-chat"><div class="hdw"></div><div class="bd msgs" id="'+room+'-msgs"></div><form class="cin" data-room="'+room+'" autocomplete="off"><input class="fin" type="text" maxlength="500" placeholder="Message…" aria-label="'+ttl+'"><button class="btn" type="submit">SEND ▸</button></form><div class="cin" style="border-top:0;padding-top:0;min-height:1.3rem"><span class="cst" id="'+room+'-cst"></span></div></section>';
+const chatCard=(room,ttl)=>'<section class="card" id="'+room+'-chat"><div class="hdw"></div><div class="bd msgs" id="'+room+'-msgs"></div><form class="cin" data-room="'+room+'" autocomplete="off"><input class="fin" type="text" maxlength="500" placeholder="Message…" aria-label="'+ttl+'"><button class="btn" type="submit">'+(room==='team'?'SEND TO TEAM ▸':room==='eng'?'SEND TO ENGINEERING ▸':'SEND TO MEDIA ▸')+'</button></form><div class="cin" style="border-top:0;padding-top:0;min-height:1.3rem"><span class="cst" id="'+room+'-cst"></span></div></section>';
 function buildShells(){
   $('#v-member').innerHTML='<div class="vh"><button class="btn bk" data-a="back:" aria-label="Back to the Command Deck primary screen">◂ COMMAND DECK</button><div class="tbs" id="mtabs"></div><div class="vs" id="mv-st"></div></div>'
    +'<div class="mvb"><section class="card" id="mv-chat"><div class="hdw"></div><div class="bd msgs" id="mv-msgs"></div><form class="cin" data-room="" id="mv-form" autocomplete="off"><input class="fin" type="text" maxlength="500" placeholder="Message…" aria-label="Message this lane"><button class="btn" type="submit">SEND ▸</button></form><div class="cin" style="border-top:0;padding-top:0;min-height:1.3rem"><span class="cst" id="mv-cst"></span></div></section>'
@@ -626,11 +631,11 @@ function buildShells(){
   $('#v-home').dataset.ready='1'}
 
 /* ---------- member view (a box opened big, in place) ---------- */
-function msgHTML(x){return '<div class="msg"><div class="mh2">'+esc(clip(x.who,20))+(x.at?'<i>'+esc(clip(x.at,24))+'</i>':'')+'</div><div class="mb">'+esc(clip(x.text,1200))+'</div></div>'}
+function msgHTML(x){const c=mcolW(x.who),ini=String(x.who||'?').slice(0,2).toUpperCase();return '<div class="msg" style="--mc:'+c+'"><span class="mav" style="background:'+c+'">'+ini+'</span><div class="mmn"><div class="mh2"><b>'+esc(clip(x.who,20))+'</b>'+(x.at?'<i>'+esc(clip(x.at,24))+'</i>':'')+'</div><div class="mb">'+esc(clip(x.text,1200))+'</div></div></div>'}
 function rChat(card,room,title,sub,narrow){const f=fs('chat:'+room),l=msgs(room),el=$('#'+card),xr=!!XCHAT[room]&&f.s==='NC';
   setH($('.hdw',el),hdr(title,xr?xPill():narrow?pillS(f):pillFor(f)));
   const bd=$('.msgs',el),near=bd.scrollHeight-bd.scrollTop-bd.clientHeight<40;
-  setH(bd,l.length?l.map(msgHTML).join(''):xr?XCHAT[room].map(msgHTML).join(''):f.s==='NC'?ncb('No conversation feed is set for '+sub+'. Messages show here once the hub feed is connected — none are invented.'):f.s==='OFFLINE'?ncb('The conversation feed is not answering.','OFFLINE'):f.s==='UNKNOWN'?ncb(unkTxt(f),'UNKNOWN · '+f.why):f.s==='WAIT'?ncb('Waiting for the conversation feed.','WAITING'):ncb('The feed has no messages yet.','EMPTY'));
+  setH(bd,xr?XCHAT[room].map(msgHTML).join('')+l.map(msgHTML).join(''):l.length?l.map(msgHTML).join(''):f.s==='NC'?ncb('No conversation feed is set for '+sub+'. Messages show here once the hub feed is connected — none are invented.'):f.s==='OFFLINE'?ncb('The conversation feed is not answering.','OFFLINE'):f.s==='UNKNOWN'?ncb(unkTxt(f),'UNKNOWN · '+f.why):f.s==='WAIT'?ncb('Waiting for the conversation feed.','WAITING'):ncb('No messages in this lane yet.','EMPTY'));
   if(near)bd.scrollTop=bd.scrollHeight}
 function rMemberView(){const m=MEMBERS.find(x=>x.id===V.member)||MEMBERS[0],L=lampOf(m);
   setH($('#mtabs'),MEMBERS.map(x=>'<button class="btn" data-a="m:'+x.id+'" aria-pressed="'+(x.id===m.id)+'"><i class="lamp '+lampOf(x).cls+'"></i>'+x.n+'</button>').join(''));
@@ -638,6 +643,7 @@ function rMemberView(){const m=MEMBERS.find(x=>x.id===V.member)||MEMBERS[0],L=la
   setH($('#mv-stn .hdw'),hdr('STATION LAMP',pillS(L.f)));
   setH($('#mv-stn .bd'),'<div class="stn"><i class="lamp '+L.cls+'"></i><div><b>'+esc(L.word)+'</b><span>'+esc(L.def?L.def+(L.note?' — '+L.note:''):L.f.s==='NC'?'No station feed is set, so this lamp cannot show a state yet.':'No state for this station in the feed.')+'</span></div></div>');
   $('#mv-form').dataset.room=m.id;$('#mv-form input').placeholder=m.hub?'Grant → Oakley…':'Grant, in the Oakley ↔ '+m.nm+' lane…';
+  const _sb=$('#mv-form .btn');if(_sb)_sb.textContent='SEND TO '+m.n+' ▸';
   rChat('mv-chat',m.id,'LANE · '+laneName(m.id),m.nm+'’s lane with Oakley');
   const j=codeJ(m.id),cf=codeF(m.id);
   setH($('#mv-code .hdw'),hdr('CODE BOX · '+m.n+' CURRENT WORK / BUILD',pillFor(cf)));
@@ -652,10 +658,10 @@ function rMemberView(){const m=MEMBERS.find(x=>x.id===V.member)||MEMBERS[0],L=la
   setH($('#mv-flags .bd'),fl.length?'<div class="rows">'+fl.map(flagRow).join('')+'</div>':ff.s==='NC'?ncb('No flag feed is set.'):ff.s==='OFFLINE'?ncb('The flag feed is not answering.','OFFLINE'):ff.s==='UNKNOWN'?ncb(unkTxt(ff),'UNKNOWN · '+ff.why):ncb('No open flags raised by '+m.nm+'.','NONE OPEN'))}
 
 /* ---------- team room (group chat: the face box shows the last two messages; the room opens as its own view) ---------- */
-function rTeamBox(){const f=chatF('team'),l=msgs('team'),src=f.s==='NC'?XCHAT.team:l,last=src.slice(-2);
+function rTeamBox(){const f=chatF('team'),l=msgs('team'),src=f.s==='NC'?XCHAT.team.concat(l):l,last=src.slice(-2);
   setH($('#teamroom'),'<div class="hd mh"><span class="mt1"><span class="mnm">TEAM ROOM</span><em>GROUP CHAT</em></span><span class="mt2">'+(f.s==='NC'?xPill():pillFor(f))+'<span class="opn">OPEN ▸</span></span></div>'
-   +'<div class="bd"><div class="pane pchat">'+(f.s==='UNKNOWN'?ukHTML(f):'')+(last.length?last.map(x=>'<div class="ml"><b>'+esc(clip(x.who,14))+'</b>'+esc(clip(x.text,220))+'</div>').join(''):'<span class="ph2">no messages in the feed yet</span>')+'</div></div>')}
-function rTeamView(){setH($('#team-st'),MEMBERS.map(m=>{const L=lampOf(m);return '<span class="tchip"><i class="lamp '+L.cls+'"></i>'+m.n+'</span>'}).join(''));
+   +'<div class="bd"><div class="pane pchat">'+(f.s==='UNKNOWN'?ukHTML(f):'')+(last.length?last.map(x=>'<div class="ml"><b style="color:'+mcolW(x.who)+'">'+esc(clip(x.who,14))+'</b>'+esc(clip(x.text,220))+'</div>').join(''):'<span class="ph2">No messages in this lane yet.</span>')+'</div></div>')}
+function rTeamView(){setH($('#team-st'),MEMBERS.map(m=>{const L=lampOf(m);return '<button class="btn tchip" data-a="m:'+m.id+'" style="--mc:'+MCOLID[m.id]+'" aria-label="Open '+esc(m.nm)+' — member room"><i class="lamp '+L.cls+'"></i>'+m.n+'</button>'}).join(''));
   rChat('team-chat','team','TEAM CHAT · WHOLE TEAM','the team room')}
 
 /* ---------- portals (whole areas) ---------- */
@@ -684,13 +690,13 @@ const ctxName=()=>V.view==='member'?(MEMBERS.find(m=>m.id===V.member)||MEMBERS[0
 const ctxNow=()=>({surface:'deck',view:V.view,member:V.view==='member'?V.member:undefined,collection:V.view==='media'?V.coll:undefined,at:new Date().toISOString()});
 const flashT={};function flash(id,txt,bad){const e=$('#'+id);if(!e)return;e._h=null;e.textContent=txt;e.style.color=bad?'#f87171':'';clearTimeout(flashT[id]);flashT[id]=setTimeout(()=>{flashT[id]=0;e.textContent='';e.style.color='';e._h=null;paint()},5000)}
 async function sendMsg(room,text,stId){text=String(text||'').trim();if(!text)return false;const u=CFG.talk[room];
-  if(!okUrl(u)){flash(stId,'NOT SENT · talk address not set',true);return false}
+  if(!okUrl(u)){laneSend(room,text);flash(stId,'SENT · in-app lane '+hm(Date.now()));return true}
   try{const r=await fetch(u,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({to:room,text,ctx:ctxNow()}),cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);
     flash(stId,'SENT '+hm(Date.now()));pull('chat:'+room);return true}catch(e){flash(stId,'NOT SENT · endpoint error',true);return false}}
 function rDock(){const L=lampOf(MEMBERS[4]);$('#dock').classList.toggle('hasret',!!RET);setH($('#tk-retw'),RET?retHTML('btn bk'):'');$('#tk-lamp').className='lamp '+L.cls;
   setH($('#tk-ctx'),'CONTEXT <b>'+esc(ctxName())+'</b>');
-  if(!flashT['tk-st'])setH($('#tk-st'),okUrl(CFG.talk.oakley)?bdg(['READY','live']):bdg(['OAKLEY · NOT CONNECTED','pend']))}
-function rTalkRoomSt(){const nc='talk address not set';
+  if(!flashT['tk-st'])setH($('#tk-st'),okUrl(CFG.talk.oakley)?bdg(['READY','live']):bdg(['IN-APP LANE','ice']))}
+function rTalkRoomSt(){const nc='in-app lane · messages stay in this app, on this device';
   [['team-cst','team'],['eng-cst','eng'],['media-cst','media'],['mv-cst',V.member]].forEach(a=>{const e=$('#'+a[0]);if(e&&!flashT[a[0]])setH(e,okUrl(CFG.talk[a[1]])?'':nc)})}
 
 /* ---------- return door (doors carry context; the owner offers the way back) ---------- */
@@ -756,6 +762,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');
   if(!b)return;const a=b.dataset.a,i=a.indexOf(':'),k=a.slice(0,i),v=a.slice(i+1);
   if(k==='m')go('#/member/'+v);else if(k==='team')go('#/team');else if(k==='go'||k==='back')go('#/deck');else if(k==='portal')go('#/'+v);
   else if(k==='coll'){V.coll=v;go('#/media/'+v)}
+  else if(k==='urefresh'){rUsage();toast('<b>TEAM USAGE</b> · snapshot re-read in place — still the '+esc(CFG.team.asOf)+' capture ('+ageDays()+' days old). A fresher number lands when a lane re-captures its own usage screen; the snapshot is never shown as live.')}
   else if(k==='cad')cadPreset(v);else if(k==='apps')toggleApps();
   else if(k==='homenc'){toast('<b>HOME</b> · NOT CONNECTED — the Home wall address is not set, so nothing is simulated.')}
   else if(k==='door'){const d=DOORS.find(x=>x.k===v);toast('<b>'+esc(d?d.n:v)+'</b> · NOT CONNECTED — this surface is not part of this file and its address is not supplied yet, so nothing is simulated. It lands at integration.')}});
@@ -866,5 +873,173 @@ $$('[data-nw="close"]',nwEl).forEach(function(b){b.addEventListener('click',whee
 nwEl.addEventListener('click',function(e){if(e.target===nwEl||e.target.closest('a'))wheelClose()});
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!nwEl.hidden)wheelClose()});
 })();
+</script>
+<style id="corr-2026-11-21">
+/* ===== CORRECTION ROUND 2026-11-21 — shared layer: unified doors/top bar (line 1, F4), tactile press + hover (lines 3/4), Canopy phone wheel (two levels, Canopy dial face) ===== */
+#wheelbtn,.wheelbtn,#nwheel,.nwheel{display:none!important}
+.cnd{position:relative;display:flex;align-items:center;gap:.5rem;padding:.3rem .6rem;border-radius:.35rem;text-decoration:none;color:#e8e4d8;background:linear-gradient(180deg,#17181c,#101114);border:1px solid #26262b;transition:transform 150ms ease,box-shadow 150ms ease;min-width:0;cursor:pointer;font-family:var(--fm,ui-monospace,monospace)}
+.cnd .chip{width:.55rem;height:.55rem;border-radius:50%;background:var(--dc);flex:none;box-shadow:0 0 .4rem var(--dc)}
+.cnd .nm{font-weight:800;font-size:.78rem;letter-spacing:.08em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:var(--fd,var(--fm,ui-monospace,monospace))}
+.cnd .ct{margin-left:auto;font-weight:700;font-size:.58rem;letter-spacing:.07em;color:#a49e93;border:1px solid #33343a;border-radius:2rem;padding:.08rem .4rem;white-space:nowrap;flex:none}
+.cnd.linked{box-shadow:0 0 0 1px var(--dc),0 0 .8rem -.15rem var(--dc)}
+.cnd.linked::after{content:"LINK";position:absolute;top:-.42rem;right:.4rem;font-weight:700;font-size:.5rem;line-height:1;letter-spacing:.09em;color:#0b0e13;background:rgba(250,204,21,.95);padding:.14rem .3rem;border-radius:.25rem;pointer-events:none}
+.cnd:hover{transform:translateY(-2px);background:var(--dc);color:#0b0e13;filter:brightness(1.12);box-shadow:0 .3rem .7rem rgb(0 0 0/.48),0 0 .85rem var(--dc),inset 0 1px 0 rgb(255 255 255/.06)}
+.cnd:hover .ct{color:#0b0e13;border-color:rgba(0,0,0,.35)}
+.cnd:hover .chip{background:#0b0e13;box-shadow:none}
+.cnd:active{transform:scale(.98);transition-duration:100ms}
+.cnd.on{border-color:var(--dc);background:linear-gradient(180deg,#1e1f26,#121317)}
+button:active,.btn:active{transform:scale(.98);transition-duration:100ms}
+.card{transition:transform 150ms ease,box-shadow 150ms ease,filter 150ms ease}
+.card:hover{transform:translateY(-2px);filter:brightness(1.12);box-shadow:0 .3rem .7rem rgb(0 0 0/.48),0 0 .85rem rgba(47,168,102,.25),inset 0 1px 0 rgb(255 255 255/.06)}
+.cwbar{position:fixed;left:0;right:0;bottom:0;z-index:340;display:none;align-items:center;gap:.6rem;height:calc(64px + env(safe-area-inset-bottom));padding:0 .6rem env(safe-area-inset-bottom);background:#111417;border-top:1px solid #2a2e33}
+@media (max-width:760px){.cwbar{display:flex}}
+.cw-dwrap{display:flex;flex-direction:column;align-items:center;gap:1px;flex:none}
+.cw-open{position:relative;width:56px;height:56px;border-radius:50%;border:0;background:#111417;cursor:pointer;padding:0;flex:none}
+.cw-open:active{transform:scale(.98)}
+.cw-ring{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from -90deg,#F5F2EA 0 72deg,#C9A227 0 144deg,#2FA866 0 216deg,#D64541 0 288deg,#3E8FE0 0 360deg);opacity:.35}
+.cw-ring b{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from var(--rr,-90deg),rgba(255,255,255,.95) 0 72deg,transparent 0 360deg);mix-blend-mode:overlay}
+.cw-open::after{content:"";position:absolute;inset:7px;border-radius:50%;background:#111417}
+.cw-husk{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:32px;height:32px;z-index:1}
+.cw-curlab{font:700 10px var(--fm,ui-monospace,monospace);letter-spacing:.1em;color:#e8e4d8}
+.cw-sbtn{flex:1;display:flex;align-items:center;gap:.5rem;height:44px;border-radius:2rem;border:1px solid #33373d;background:#17191d;color:#a49e93;font:600 13px var(--fm,ui-monospace,monospace);letter-spacing:.06em;padding:0 1rem;cursor:pointer;text-align:left}
+.cw-sbtn:active{transform:scale(.98)}
+.cw-sp{position:fixed;left:0;right:0;bottom:calc(64px + env(safe-area-inset-bottom));z-index:345;background:#14161a;border-top:1px solid #2c2f34;padding:.6rem;box-shadow:0 -.6rem 1.4rem rgba(0,0,0,.5)}
+.cw-sp[hidden]{display:none}
+.cw-sp input{width:100%;height:44px;border-radius:.4rem;border:1px solid #33373d;background:#0d0e11;color:#e8e4d8;font:600 14px var(--fm,ui-monospace,monospace);padding:0 .7rem}
+.cw-sres{max-height:42vh;overflow-y:auto;margin-top:.5rem;display:flex;flex-direction:column;gap:.3rem}
+.cw-sr{display:flex;align-items:center;gap:.6rem;padding:.55rem .6rem;border:1px solid #26262b;border-radius:.35rem;color:#e8e4d8;text-decoration:none;font:600 13px var(--fm,ui-monospace,monospace)}
+.cw-sr i{margin-left:auto;font-style:normal;font-size:10px;letter-spacing:.08em;color:#a49e93}
+.cw-none{padding:.6rem;color:#a49e93;font:600 12px var(--fm,ui-monospace,monospace)}
+.cw-sheet{position:fixed;inset:0;z-index:350}
+.cw-sheet[hidden]{display:none}
+.cw-scrim{position:absolute;inset:0;background:rgba(0,0,0,.4)}
+.cw-panel{position:absolute;left:50%;transform:translateX(-50%);bottom:88px;display:flex;flex-direction:column;align-items:center;gap:.5rem;animation:cwUp 240ms ease-out}
+@keyframes cwUp{from{opacity:0;transform:translateX(-50%) translateY(14px) scale(.96)}to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
+.cw-crumb{font:700 11px var(--fm,ui-monospace,monospace);letter-spacing:.14em;color:#cfd3d8;background:rgba(10,11,13,.85);padding:.3rem .7rem;border-radius:2rem;border:1px solid #2c2f34}
+.cw-dial{position:relative;width:336px;height:336px;max-width:92vw;max-height:92vw;border-radius:50%;background:radial-gradient(circle,#1A1D20 55%,#0B0B0C 82%);border:6px solid #22262b;box-shadow:0 1.2rem 2.6rem rgba(0,0,0,.6),inset 0 0 0 2px var(--rim,#3a3e44)}
+.cw-dial::before{content:"";position:absolute;inset:0;border-radius:50%;background:repeating-conic-gradient(from -90deg,rgba(255,255,255,.13) 0 1deg,transparent 1deg 30deg);-webkit-mask:radial-gradient(circle,transparent 63%,#000 64%,#000 72%,transparent 73%);mask:radial-gradient(circle,transparent 63%,#000 64%,#000 72%,transparent 73%);pointer-events:none}
+.cw-stop{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;display:flex;align-items:center;justify-content:center;background:none;border:0;cursor:pointer;text-decoration:none;padding:0;z-index:2}
+.cw-dot{width:40px;height:40px;border-radius:50%;background:#17191d;border:2px solid var(--sc,#8a857e);color:#e8e4d8;display:flex;align-items:center;justify-content:center;font:700 11px var(--fm,ui-monospace,monospace);overflow:hidden;flex:none}
+.cw-dot img{width:100%;height:100%}
+.cw-lab{position:absolute;top:45px;left:50%;transform:translateX(-50%);width:74px;text-align:center;font:600 9px/1.2 var(--fm,ui-monospace,monospace);color:#cfd3d8;letter-spacing:.02em}
+.cw-stop.on .cw-dot{background:var(--sc);color:#0b0b0c;box-shadow:0 0 0 1px rgba(255,255,255,.55),0 0 12px var(--sc)}
+.cw-stop:active .cw-dot{transform:scale(.96)}
+.cw-bdg{position:absolute;top:-4px;right:-8px;min-width:16px;height:16px;border-radius:2rem;background:#C9A227;color:#0b0b0c;font:800 10px/16px var(--fm,ui-monospace,monospace);text-align:center;padding:0 4px;z-index:3}
+.cw-ptr{position:absolute;left:50%;top:50%;width:0;height:0;z-index:1;transition:transform 200ms ease}
+.cw-ptr::before{content:"";position:absolute;left:-6px;top:-128px;border:6px solid transparent;border-bottom:10px solid #e8e4d8}
+.cw-centre{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:120px;height:120px;border-radius:50%;background:#101215;border:2px solid var(--rim,#3a3e44);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center;color:#e8e4d8;font:700 11px var(--fm,ui-monospace,monospace);letter-spacing:.08em;z-index:2;padding:0}
+.cw-centre img{width:72px;height:72px}
+.cw-centre.back{cursor:pointer;background:#17191d}
+.cw-centre b{font-size:14px;letter-spacing:.1em}
+.cw-x{min-height:44px;padding:.5rem 1.1rem;border-radius:2rem;border:1px solid #33373d;background:#14161a;color:#e8e4d8;font:700 11px var(--fm,ui-monospace,monospace);letter-spacing:.1em;cursor:pointer}
+@media (prefers-reduced-motion:reduce){.cw-panel{animation:cwFade 120ms ease-out}.cw-ptr{transition:none}@keyframes cwFade{from{opacity:0}to{opacity:1}}}
+/* deck: one 60px top bar; the duplicate destinations strip is retired; cluster = time over weather */
+#cstrip{display:none!important}
+.top{display:flex;align-items:center;gap:.6rem;height:60px;padding:0 .5rem}
+.hlogo{height:52px;width:52px;flex:none}
+.chrono{display:flex;flex-direction:column;justify-content:center;gap:0;flex:none}
+.chrono .ckin span{display:none}
+.chrono .ckin .num{font-size:1.02rem}
+.chrono .wxdoor{border:0;padding:0;margin:0;background:none}
+#doors{display:flex;gap:.45rem;flex:1;min-width:0}
+#doors .cnd{flex:1;height:52px}
+/* deck face geometry (QA §2/§4/§6/§14): one screen, internal panel scroll only */
+#v-home{display:flex;flex-direction:column;min-height:0}
+#v-home>*{flex:none}
+#v-home .brow{flex:1;min-height:0}
+.brow .card{min-height:0}
+.brow .bd{overflow-y:auto;min-height:0}
+#mrow .mbox{height:11.8rem}
+#mrow .mbox .hd.mh{height:2.14rem;flex:none}
+#mrow .mbox .sec{flex:none;height:.85rem;overflow:hidden}
+#mrow .mbox .pane{flex:1;min-height:0}
+#teamroom{height:7.5rem}
+#teamroom .pane{border:0;background:none;padding:0}
+#teamroom .ml{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#tasks .ncb,#flags .ncb{padding:.3rem .5rem;font-size:.66rem;line-height:1.35}
+#tasks .rows,#flags .rows{overflow-y:auto;min-height:0}
+/* member identity (QA §3/§11/§12) */
+.mav{width:1.25rem;height:1.25rem;border-radius:50%;color:#0b0b0c;font:800 .55rem var(--fm,ui-monospace,monospace);display:inline-flex;align-items:center;justify-content:center;flex:none}
+.msg{flex-direction:row;gap:.5rem;border-left:4px solid var(--mc)}
+.msg .mav{width:28px;height:28px;font-size:10px}
+.msg .mmn{flex:1;min-width:0;display:flex;flex-direction:column;gap:.05rem}
+.msg .mh2 b{color:var(--mc)}
+#team-st .tchip{color:var(--mc);border-color:var(--mc)}
+.ur.stale-dim{opacity:.6}
+#stkey .act b{color:#FACC15}
+#stkey .ki.dim{font-size:.5rem;opacity:.6}
+/* member drawer (QA §9 + line 10/F6): chrome fixed, room content scrolls, Talk dock stays reachable below the drawer */
+#v-member{top:0;bottom:3.2rem;height:auto;display:flex;flex-direction:column;overflow:hidden}
+#v-member .vh{flex:none}
+#v-member .mvb{flex:1;min-height:0;overflow-y:auto}
+#v-member .mvf{flex:none}
+#mv-chat,#mv-code{height:24rem;max-height:100%}
+#scrim{bottom:3.2rem}
+.memwm{display:flex;align-items:center;justify-content:center;gap:.35rem;opacity:.38;font:600 .58rem var(--fm,ui-monospace,monospace);letter-spacing:.14em;padding-top:.15rem}
+.memwm svg{width:.8rem;height:.8rem;flex:none}
+</style>
+<div id="cwwrap" data-cur="deck">
+ <div class="cwbar">
+  <div class="cw-dwrap"><button class="cw-open" id="cw-open" aria-label="Open the Canopy section wheel"><span class="cw-ring" style="--rr:54deg" aria-hidden="true"><b></b></span><img class="cw-husk" src="./assets/northbirch-head-only-v10.svg" alt=""></button><span class="cw-curlab">COMMAND DECK</span></div>
+  <button class="cw-sbtn" id="cw-sopen" aria-label="Search Canopy sections"><span aria-hidden="true">⌕</span> SEARCH SECTIONS</button>
+ </div>
+ <div class="cw-sp" id="cwsp" hidden><input id="cw-sq" type="search" placeholder="Search sections…" aria-label="Search Canopy sections"><div class="cw-sres" id="cw-sres"></div></div>
+ <div class="cw-sheet" id="cwsheet" hidden role="dialog" aria-modal="true" aria-label="Canopy sections">
+  <div class="cw-scrim" data-cw="close"></div>
+  <div class="cw-panel"><div class="cw-crumb" id="cw-crumb">CANOPY</div><div class="cw-dial" id="cw-dial"></div><button class="cw-x" data-cw="close" aria-label="Close the wheel">✕ CLOSE</button></div>
+ </div>
+</div>
+<script id="corr-2026-11-21">
+/* ===== CORRECTION ROUND 2026-11-21 — Canopy phone wheel: two levels, Canopy dial face (wheel audit + face design 2026-11-21).
+   L1 = the five sections, 72° apart clockwise from 12:00 in top-bar order; Home has no L2 (navigates directly).
+   L2 lists are the audit's, verbatim. Bottom bar = wheel + search only, phone widths only; no wheel on big screens. ===== */
+(function(){'use strict';
+var wrap=document.getElementById('cwwrap');if(!wrap)return;
+var $=function(s,r){return (r||document).querySelector(s)},$$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var LOGO='./assets/northbirch-head-only-v10.svg';
+var SEC=[
+ {k:'home',n:'HOME',c:'#F5F2EA',href:'./index.html',stops:null},
+ {k:'sitrep',n:'SITREP',c:'#C9A227',href:'./sitrep.html#tab=1',stops:[['SITREP HOME','./sitrep.html#sec=home'],['WEATHER','./sitrep.html#sec=weather'],['COMMUTE + CAMERAS','./sitrep.html#sec=cams'],['AIRPORT · YOW','./sitrep.html#sec=airport'],['LIVE TV','./sitrep.html#sec=tv'],['WORLD','./sitrep.html#sec=world'],['OSIRIS','./sitrep.html#sec=home&osiris=1']]},
+ {k:'deck',n:'COMMAND DECK',c:'#2FA866',href:'./deck.html',stops:[['DECK HOME','./deck.html#/deck'],['TEAM ROOM','./deck.html#/team'],['CLAUDE','./deck.html#/member/claude','CL','#D97757'],['CHATGPT','./deck.html#/member/chatgpt','CG','#10A37F'],['PERPLEXITY','./deck.html#/member/perplexity','PX','#20808D'],['GEMINI','./deck.html#/member/gemini','GE','#4285F4'],['OAKLEY HUB','./deck.html#/member/oakley','OK','#C9A227']]},
+ {k:'day',n:'DAYBOOK',c:'#D64541',href:'./daybook.html',stops:[['DAYBOOK HOME','./daybook.html#view=day'],['BUDGETING','./daybook.html#view=budget'],['INVESTMENTS','./daybook.html#view=invest'],['SECURITY','./daybook.html#view=security'],['CALENDAR','./daybook.html#view=calendar'],['HOME AUTOMATION','./daybook.html#view=automation'],['COMMUTE','./daybook.html#view=commute'],['TRUCK','./daybook.html#view=truck'],['SOCIAL','./daybook.html#view=social'],['NOTES & TO-DO','./daybook.html#view=notes'],['SHOPPING','./daybook.html#view=shopping']]},
+ {k:'wb',n:'WORKBENCH',c:'#3E8FE0',href:'./workbench.html',stops:[['BLUEPRINT','./workbench.html']]}];
+var CUR=wrap.getAttribute('data-cur')||'home';
+var BADGES=window.CW_BADGES||{};
+var sheet=$('#cwsheet'),dial=$('#cw-dial'),crumb=$('#cw-crumb'),sp=$('#cwsp'),sq=$('#cw-sq'),sres=$('#cw-sres');
+function pos(i,n){var a=(-90+i*360/n)*Math.PI/180,R=40.5;return[50+R*Math.cos(a),50+R*Math.sin(a)]}
+function centre(html,back){var c=document.createElement('div');c.className='cw-centre'+(back?' back':'');c.innerHTML=html;if(back){c.setAttribute('role','button');c.setAttribute('tabindex','0');c.setAttribute('aria-label','Back to all sections')}return c}
+function renderL1(){dial.innerHTML='';dial.style.setProperty('--rim','#3a3e44');crumb.textContent='CANOPY';
+ var curI=0;SEC.forEach(function(s,i){if(s.k===CUR)curI=i});
+ SEC.forEach(function(s,i){var p=pos(i,5),el=document.createElement(s.stops?'button':'a');el.className='cw-stop'+(s.k===CUR?' on':'');el.style.left=p[0]+'%';el.style.top=p[1]+'%';el.style.setProperty('--sc',s.c);el.setAttribute('aria-label',s.n);
+  if(!s.stops)el.href=s.href;
+  el.innerHTML='<span class="cw-dot">'+(s.k==='home'?'<img src="'+LOGO+'" alt="">':s.n.slice(0,2))+'</span><span class="cw-lab">'+s.n+'</span>'+(BADGES[s.k]?'<span class="cw-bdg">'+BADGES[s.k]+'</span>':'');
+  if(s.stops)el.addEventListener('click',function(){renderL2(s)});dial.appendChild(el)});
+ var cs=SEC[curI],c=centre('<img src="'+LOGO+'" alt=""><span style="color:'+cs.c+'">'+cs.n+'</span>');dial.appendChild(c);
+ var pt=document.createElement('div');pt.className='cw-ptr';pt.style.transform='rotate('+(curI*72)+'deg)';dial.appendChild(pt)}
+function renderL2(sec){dial.innerHTML='';dial.style.setProperty('--rim',sec.c);crumb.textContent='CANOPY › '+sec.n;
+ sec.stops.forEach(function(t,i){var p=pos(i,sec.stops.length),el=document.createElement('a');el.className='cw-stop';el.href=t[1];el.style.left=p[0]+'%';el.style.top=p[1]+'%';el.style.setProperty('--sc',t[3]||sec.c);el.setAttribute('aria-label',t[0]);
+  el.innerHTML='<span class="cw-dot">'+(t[2]||t[0].slice(0,2))+'</span><span class="cw-lab">'+t[0]+'</span>';dial.appendChild(el)});
+ var c=centre('<b>◂ BACK</b><span style="color:'+sec.c+'">'+sec.n+'</span>',true);
+ c.addEventListener('click',renderL1);c.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();renderL1()}});dial.appendChild(c)}
+function openSheet(){sp.hidden=true;renderL1();sheet.hidden=false}
+function closeAll(){sheet.hidden=true;sp.hidden=true}
+$('#cw-open').addEventListener('click',openSheet);
+$$('[data-cw="close"]',wrap).forEach(function(b){b.addEventListener('click',closeAll)});
+sheet.addEventListener('click',function(e){if(e.target.closest('a'))closeAll()});
+var ALL=[];SEC.forEach(function(s){ALL.push([s.n,s.n,s.href]);(s.stops||[]).forEach(function(t){ALL.push([t[0],s.n,t[1]])})});
+function sRender(){var q=(sq.value||'').trim().toLowerCase(),list=ALL.filter(function(x){return !q||x[0].toLowerCase().indexOf(q)>=0||x[1].toLowerCase().indexOf(q)>=0});
+ sres.innerHTML=list.length?list.map(function(x){return '<a class="cw-sr" href="'+x[2]+'"><span>'+x[0]+'</span><i>'+x[1]+'</i></a>'}).join(''):'<div class="cw-none">No section matches.</div>'}
+$('#cw-sopen').addEventListener('click',function(){sheet.hidden=true;sp.hidden=!sp.hidden;if(!sp.hidden){sRender();sq.focus()}});
+sq.addEventListener('input',sRender);
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeAll()});
+var ty=null;sheet.addEventListener('touchstart',function(e){ty=e.touches[0].clientY},{passive:true});
+sheet.addEventListener('touchend',function(e){if(ty!=null&&e.changedTouches[0].clientY-ty>60)closeAll();ty=null},{passive:true});
+})();
+</script>
+<script id="corr-deck-wx-2026-11-21">
+/* Top-bar unification: the header weather row renders the one Ottawa ECCC object when the feed answers (10-minute cadence, Stale labelled past 60 minutes); SNAPSHOT · OTTAWA stays the honest fallback. */
+(function(){'use strict';var el=document.querySelector('.wxdoor .wxc');if(!el)return;var fetchedAt=0;
+function wxRow(){fetch('https://geo.weather.gc.ca/geomet/features/collections/citypageweather-realtime/items/on-118?f=json',{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){var cc=j.properties.currentConditions;fetchedAt=Date.now();el.textContent=(Math.round(cc.temperature.value*10)/10)+'° '+String(cc.condition||'').toUpperCase()+' · OTTAWA'}).catch(function(){})}
+wxRow();setInterval(wxRow,600000);setInterval(function(){if(fetchedAt&&Date.now()-fetchedAt>3600000&&!/STALE/.test(el.textContent))el.textContent+=' · STALE'},60000)})();
 </script>
 </body></html>

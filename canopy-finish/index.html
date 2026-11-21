@@ -508,8 +508,8 @@ const CFG={
     certificate:'UqBjCg9pmpVUCv5VGgJj',   // >>> PLACEHOLDER — SUPPLIED AT APP INTEGRATION from Grant's records. NEVER embed a real value in this file. Empty = no camera requests are made (state: CERTIFICATE PENDING).
     userId:'',        // >>> PLACEHOLDER — alphanumeric user-id supplied at app integration (optional &id=). NEVER embed a real value here.
     live:true,                                          // false = show only hub-supplied CFG.cam.frames
-    intervalMs:60000,                                   // City terms (W137): ONE request per 60 s TOTAL across ALL cameras (rotating)
-    staleMs:300000,
+    intervalMs:60000,                                   // CORRECTION ROUND (proxy route spec): 60 s cadence PER CAMERA, grid staggered (60/N); stills via {CFG.PROXY}/ottawa/camera?c={n} when a proxy is set, direct certificate route otherwise
+    staleMs:120000,
     set:[ {id:312,s:"417 @ O'CONNOR",n:"(MTO) Hwy 417 near O'Connor St",note:'nearest real cam to 417 @ Metcalfe'},
           {id:149,s:'BANK @ CATHERINE',n:'Bank & Catherine',note:'nearest real cam to 417 @ Bank'},
           {id:289,s:'174 EB @ BLAIR',n:'Highway 174 (East) at Blair',note:'exact match'},
@@ -555,7 +555,7 @@ const ago=t=>{if(!t)return '--';const s=Math.max(0,(Date.now()-t)/1000);return s
 const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const NIGHT=()=>{const h=new Date().getHours();return h<6};
 const ST={m:'wall',id:null};
-const UI={gwv:'map',wx:'reg',camMode:4,camCur:0,stn:'dw',yt:'idle',ytAt:0};
+const UI={gwv:'map',wx:'reg',camMode:4,camCur:0,stn:'trt',yt:'idle',ytAt:0};
 const D={seen:new Set(),seenInit:false,wx:null,camList:null,frames:{},camReq:0,camNext:0,news:{local:[],world:[]},nsrc:{},nat:{local:0,world:0},quakes:null,btc:null,hubfeed:null,brief:null,hcam:{},sec:null,wxg:null,tev:null,yow:null,cal:null,scn:null,wmi:{usgs:[],gdacs:[],cap:[],eonet:[]},radar:null,events:[],log:[]};
 const H={wx:{st:'pend'},cams:{st:'pend'},news:{st:'pend'},quakes:{st:'pend'},mk:{st:'dly'},ge:{st:'pend'},wxg:{st:'pend'},tev:{st:'pend'},yow:{st:'pend'},wm:{usgs:{st:'pend'},gdacs:{st:'pend'},cap:{st:'pend'},eonet:{st:'pend'}}};
 /* ---- log (real events only) ---- */
@@ -718,18 +718,30 @@ function visibleCams(){return UI.camMode===1?[SET[UI.camCur%SET.length]]:SET}
 let CAMLAST=0;
 function lastReq(){let s=0;try{s=+localStorage.getItem('hw3.lastCam')||0}catch(e){}return Math.max(CAMLAST,isFinite(s)?s:0)}
 function setReq(t){CAMLAST=t;try{localStorage.setItem('hw3.lastCam',String(t))}catch(e){}}
-/* ONE request per 60 s total across ALL cameras; rotation over the visible set */
-let rot=0;
-let certLogged=false;
+/* CORRECTION ROUND — grid scheduler per the proxy route spec (2026-11-21): stills only, displayed cameras only,
+   each camera on a 60 s cadence, the grid staggered evenly across the cycle (one fetch every 60/N s), paused while
+   the tab is hidden. Route: {CFG.PROXY}/ottawa/camera?c={camera_number} when a hub proxy is configured (the City
+   certificate is injected server-side there and never appears in a client URL); otherwise the direct certificate
+   route. Tiles are labelled with the still's receipt time; a still older than 120 s reads Stale; a failed fetch
+   reads OFFLINE and keeps the last good still underneath. Stills are NEVER labelled playing or live. */
+const CAMDUE={};let camRouteLogged=false;
+const camRouteReady=()=>!!CFG.PROXY||camReady();
+function camFetch(c){
+  const n=camNo(c.id);if(n==null)return;
+  const u=CFG.PROXY?CFG.PROXY.replace(/\/?$/,'/')+'ottawa/camera?c='+encodeURIComponent(n):camUrl(c);
+  if(!u)return;D.camReq++;
+  const im=new Image();
+  im.onload=()=>{const done=()=>{D.frames[c.id]={src:im.src,ts:Date.now(),real:'fetched'};if(D.camErr)delete D.camErr[c.id];H.cams={st:'live',at:Date.now()};log('CAM OK · '+c.s+' (id '+c.id+')');D.events.unshift({t:Date.now(),id:c.id});D.events.length=20;paintCam(c.id);paint('ge');healthRender()};(im.decode?im.decode().then(done,done):done())};
+  im.onerror=()=>{D.camErr=D.camErr||{};D.camErr[c.id]=Date.now();log('CAM FAIL · '+c.s+' (id '+c.id+')',1);H.cams={st:H.cams.at?'stale':'err',at:H.cams.at||0};healthRender();paint('trf')};
+  im.src=u}
 function camTick(){
   if(!CFG.cam.live)return;
-  if(!camReady()){D.camNext=0;if(!certLogged){certLogged=true;log('CAM · CERT PENDING — City of Ottawa camera-API certificate (free request form on traffic.ottawa.ca) — no camera requests made')}return}
-  const now=Date.now();if(now-lastReq()<CFG.cam.intervalMs-500){D.camNext=lastReq()+CFG.cam.intervalMs;return}
-  const vis=visibleCams();const c=vis[rot%vis.length];const u=camUrl(c);if(!u)return;   // camera list not loaded yet: no request, no slot used
-  rot++;setReq(now);D.camNext=now+CFG.cam.intervalMs;D.camReq++;
-  const im=new Image();im.onload=()=>{const done=()=>{D.frames[c.id]={src:im.src,ts:Date.now(),real:'fetched'};H.cams={st:'live',at:Date.now()};log('CAM OK · '+c.s+' (id '+c.id+')');D.events.unshift({t:Date.now(),id:c.id});D.events.length=20;paintCam(c.id);paint('ge');healthRender()};(im.decode?im.decode().then(done,done):done())};
-  im.onerror=()=>{log('CAM FAIL · '+c.s+' (id '+c.id+')',1);H.cams={st:H.cams.at?'stale':'err',at:H.cams.at||0};healthRender();paint('trf')};
-  im.src=u}
+  if(!camRouteReady()){D.camNext=0;if(!camRouteLogged){camRouteLogged=true;log('CAM · NO ROUTE — camera stills need the hub proxy route (City certificate server-side) or a certificate in CFG.cam; no camera requests made')}return}
+  if(document.hidden)return;   // proxy route spec: pause stills while the tab is hidden
+  const vis=visibleCams();if(!vis.length)return;const now=Date.now(),step=CFG.cam.intervalMs/Math.max(1,vis.length);
+  vis.forEach((c,i)=>{if(CAMDUE[c.id]==null)CAMDUE[c.id]=now+i*step;
+    if(now>=CAMDUE[c.id]){CAMDUE[c.id]=now+CFG.cam.intervalMs;camFetch(c)}});
+  D.camNext=Math.min.apply(null,vis.map(c=>CAMDUE[c.id]||now))}
 function frameOf(id){const hub=CFG.cam.frames[id];const f=D.frames[id];if(f&&(!hub||f.ts>=Date.parse(hub.ts)))return{src:f.src,ts:f.ts,how:'fetched'};if(hub)return{src:hub.src,ts:Date.parse(hub.ts),how:'hub'};return null}
 function camStale(f){return f&&Date.now()-f.ts>CFG.cam.staleMs}
 /* ============================ v4.3 DATA ADDITIONS: Canada alerts (GeoMet) · tsunami · Stooq · radar rate · team snapshot · door briefs · home cameras ============================ */
@@ -851,18 +863,25 @@ const camIcon='<svg class="cgl" viewBox="0 0 32 22" aria-hidden="true"><rect x="
 const remPx=()=>parseFloat(getComputedStyle(document.documentElement).fontSize);
 /* ---------- live broadcast (DW embed · CBC/CTV/Global link-outs) ---------- */
 const RMQ=matchMedia('(prefers-reduced-motion: reduce)');const rm=()=>RMQ.matches;
-const STN=[{k:'cbc',n:'CBC',t:'CBC NEWS NETWORK',site:'gem.cbc.ca',w:'Opens CBC Gem (sign-in needed — no embed)',url:()=>CFG.links.cbc},
+/* CORRECTION ROUND — TV route (Perplexity evaluations 2026-11-21): the four international channels play IN PLACE via
+   their official YouTube VIDEO-ID embeds (IDs only — never live_stream?channel=, never @handle URLs); hls.js on the
+   direct HLS URL is the fallback where an embed fails. Canadian channels do not permit embedding → link-outs only. */
+const STN=[{k:'trt',n:'TRT',t:'TRT WORLD',site:'youtube.com',w:'TRT World official live stream (YouTube embed)',yt:'JV5w1MhzcfQ',ch:'UC7fWeaHhqgM4Ry-RMpM2YYw',hls:'https://tv-trtworld.medya.trt.com.tr/master.m3u8',watch:'https://www.trtworld.com/live'},
+ {k:'cna',n:'CNA',t:'CNA',site:'youtube.com',w:'CNA 24/7 LIVE (YouTube embed)',yt:'-PWMxjBgr0k',ch:'UC83jt4dlz1Gjl58fzQrrKZg',hls:'https://d2e1asnsl7br7b.cloudfront.net/7782e205e72f43aeb4a48ec97f66ebbe/index.m3u8',watch:'https://www.channelnewsasia.com/live'},
+ {k:'nhk',n:'NHK',t:'NHK WORLD-JAPAN',site:'youtube.com',w:'NHK WORLD-JAPAN hourly news (YouTube embed)',yt:'IimtbuqYIE8',ch:'UCSPEjw8F2nQDtmUKPFNF7_A',hls:'https://masterpl.hls.nhkworld.jp/hls/w/live/smarttv.m3u8',watch:'https://www3.nhk.or.jp/nhkworld/en/live/'},
+ {k:'ari',n:'ARIRANG',t:'ARIRANG TV',site:'youtube.com',w:'Arirang TV · Live from KOREA 24/7 (YouTube embed)',yt:'hvVlyZ5GiE8',ch:'UC-PHIZjV-oX8H7zD1cCN2NQ',hls:'',watch:'https://www.arirang.com/live'},
+ {k:'cbc',n:'CBC',t:'CBC NEWS NETWORK',site:'gem.cbc.ca',w:'Opens CBC Gem (sign-in needed — no embed)',url:()=>CFG.links.cbc},
  {k:'ctv',n:'CTV',t:'CTV NEWS',site:'ctvnews.ca',w:'Opens CTV News live in a new tab',url:()=>CFG.links.ctv},
- {k:'global',n:'GLOBAL',t:'GLOBAL NEWS',site:'globalnews.ca',w:'Opens Global News live in a new tab',url:()=>CFG.links.global},
- {k:'dw',n:'DW',t:'DW NEWS',site:'youtube.com',w:'DW News livestream (YouTube embed)',url:()=>CFG.stream.dwFallback}];
+ {k:'global',n:'GLOBAL',t:'GLOBAL NEWS',site:'globalnews.ca',w:'Opens Global News live in a new tab',url:()=>CFG.links.global}];
+const stnNow=()=>STN.find(x=>x.k===UI.stn)||STN[0];
 const ytSt=()=>({idle:['IDLE','pend'],loading:['LOADING','stale'],playing:['PLAYING','live'],paused:['PAUSED','stale'],offline:['OFFLINE','err']}[UI.yt]||['IDLE','pend']);
-function playerHTML(){if(UI.stn==='dw')return '<iframe title="DW News livestream (YouTube embed)" src="https://www.youtube.com/embed/'+CFG.stream.dw+'?autoplay=1&mute=1&playsinline=1&rel=0&enablejsapi=1'+(/^https?:/.test(location.protocol)?'&origin='+encodeURIComponent(location.origin):'')+'" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-presentation allow-popups"></iframe>';
-  const s=STN.find(x=>x.k===UI.stn);return '<a class="poster" href="'+esc(s.url())+'" target="_blank" rel="noopener noreferrer"><b>'+s.n+'</b><span>'+esc(s.t)+' · '+esc(s.w)+'</span><u>OPEN '+esc(s.site)+' ↗</u></a>'}
-function setStation(){const pv=$('#plv');if(!pv)return;if(UI.stn==='dw'){UI.yt='loading';UI.ytAt=Date.now()}pv.innerHTML=playerHTML();const f=$('iframe',pv);if(f)f.addEventListener('load',()=>{try{f.contentWindow.postMessage(JSON.stringify({event:'listening',id:1,channel:'widget'}),'*')}catch(e){}});rNews()}
+function playerHTML(){const s=stnNow();if(s.yt)return '<iframe title="'+esc(s.t)+' livestream (YouTube embed)" src="https://www.youtube.com/embed/'+s.yt+'?autoplay=1&mute=1&playsinline=1&rel=0&enablejsapi=1'+(/^https?:/.test(location.protocol)?'&origin='+encodeURIComponent(location.origin):'')+'" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-presentation allow-popups"></iframe>';
+  return '<a class="poster" href="'+esc(s.url())+'" target="_blank" rel="noopener noreferrer"><b>'+s.n+'</b><span>'+esc(s.t)+' · '+esc(s.w)+'</span><u>OPEN '+esc(s.site)+' ↗</u></a>'}
+function setStation(){const pv=$('#plv');if(!pv)return;const s=stnNow();if(s.yt){UI.yt='loading';UI.ytAt=Date.now()}pv.innerHTML=playerHTML();const f=$('iframe',pv);if(f)f.addEventListener('load',()=>{try{f.contentWindow.postMessage(JSON.stringify({event:'listening',id:1,channel:'widget'}),'*')}catch(e){}});rNews()}
 window.addEventListener('message',e=>{if(typeof e.data!=='string'||!/youtube/.test(e.origin))return;let j;try{j=JSON.parse(e.data)}catch(x){return}
   let s=null;if(j.event==='onStateChange')s=j.info;else if(j.event==='infoDelivery'&&j.info&&typeof j.info.playerState==='number')s=j.info.playerState;
   if(j.event==='onError')UI.yt='offline';else if(s===1)UI.yt='playing';else if(s===2)UI.yt='paused';else if(s===3||s===-1||s===5)UI.yt='loading';else if(s===0)UI.yt='offline';else return;rNews()});
-setInterval(()=>{if(UI.stn==='dw'&&UI.yt==='loading'&&UI.ytAt&&Date.now()-UI.ytAt>8000&&$('#nw iframe')){UI.yt='offline';rNews()}},1000);
+setInterval(()=>{const s=stnNow();if(s.yt&&UI.yt==='loading'&&UI.ytAt&&Date.now()-UI.ytAt>8000&&$('#nw iframe')){UI.yt='offline';rNews()}},1000);
 /* ---------- news bars: scroll while fresh (no pause control) · stale = freeze + unmissable STALE · no data = unmissable OFFLINE · reduced-motion = static headlines ---------- */
 const BARS=new Set();
 function barOff(k){const srcs=CFG.news[k],tried=srcs.filter(s=>D.nsrc[s.id]);if(!tried.length)return['PENDING','waiting for the first RSS fetch…'];
@@ -936,12 +955,10 @@ function wbLine(){const b=D.brief&&D.brief.wb;
 const GORD=['OAKLEY','CLAUDE','CHATGPT','GEMINI','PERPLEXITY'];
 const ggH=m=>m.pct==null?'<span class="gg"><span class="gn">'+m.n+'</span><span class="gp">'+esc(m.cnt||'')+' '+esc(m.cntl||'')+'</span></span>':'<span class="gg"><span class="gn">'+m.n+'</span><span class="gr"><span class="gb"><i style="width:'+m.pct+'%"></i></span><span class="gp">'+m.pct+'%</span></span></span>';
 const WBPTS=[['BLUEPRINT','own app'],['KÜL','LIVE PWA'],['TRELLIS','7 planned'],['SITEVISION','ground-up'],['NB APP','not built']];
-function doorSnap(key){if(key==='deck')return '<span class="snap">'+'<span class="pt"><b>2 SECTIONS</b></span>'+'</span>';
- if(key==='wb')return '<span class="snap">'+'<span class="pt"><b>'+WBPTS.length+' APPS</b></span>'+'</span>';
- if(key==='day')return '<span class="snap"><span class="pt"><b>'+DOORS.day.secs.length+' SECTIONS</b></span></span>';if(key==='sitrep')return '<span class="snap">'+'<span class="pt"><b>'+DOORS.sitrep.secs.length+' SECTIONS</b></span>'+'</span>';return ''}
-function door(id,key,ln){const d=DOORS[key],u=dest(key),b='<span class="in"><span class="nm">'+d.n+'</span><span class="ln">'+ln+'</span></span><span class="go">▸</span>'+doorSnap(key);
-  return u?'<a id="'+id+'" class="door" href="'+esc(u)+'">'+b+'</a>':'<button id="'+id+'" class="door" data-a="door:'+key+'" aria-label="'+d.n+' — opens its section page">'+b+'</button>'}
-const sitrepLine=()=>{if(D.wx&&D.wx.cur)return 'Ottawa now '+Math.round(D.wx.cur.temp)+'° · '+esc(D.wx.cur.cond||'')+' — weather, traffic, news, airport &amp; world inside';return DOORS.sitrep.d};function rDoors(){setH($('#doors'),door('d-sitrep','sitrep',sitrepLine())+door('d-deck','deck',deckLine())+door('d-day','day',dayLine())+door('d-wb','wb',wbLine()))}
+/* CORRECTION ROUND: doorSnap/door (subtitle-line doors) replaced by the unified .cnd door form — see CNDOORS below. */
+const sitrepLine=()=>{if(D.wx&&D.wx.cur)return 'Ottawa now '+Math.round(D.wx.cur.temp)+'° · '+esc(D.wx.cur.cond||'')+' — weather, traffic, news, airport &amp; world inside';return DOORS.sitrep.d};const CNDOORS=[['home','HOME','./index.html','#F5F2EA','LIVE'],['sitrep','SITREP','./sitrep.html#tab=1','#C9A227','6 SECTIONS'],['deck','COMMAND DECK','./deck.html','#2FA866','5 LANES'],['day','DAYBOOK','./daybook.html','#D64541','11 VIEWS'],['wb','WORKBENCH','./workbench.html','#3E8FE0','APP SHELF']];
+const cndoor=(d,cur)=>'<a class="door cnd linked'+(cur?' on':'')+'" href="'+d[2]+'" style="--dc:'+d[3]+'"'+(cur?' aria-current="page"':'')+' aria-label="'+d[1]+'"><span class="chip"></span><span class="nm">'+d[1]+'</span><span class="ct">'+d[4]+'</span></a>';
+function rDoors(){setH($('#doors'),CNDOORS.map(d=>cndoor(d,d[0]==='home')).join(''))}
 /* ---------- section placeholder view (in-file destination for doors and Daybook tabs) ---------- */
 let SV=null;
 function openSuite(k,sub,from){const u=dest(k,sub);if(u){location.href=u;return}SV={k,sub,from};renderSV()}
@@ -972,18 +989,25 @@ function rWx(){const w=D.wx,s=wxSt(),o=w&&w.o,x=X('wx'),pl=UI.wx==='plow',f=w?pl
   const strip=w&&w.hr.length?'<div class="pst">'+stripSvg(w.hr)+'</div>':'<div class="pst nos">12-h strip needs the ECCC hourly forecast</div>';
   let L;
   if(x){const fc=w?w.fc.slice(0,8).map(q=>'<div class="rw fcr"><b>'+esc(fcName(q.n))+'</b><span><i class="num">'+(q.v!=null?sg(q.v)+'°':'--')+'</i> '+esc(q.sum||'')+'</span></div>').join(''):'';
-    L='<div class="x3"><div class="xc"><div class="hero"><b class="big">'+(o?sg(o.t)+'°':'--°')+'</b><div class="wst"><span class="c1">'+(o?esc(o.cond||'--'):'ECCC '+(s[1]==='err'?'UNREACHABLE':'pending'))+'</span><span>FEELS '+(o?(o.feels!=null?sg(o.feels)+'°':'= TEMP'):'--')+'</span><span>'+(o?needle(o)+' ':'')+wind+'</span></div></div><div class="g2">'+kvh('HUMIDITY',o?num(o.hum)+'%':'--')+kvh('PRESSURE',o?num(o.pr,1)+' kPa '+tendA(o.tend):'--')+kvh('DEWPOINT',o?sg(o.dew)+'°':'--')+kvh('VISIBILITY',o?(o.vis!=null?num(o.vis)+' km':'not reported'):'--')+kvh('GUST',o?(o.gust!=null?num(o.gust)+' km/h':'none'):'--')+kvh('GATINEAU',g[0],g[1])+kvh('OBSERVED',o?obs+' · ECCC':'--')+kvh('SUNSET',w&&w.ss?hm(w.ss):'--')+'</div></div>'+
+    L='<div class="x3"><div class="xc"><div class="hero"><b class="big">'+(o?sg(o.t)+'°':'--°')+'</b><div class="wst"><span class="c1">'+(o?esc(o.cond||'--'):'ECCC '+(s[1]==='err'?'UNREACHABLE':'pending'))+'</span><span>FEELS '+(o?(o.feels!=null?sg(o.feels)+'°':'= TEMP'):'--')+'</span><span>'+(o?needle(o)+' ':'')+wind+'</span></div></div><div class="g2">'+kvh('HUMIDITY',o?num(o.hum)+'%':'--')+kvh('PRESSURE',o?num(o.pr,1)+' kPa '+tendA(o.tend):'--')+kvh('DEWPOINT',o?sg(o.dew)+'°':'--')+kvh('VISIBILITY',o?(o.vis!=null?num(o.vis)+' km':'not reported'):'--')+kvh('GUST',o?(o.gust!=null?num(o.gust)+' km/h':'none'):'--')+kvh('STATION','OTTAWA · ECCC s0000430')+kvh('OBSERVED',o?obs+' · ECCC':'--')+kvh('SUNSET',w&&w.ss?hm(w.ss):'--')+'</div></div>'+
       '<div class="xc fcl">'+(fc||'<div class="kv fcr"><span class="k">FORECAST</span><span class="v dm">none received from ECCC</span></div>')+'</div><div class="xc">'+dsgHTML()+strip+'<div class="g2">'+plowCells(kvh)+'<div class="kv s2"><span class="k">ECCC ALERTS</span><span class="v '+alC+'">'+alV+'</span></div></div></div></div>'}
   else if(!pl){const t=w&&w.fc[0],t2=w&&w.fc[1],gp=gatParts();
-    L='<div class="hero"><b class="big">'+(o?sg(o.t)+'°':'--°')+'</b><div class="wst">'+(o?'<span class="c1">'+esc(o.cond||'--')+'</span><span>FEELS '+(o.feels!=null?sg(o.feels)+'°':'= TEMP')+'</span><span>'+needle(o)+' '+wind+'</span>':'<span class="c1">ECCC '+(s[1]==='err'?'UNREACHABLE':'pending')+'</span><span>last good: '+(H.wx.at?hm(H.wx.at):'never')+'</span><span>retry every 10 min</span>')+'</div><div class="gatb"><span class="k">GATINEAU</span><b class="'+gp.k+'">'+gp.t+'</b><span class="'+gp.k+'">'+gp.c+'</span></div></div>'+
+    L='<div class="hero"><b class="big">'+(o?sg(o.t)+'°':'--°')+'</b><div class="wst">'+(o?'<span class="c1">'+esc(o.cond||'--')+'</span><span>FEELS '+(o.feels!=null?sg(o.feels)+'°':'= TEMP')+'</span><span>'+needle(o)+' '+wind+'</span>':'<span class="c1">ECCC '+(s[1]==='err'?'UNREACHABLE':'pending')+'</span><span>last good: '+(H.wx.at?hm(H.wx.at):'never')+'</span><span>retry every 10 min</span>')+'</div></div>'+
       '<div class="cd tr">'+(t?esc(fcName(t.n))+': '+esc(t.sum||'')+' '+(t.v!=null?sg(t.v)+'°':''):'forecast unavailable — ECCC not reached')+'</div>'+
       '<div class="g3">'+kv1('HUM',o?num(o.hum)+'%':'--')+kv1('PRES',o?num(o.pr,1):'--')+kv1('DEW',o?sg(o.dew)+'°':'--')+kv1('VIS',o?(o.vis!=null?num(o.vis)+' km':'n/r'):'--')+kv1('GUST',o?(o.gust!=null?num(o.gust):'none'):'--')+(t2?kv1(esc(fcName(t2.n)),t2.v!=null?sg(t2.v)+'°':'--'):kv1('NEXT','--'))+'</div>'}
   else L=dsgHTML()+'<div class="pgrid">'+plowCells(kvh)+'</div><div class="pbot">'+strip+kv1('ALERTS',alV,alC)+'</div>';
   setH($('#wx .bd'),x?L:'<div class="wxl'+(pl?' plow':'')+'">'+L+'</div>')
-  {const gp3=gatParts(),_wt=$('#ckwx-t'),_wc=$('#ckwx-c');if(_wt){_wt.textContent=gp3.t;_wc.textContent=String(gp3.c||'OTTAWA').toUpperCase().slice(0,16)}}}
+  {const _wt=$('#ckwx-t'),_wc=$('#ckwx-c');if(_wt&&_wc){if(o){_wt.textContent=sg(o.t)+'°';_wc.textContent=String(o.cond||'OTTAWA').toUpperCase().slice(0,16)}else{_wt.textContent='--°';_wc.textContent=s[1]==='err'?'OFFLINE · OTTAWA':'PENDING · OTTAWA'}}}
+}
 /* ---------- commute + traffic cameras (camera status derived from config/state — CERT PENDING flow) ---------- */
 const tevK=r=>r.t==='INCIDENT'?0:r.c==='ROAD_CLOSED'?1:r.c==='LANES_CLOSED'?2:3;
-function camState(c){const f=frameOf(c.id),stale=f&&camStale(f);return f?(stale?['STALE '+hm(f.ts),'am',f]:['SNAP '+hms(f.ts),'em',f]):!CFG.cam.live?['FEED OFF','dm']:camReady()?(!D.camList?['AWAITING LIST','am']:camNo(c.id)==null?['NOT IN CITY LIST','dm']:['AWAITING FRAME','am']):['CERT PENDING','am']}
+function camState(c){const f=frameOf(c.id),stale=f&&camStale(f);if(f)return stale?['STALE · '+hm(f.ts),'am',f]:['STILL '+hm(f.ts),'em',f];
+  if(!CFG.cam.live)return['FEED OFF','dm'];
+  if(!camRouteReady())return['NO ROUTE · needs hub proxy (City certificate server-side)','am'];
+  if(D.camErr&&D.camErr[c.id])return['OFFLINE · City feed did not answer','cr'];
+  if(!D.camList)return['CAMERA LIST LOADING','am'];
+  if(camNo(c.id)==null)return['NOT IN CITY LIST','dm'];
+  return['FIRST STILL DUE · 60 s cadence','am']}
 function rCm(){const t=D.tev,s=H.tev,x=X('cc');
   const st=!t?(s.st==='err'?['EVENTS UNREACHABLE','err']:['PENDING','pend']):Date.now()-t.at>CFG.ev.staleMs?['STALE '+hm(t.at),'stale']:['LIVE · '+t.rows.length+' ACTIVE','live'];
   hdw('cc','COMMUTE + CAMERAS',bdg(st));
@@ -997,8 +1021,8 @@ function rCm(){const t=D.tev,s=H.tev,x=X('cc');
   const cams=SET.map(c=>{const k=camState(c);return '<div class="cam'+(k[2]?' has':'')+'" data-cid="'+c.id+'">'+(k[2]?'<img alt="" src="'+k[2].src+'">':camIcon)+'<span class="cn tr">'+esc(c.s)+'</span><span class="cs '+k[1]+'">'+k[0]+'</span></div>'}).join('');
   const hd='<div class="ch"><span>KIND</span><span>ROAD · DIRECTION · BETWEEN</span><span>STATUS</span></div>';
   const dl='<div class="cl sp"><span class="tr"><b>DELAY</b> n/a'+(sm?' · '+sm:'')+'</span><span><b>ONTARIO 511</b> · KEY PENDING</span></div>';
-  const cl='<div class="cl cl2 sp" title="CERT PENDING — City of Ottawa camera-API certificate (free request form on traffic.ottawa.ca)"><span class="tr"><b>CITY CAMERAS</b></span><span>'+(!CFG.cam.live?'feed off':camReady()?'snapshots · 1 request/min'+(D.camNext?' · next '+hm(D.camNext):''):'CERT PENDING · no requests')+'</span></div>';
-  const clWhy='<div class="cl why">CERT PENDING — City of Ottawa camera-API certificate (free request form on traffic.ottawa.ca) · no camera image requests are made until a certificate is configured</div>';
+  const cl='<div class="cl cl2 sp" title="City of Ottawa traffic cameras — stills via the hub proxy route; the City certificate is injected server-side and never appears in a client URL"><span class="tr"><b>CITY CAMERAS</b></span><span>'+(!CFG.cam.live?'feed off':camRouteReady()?'stills · each camera every 60 s'+(D.camNext?' · next '+hm(D.camNext):''):'NO ROUTE · needs hub proxy')+'</span></div>';
+  const clWhy='<div class="cl why">Stills only — never live video. Route: '+(CFG.PROXY?'hub proxy /ottawa/camera — City certificate server-side':'direct City certificate route')+' · 60 s per camera, staggered · a still older than 120 s reads Stale · a failed fetch reads OFFLINE and keeps the last good still</div>';
   setH($('#cc .bd'),x?'<div class="x2"><div class="xc">'+hd+'<div class="ces fl1">'+ev+'</div>'+dl+'</div><div class="xc">'+cl+clWhy+'<div class="cg">'+cams+'</div></div></div>':hd+'<div class="ces">'+ev+'</div>'+dl+'<div class="cg">'+cams+'</div>')}
 function paintCam(){rCm()}
 /* ---------- team usage · one round gauge per member (honest snapshot labels) ---------- */
@@ -1019,8 +1043,8 @@ function rTm(){const rows=teamRows(),x=X('tm');hdw('tm','TEAM USAGE',bdg(['SNAPS
 /* ---------- live TV card: 16:9 stage (the video fills its area) + LOCAL/WORLD bars ---------- */
 const barHTML=(k,n,c)=>'<div class="bar2 '+c+'" data-bar="'+k+'"><span class="bg2">'+n+'</span><span class="bst"></span><div class="win"><div class="trk"></div></div></div>';
 function nwInit(){setH($('#nw'),'<div class="hdw"></div><div class="nwm"><div class="stage" id="plv"></div><div class="nxs" id="nxs"></div></div><div class="tks">'+barHTML('local','LOCAL','lo')+barHTML('world','WORLD','wo')+'</div>');setStation()}
-function rNews(){const el=$('#nw .hdw');if(!el)return;const st=UI.stn==='dw'?ytSt():['LINK-OUT','pend'];
-  setH(el,'<div class="hd tall"><span class="ttl"><i class="led"></i><span class="tt">LIVE TV</span></span><span class="stn">'+STN.map(t=>'<button class="btn st" data-a="st:'+t.k+'" aria-pressed="'+(UI.stn===t.k)+'" aria-label="'+t.t+(t.k==='dw'?' — embedded stream':' — opens '+t.site)+'">'+t.n+(t.k==='dw'?' ▶':' ↗')+'</button>').join('')+'</span><span class="hr">'+bdg(st)+xbtns('nw')+'</span></div>');
+function rNews(){const el=$('#nw .hdw');if(!el)return;const st=stnNow().yt?ytSt():['LINK-OUT','pend'];
+  setH(el,'<div class="hd tall"><span class="ttl"><i class="led"></i><span class="tt">LIVE TV</span></span><span class="stn">'+STN.map(t=>'<button class="btn st" data-a="st:'+t.k+'" aria-pressed="'+(UI.stn===t.k)+'" aria-label="'+t.t+(t.yt?' — embedded stream':' — opens '+t.site)+'">'+t.n+(t.yt?' ▶':' ↗')+'</button>').join('')+'</span><span class="hr">'+bdg(st)+xbtns('nw')+'</span></div>');
   if(X('nw')){const s=STN.find(x=>x.k===UI.stn),lst=k=>D.news[k].length?D.news[k].slice(0,5).map(x=>'<div class="hl"><b>'+esc(x.o)+'</b><span>'+esc(x.t)+'</span><i>'+(x.ts?ago(x.ts)+' ago':'')+'</i></div>').join(''):'<div class="hl"><span class="dm">'+esc(barOff(k)[1])+'</span></div>';
     setH($('#nxs'),'<div class="nxh"><span class="k">ON AIR</span><b>'+esc(s.t)+'</b><span>'+esc(s.w)+'</span></div><div class="nxl"><span class="k lo">LOCAL HEADLINES</span>'+lst('local')+'</div><div class="nxl"><span class="k wo">WORLD HEADLINES</span>'+lst('world')+'</div>')}
   else setH($('#nxs'),'')}
@@ -1077,7 +1101,7 @@ function tape(){const cfg={symbols:[{proName:'FOREXCOM:SPXUSD',title:'S&P 500'},
   const f=$('iframe',t);f.addEventListener('load',()=>{f.dataset.l=1});setTimeout(()=>{if(!f.dataset.l)t.classList.add('fail')},15000)}
 /* chart tiles: four fixed slots, each with a persistent chart layer (so a TradingView frame is never rebuilt on repaint) and a text layer.
    Every tile always shows a chart area — a real line from its own source, a TradingView mini chart (delayed) where our own source is browser-blocked, or an honest hatched "no chart" state with the reason. Never blank, never a fake line. */
-const MKS=['btc','cad','tsx','spx'];
+const MKS=['btc','btcc','cad','tsx','spx','y10'];
 function tvMini(sym){return 'https://s.tradingview.com/embed-widget/mini-symbol-overview/?locale=en#'+encodeURIComponent(JSON.stringify({symbol:sym,width:'100%',height:'100%',locale:'en',dateRange:CFG.markets.tvRange,colorTheme:'dark',isTransparent:true,autosize:true,largeChartUrl:'',chartOnly:true,noTimeScale:true,trendLineColor:'rgba(250, 204, 21, 1)',underLineColor:'rgba(250, 204, 21, 0.2)',underLineBottomColor:'rgba(250, 204, 21, 0)'}))}
 function setChart(k,o){const el=$('#mt-'+k+' .chl');if(!el)return;
   if(o.ck==='tv'){if(el.dataset.k==='tv'&&el.dataset.s===o.sym)return;el.dataset.k='tv';el.dataset.s=o.sym;el.classList.remove('tvf');
@@ -1110,6 +1134,12 @@ function rMk(){const now=Date.now(),x=X('mk'),b=D.btc,bs=D.btcS,bo=D.boc,q=D.stq
     const fl=$('#mt-'+k+' .chl.tvf');
     putTile(k,{lb:n,val:'',ck:'tv',sym:CFG.markets.tv[k],tag:fl?'OFFLINE':'DELAYED',tc:fl?'of':'dl',dim:!!fl,note:fl?'∿ chart did not load':(x?'TradingView mini chart · '+CFG.markets.tvRange+' · delayed':'TradingView · '+CFG.markets.tvRange),
       tip:n+' — TradingView mini chart ('+CFG.markets.tvRange+', delayed). Our own Stooq daily closes: '+(D.stqE[k]==='blocked'?'blocked in this browser (no CORS) — the hub proxy enables them at integration':D.stqE[k]?'unreachable':'pending')})});
+  /* CORRECTION ROUND: tiles 5 + 6 — BTC/CAD (CoinGecko's CAD quote; derived via the USD/CAD rate when only a USD spot answered) and the Canada 10Y yield (BoC series already requested in CFG.markets.boc). Previous-close/daily data — never labelled live (Grant's markets ruling 2026-11-21). */
+  if(b&&(b.cad||(bo&&bo.fx.length>1))){const fxr=bo&&bo.fx.length>1?bo.fx[bo.fx.length-1][1]:null,cadv=b.cad||Math.round(b.usd*fxr),cst2=now-(b.t||b.at)>CFG.markets.btcStaleMs;
+    putTile('btcc',{lb:'BTC/CAD',val:Math.round(cadv).toLocaleString('en-CA'),chg:b.ch,ck:'none',tag:cst2?'STALE '+hm(b.t||b.at):'DELAYED',tc:cst2?'st':'dl',dim:cst2,tip:'BTC/CAD: '+(b.cad?'CoinGecko CAD quote':'derived — '+b.src+' USD spot × USD/CAD '+(fxr||'')+' (Bank of Canada)')+' as of '+hm(b.t||b.at)+' — daily/delayed, never live'})}
+  else putTile('btcc',noChart('BTC/CAD',H.mk.btcErr,'BTC sources down'));
+  if(bo&&bo.y&&bo.y.length>1){const yo=dailyO('CA 10Y YIELD',bo.y,'BoC',x,2,'Canada 10-year benchmark bond yield — Bank of Canada daily');yo.val=yo.val+'%';putTile('y10',yo)}
+  else putTile('y10',noChart('CA 10Y YIELD',H.mk.fxErr,'BoC yield series not in the ECB fallback'));
   const srcs=[b&&b.src,bs&&bs.src!==(b&&b.src)?bs.src:null,bo?(bo.src==='ECB'?'ECB':'BoC'):null,(!q.tsx||!q.spx)?'TradingView':null,(q.tsx||q.spx)?'Stooq':null].filter(Boolean);
   hdw('mk','MARKETS',(srcs.length?'<span class="msrc" title="data now drawing: '+[...new Set(srcs)].join(' · ')+'">'+[...new Set(srcs)].join(' · ')+'</span>':'')+bdg(['TAPE DELAYED','stale']))}
 /* ---------- security: CAMERAS (one box per zone; state derived from config / hub) ⇄ HOME MONITORING ---------- */
@@ -1202,10 +1232,10 @@ $$('[data-bar]').forEach(el=>{const hold=v=>{el._hold=v;clearTimeout(el._ht);if(
 if(window.ResizeObserver)new ResizeObserver(()=>{const l=$('#evl');if(l&&l.clientHeight!==l._h){l._h=l.clientHeight;rEv()}}).observe($('#evl'));
 if(geInit()){scopeView()}scopeUpd();setInterval(geWatch,3000);setInterval(geRefresh,CFG.ge.refreshMs);
 window.__home={ui:UI,data:D,health:H,cfg:CFG,paint,xpSet,XP,GE,desig,plot,runBar,allEv,teamRows,openSuite,fit};
-getWx();getWxg();getTev();getYow();getNews();getQuakes();getGdacs();getEonet();getAlerts();getTsu();getRate();getBtc();getBoc();['spx','tsx','cad'].forEach(getStq);getCamList();['hubfeed','security','cal','scn','brief'].forEach(getHub);hcamTick();
-setInterval(getWx,CFG.wx.everyMs);setInterval(getWxg,CFG.wx.everyMs);setInterval(getTev,CFG.ev.everyMs);setInterval(getYow,CFG.yow.everyMs);setInterval(getNews,CFG.news.everyMs);setInterval(getQuakes,CFG.quakes.everyMs);setInterval(getGdacs,CFG.wm.everyMs);setInterval(getEonet,CFG.wm.everyMs);setInterval(getAlerts,CFG.alerts.everyMs);setInterval(getTsu,CFG.tsu.everyMs);setInterval(getRate,CFG.rate.everyMs);setInterval(getBtc,CFG.markets.btcEveryMs);setInterval(getBoc,CFG.markets.bocEveryMs);setInterval(()=>['spx','tsx','cad'].forEach(getStq),CFG.stooq.everyMs);setInterval(hcamTick,CFG.homecams.everyMs);
+getWx();getTev();getYow();getNews();getQuakes();getGdacs();getEonet();getAlerts();getTsu();getRate();getBtc();getBoc();['spx','tsx','cad'].forEach(getStq);getCamList();['hubfeed','security','cal','scn','brief'].forEach(getHub);hcamTick();
+setInterval(getWx,CFG.wx.everyMs);setInterval(getTev,CFG.ev.everyMs);setInterval(getYow,CFG.yow.everyMs);setInterval(getNews,CFG.news.everyMs);setInterval(getQuakes,CFG.quakes.everyMs);setInterval(getGdacs,CFG.wm.everyMs);setInterval(getEonet,CFG.wm.everyMs);setInterval(getAlerts,CFG.alerts.everyMs);setInterval(getTsu,CFG.tsu.everyMs);setInterval(getRate,CFG.rate.everyMs);setInterval(getBtc,CFG.markets.btcEveryMs);setInterval(getBoc,CFG.markets.bocEveryMs);setInterval(()=>['spx','tsx','cad'].forEach(getStq),CFG.stooq.everyMs);setInterval(hcamTick,CFG.homecams.everyMs);
 if(CFG.hubfeed.url)setInterval(()=>getHub('hubfeed'),CFG.hubfeed.everyMs);if(CFG.security.url)setInterval(()=>getHub('security'),15000);if(CFG.cal.url)setInterval(()=>getHub('cal'),CFG.cal.everyMs);if(CFG.scn.url)setInterval(()=>getHub('scn'),CFG.scn.everyMs);if(CFG.brief.url)setInterval(()=>getHub('brief'),CFG.brief.everyMs);
-setTimeout(camTick,1500);setInterval(camTick,CFG.cam.intervalMs);
+setTimeout(camTick,1500);setInterval(camTick,5000);
 
 /* ---------- Talk to Oakley (Phase 0): the family's honest SHELL state — the service joins in Phase 3 ---------- */
 (function(){const h=document.getElementById('tkh');if(!h)return;const open=()=>{h.hidden=false;const b=h.querySelector('.btn.q,.tkf .btn');if(b)b.focus()},close=()=>{h.hidden=true;const t=document.getElementById('tk-btn');if(t)t.focus()};
@@ -1395,7 +1425,7 @@ html:not(.stk) .chrono{grid-column:3;grid-row:1}
   <div class="road-grid">
    <div class="rnode" style="border-top-color:#ff5a5a"><h4><span class="rn">1</span>CALENDAR — DAYBOOK</h4><p><span class="fridate">The trip day</span> — Flight <b>AC 452</b>, YOW → YYZ, departs <b>08:35</b>. The calendar event starts the chain; everything else hangs off it. Its home is Daybook · Calendar.</p></div>
    <div class="rnode"><h4><span class="rn">2</span>AIRPORT — CANOPY HOME · YOW BOX</h4><p>The YOW box flags the flight on its face. Gate and delay watch ride the airport's own free FIDS feed, shown in the box with its snapshot time.</p></div>
-   <div class="rnode"><h4><span class="rn">3</span>COMMUTE + CAMERAS — CANOPY HOME</h4><p>Leave by <b>07:05</b> · Hwy 417 · about <b>38 min</b>, counted back from the 08:35 departure. Route camera snapshots join once the City of Ottawa camera-API certificate lands — CERT PENDING (free request form on traffic.ottawa.ca).</p></div>
+   <div class="rnode"><h4><span class="rn">3</span>COMMUTE + CAMERAS — CANOPY HOME</h4><p>Leave by <b>07:05</b> · Hwy 417 · about <b>38 min</b>, counted back from the 08:35 departure. Route camera snapshots ride the City of Ottawa feed — the certificate is in hand; stills come via the hub proxy route on a 60-second cadence, each labelled with its capture time, never as live video.</p></div>
    <div class="rnode"><h4><span class="rn">4</span>WEATHER — CANOPY HOME</h4><p>Road weather for the drive and departure conditions ride along from the ECCC Ottawa feed — the same box, seen from inside the chain.</p></div>
    <div class="rnode" style="border-top-color:#35d07f"><h4><span class="rn">5</span>OAKLEY — COMMAND DECK</h4><p>Oakley watches the whole chain from the Deck. A delay or a weather alert re-times the leave-by and re-flags every box in the chain.</p></div>
    <div class="rnode" style="border-top-color:#ff5a5a"><h4><span class="rn">6</span>DAYBOOK — CALENDAR + REMINDERS</h4><p>The trip lives in Daybook too — the same linked info from inside, a door and a reference, never a copy that drifts.</p></div>
@@ -1450,16 +1480,43 @@ var CHAIN={cl:'Calendar holds the trip — Airport, Commute and Weather light up
 Object.keys(CHAIN).forEach(function(id){var sec=document.getElementById(id);if(!sec||$('.lkbadge',sec))return;sec.classList.add('linked');
 if(id!=='cl'){var b=document.createElement('button');b.className='lkbadge';b.setAttribute('data-road','1');b.setAttribute('aria-label','Linked example event — open its roadmap');b.textContent='\uD83D\uDD17 1 LINK';sec.appendChild(b);}
 var st=document.createElement('div');st.className='lkstrip';st.innerHTML='<b>LINKED · EXAMPLE</b> — Flight <b>AC 452</b> · '+FMT+' · 08:35 · YOW \u2192 YYZ. '+CHAIN[id]+' <button class="btn tab" data-road="1">ROADMAP \u25B8</button>';sec.appendChild(st);});
+/* --- CORRECTION ROUND (amendment A): Team Usage is a working link into the Command Deck — it carries the flagging standard (static glow + LINK badge) like every other working link --- */
+var tmEl=document.getElementById('tm');if(tmEl)tmEl.classList.add('linked');
+/* --- CORRECTION ROUND — Live TV fallback manager: the stage runs the channel's official YouTube video-ID embed
+   first (setStation). If the embed errors or never starts (UI.yt 'offline'), the SAME channel retries on its direct
+   HLS stream via hls.js; if that fails too, the stage shows a NAMED reason + Watch fallbacks + retry — never a bare
+   label. While a check runs, the last-good frame stays on screen. --- */
+var TVFB={mode:'embed',key:null,hls:null};
+function tvStation(){return STN.find(function(x){return x.k===UI.stn})}
+function tvFailHTML(s,reason){return '<div class="tvfail"><b>'+s.t+' — STREAM UNAVAILABLE</b><span>'+reason+'</span><div class="tvfrow"><a href="https://www.youtube.com/channel/'+s.ch+'/live" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a><a href="'+s.watch+'" target="_blank" rel="noopener noreferrer">'+s.t+' live page ↗</a><button type="button" data-tvfb="retry">↻ TRY AGAIN</button><button type="button" data-tvfb="next">NEXT CHANNEL ▸</button></div></div>'}
+function tvHlsStart(s){var p=$('#plv');if(!p)return;TVFB.mode='hls';TVFB.key=s.k;
+ p.innerHTML='<div class="tvhls"><video muted playsinline autoplay preload="auto"></video><span class="hwst">CONNECTING…</span></div>';
+ var v=$('video',p),st=$('.hwst',p);
+ function dead(reason){if(TVFB.key!==s.k||TVFB.mode!=='hls')return;TVFB.mode='failed';p.innerHTML=tvFailHTML(s,reason)}
+ if(window.Hls&&Hls.isSupported()){var h=new Hls({maxBufferLength:12});TVFB.hls=h;h.loadSource(s.hls);h.attachMedia(v);
+  h.on(Hls.Events.MANIFEST_PARSED,function(){var pr=v.play();if(pr)pr.catch(function(){})});
+  h.on(Hls.Events.ERROR,function(e,d){if(!d||!d.fatal)return;dead(d.type==='network'?'Network unreachable — the stream host did not answer.':d.type==='media'?'Stream ended — the broadcaster stopped this feed.':'Unsupported format — this browser cannot play this stream (HLS).')});}
+ else if(v.canPlayType('application/vnd.apple.mpegurl')){v.src=s.hls;var pr2=v.play();if(pr2)pr2.catch(function(){})}
+ else{dead('Unsupported format — this browser cannot play this stream (HLS).');return}
+ v.addEventListener('playing',function(){if(st)st.textContent='● LIVE · DIRECT STREAM';UI.yt='playing';rNews()});
+ setTimeout(function(){if(TVFB.mode==='hls'&&TVFB.key===s.k&&v.readyState<2)dead('Network unreachable — the stream host did not answer in 8 s.')},9000)}
+setInterval(function(){var s=tvStation();if(!s||!s.yt)return;var p=$('#plv');if(!p)return;
+ if(TVFB.key!==s.k){TVFB.mode='embed';TVFB.key=s.k;if(TVFB.hls){try{TVFB.hls.destroy()}catch(e){}TVFB.hls=null}}
+ if(UI.yt==='offline'&&TVFB.mode==='embed'){if(s.hls)tvHlsStart(s);else{TVFB.mode='failed';p.innerHTML=tvFailHTML(s,'The embedded player could not start this channel, and no direct stream is published for it.')}}
+},700);
+document.addEventListener('click',function(e){var b=e.target.closest('[data-tvfb]');if(!b)return;var s=tvStation();if(!s)return;
+ if(b.getAttribute('data-tvfb')==='retry'){TVFB.mode='embed';TVFB.key=s.k;UI.yt='loading';UI.ytAt=Date.now();setStation()}
+ else{var i=STN.indexOf(s),n=STN[(i+1)%STN.length];TVFB.mode='embed';var btn=document.querySelector('[data-a="st:'+n.k+'"]');if(btn)btn.click()}},true);
 /* --- News box: two stations playing side by side (the full 4-channel wall lives in the TV window) --- */
 var WALL=[{id:'trt',name:'TRT WORLD',url:'https://tv-trtworld.medya.trt.com.tr/master.m3u8'},{id:'cna',name:'CNA',url:'https://d2e1asnsl7br7b.cloudfront.net/7782e205e72f43aeb4a48ec97f66ebbe/index.m3u8'}];
-function wallBuild(){var p=$('#plv');if(!p||$('.hwwall',p))return;
+function wallBuild(){return; /* CORRECTION ROUND: the two-tile HLS hijack is retired — the stage is owned by setStation() (video-ID embeds first; the hls.js fallback manager below takes over only when an embed fails) */
 p.innerHTML='<div class="hwwall">'+WALL.map(function(s){return '<div class="hwtile"><video muted playsinline autoplay preload="auto"></video><span class="hwst">CONNECTING\u2026</span><div class="hwbar"><span>'+s.name+'</span><span class="r">FULL WALL IN THE TV WINDOW</span></div></div>'}).join('')+'</div>';
 $$('.hwtile',p).forEach(function(t,i){var s=WALL[i],v=$('video',t),st=$('.hwst',t);
 function ok(){st.textContent='\u25CF LIVE';st.style.color='#7be495'}function bad(m){st.textContent=m;st.style.color='#ffb3ab'}
-if(window.Hls&&Hls.isSupported()){var h=new Hls({maxBufferLength:12});h.loadSource(s.url);h.attachMedia(v);h.on(Hls.Events.MANIFEST_PARSED,function(){var pr=v.play();if(pr)pr.catch(function(){})});h.on(Hls.Events.ERROR,function(e,d){if(d&&d.fatal)bad('STREAM UNAVAILABLE')});}
+if(window.Hls&&Hls.isSupported()){var h=new Hls({maxBufferLength:12});h.loadSource(s.url);h.attachMedia(v);h.on(Hls.Events.MANIFEST_PARSED,function(){var pr=v.play();if(pr)pr.catch(function(){})});h.on(Hls.Events.ERROR,function(e,d){if(d&&d.fatal)bad('STREAM UNAVAILABLE — feed did not load')});}
 else if(v.canPlayType('application/vnd.apple.mpegurl')){v.src=s.url;var pr2=v.play();if(pr2)pr2.catch(function(){})}
 else{bad('PLAYER UNAVAILABLE');return}
-v.addEventListener('playing',ok);v.addEventListener('error',function(){bad('STREAM UNAVAILABLE')});});}
+v.addEventListener('playing',ok);v.addEventListener('error',function(){bad('STREAM UNAVAILABLE — feed did not load')});});}
 /* --- World box: name the rest of the Osiris layer on the box itself --- */
 function wmStrip(){var wm=$('#wm');if(!wm||$('.wmstrip',wm))return;var d=document.createElement('div');d.className='wmstrip';d.innerHTML='<b>OSIRIS</b> — conflicts · wildfires · GDELT events ride in the World window via hub snapshots (as-of shown there) · conflict zones <b>UNKNOWN · NO TIMESTAMP</b>';wm.appendChild(d)}
 function guards(){wallBuild();wmStrip()}
@@ -1507,5 +1564,148 @@ nwEl.addEventListener('click',function(e){if(e.target===nwEl||e.target.closest('
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!nwEl.hidden)wheelClose()});
 })();
 
+</script>
+<style id="corr-2026-11-21">
+/* ===== CORRECTION ROUND 2026-11-21 — shared layer: unified doors/top bar (line 1, F4), tactile press + hover (lines 3/4), Canopy phone wheel (two levels, Canopy dial face) ===== */
+#wheelbtn,.wheelbtn,#nwheel,.nwheel{display:none!important}
+.cnd{position:relative;display:flex;align-items:center;gap:.5rem;padding:.3rem .6rem;border-radius:.35rem;text-decoration:none;color:#e8e4d8;background:linear-gradient(180deg,#17181c,#101114);border:1px solid #26262b;transition:transform 150ms ease,box-shadow 150ms ease;min-width:0;cursor:pointer;font-family:var(--fm,ui-monospace,monospace)}
+.cnd .chip{width:.55rem;height:.55rem;border-radius:50%;background:var(--dc);flex:none;box-shadow:0 0 .4rem var(--dc)}
+.cnd .nm{font-weight:800;font-size:.78rem;letter-spacing:.08em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:var(--fd,var(--fm,ui-monospace,monospace))}
+.cnd .ct{margin-left:auto;font-weight:700;font-size:.58rem;letter-spacing:.07em;color:#a49e93;border:1px solid #33343a;border-radius:2rem;padding:.08rem .4rem;white-space:nowrap;flex:none}
+.cnd.linked{box-shadow:0 0 0 1px var(--dc),0 0 .8rem -.15rem var(--dc)}
+.cnd.linked::after{content:"LINK";position:absolute;top:-.42rem;right:.4rem;font-weight:700;font-size:.5rem;line-height:1;letter-spacing:.09em;color:#0b0e13;background:rgba(250,204,21,.95);padding:.14rem .3rem;border-radius:.25rem;pointer-events:none}
+.cnd:hover{transform:translateY(-2px);background:var(--dc);color:#0b0e13;filter:brightness(1.12);box-shadow:0 .3rem .7rem rgb(0 0 0/.48),0 0 .85rem var(--dc),inset 0 1px 0 rgb(255 255 255/.06)}
+.cnd:hover .ct{color:#0b0e13;border-color:rgba(0,0,0,.35)}
+.cnd:hover .chip{background:#0b0e13;box-shadow:none}
+.cnd:active{transform:scale(.98);transition-duration:100ms}
+.cnd.on{border-color:var(--dc);background:linear-gradient(180deg,#1e1f26,#121317)}
+button:active,.btn:active{transform:scale(.98);transition-duration:100ms}
+.card{transition:transform 150ms ease,box-shadow 150ms ease,filter 150ms ease}
+.card:hover{transform:translateY(-2px);filter:brightness(1.12);box-shadow:0 .3rem .7rem rgb(0 0 0/.48),0 0 .85rem rgba(250,204,21,.25),inset 0 1px 0 rgb(255 255 255/.06)}
+.cwbar{position:fixed;left:0;right:0;bottom:0;z-index:340;display:none;align-items:center;gap:.6rem;height:calc(64px + env(safe-area-inset-bottom));padding:0 .6rem env(safe-area-inset-bottom);background:#111417;border-top:1px solid #2a2e33}
+@media (max-width:760px){.cwbar{display:flex}}
+.cw-dwrap{display:flex;flex-direction:column;align-items:center;gap:1px;flex:none}
+.cw-open{position:relative;width:56px;height:56px;border-radius:50%;border:0;background:#111417;cursor:pointer;padding:0;flex:none}
+.cw-open:active{transform:scale(.98)}
+.cw-ring{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from -90deg,#F5F2EA 0 72deg,#C9A227 0 144deg,#2FA866 0 216deg,#D64541 0 288deg,#3E8FE0 0 360deg);opacity:.35}
+.cw-ring b{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from var(--rr,-90deg),rgba(255,255,255,.95) 0 72deg,transparent 0 360deg);mix-blend-mode:overlay}
+.cw-open::after{content:"";position:absolute;inset:7px;border-radius:50%;background:#111417}
+.cw-husk{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:32px;height:32px;z-index:1}
+.cw-curlab{font:700 10px var(--fm,ui-monospace,monospace);letter-spacing:.1em;color:#e8e4d8}
+.cw-sbtn{flex:1;display:flex;align-items:center;gap:.5rem;height:44px;border-radius:2rem;border:1px solid #33373d;background:#17191d;color:#a49e93;font:600 13px var(--fm,ui-monospace,monospace);letter-spacing:.06em;padding:0 1rem;cursor:pointer;text-align:left}
+.cw-sbtn:active{transform:scale(.98)}
+.cw-sp{position:fixed;left:0;right:0;bottom:calc(64px + env(safe-area-inset-bottom));z-index:345;background:#14161a;border-top:1px solid #2c2f34;padding:.6rem;box-shadow:0 -.6rem 1.4rem rgba(0,0,0,.5)}
+.cw-sp[hidden]{display:none}
+.cw-sp input{width:100%;height:44px;border-radius:.4rem;border:1px solid #33373d;background:#0d0e11;color:#e8e4d8;font:600 14px var(--fm,ui-monospace,monospace);padding:0 .7rem}
+.cw-sres{max-height:42vh;overflow-y:auto;margin-top:.5rem;display:flex;flex-direction:column;gap:.3rem}
+.cw-sr{display:flex;align-items:center;gap:.6rem;padding:.55rem .6rem;border:1px solid #26262b;border-radius:.35rem;color:#e8e4d8;text-decoration:none;font:600 13px var(--fm,ui-monospace,monospace)}
+.cw-sr i{margin-left:auto;font-style:normal;font-size:10px;letter-spacing:.08em;color:#a49e93}
+.cw-none{padding:.6rem;color:#a49e93;font:600 12px var(--fm,ui-monospace,monospace)}
+.cw-sheet{position:fixed;inset:0;z-index:350}
+.cw-sheet[hidden]{display:none}
+.cw-scrim{position:absolute;inset:0;background:rgba(0,0,0,.4)}
+.cw-panel{position:absolute;left:50%;transform:translateX(-50%);bottom:88px;display:flex;flex-direction:column;align-items:center;gap:.5rem;animation:cwUp 240ms ease-out}
+@keyframes cwUp{from{opacity:0;transform:translateX(-50%) translateY(14px) scale(.96)}to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
+.cw-crumb{font:700 11px var(--fm,ui-monospace,monospace);letter-spacing:.14em;color:#cfd3d8;background:rgba(10,11,13,.85);padding:.3rem .7rem;border-radius:2rem;border:1px solid #2c2f34}
+.cw-dial{position:relative;width:336px;height:336px;max-width:92vw;max-height:92vw;border-radius:50%;background:radial-gradient(circle,#1A1D20 55%,#0B0B0C 82%);border:6px solid #22262b;box-shadow:0 1.2rem 2.6rem rgba(0,0,0,.6),inset 0 0 0 2px var(--rim,#3a3e44)}
+.cw-dial::before{content:"";position:absolute;inset:0;border-radius:50%;background:repeating-conic-gradient(from -90deg,rgba(255,255,255,.13) 0 1deg,transparent 1deg 30deg);-webkit-mask:radial-gradient(circle,transparent 63%,#000 64%,#000 72%,transparent 73%);mask:radial-gradient(circle,transparent 63%,#000 64%,#000 72%,transparent 73%);pointer-events:none}
+.cw-stop{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;display:flex;align-items:center;justify-content:center;background:none;border:0;cursor:pointer;text-decoration:none;padding:0;z-index:2}
+.cw-dot{width:40px;height:40px;border-radius:50%;background:#17191d;border:2px solid var(--sc,#8a857e);color:#e8e4d8;display:flex;align-items:center;justify-content:center;font:700 11px var(--fm,ui-monospace,monospace);overflow:hidden;flex:none}
+.cw-dot img{width:100%;height:100%}
+.cw-lab{position:absolute;top:45px;left:50%;transform:translateX(-50%);width:74px;text-align:center;font:600 9px/1.2 var(--fm,ui-monospace,monospace);color:#cfd3d8;letter-spacing:.02em}
+.cw-stop.on .cw-dot{background:var(--sc);color:#0b0b0c;box-shadow:0 0 0 1px rgba(255,255,255,.55),0 0 12px var(--sc)}
+.cw-stop:active .cw-dot{transform:scale(.96)}
+.cw-bdg{position:absolute;top:-4px;right:-8px;min-width:16px;height:16px;border-radius:2rem;background:#C9A227;color:#0b0b0c;font:800 10px/16px var(--fm,ui-monospace,monospace);text-align:center;padding:0 4px;z-index:3}
+.cw-ptr{position:absolute;left:50%;top:50%;width:0;height:0;z-index:1;transition:transform 200ms ease}
+.cw-ptr::before{content:"";position:absolute;left:-6px;top:-128px;border:6px solid transparent;border-bottom:10px solid #e8e4d8}
+.cw-centre{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:120px;height:120px;border-radius:50%;background:#101215;border:2px solid var(--rim,#3a3e44);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center;color:#e8e4d8;font:700 11px var(--fm,ui-monospace,monospace);letter-spacing:.08em;z-index:2;padding:0}
+.cw-centre img{width:72px;height:72px}
+.cw-centre.back{cursor:pointer;background:#17191d}
+.cw-centre b{font-size:14px;letter-spacing:.1em}
+.cw-x{min-height:44px;padding:.5rem 1.1rem;border-radius:2rem;border:1px solid #33373d;background:#14161a;color:#e8e4d8;font:700 11px var(--fm,ui-monospace,monospace);letter-spacing:.1em;cursor:pointer}
+@media (prefers-reduced-motion:reduce){.cw-panel{animation:cwFade 120ms ease-out}.cw-ptr{transition:none}@keyframes cwFade{from{opacity:0}to{opacity:1}}}
+/* index: 60px top bar (amendment D) — husky beside the cluster; the cluster holds ONLY time above weather */
+.bridge{grid-template-rows:60px minmax(0,1fr) 1.5rem;height:100dvh;box-sizing:border-box}
+.top{display:flex;align-items:center;gap:.6rem;height:60px;padding:0 .5rem}
+.hlogo{height:52px;width:auto;display:flex;align-items:center;gap:.45rem;padding:.25rem .55rem;flex:none}
+.hlogo .nblogo{width:44px;height:44px}
+.chrono{flex:none;width:300px;height:52px;display:flex;flex-direction:column;justify-content:center;gap:1px;padding:.2rem .6rem}
+.chrono .ckrow i{display:none}
+.chrono .ckrow .num{font-size:1.02rem}
+#doors{display:flex;gap:.45rem;flex:1;min-width:0;align-items:stretch}
+#doors .cnd{flex:1;height:52px}
+/* F6 geometry: internal scroll bands; rows keep their line height; badges never sit on rows */
+#yw .bd,#wx .bd{overflow-y:auto}
+.rw span{line-height:1.25}
+.card:not(.xp) .lkbadge{top:auto;bottom:.35rem}
+#mk .mkt{grid-template-rows:repeat(3,1fr)}
+/* TV fallback stage */
+#plv{position:relative}
+#plv .tvhls,#plv .tvfail{position:absolute;inset:0}
+#plv video{width:100%;height:100%;object-fit:cover;background:#000}
+.tvfail{display:flex;flex-direction:column;gap:.4rem;align-items:flex-start;justify-content:center;padding:.8rem;background:#0b0b0d;color:#e8e4d8}
+.tvfail b{font:800 .8rem var(--fm,ui-monospace,monospace);letter-spacing:.06em;color:#ffb3ab}
+.tvfail span{font:.72rem/1.45 var(--fm,ui-monospace,monospace);color:#cfd3d8}
+.tvfrow{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.2rem}
+.tvfrow a,.tvfrow button{font:700 .66rem var(--fm,ui-monospace,monospace);letter-spacing:.05em;color:#0b0e13;background:rgba(250,204,21,.95);border:0;border-radius:.3rem;padding:.4rem .6rem;text-decoration:none;cursor:pointer}
+.hwst{position:absolute;top:.4rem;left:.5rem;font:700 .62rem var(--fm,ui-monospace,monospace);letter-spacing:.08em;color:#7be495;text-shadow:0 1px 3px #000}
+</style>
+<div id="cwwrap" data-cur="home">
+ <div class="cwbar">
+  <div class="cw-dwrap"><button class="cw-open" id="cw-open" aria-label="Open the Canopy section wheel"><span class="cw-ring" style="--rr:-90deg" aria-hidden="true"><b></b></span><img class="cw-husk" src="./assets/northbirch-head-only-v10.svg" alt=""></button><span class="cw-curlab">HOME</span></div>
+  <button class="cw-sbtn" id="cw-sopen" aria-label="Search Canopy sections"><span aria-hidden="true">⌕</span> SEARCH SECTIONS</button>
+ </div>
+ <div class="cw-sp" id="cwsp" hidden><input id="cw-sq" type="search" placeholder="Search sections…" aria-label="Search Canopy sections"><div class="cw-sres" id="cw-sres"></div></div>
+ <div class="cw-sheet" id="cwsheet" hidden role="dialog" aria-modal="true" aria-label="Canopy sections">
+  <div class="cw-scrim" data-cw="close"></div>
+  <div class="cw-panel"><div class="cw-crumb" id="cw-crumb">CANOPY</div><div class="cw-dial" id="cw-dial"></div><button class="cw-x" data-cw="close" aria-label="Close the wheel">✕ CLOSE</button></div>
+ </div>
+</div>
+<script id="corr-2026-11-21">
+/* ===== CORRECTION ROUND 2026-11-21 — Canopy phone wheel: two levels, Canopy dial face (wheel audit + face design 2026-11-21).
+   L1 = the five sections, 72° apart clockwise from 12:00 in top-bar order; Home has no L2 (navigates directly).
+   L2 lists are the audit's, verbatim. Bottom bar = wheel + search only, phone widths only; no wheel on big screens. ===== */
+(function(){'use strict';
+var wrap=document.getElementById('cwwrap');if(!wrap)return;
+var $=function(s,r){return (r||document).querySelector(s)},$$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var LOGO='./assets/northbirch-head-only-v10.svg';
+var SEC=[
+ {k:'home',n:'HOME',c:'#F5F2EA',href:'./index.html',stops:null},
+ {k:'sitrep',n:'SITREP',c:'#C9A227',href:'./sitrep.html#tab=1',stops:[['SITREP HOME','./sitrep.html#sec=home'],['WEATHER','./sitrep.html#sec=weather'],['COMMUTE + CAMERAS','./sitrep.html#sec=cams'],['AIRPORT · YOW','./sitrep.html#sec=airport'],['LIVE TV','./sitrep.html#sec=tv'],['WORLD','./sitrep.html#sec=world'],['OSIRIS','./sitrep.html#sec=home&osiris=1']]},
+ {k:'deck',n:'COMMAND DECK',c:'#2FA866',href:'./deck.html',stops:[['DECK HOME','./deck.html#/deck'],['TEAM ROOM','./deck.html#/team'],['CLAUDE','./deck.html#/member/claude','CL','#D97757'],['CHATGPT','./deck.html#/member/chatgpt','CG','#10A37F'],['PERPLEXITY','./deck.html#/member/perplexity','PX','#20808D'],['GEMINI','./deck.html#/member/gemini','GE','#4285F4'],['OAKLEY HUB','./deck.html#/member/oakley','OK','#C9A227']]},
+ {k:'day',n:'DAYBOOK',c:'#D64541',href:'./daybook.html',stops:[['DAYBOOK HOME','./daybook.html#view=day'],['BUDGETING','./daybook.html#view=budget'],['INVESTMENTS','./daybook.html#view=invest'],['SECURITY','./daybook.html#view=security'],['CALENDAR','./daybook.html#view=calendar'],['HOME AUTOMATION','./daybook.html#view=automation'],['COMMUTE','./daybook.html#view=commute'],['TRUCK','./daybook.html#view=truck'],['SOCIAL','./daybook.html#view=social'],['NOTES & TO-DO','./daybook.html#view=notes'],['SHOPPING','./daybook.html#view=shopping']]},
+ {k:'wb',n:'WORKBENCH',c:'#3E8FE0',href:'./workbench.html',stops:[['BLUEPRINT','./workbench.html']]}];
+var CUR=wrap.getAttribute('data-cur')||'home';
+var BADGES=window.CW_BADGES||{};
+var sheet=$('#cwsheet'),dial=$('#cw-dial'),crumb=$('#cw-crumb'),sp=$('#cwsp'),sq=$('#cw-sq'),sres=$('#cw-sres');
+function pos(i,n){var a=(-90+i*360/n)*Math.PI/180,R=40.5;return[50+R*Math.cos(a),50+R*Math.sin(a)]}
+function centre(html,back){var c=document.createElement('div');c.className='cw-centre'+(back?' back':'');c.innerHTML=html;if(back){c.setAttribute('role','button');c.setAttribute('tabindex','0');c.setAttribute('aria-label','Back to all sections')}return c}
+function renderL1(){dial.innerHTML='';dial.style.setProperty('--rim','#3a3e44');crumb.textContent='CANOPY';
+ var curI=0;SEC.forEach(function(s,i){if(s.k===CUR)curI=i});
+ SEC.forEach(function(s,i){var p=pos(i,5),el=document.createElement(s.stops?'button':'a');el.className='cw-stop'+(s.k===CUR?' on':'');el.style.left=p[0]+'%';el.style.top=p[1]+'%';el.style.setProperty('--sc',s.c);el.setAttribute('aria-label',s.n);
+  if(!s.stops)el.href=s.href;
+  el.innerHTML='<span class="cw-dot">'+(s.k==='home'?'<img src="'+LOGO+'" alt="">':s.n.slice(0,2))+'</span><span class="cw-lab">'+s.n+'</span>'+(BADGES[s.k]?'<span class="cw-bdg">'+BADGES[s.k]+'</span>':'');
+  if(s.stops)el.addEventListener('click',function(){renderL2(s)});dial.appendChild(el)});
+ var cs=SEC[curI],c=centre('<img src="'+LOGO+'" alt=""><span style="color:'+cs.c+'">'+cs.n+'</span>');dial.appendChild(c);
+ var pt=document.createElement('div');pt.className='cw-ptr';pt.style.transform='rotate('+(curI*72)+'deg)';dial.appendChild(pt)}
+function renderL2(sec){dial.innerHTML='';dial.style.setProperty('--rim',sec.c);crumb.textContent='CANOPY › '+sec.n;
+ sec.stops.forEach(function(t,i){var p=pos(i,sec.stops.length),el=document.createElement('a');el.className='cw-stop';el.href=t[1];el.style.left=p[0]+'%';el.style.top=p[1]+'%';el.style.setProperty('--sc',t[3]||sec.c);el.setAttribute('aria-label',t[0]);
+  el.innerHTML='<span class="cw-dot">'+(t[2]||t[0].slice(0,2))+'</span><span class="cw-lab">'+t[0]+'</span>';dial.appendChild(el)});
+ var c=centre('<b>◂ BACK</b><span style="color:'+sec.c+'">'+sec.n+'</span>',true);
+ c.addEventListener('click',renderL1);c.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();renderL1()}});dial.appendChild(c)}
+function openSheet(){sp.hidden=true;renderL1();sheet.hidden=false}
+function closeAll(){sheet.hidden=true;sp.hidden=true}
+$('#cw-open').addEventListener('click',openSheet);
+$$('[data-cw="close"]',wrap).forEach(function(b){b.addEventListener('click',closeAll)});
+sheet.addEventListener('click',function(e){if(e.target.closest('a'))closeAll()});
+var ALL=[];SEC.forEach(function(s){ALL.push([s.n,s.n,s.href]);(s.stops||[]).forEach(function(t){ALL.push([t[0],s.n,t[1]])})});
+function sRender(){var q=(sq.value||'').trim().toLowerCase(),list=ALL.filter(function(x){return !q||x[0].toLowerCase().indexOf(q)>=0||x[1].toLowerCase().indexOf(q)>=0});
+ sres.innerHTML=list.length?list.map(function(x){return '<a class="cw-sr" href="'+x[2]+'"><span>'+x[0]+'</span><i>'+x[1]+'</i></a>'}).join(''):'<div class="cw-none">No section matches.</div>'}
+$('#cw-sopen').addEventListener('click',function(){sheet.hidden=true;sp.hidden=!sp.hidden;if(!sp.hidden){sRender();sq.focus()}});
+sq.addEventListener('input',sRender);
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeAll()});
+var ty=null;sheet.addEventListener('touchstart',function(e){ty=e.touches[0].clientY},{passive:true});
+sheet.addEventListener('touchend',function(e){if(ty!=null&&e.changedTouches[0].clientY-ty>60)closeAll();ty=null},{passive:true});
+})();
 </script>
 </body></html>

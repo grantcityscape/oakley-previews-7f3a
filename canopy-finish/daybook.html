@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data: 'self'; connect-src https:">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data: 'self'; connect-src https:; frame-src 'self'">
 <title>Daybook — Canopy</title>
 <style>
 :root{
@@ -1073,5 +1073,141 @@ var wxl=document.querySelector('.wxdoor .wxl');if(wxl){var i1=wxl.querySelector(
  wxRow();setInterval(wxRow,600000);setInterval(function(){if(fetchedAt&&Date.now()-fetchedAt>3600000&&i1&&!/STALE/.test(i1.textContent))i1.textContent+=' · STALE'},60000)}
 })();
 </script>
+<style id="cnd-r2-css">
+/* ===== CANOPY ROUND 2 (2026-11-21) — shared layer: door badges inside, diffuse glow,
+   hover lift / press at render, in-place switch motion, shell stage ===== */
+/* LINK badge: a small pill INSIDE the door's top-right corner — never above the door,
+   where the old .door::after inset:0 merge stretched it across the whole door face */
+.cnd{overflow:visible!important;flex-wrap:wrap!important;align-content:center!important;row-gap:.05rem!important}
+.cnd.linked::after{left:auto!important;bottom:auto!important;top:.3rem!important;right:.45rem!important;z-index:5}
+.cnd .nm{overflow:visible!important;text-overflow:clip!important;font-size:.72rem;letter-spacing:.04em;padding-right:56px}
+.cnd .ct{flex:1 1 100%!important;order:2;margin-left:0!important;border:0!important;padding:0!important;text-align:left;font-size:.56rem;letter-spacing:.07em}
+/* link flagging: 1px accent edge + 12px diffuse glow (no negative spread) + badge */
+.cnd.linked{box-shadow:0 0 0 1px var(--dc),0 0 12px color-mix(in srgb,var(--dc) 55%,transparent),0 .3rem .8rem rgb(0 0 0/.45)!important;animation:none!important}
+body .card.linked{box-shadow:0 0 0 1px rgba(250,204,21,.55),0 0 14px rgba(250,204,21,.42),0 .3rem .8rem rgb(0 0 0/.45)!important;animation:none!important}
+.row.linked,.row.shn.linked{box-shadow:0 0 0 1px var(--gold),0 0 12px color-mix(in srgb,var(--gold) 55%,transparent)!important}
+/* hover lift (doors 4px, cards/boxes 2px) + press .98 — transforms carry !important so the
+   load-in rise animations' fill cannot pin them (the round-1 failure) */
+.cnd{transition:transform 150ms ease,box-shadow 150ms ease,background-color 150ms ease,color 150ms ease,filter 150ms ease!important}
+.cnd:hover{transform:translateY(-4px)!important}
+.cnd:active{transform:scale(.98)!important;transition-duration:100ms!important}
+body .card,body .mbox{transition:transform 150ms ease,box-shadow 150ms ease,filter 150ms ease}
+body .card:hover,body .mbox:hover{transform:translateY(-2px)!important}
+body .card:active,body .mbox:active{transform:scale(.98)!important;transition-duration:100ms!important}
+/* in-place switch motion: 200ms crossfade + 8px rise */
+@keyframes cndfade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.cnd-rise{animation:cndfade 200ms ease-out!important}
+/* shell stage (host mode): the five sections live in iframes, crossfaded in place */
+#cnd-stage{position:fixed;inset:0;display:none;background:#060809;z-index:1}
+html.cnd-host #cnd-stage{display:block}
+html.cnd-host body>*:not(#cnd-stage){display:none!important}
+#cnd-stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity 200ms ease,transform 200ms ease,visibility 0s linear 200ms}
+#cnd-stage iframe.cnd-cur{opacity:1;visibility:visible;transform:translateY(0);transition:opacity 200ms ease,transform 200ms ease}
+@media (prefers-reduced-motion:reduce){
+ .cnd-rise{animation:none!important}
+ #cnd-stage iframe{transition:none!important}
+ .cnd,body .card,body .mbox{transition:none!important}
+}
+</style>
+<script>/* ===== CANOPY ROUND 2 SHELL — main section switches animate IN PLACE.
+   Whichever of the five section files is visited top-level becomes the host: it holds the
+   five sections in iframes and crossfades between them (200ms + 8px rise), each section
+   keeping its own state and scroll. Deep links and door URLs keep working: every file
+   still stands alone, and a section link clicked inside a frame asks the host to switch.
+   A frame that navigates itself to another section file (the apps' own JS doors) is
+   adopted by the host as that section, so no switch ever becomes a bare page load. ===== */
+(function(){'use strict';
+var FILES={home:'index.html',sitrep:'sitrep.html',deck:'deck.html',daybook:'daybook.html',workbench:'workbench.html'};
+var TITLES={home:'Home — Canopy',sitrep:'SITREP — Canopy',deck:'Command Deck — Canopy',daybook:'Daybook — Canopy',workbench:'Workbench — Canopy'};
+var me=(location.pathname.split('/').pop()||'index.html').toLowerCase();
+var myKey='home';for(var k in FILES)if(FILES[k]===me)myKey=k;
+var inFrame=false;try{inFrame=window.self!==window.top}catch(e){inFrame=true}
+var qs=new URLSearchParams(location.search);
+function fileOf(href){try{var u=new URL(href,location.href);if(u.origin!==location.origin)return null;var f=(u.pathname.split('/').pop()||'').toLowerCase();for(var k in FILES)if(FILES[k]===f)return{key:k,url:u};}catch(e){}return null}
+if(inFrame||qs.get('embed')==='1'||qs.get('shell')==='1'){
+  /* EMBED mode — this page is a section inside the shell (or an app window). */
+  window.__CND_EMBED=true;document.documentElement.classList.add('cnd-embed');
+  var hostKnown=false;
+  window.addEventListener('message',function(e){var d=e.data||{};
+    if(d.canopy==='host'){hostKnown=true;return}
+    if(!hostKnown)return;
+    if(d.canopy==='sec'&&typeof window.__cndGoSec==='function')window.__cndGoSec(d.sec);
+    if(d.canopy==='hash'&&d.hash&&d.hash.indexOf('#tab')!==0){try{location.hash=d.hash}catch(_){}}
+  });
+  document.addEventListener('click',function(e){
+    if(!hostKnown)return;
+    var a=e.target&&e.target.closest?e.target.closest('a[href]'):null;if(!a)return;
+    if(a.target&&a.target!=='_self')return;
+    var t=fileOf(a.getAttribute('href'));if(!t)return;
+    if(t.key===myKey){if(t.url.search||t.url.hash){e.preventDefault();try{window.top.postMessage({canopy:'switch',to:t.key,search:t.url.search,hash:t.url.hash},'*')}catch(_){}}return}
+    e.preventDefault();
+    try{window.top.postMessage({canopy:'switch',to:t.key,search:t.url.search,hash:t.url.hash},'*')}catch(_){}
+  },true);
+  return;
+}
+/* HOST mode — this visit stands as the shell. */
+document.documentElement.classList.add('cnd-host');
+function boot(){
+  var stage=document.createElement('div');stage.id='cnd-stage';document.body.appendChild(stage);
+  var frames={},assigned={},cur=null,curKey=null;
+  var MYIDS={};function myT(fn,ms){var id=setTimeout(fn,ms);MYIDS[id]=1;return id}
+  function srcFor(key,extra){var q=[];if(key==='sitrep'){q.push('shell=1','tab=1')}else{q.push('embed=1')}
+    if(extra&&extra.search){new URLSearchParams(extra.search).forEach(function(v,k2){if(['embed','shell','tab'].indexOf(k2)<0)q.push(encodeURIComponent(k2)+'='+encodeURIComponent(v))})}
+    return FILES[key]+'?'+q.join('&')+(extra&&extra.hash&&extra.hash.indexOf('#/')!==0?extra.hash:'')}
+  function frameKey(fr){try{var f=(fr.contentWindow.location.pathname.split('/').pop()||'').toLowerCase();for(var k in FILES)if(FILES[k]===f)return k}catch(e){}return null}
+  function tellHost(fr){try{fr.contentWindow.postMessage({canopy:'host'},'*')}catch(e){}}
+  function make(key,extra){var fr=document.createElement('iframe');fr.title=TITLES[key];fr.setAttribute('aria-label',TITLES[key]);
+    fr.addEventListener('load',function(){tellHost(fr);
+      var fk=frameKey(fr);
+      if(fk&&assigned[fr]&&fk!==assigned[fr]){ /* the app navigated this frame to another section itself — adopt it */
+        var old=assigned[fr];if(frames[old]===fr)frames[old]=null;
+        if(frames[fk]&&frames[fk]!==fr){/* another frame already holds that section; reset this one */assigned[fr]=old;fr.src=srcFor(old);return}
+        assigned[fr]=fk;frames[fk]=fr;cur=fr;curKey=fk;document.title=TITLES[fk];
+        try{history.replaceState({cnd:fk},'','#/'+fk)}catch(_){}
+      }});
+    assigned[fr]=key;frames[key]=fr;fr.src=srcFor(key,extra);stage.appendChild(fr);return fr}
+  function show(key,extra,push){
+    if(!FILES[key])key='home';
+    var fr=frames[key];
+    if(fr&&(frameKey(fr)!==key)){fr.remove();frames[key]=null;fr=null} /* drifted away (e.g. an app door left the section) — rebuild */
+    var fresh=!fr;if(fresh)fr=make(key,extra);
+    var prev=cur;
+    var reveal=function(){if(prev&&prev!==fr)prev.classList.remove('cnd-cur');fr.classList.add('cnd-cur');cur=fr;curKey=key;document.title=TITLES[key];
+      if(extra&&extra.hash&&extra.hash.indexOf('#/')!==0){try{fr.contentWindow.postMessage({canopy:'hash',hash:extra.hash},'*')}catch(_){}}
+      if(push!==false){try{history.pushState({cnd:key},'','#/'+key)}catch(_){}}};
+    if(fresh){fr.addEventListener('load',function(){myT(reveal,30)});myT(function(){if(cur!==fr)reveal()},2500)}
+    else reveal();
+  }
+  window.addEventListener('message',function(e){var d=e.data||{};
+    if(d.canopy==='switch'&&FILES[d.to]){show(d.to,{search:d.search,hash:d.hash},true)}});
+  window.addEventListener('popstate',function(e){var k2=e.state&&e.state.cnd;if(k2&&FILES[k2])show(k2,null,false)});
+  /* The host's own copy of the app is inert chrome (hidden; the framed copy is the live one).
+     Stop the host copy's timers: every timer the app created before this script ran has an id
+     below the snapshot, and a second snapshot sweep catches stragglers — the shell's own
+     timers are registered in MYIDS and never cleared. */
+  var snap=myT(function(){},0);
+  var start=myKey,hm=/^#\/([a-z]+)/.exec(location.hash||'');
+  if(hm&&FILES[hm[1]])start=hm[1];
+  show(start,{search:location.search,hash:(location.hash&&location.hash.indexOf('#/')!==0)?location.hash:''},false);
+  try{history.replaceState({cnd:start},'','/'+location.pathname.split('/').pop()+'#/'+start)}catch(_){}
+  function sweepTo(limit){for(var i=1;i<=limit;i++){if(!MYIDS[i]){clearInterval(i);clearTimeout(i)}}}
+  myT(function(){sweepTo(snap)},350);
+  myT(function(){var snap2=myT(function(){},0);myT(function(){sweepTo(snap2)},60)},1400);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+})();</script>
+
+
+<style id="cnd-r2-daybook">
+/* ===== ROUND 2 · DAYBOOK — one-row canonical bar; doors stop spilling over the page ===== */
+header{height:60px!important;overflow:visible!important}
+#doors{display:flex!important;flex-wrap:nowrap!important;gap:.45rem!important;align-items:stretch!important;height:52px!important;min-height:0!important}
+#doors .cnd{flex:1 1 0!important;min-width:0!important;justify-content:flex-start!important;text-align:left!important}
+.hctl{flex:none!important}
+#clock-d{display:none!important}
+/* the floating Oakley button sits fully inside the viewport, above the footer */
+.abub{bottom:4.2rem!important;right:1rem!important}
+</style>
+
 </body>
 </html>

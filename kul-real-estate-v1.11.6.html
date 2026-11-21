@@ -2381,7 +2381,7 @@ function openClientUpload(cid,aid){var c=store.clients.find(function(x){return x
  if(ttl){ttl.textContent=a.title||a.name||'Attached file';}
  if(dl){dl.href=r.url;dl.setAttribute('download',a.name||a.title||'attachment');}
  if(mime.indexOf('image/')===0){var im=document.createElement('img');im.src=r.url;im.alt=a.title||'';body.appendChild(im);}
- else if(mime==='application/pdf'){var ob=document.createElement('object');ob.data=r.url;ob.type='application/pdf';var fr=document.createElement('iframe');fr.src=r.url;fr.title=a.title||'PDF document';ob.appendChild(fr);body.appendChild(ob);}
+ else if(mime==='application/pdf'){var ob=document.createElement('object');ob.data=r.url;ob.type='application/pdf';var fr=document.createElement('iframe');fr.src=r.url;fr.title=a.title||'PDF document';ob.appendChild(fr);var pw=document.createElement('div');pw.style.cssText='display:flex;flex-direction:column;width:100%;height:100%';ob.style.cssText='flex:1 1 auto;width:100%;height:auto;min-height:0';pw.appendChild(ob);var pn=document.createElement('p');pn.className='attv-note';pn.style.cssText='flex:none;padding:.6rem 1rem;font-size:.9rem';pn.textContent='If this PDF does not appear above, use Download to save a copy and open it in your PDF app \u2014 PDFs can\'t be displayed inside the app on a phone. The file itself is stored safely on this record.';pw.appendChild(pn);body.appendChild(pw);}
  else if(mime.indexOf('video/')===0){var vd=document.createElement('video');vd.src=r.url;vd.controls=true;vd.autoplay=true;body.appendChild(vd);}
  else{body.innerHTML='<p class="attv-note">This file can\'t be shown inside the app — use Download above to open it on this device.</p>';}
  v.classList.add('open');}

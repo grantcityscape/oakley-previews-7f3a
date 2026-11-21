@@ -220,6 +220,27 @@ a.syslbl{text-decoration:none}a.syslbl:hover,a.syslbl:focus-visible{color:#facc1
 @media (max-width:760px){.wxdoor .wxl{display:none}}
 @media (max-width:760px){.sdoor .sc{display:none}.sdoor .tk{display:none}.sdoors{gap:.55rem}.sdoor{letter-spacing:.07em}.sysbar{gap:.55rem}.sysbar .syslbl{letter-spacing:.12em}}
 </style>
+<style id="canopy-depth-layer">
+/* ===== CANOPY DEPTH LAYER · 2026-11-21 · Grant's 3D depth + colour + motion direction.
+   Purely visual: layered depth, richer accent presence, entrance/hover motion.
+   No layout, structure, data, or logic changes. All animation is disabled under
+   prefers-reduced-motion. ===== */
+body .shelf{box-shadow:0 .5rem 1.3rem rgb(0 0 0/.5),0 .08rem .3rem rgb(0 0 0/.5),inset 0 1px 0 rgb(255 255 255/.05),inset 0 -.6rem 1.2rem rgb(0 0 0/.18)}
+body .shelf .card{box-shadow:0 .3rem .8rem rgb(0 0 0/.45),0 .05rem .2rem rgb(0 0 0/.5),inset 0 1px 0 rgb(255 255 255/.05);transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
+body .sysbar{box-shadow:0 .22rem .6rem rgb(0 0 0/.42),inset 0 1px 0 rgb(255 255 255/.05)}
+body .btn{box-shadow:0 .15rem .4rem rgb(0 0 0/.42),inset 0 1px 0 rgb(255 255 255/.08);transition:box-shadow .2s ease,filter .2s ease,background-color .2s ease}
+body .btn:hover{filter:brightness(1.13);box-shadow:0 .3rem .75rem rgb(0 0 0/.5),0 0 .8rem rgb(var(--wb)/.28),inset 0 1px 0 rgb(255 255 255/.09)}
+body .sdoor{transition:color .2s ease,text-shadow .2s ease,border-color .2s ease}
+body .sdoor:hover{text-shadow:0 0 .6rem rgb(var(--wb)/.55)}
+body .ib{box-shadow:inset 0 1px 0 rgb(255 255 255/.05),0 .1rem .3rem rgb(0 0 0/.35)}
+@keyframes cdp-rise{from{opacity:0;transform:translateY(.35rem)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: no-preference){
+  body .shelf .card{animation:cdp-rise .45s cubic-bezier(.2,.9,.25,1) both}
+}
+@media (prefers-reduced-motion: reduce){
+  body .shelf .card,body .btn,body .sdoor{transition:none}
+}
+</style>
 </head><body>
 <div class="bench" id="bench">
  <div class="sysbar"><a class="syslbl" id="sl-canopy" href="./index.html" aria-label="Canopy — Home"><img class="sl-logo nb-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true"><span class="chrome-wm">CANOPY</span></a><span class="syssep" aria-hidden="true"></span><nav class="sdoors" id="doors" aria-label="Sections"></nav><span class="syssnap" aria-hidden="true">SNAPSHOT · KÜL LIVE PWA · BLUEPRINT OWN APP · TRELLIS 7 PLANNED</span></div>

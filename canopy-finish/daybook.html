@@ -229,6 +229,30 @@ nav#doors{grid-template-columns:repeat(3,minmax(0,1fr))}
 .door .snap .gg .gp{font-size:.6rem;font-weight:700;color:var(--ink2);white-space:nowrap}
 @media (max-width:900px){.hctl{flex-wrap:wrap}}
 </style>
+<style id="canopy-depth-layer">
+/* ===== CANOPY DEPTH LAYER · 2026-11-21 · Grant's 3D depth + colour + motion direction.
+   Purely visual: layered depth, richer accent presence, entrance/hover motion.
+   No layout, structure, data, or logic changes. All animation is disabled under
+   prefers-reduced-motion. ===== */
+body .card{box-shadow:0 .35rem .9rem rgb(0 0 0/.45),0 .06rem .22rem rgb(0 0 0/.5),inset 0 1px 0 rgb(255 255 255/.05),inset 0 -.5rem 1rem rgb(0 0 0/.16);transition:box-shadow .3s ease,border-color .3s ease}
+body .card:hover{box-shadow:0 .5rem 1.15rem rgb(0 0 0/.52),0 .06rem .22rem rgb(0 0 0/.5),inset 0 1px 0 rgb(255 255 255/.065),inset 0 -.5rem 1rem rgb(0 0 0/.16)}
+body .ent{box-shadow:inset 0 .25rem .55rem rgb(0 0 0/.28),inset 0 -1px 0 rgb(255 255 255/.025);transition:box-shadow .2s ease}
+body .door{box-shadow:0 .25rem .65rem rgb(0 0 0/.45),inset 0 1px 0 rgb(255 255 255/.06);transition:box-shadow .25s ease,filter .25s ease}
+body .door:hover{filter:brightness(1.1);box-shadow:0 .4rem .95rem rgb(0 0 0/.52),0 0 .85rem color-mix(in srgb,var(--dc,#444) 42%,transparent),inset 0 1px 0 rgb(255 255 255/.07)}
+body .cam{box-shadow:inset 0 0 1.4rem rgb(0 0 0/.65),inset 0 1px 0 rgb(255 255 255/.05),0 .15rem .4rem rgb(0 0 0/.4)}
+body .pill{box-shadow:0 0 .5rem rgb(201 162 39/.16),inset 0 1px 0 rgb(255 255 255/.08)}
+body .btn{box-shadow:0 .12rem .35rem rgb(0 0 0/.4),inset 0 1px 0 rgb(255 255 255/.07);transition:box-shadow .2s ease,filter .2s ease}
+body .btn:hover{filter:brightness(1.13)}
+body .tag{box-shadow:0 .06rem .2rem rgb(0 0 0/.35),inset 0 1px 0 rgb(255 255 255/.08)}
+@keyframes cdp-rise{from{opacity:0;transform:translateY(.3rem)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: no-preference){
+  body .view .card{animation:cdp-rise .4s cubic-bezier(.2,.9,.25,1) both}
+  body .view .ent{animation:cdp-rise .35s cubic-bezier(.2,.9,.25,1) both}
+}
+@media (prefers-reduced-motion: reduce){
+  body .card,body .door,body .btn,body .ent{transition:none}
+}
+</style>
 </head>
 <body>
 <header>

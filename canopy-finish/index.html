@@ -413,6 +413,51 @@ html.stk .doors,html.stk.c2 .doors{grid-auto-rows:auto}
 .chrono .wxdoor:hover .wxt{color:var(--amber)}
 @media (max-width:760px){.cstrip a{padding:0 .35rem;letter-spacing:.06em}}
 </style>
+<style id="canopy-depth-layer">
+/* ===== CANOPY DEPTH LAYER · 2026-11-21 · Grant's 3D depth + colour + motion direction.
+   Purely visual: layered depth, richer accent presence, entrance/hover/link motion.
+   No layout, structure, data, or logic changes. All animation is disabled under
+   prefers-reduced-motion. ===== */
+body .card{box-shadow:0 .32rem .85rem rgb(0 0 0/.42),0 .06rem .22rem rgb(0 0 0/.5),inset 0 1px 0 rgb(255 255 255/.045),inset 0 -.5rem 1.1rem rgb(0 0 0/.14);transition:box-shadow .3s ease,border-color .3s ease}
+body .card:hover{border-color:#2c2c32;box-shadow:0 .45rem 1.05rem rgb(0 0 0/.5),0 .06rem .22rem rgb(0 0 0/.5),0 0 .85rem rgb(var(--a)/.16),inset 0 1px 0 rgb(255 255 255/.06),inset 0 -.5rem 1.1rem rgb(0 0 0/.14)}
+body .card.xp{box-shadow:0 0 0 1px #000,0 1.2rem 3rem rgb(0 0 0/.65),0 0 2.5rem rgb(0 0 0/.85),0 0 1.6rem rgb(var(--a)/.22)}
+body .hd{box-shadow:inset 0 -1px 0 rgb(0 0 0/.35),inset 0 1px 0 rgb(255 255 255/.05)}
+body .bd{box-shadow:inset 0 .35rem .7rem rgb(0 0 0/.26)}
+body .door{box-shadow:0 .22rem .6rem rgb(0 0 0/.4),inset 0 1px 0 rgb(255 255 255/.05)}
+body .door:hover{box-shadow:0 .35rem .85rem rgb(0 0 0/.5),0 0 1rem rgb(var(--d)/.30),inset 0 1px 0 rgb(255 255 255/.07)}
+body .kv,body .dy,body .hl{box-shadow:inset 0 1px 0 rgb(255 255 255/.035),0 .12rem .32rem rgb(0 0 0/.35)}
+body .rw{box-shadow:inset 0 1px 0 rgb(255 255 255/.03)}
+body .ev{box-shadow:inset 0 1px 0 rgb(255 255 255/.03),0 .1rem .3rem rgb(0 0 0/.3)}
+body .cam,body .cb{box-shadow:inset 0 0 1.6rem rgb(0 0 0/.5),inset 0 1px 0 rgb(255 255 255/.05),0 .15rem .4rem rgb(0 0 0/.4)}
+body .btn{box-shadow:0 .12rem .35rem rgb(0 0 0/.4),inset 0 1px 0 rgb(255 255 255/.07);transition:box-shadow .2s ease,filter .2s ease,background-color .2s ease,color .2s ease,border-color .2s ease}
+body .btn:hover{filter:brightness(1.14)}
+body .pill{box-shadow:0 .08rem .25rem rgb(0 0 0/.4),inset 0 1px 0 rgb(255 255 255/.14)}
+body .bar2{box-shadow:inset 0 .3rem .55rem rgb(0 0 0/.4),inset 0 -.2rem .4rem rgb(0 0 0/.3),inset 0 1px 0 rgb(255 255 255/.05)}
+body .ring{filter:drop-shadow(0 .12rem .3rem rgb(0 0 0/.55))}
+body .rnode{box-shadow:0 .3rem .8rem rgb(0 0 0/.45),inset 0 1px 0 rgb(255 255 255/.05)}
+body .lkstrip{box-shadow:0 .2rem .55rem rgb(0 0 0/.35),inset 0 1px 0 rgb(255 255 255/.05)}
+@keyframes cdp-rise{from{opacity:0;transform:translateY(.35rem)}to{opacity:1;transform:none}}
+@keyframes cdp-linkpulse{0%,100%{box-shadow:0 0 0 1px rgba(250,204,21,.55),0 0 .8rem rgba(250,204,21,.22),0 .3rem .8rem rgb(0 0 0/.45)}50%{box-shadow:0 0 0 1px rgba(250,204,21,.85),0 0 1.6rem rgba(250,204,21,.45),0 .3rem .8rem rgb(0 0 0/.45)}}
+@keyframes cdp-badgepulse{0%,100%{box-shadow:0 0 .55rem rgba(250,204,21,.4),0 .1rem .3rem rgb(0 0 0/.4)}50%{box-shadow:0 0 1.05rem rgba(250,204,21,.65),0 .1rem .3rem rgb(0 0 0/.4)}}
+@keyframes cdp-led{from{box-shadow:0 0 .3rem rgb(var(--a)/.7),0 0 .1rem rgb(var(--a))}to{box-shadow:0 0 .55rem rgb(var(--a)/.95),0 0 .16rem rgb(var(--a))}}
+@media (prefers-reduced-motion: no-preference){
+  body .doors .door{animation:cdp-rise .5s cubic-bezier(.2,.9,.25,1) both}
+  body .doors .door:nth-child(2){animation-delay:.05s}
+  body .doors .door:nth-child(3){animation-delay:.1s}
+  body .doors .door:nth-child(4){animation-delay:.15s}
+  body .doors .door:nth-child(5){animation-delay:.2s}
+  body .col .card{animation:cdp-rise .55s cubic-bezier(.2,.9,.25,1) both}
+  body .col .card:nth-child(2){animation-delay:.06s}
+  body .col .card:nth-child(3){animation-delay:.12s}
+  body .col .card:nth-child(4){animation-delay:.18s}
+  body .card.linked{animation:cdp-linkpulse 2.8s ease-in-out infinite}
+  body .lkbadge{animation:cdp-badgepulse 2.8s ease-in-out infinite}
+  body .led{animation:cdp-led 3.2s ease-in-out infinite alternate}
+}
+@media (prefers-reduced-motion: reduce){
+  body .card,body .door,body .btn{transition:none}
+}
+</style>
 </head><body>
 <div class="bridge" id="bridge">
  <header class="top"><a class="hlogo" href="./index.html" aria-label="Canopy — Home" title="Home"><img class="nblogo" src="./assets/northbirch-head-only-v10.svg" alt="Northbirch — Oakley"></a><div class="chrono"><b id="ck" class="num">--:--:--</b><span><i id="dt">---</i><i id="ut">---</i><i class="chrome-wm" aria-hidden="true">CANOPY</i></span><a class="wxdoor" href="#win=weather" data-win="weather" aria-label="Weather, Ottawa — opens the Weather window" title="Weather — opens the Weather window"><span class="wx" aria-hidden="true"><svg viewBox="0 0 48 30"><g class="rays" stroke="#FACC15" stroke-width="2.4" stroke-linecap="round" fill="none"><path d="M14 2v4M5 6l3 3M23 6l-3 3M2 15h4"/></g><circle cx="14" cy="15" r="5.4" fill="#FACC15"/><path class="cld" d="M20 24.6h17.4a4.9 4.9 0 0 0 .8-9.7 8.2 8.2 0 0 0-15.7-1.6A5.4 5.4 0 0 0 20 24.6Z" fill="#dfe9f5"/></svg></span><span class="wxt num" id="ckwx-t">--°</span><span class="wxc" id="ckwx-c">OTTAWA</span><span class="wxg" aria-hidden="true">▸</span></a></div><nav class="doors" id="doors" aria-label="Sections"></nav></header>

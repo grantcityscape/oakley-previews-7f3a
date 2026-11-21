@@ -300,6 +300,36 @@ html.stk .doors{grid-auto-rows:auto}
 .chrono .wxdoor .wxc{font:600 .52rem/1.1 var(--fm);letter-spacing:.07em;color:var(--ts);white-space:nowrap}
 .chrono .wxdoor:hover .wxt{color:rgb(var(--r-db))}
 </style>
+<style id="canopy-depth-layer">
+/* ===== CANOPY DEPTH LAYER · 2026-11-21 · Grant's 3D depth + colour + motion direction.
+   Purely visual: layered depth, richer accent presence, entrance/hover motion.
+   No layout, structure, data, or logic changes. All animation is disabled under
+   prefers-reduced-motion. ===== */
+body .card{box-shadow:0 .32rem .85rem rgb(0 0 0/.42),0 .06rem .22rem rgb(0 0 0/.5),inset 0 1px 0 rgb(255 255 255/.045),inset 0 -.5rem 1.1rem rgb(0 0 0/.14);transition:box-shadow .3s ease,border-color .3s ease}
+body .card:hover{border-color:#22344a;box-shadow:0 .45rem 1.05rem rgb(0 0 0/.5),0 .06rem .22rem rgb(0 0 0/.5),inset 0 1px 0 rgb(255 255 255/.06),inset 0 -.5rem 1.1rem rgb(0 0 0/.14)}
+body .portal{box-shadow:0 .28rem .75rem rgb(0 0 0/.42),inset 0 1px 0 rgb(255 255 255/.05),inset 0 -.4rem .9rem rgb(0 0 0/.14);transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
+body .portal:hover{transform:translateY(-1px);box-shadow:0 .5rem 1.1rem rgb(0 0 0/.52),0 0 .85rem rgb(var(--r-db)/.22),inset 0 1px 0 rgb(255 255 255/.07),inset 0 -.4rem .9rem rgb(0 0 0/.14)}
+body .pane{box-shadow:inset 0 .3rem .65rem rgb(0 0 0/.3),inset 0 1px 0 rgb(0 0 0/.25)}
+body .lane{box-shadow:inset 0 .2rem .45rem rgb(0 0 0/.35)}
+body .lamp{box-shadow:inset 0 1px 0 rgb(255 255 255/.06),0 .08rem .25rem rgb(0 0 0/.35)}
+body .door{box-shadow:0 .22rem .6rem rgb(0 0 0/.4),inset 0 1px 0 rgb(255 255 255/.05)}
+body .door:hover{box-shadow:0 .35rem .85rem rgb(0 0 0/.5),0 0 1rem rgb(var(--d)/.30),inset 0 1px 0 rgb(255 255 255/.07)}
+body .btn{box-shadow:0 .12rem .35rem rgb(0 0 0/.4),inset 0 1px 0 rgb(255 255 255/.07);transition:box-shadow .2s ease,filter .2s ease,background-color .2s ease,color .2s ease,border-color .2s ease}
+body .btn:hover{filter:brightness(1.14)}
+body .pill{box-shadow:0 .08rem .25rem rgb(0 0 0/.4),inset 0 1px 0 rgb(255 255 255/.14)}
+@keyframes cdp-rise{from{opacity:0;transform:translateY(.35rem)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: no-preference){
+  body .doors .door{animation:cdp-rise .5s cubic-bezier(.2,.9,.25,1) both}
+  body .doors .door:nth-child(2){animation-delay:.05s}
+  body .doors .door:nth-child(3){animation-delay:.1s}
+  body .doors .door:nth-child(4){animation-delay:.15s}
+  body .doors .door:nth-child(5){animation-delay:.2s}
+  body .view .card,body .view .portal{animation:cdp-rise .45s cubic-bezier(.2,.9,.25,1) both}
+}
+@media (prefers-reduced-motion: reduce){
+  body .card,body .portal,body .door,body .btn{transition:none}
+}
+</style>
 </head><body>
 <nav class="cstrip" id="cstrip" aria-label="Canopy destinations"><a href="./index.html" data-door="canopy">CANOPY</a><a href="./daybook.html" data-door="day">DAYBOOK</a><a href="./workbench.html" data-door="wb">WORKBENCH</a><span class="sp"></span></nav>
 <div class="bridge" id="bridge">

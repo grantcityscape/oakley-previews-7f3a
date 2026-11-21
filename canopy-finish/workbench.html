@@ -104,9 +104,7 @@ html[data-theme=light] .shelf{box-shadow:inset 0 .1rem .8rem rgb(20 40 80/.12)}
 .err{color:rgb(var(--cr));font:700 .7rem var(--fm)}
 .toast{position:fixed;left:50%;bottom:3.6rem;transform:translateX(-50%);z-index:60;max-width:min(36rem,92vw);padding:.55rem .8rem;border-radius:.3rem;background:var(--cell);border:1px solid rgb(var(--wb)/.7);font:.76rem/1.35 var(--fs);color:var(--tp);box-shadow:0 .6rem 2rem rgb(0 0 0/.5)}
 /* ---------- opening ---------- */
-#open{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:radial-gradient(ellipse 80% 60% at 50% 40%,#0d2145,#03070f 75%);overflow:hidden;cursor:pointer;transition:opacity .5s}
-#open.out{opacity:0;pointer-events:none}
-#open::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at center,rgb(120 170 240/.2) .07rem,transparent .09rem) 0 0/1.3rem 1.3rem;mask:radial-gradient(ellipse 70% 60% at 50% 50%,#000,transparent 80%);-webkit-mask:radial-gradient(ellipse 70% 60% at 50% 50%,#000,transparent 80%)}
+
 .os{position:relative;width:min(72rem,94vw);max-height:92vh;display:flex;flex-direction:column;align-items:center;gap:1rem}
 .os svg.sc{width:100%;height:auto;max-height:46vh;display:block;overflow:visible}
 .os .ln1{fill:none;stroke:rgb(147 190 255);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;animation:dr 1s ease forwards}
@@ -199,7 +197,7 @@ a.syslbl{text-decoration:none}a.syslbl:hover,a.syslbl:focus-visible{color:#facc1
 .wheelbtn .nb-head{width:64%;height:64%;border-radius:50%}
 .nw-hub .nb-head{width:84%;height:84%;border-radius:50%}
 .nw-st .nb-head{width:54%;height:54%;border-radius:50%}
-.lockup img{height:2.9rem;width:auto;display:block}
+.lockup{display:flex;align-items:center;gap:.55rem;line-height:1.1;overflow:visible}.lockup .lg-head{height:2.9rem;width:2.9rem;display:block}.wb-cword{font:800 1.12rem var(--fd);letter-spacing:.32em;color:#F2EDDB}.intro .lg .lg-head{display:block;width:8.5rem;height:8.5rem;margin:0 auto .5rem}.intro .lg .wb-cword{display:block;text-align:center;font-size:1.6rem}
 </style><style>
 /* ===== sysbar snapshots · Home tab treatment · SITREP door · weather door (Grant 2026-11-18, 19:21-19:26 rulings) ===== */
 .syslbl{display:inline-flex;align-items:center;gap:.45rem;text-decoration:none}
@@ -241,26 +239,26 @@ body .ib{box-shadow:inset 0 1px 0 rgb(255 255 255/.05),0 .1rem .3rem rgb(0 0 0/.
   body .shelf .card,body .btn,body .sdoor{transition:none}
 }
 </style>
+<style id="enrich-2026-11-21">
+/* ENRICHMENT 2026-11-21 (Gemini spec): app buttons lift 2px @150ms, press scale .98 @100ms; Empire Map edges = .lk 1px-class connectors with colour-coded nodes (base) */
+body .btn{transition:transform 150ms ease,box-shadow 150ms ease,filter 150ms ease}
+body .btn:hover{transform:translateY(-2px)}
+body .btn:active{transform:scale(.98);transition-duration:100ms}
+</style>
+<style>@keyframes pgin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}body{animation:pgin 200ms ease-out}@media (prefers-reduced-motion:reduce){body{animation:none}}</style>
 </head><body>
 <div class="bench" id="bench">
- <div class="sysbar"><a class="syslbl" id="sl-canopy" href="./index.html" aria-label="Canopy — Home"><img class="sl-logo nb-head" src="./assets/northbirch-head-only-v11.svg" alt="" aria-hidden="true"><span class="chrome-wm">CANOPY</span></a><span class="syssep" aria-hidden="true"></span><nav class="sdoors" id="doors" aria-label="Sections"></nav><span class="syssnap" aria-hidden="true">SNAPSHOT · KÜL LIVE PWA · BLUEPRINT OWN APP · TRELLIS 7 PLANNED</span></div>
- <header class="top"><a class="hlogo" id="hm-logo" aria-label="Northbirch — return to Home" title="Home"><img class="nb-head" src="./assets/northbirch-head-only-v11.svg" alt="" aria-hidden="true"></a><div class="lockup" id="hm-lockup" data-logo-slot="masthead-lockup" role="img" aria-label="Northbirch — the Canopy logo"></div><a class="chrono" id="hm-clock" aria-label="Clock — return to Home" title="Home (clock shows this device's time)"><b id="ck" class="num">--:--:--</b><span><i id="dt">---</i><i id="ut">---</i></span></a><a class="wxdoor" href="./index.html#win=weather" aria-label="Weather — snapshot, Ottawa; opens the Weather window on Canopy Home" title="Weather — snapshot, Ottawa · opens the Weather window"><span class="wx" aria-hidden="true" title="Weather — snapshot, Ottawa (this standalone file shows a snapshot, not live weather)"><svg viewBox="0 0 48 30"><g class="rays" stroke="rgb(var(--gold))" stroke-width="1.7" stroke-linecap="round"><path d="M23.5 12h3M21.3 17.3l2.1 2.1M16 19.5v3M10.7 17.3l-2.1 2.1M8.5 12h-3M10.7 6.7L8.6 4.6M16 4.5v-3M21.3 6.7l2.1-2.1"/></g><circle cx="16" cy="12" r="5.4" fill="rgb(var(--gold))"/><g class="cld"><path d="M24.5 25.5h17.2a4.6 4.6 0 0 0 .9-9.1A7.2 7.2 0 0 0 29 12.6a5.6 5.6 0 0 0-4.5 12.9z" fill="rgb(var(--silver))"/></g></svg><span class="wxl"><i>SNAPSHOT</i><i>OTTAWA</i></span></span><span class="wxg" aria-hidden="true">▸</span></a></header>
+ <div class="sysbar"><a class="syslbl" id="sl-canopy" href="./index.html" aria-label="Canopy — Home"><img class="sl-logo nb-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true"><span class="chrome-wm">CANOPY</span></a><span class="syssep" aria-hidden="true"></span><nav class="sdoors" id="doors" aria-label="Sections"></nav></div>
+ <header class="top"><a class="hlogo" id="hm-logo" aria-label="Canopy — return to Home" title="Home"><img class="nb-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true"></a><div class="lockup" id="hm-lockup" data-logo-slot="masthead-brand" role="img" aria-label="Canopy"></div><a class="chrono" id="hm-clock" aria-label="Clock — return to Home" title="Home (clock shows this device's time)"><b id="ck" class="num">--:--:--</b><span><i id="dt">---</i><i id="ut">---</i></span></a><a class="wxdoor" href="./index.html#win=weather" aria-label="Weather — snapshot, Ottawa; opens the Weather window on Canopy Home" title="Weather — snapshot, Ottawa · opens the Weather window"><span class="wx" aria-hidden="true" title="Weather — snapshot, Ottawa (this standalone file shows a snapshot, not live weather)"><svg viewBox="0 0 48 30"><g class="rays" stroke="rgb(var(--gold))" stroke-width="1.7" stroke-linecap="round"><path d="M23.5 12h3M21.3 17.3l2.1 2.1M16 19.5v3M10.7 17.3l-2.1 2.1M8.5 12h-3M10.7 6.7L8.6 4.6M16 4.5v-3M21.3 6.7l2.1-2.1"/></g><circle cx="16" cy="12" r="5.4" fill="rgb(var(--gold))"/><g class="cld"><path d="M24.5 25.5h17.2a4.6 4.6 0 0 0 .9-9.1A7.2 7.2 0 0 0 29 12.6a5.6 5.6 0 0 0-4.5 12.9z" fill="rgb(var(--silver))"/></g></svg><span class="wxl"><i>SNAPSHOT</i><i>OTTAWA</i></span></span><span class="wxg" aria-hidden="true">▸</span></a></header>
  <main class="stage">
   <section class="pic" aria-label="The bench at a glance"><div class="ttl"><span class="eb">CANOPY</span><span class="h1" id="h1">THE BENCH</span></div><div class="chips" id="chips"></div><div class="rt"><div class="pager" id="pager" hidden><button class="ib" id="pg-p" aria-label="Previous page">◂</button><span id="pg-n">1/1</span><button class="ib" id="pg-x" aria-label="Next page">▸</button></div><button class="ib egg" id="egg" aria-label="The whole picture" title="the whole picture" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="5" cy="6" r="2.2" fill="currentColor"/><circle cx="19" cy="5" r="2.2" fill="currentColor"/><circle cx="12" cy="19" r="2.2" fill="currentColor"/><circle cx="12" cy="11" r="1.5"/><path d="M6.6 7.3l4.2 2.8M17.4 6.4l-4.2 3.8M12 12.5V16.8"/></svg></button></div></section>
   <section class="shelf" id="shelf" aria-label="Shelf of businesses"></section>
  </main>
  <footer class="foot"><div class="seg" role="group" aria-label="Preview which owner's bench"><button id="i-grant" aria-pressed="true" data-a="inst:grant">GRANT'S BENCH</button><button id="i-johnny" aria-pressed="false" data-a="inst:johnny">JOHNNY'S BENCH</button></div><span class="sv" id="sv"></span><button class="btn q" id="th" data-a="theme" aria-label="Switch theme">☾ NIGHT</button><button class="btn" id="talk" data-a="talk"><span id="talk-n">TALK TO OAKLEY</span><span class="nc">SHELL</span></button></footer>
 </div>
-<div id="open" role="presentation"><div class="os"><svg class="sc" viewBox="0 0 800 270" aria-hidden="true"><path class="ln1" pathLength="1" d="M20 190H780"/><path class="ln1" pathLength="1" style="animation-delay:.25s" d="M20 200H780" opacity=".4"/>
-<g transform="translate(58 150)"><g class="tool" style="animation-delay:.7s"><rect x="0" y="0" width="66" height="27" rx="13.5" fill="#d99a35"/><path d="M11 4.5v18M25 3v21M39 3v21" stroke="#a96f1d" stroke-width="4" stroke-linecap="round"/><rect x="66" y="9.5" width="12" height="8" fill="#8ea6cf"/><path d="M78 11h80v5H78z" fill="#c7d3e6"/><path d="M158 11l24 2.5-24 2.5z" fill="#8ea6cf"/></g></g>
-<g transform="translate(258 60)"><g class="tool" style="animation-delay:1s"><path d="M0 0h27v83h83v27H0z" fill="#7fb0e8" stroke="#4a76ad" stroke-width="2"/><path d="M21 10h6M21 20h6M18 30h9M21 40h6M21 50h6M18 60h9M21 70h6M37 89v-6M47 89v-6M57 92v-9M67 89v-6M77 89v-6M87 92v-9M97 89v-6" stroke="#2c4a73" stroke-width="2"/></g></g>
-<g transform="translate(392 138)"><g class="tool" style="animation-delay:1.3s"><rect x="0" y="0" width="212" height="36" rx="7" fill="#d9a92c"/><rect x="0" y="0" width="16" height="36" rx="7" fill="#26303c"/><rect x="196" y="0" width="16" height="36" rx="7" fill="#26303c"/><rect x="30" y="11" width="34" height="14" rx="7" fill="#cdeecd"/><rect x="89" y="11" width="46" height="14" rx="7" fill="#cdeecd"/><rect x="160" y="11" width="34" height="14" rx="7" fill="#cdeecd"/><rect x="43" y="11" width="8" height="14" fill="#f6fdf3"/><rect x="107" y="11" width="10" height="14" fill="#f6fdf3"/><rect x="173" y="11" width="8" height="14" fill="#f6fdf3"/></g></g>
-<g transform="translate(650 66)"><g class="tool" style="animation-delay:1.6s"><rect x="1" y="-26" width="18" height="12" rx="5" fill="#e58aa0"/><rect x="0" y="-14" width="20" height="11" fill="#b9c6d8"/><path d="M5 -14v11M15 -14v11" stroke="#8494ab" stroke-width="2"/><rect x="0" y="-3" width="20" height="88" fill="#e8b93b"/><path d="M6.7 -3v85M13.3 -3v85" stroke="#c1912a" stroke-width="2"/><path d="M0 85L10 110L20 85z" fill="#ecd3a3"/><path d="M6.8 101.5L10 110L13.2 101.5z" fill="#2b3440"/></g></g>
-<path class="tl" pathLength="1" style="animation-delay:1.9s" d="M20 190l30-22M780 190l-30-22"/></svg>
-<div class="pls" id="o-pls"></div><div class="wm">WORKBENCH</div><div class="sb" id="o-sb">WHERE THE WORK LIVES</div><div class="sk">TAP ANYWHERE TO SKIP</div></div></div>
 <div id="sheetHost"></div><div id="toastHost"></div><div id="empHost"></div>
 
-<template id="logo-lockup-src"><img src="./assets/northbirch-lockup-reversed.svg" alt="NORTHBIRCH" width="2106" height="798"></template>
+
 <script>(function(){'use strict';
 /* ============ config: the only places an address lives ============ */
 const CFG={doors:{home:'./index.html',deck:'./deck.html',day:'./daybook.html',sitrep:'./sitrep.html?tab=1'},
@@ -268,8 +266,8 @@ const CFG={doors:{home:'./index.html',deck:'./deck.html',day:'./daybook.html',si
  /* PHASE 0: preview file names under previewBase (map 5.7–5.13) — retires the dead previewBase config */
  previews:{lgy:'lions-gate-yachts-v1.1.4.html',bma:'brand-my-aqua-v1.0.html',cms:'cms-construction-v1.0.html',pez:'purenzyme-v1.0.html',siq:'structureiq-v1.0.html',e12:'8twelve-v1.0.html',atra:'atra-lend-v1.0.html'}};
 const KEY='workbench.entries.v1',TKEY='workbench.theme.v1';
-/* The logo art is swappable: replace LOGO.lockup (or call window.WB_setLogoArt(svgString)) when the head-only passes Grant's eye. Only the APPROVED lockup ships here. */
-const LOGO={lockup:document.getElementById('logo-lockup-src').innerHTML.trim()};
+/* Canopy branding (Grant 2026-11-21): the masthead carries the husky head + CANOPY — the Northbirch wordmark lockup does not ship in Workbench. WB_setLogoArt still swaps the slot art; the shipped art is the head + CANOPY. */
+const LOGO={lockup:'<img class="lg-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true"><span class="wb-cword" aria-hidden="true">CANOPY</span>'};
 const hmLock=document.getElementById('hm-lockup');if(hmLock)hmLock.innerHTML=LOGO.lockup;
 window.WB_setLogoArt=function(svg){LOGO.lockup=String(svg);const m=document.getElementById('hm-lockup');if(m)m.innerHTML=LOGO.lockup};
 /* ============ roster = data (renders whatever the instance carries) ============ */
@@ -390,11 +388,7 @@ function setTheme(t,persist){document.documentElement.dataset.theme=t;$('#th').t
 /* ============ paint ============ */
 function paintAll(){const I=INST[store.instance];$('#h1').textContent=I.title;$('#talk-n').textContent='TALK TO '+I.talk;['grant','johnny'].forEach(k=>$('#i-'+k).setAttribute('aria-pressed',k===store.instance));$('#egg').hidden=!I.empire;paintChips();paintShelf();paintSv()}
 new ResizeObserver(()=>paintShelf()).observe($('#shelf'));
-/* ============ opening (full length every time; tap / key skips) ============ */
 const reduced=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-function runOpening(){const el=$('#open'),I=INST[store.instance];$('#o-pls').innerHTML=entries().slice(0,8).map((e,i)=>'<span class="p" style="animation-delay:'+(2.2+i*.14)+'s">'+plate(e)+'</span>').join('');
- let done=false;const end=()=>{if(done)return;done=true;clearTimeout(T);el.classList.add('out');setTimeout(()=>{el.remove()},560)};const T=setTimeout(end,reduced?1800:5400);
- ['pointerdown','keydown'].forEach(n=>el.addEventListener(n,end));document.addEventListener('keydown',end,{once:true})}
 /* ============ Empire Map ============ */
 const SAMPLE_CLIENTS=[
  {id:'s01',n:'Sample client 01',pl:'Ottawa',lat:45.455,lon:-75.665,biz:['kul'],tags:['waterfront']},
@@ -462,14 +456,14 @@ document.addEventListener('click',ev=>{const t=ev.target.closest('[data-e]');if(
 function buildIntro(){const el=$('#intro'),D=E.D,W=el.clientWidth||innerWidth,H=el.clientHeight||innerHeight;let dots='',lines='';const k=D.biz.length,cx=W/2,cy=H*.46,rx=Math.min(W*.36,H*.8),ry=H*.34,rr=Math.max(4,Math.min(W,H)*.011);
  D.biz.forEach((b,i)=>{const a=i/k*Math.PI*2-Math.PI/2,x=cx+Math.cos(a)*rx,y=cy+Math.sin(a)*ry,a2=(i+3)/k*Math.PI*2-Math.PI/2;dots+='<circle class="sd" cx="'+x+'" cy="'+y+'" r="'+rr+'" fill="'+rgb(b.c)+'" style="animation-delay:'+(1.2+i*.12)+'s"/>';lines+='<path class="st1" pathLength="1" d="M'+x+' '+y+'L'+(cx+Math.cos(a2)*rx)+' '+(cy+Math.sin(a2)*ry)+'"/>'});
  let paws='';const ps=Math.max(.9,Math.min(W,H)/520);for(let i=0;i<8;i++){const x=W*(.08+i*.12),y=H*(i%2?.93:.87);paws+='<g class="paw" style="animation-delay:'+(.2+i*.28)+'s" transform="translate('+x+' '+y+') scale('+ps*2+') rotate('+(i%2?-8:8)+')"><ellipse cx="0" cy="1.5" rx="2.6" ry="2.1" fill="#9ec3ff"/><circle cx="-3.2" cy="-1.8" r="1.1" fill="#9ec3ff"/><circle cx="-1.1" cy="-3.2" r="1.1" fill="#9ec3ff"/><circle cx="1.1" cy="-3.2" r="1.1" fill="#9ec3ff"/><circle cx="3.2" cy="-1.8" r="1.1" fill="#9ec3ff"/></g>'}
- el.innerHTML='<svg class="c" viewBox="0 0 '+W+' '+H+'" aria-hidden="true">'+lines+dots+paws+'</svg><div class="stk"><div class="lg" id="eg-logo" data-logo-slot="approved-lockup" role="img" aria-label="Northbirch">'+LOGO.lockup+'</div><div class="cap">THE WHOLE PICTURE</div></div><div class="sk">TAP ANYWHERE TO SKIP</div>';
+ el.innerHTML='<svg class="c" viewBox="0 0 '+W+' '+H+'" aria-hidden="true">'+lines+dots+paws+'</svg><div class="stk"><div class="lg" id="eg-logo" data-logo-slot="canopy-brand" role="img" aria-label="Canopy">'+LOGO.lockup+'</div><div class="cap">THE WHOLE PICTURE</div></div><div class="sk">TAP ANYWHERE TO SKIP</div>';
  const end=()=>{el.classList.add('out');setTimeout(()=>{if(el.parentNode)el.remove()},620)};E.timer=setTimeout(end,reduced?1800:7400);['pointerdown','keydown'].forEach(n=>el.addEventListener(n,()=>{clearTimeout(E.timer);end()}))}
 /* ============ boot ============ */
 load();setTheme((function(){try{return localStorage.getItem(TKEY)==='light'?'light':'dark'}catch(e){return 'dark'}})());
 if(reduced)document.documentElement.classList.add('rm');
 paintDoors();tick();setInterval(tick,1000);
 save();   /* BOOT write: proves storage works now, so a failure is shown from the first frame */
-paintAll();runOpening();
+paintAll();
 window.__wb={entries,store,CFG,leads:()=>leads(empData()),empData};
 })();
 
@@ -513,16 +507,33 @@ apply();addEventListener('hashchange',apply)})();
 @media (prefers-reduced-motion:reduce){.nwheel:not([hidden]) .nw-dial{animation:none}}
 
 </style>
-<button id="abub" class="abub" aria-label="Talk to the assistant — tap to open, drag to move" title="Talk to the assistant"><img class="nb-head" src="./assets/northbirch-head-only-v11-clear.svg" alt="" aria-hidden="true"></button>
-<button id="wheelbtn" class="wheelbtn" aria-label="Open the Canopy section wheel"><img class="nb-head" src="./assets/northbirch-head-only-v11.svg" alt="" aria-hidden="true"><span>SECTIONS</span></button>
+<button id="abub" class="abub" aria-label="Talk to the assistant — tap to open, drag to move" title="Talk to the assistant"><img class="nb-head" src="./assets/northbirch-head-only-v10-clear.svg" alt="" aria-hidden="true"></button>
+<style id="pass2-2026-11-21">
+/* ============ CANOPY PASS 2 (2026-11-21) — Workbench: app detail sheets (the Trellis panel and every app sheet) get the 240ms slide-in; the phone wheel carries every section ============ */
+.ov-b .sheet{animation:sheetIn 240ms ease-out}
+@keyframes sheetIn{from{transform:translateX(2.5rem);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.ov-b .sheet{animation:none}}
+.nwheel{overflow-y:auto;padding:1rem 0}
+.nw-more{width:min(92vw,27rem);max-height:34vh;overflow-y:auto;display:flex;flex-direction:column;gap:.5rem;padding:.15rem;scrollbar-width:thin;flex:none}
+.nw-grp{display:flex;flex-wrap:wrap;gap:.35rem;align-items:center}
+.nw-grp>span{font:700 .58rem var(--fm,ui-monospace,monospace);letter-spacing:.14em;color:#f5c542;margin-right:.1rem}
+.nw-grp a{font:700 .6rem var(--fm,ui-monospace,monospace);letter-spacing:.05em;color:#e8e4d8;text-decoration:none;background:#121316;border:1px solid #2c2c31;border-radius:2rem;padding:.4rem .6rem;min-height:2rem;display:inline-flex;align-items:center}
+</style>
+<button id="wheelbtn" class="wheelbtn" aria-label="Open the Canopy section wheel"><img class="nb-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true"><span>SECTIONS</span></button>
 <div id="nwheel" class="nwheel" hidden role="dialog" aria-modal="true" aria-label="Canopy sections">
  <div class="nw-dial">
   <div class="nw-ring"></div><div class="nw-ring2"></div>
-  <button class="nw-hub" data-nw="close" aria-label="Close the wheel"><img class="nb-head" src="./assets/northbirch-head-only-v11.svg" alt="" aria-hidden="true"></button>
-  <a class="nw-st nw-home" href="./index.html"><img class="nb-head" src="./assets/northbirch-head-only-v11.svg" alt="" aria-hidden="true">HOME</a> <a class="nw-st nw-sit" href="./sitrep.html#tab=1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><path d="M8.5 15.5a5 5 0 0 1 0-7M15.5 8.5a5 5 0 0 1 0 7M5.6 18.4a9 9 0 0 1 0-12.8M18.4 5.6a9 9 0 0 1 0 12.8"/></svg>SITREP</a>
+  <button class="nw-hub" data-nw="close" aria-label="Close the wheel"><img class="nb-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true"></button>
+  <a class="nw-st nw-home" href="./index.html"><img class="nb-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true">HOME</a> <a class="nw-st nw-sit" href="./sitrep.html#tab=1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><path d="M8.5 15.5a5 5 0 0 1 0-7M15.5 8.5a5 5 0 0 1 0 7M5.6 18.4a9 9 0 0 1 0-12.8M18.4 5.6a9 9 0 0 1 0 12.8"/></svg>SITREP</a>
   <a class="nw-st nw-deck" href="./deck.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 15a8 8 0 1 1 16 0"/><path d="M12 15l4.2-4.2"/><circle cx="12" cy="15" r="1.3" fill="currentColor" stroke="none"/></svg>DECK</a>
   <span class="nw-st nw-wb cur" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M9 8V6a3 3 0 0 1 6 0v2M3 13h18"/></svg>WORKBENCH</span>
   <a class="nw-st nw-day" href="./daybook.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M8 3v4M16 3v4"/></svg>DAYBOOK</a>
+ </div>
+ <div class="nw-more" aria-label="Every Canopy section">
+  <div class="nw-grp"><span>SITREP</span><a href="./sitrep.html#sec=home">SITREP HOME</a><a href="./sitrep.html#sec=weather">WEATHER</a><a href="./sitrep.html#sec=cams">CAMERAS</a><a href="./sitrep.html#sec=airport">AIRPORT</a><a href="./sitrep.html#sec=tv">LIVE TV</a><a href="./sitrep.html#sec=world">WORLD</a></div>
+  <div class="nw-grp"><span>DECK</span><a href="./deck.html#/team">TEAM ROOM</a><a href="./deck.html#/member/oakley">OAKLEY</a><a href="./deck.html#/member/claude">CLAUDE</a><a href="./deck.html#/member/chatgpt">CHATGPT</a><a href="./deck.html#/member/gemini">GEMINI</a><a href="./deck.html#/member/perplexity">PERPLEXITY</a><a href="./deck.html#/eng">ENGINEERING</a><a href="./deck.html#/media">MEDIA</a></div>
+  <div class="nw-grp"><span>DAYBOOK</span><a href="./daybook.html#view=day">DAY TO DAY</a><a href="./daybook.html#view=calendar">CALENDAR</a><a href="./daybook.html#view=budget">BUDGET</a><a href="./daybook.html#view=invest">INVESTMENTS</a><a href="./daybook.html#view=shopping">SHOPPING</a><a href="./daybook.html#view=notes">NOTES</a><a href="./daybook.html#view=automation">AUTOMATION</a><a href="./daybook.html#view=commute">COMMUTE</a><a href="./daybook.html#view=truck">TRUCK</a><a href="./daybook.html#view=security">SECURITY</a><a href="./daybook.html#view=social">SOCIAL</a></div>
+  <div class="nw-grp"><span>WORKBENCH</span><a href="./workbench.html">ALL APPS</a></div>
  </div>
  <button class="nw-x" data-nw="close">✕ CLOSE</button>
 </div>
@@ -539,7 +550,7 @@ var nwEl=$('#nwheel'),wbtn=$('#wheelbtn');
 function wheelClose(){nwEl.hidden=true}
 if(wbtn)wbtn.addEventListener('click',function(){nwEl.hidden=false});
 $$('[data-nw="close"]',nwEl).forEach(function(b){b.addEventListener('click',wheelClose)});
-nwEl.addEventListener('click',function(e){if(e.target===nwEl)wheelClose()});
+nwEl.addEventListener('click',function(e){if(e.target===nwEl||e.target.closest('a'))wheelClose()});
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!nwEl.hidden)wheelClose()});
 })();
 </script>

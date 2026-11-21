@@ -458,9 +458,30 @@ body .lkstrip{box-shadow:0 .2rem .55rem rgb(0 0 0/.35),inset 0 1px 0 rgb(255 255
   body .card,body .door,body .btn{transition:none}
 }
 </style>
+<style id="enrich-2026-11-21">
+/* ENRICHMENT 2026-11-21 (Gemini spec): link-flagging = static glow + LINK badge, glow never pulses; motion = doors lift 4px / cards 2px @150ms, press scale .98 @100ms */
+body .card.linked{position:relative;animation:none;box-shadow:0 0 0 1px rgba(250,204,21,.60),0 0 .75rem rgba(250,204,21,.32),0 .3rem .8rem rgb(0 0 0/.45)}
+body .card.linked::after{content:"LINK";position:absolute;top:.4rem;right:.4rem;z-index:6;font:700 .54rem/1 var(--fm);letter-spacing:.09em;color:#0b0e13;background:rgba(250,204,21,.95);padding:.2rem .36rem;border-radius:.3rem;pointer-events:none}
+body .door{transition:transform 150ms ease,box-shadow 150ms ease,filter 150ms ease}
+body .door:hover{transform:translateY(-4px)}
+body .tile{transition:transform 150ms ease,box-shadow 150ms ease,border-color 150ms ease}
+body .tile:hover{transform:translateY(-2px)}
+body .door:active,body .tile:active{transform:scale(.98);transition-duration:100ms}
+/* HOME PROPORTIONS (Gemini spec 2026-11-21): header cluster 300x48 only; doors row capped 72px; TV column = cols 1-7 of 12 (largest); World shrunk; Markets scrolls internally, never squished */
+body .deck{grid-template-columns:2.2fr 5.9fr 2fr}
+body .chrono{width:300px;max-width:300px;height:48px;overflow:hidden}
+body .doors .door{max-height:72px;overflow:hidden}
+body #nw{flex:1 1 auto}
+body #wm{height:9rem;flex:none}
+body #mk .bd{overflow-y:auto}
+/* SECTION SWITCH (Gemini spec): 200ms crossfade + 8px rise on entry */
+@keyframes pgin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+body{animation:pgin 200ms ease-out}
+@media (prefers-reduced-motion:reduce){body{animation:none}}
+</style>
 </head><body>
 <div class="bridge" id="bridge">
- <header class="top"><a class="hlogo" href="./index.html" aria-label="Canopy — Home" title="Home"><img class="nblogo" src="./assets/northbirch-head-only-v11.svg" alt="Canopy — Oakley"><span class="hword" aria-hidden="true">CANOPY</span></a><a class="chrono" href="./sitrep.html#tab=1" aria-label="SITREP — Ottawa time and weather. Opens the SITREP tab" title="SITREP — time and weather, Ottawa"><span class="ckrow"><b id="ck" class="num">--:--:--</b><i id="dt">---</i><i id="ut">---</i></span><span class="wxrow"><span class="wx" aria-hidden="true"><svg viewBox="0 0 48 30"><g class="rays" stroke="#FACC15" stroke-width="2.4" stroke-linecap="round" fill="none"><path d="M14 2v4M5 6l3 3M23 6l-3 3M2 15h4"/></g><circle cx="14" cy="15" r="5.4" fill="#FACC15"/><path class="cld" d="M20 24.6h17.4a4.9 4.9 0 0 0 .8-9.7 8.2 8.2 0 0 0-15.7-1.6A5.4 5.4 0 0 0 20 24.6Z" fill="#dfe9f5"/></svg></span><span class="wxt num" id="ckwx-t">--°</span><span class="wxc" id="ckwx-c">OTTAWA</span></span></a><nav class="doors" id="doors" aria-label="Sections"></nav></header>
+ <header class="top"><a class="hlogo" href="./index.html" aria-label="Canopy — Home" title="Home"><img class="nblogo" src="./assets/northbirch-head-only-v10.svg" alt="Canopy — Oakley"><span class="hword" aria-hidden="true">CANOPY</span></a><a class="chrono" href="./sitrep.html#tab=1" aria-label="SITREP — Ottawa time and weather. Opens the SITREP tab" title="SITREP — time and weather, Ottawa"><span class="ckrow"><b id="ck" class="num">--:--:--</b><i id="dt">---</i><i id="ut">---</i></span><span class="wxrow"><span class="wx" aria-hidden="true"><svg viewBox="0 0 48 30"><g class="rays" stroke="#FACC15" stroke-width="2.4" stroke-linecap="round" fill="none"><path d="M14 2v4M5 6l3 3M23 6l-3 3M2 15h4"/></g><circle cx="14" cy="15" r="5.4" fill="#FACC15"/><path class="cld" d="M20 24.6h17.4a4.9 4.9 0 0 0 .8-9.7 8.2 8.2 0 0 0-15.7-1.6A5.4 5.4 0 0 0 20 24.6Z" fill="#dfe9f5"/></svg></span><span class="wxt num" id="ckwx-t">--°</span><span class="wxc" id="ckwx-c">OTTAWA</span></span></a><nav class="doors" id="doors" aria-label="Sections"></nav></header>
  
  <main class="deck" id="deck">
   <div class="col" id="c1"><section class="card" id="wx"></section><section class="card" id="cc"></section><section class="card" id="yw"></section></div>
@@ -882,7 +903,7 @@ function hdw(id,t,pill){setH($('#'+id+' .hdw'),hdr(id,t,pill))}
 const dirOf=h=>{const m=/\b(EB|WB|NB|SB)\b/i.exec(h)||/\b(east|west|north|south)bound\b/i.exec(h);if(!m)return'';const s=m[1].toUpperCase();return s.length===2?s:s[0]+'B'};
 /* ---------- doors: each door = the URGENT / attention overview for its area (Grant) — Command Deck: urgent project/team items · Daybook: personal waiting items (messages/texts, email, missed calls) · Workbench: work email waiting + urgent work to-dos.
    Values come only from the hub brief / team feed. A missing feed or field reads "not connected"; a stale brief says STALE; nothing is invented. ---------- */
-const DOORS={deck:{n:'COMMAND DECK',d:'Team command centre — projects, lanes and usage',secs:['Projects','Team lanes','Usage']},
+const DOORS={deck:{n:'COMMAND DECK',d:'Team command centre — projects and lanes',secs:['Projects','Team lanes']},
   day:{n:'DAYBOOK',d:'Day to Day · budget · investing · home',secs:['Day to Day','Calendar','Finance & Investments','Home Automation & Security','Budgeting']},
   wb:{n:'WORKBENCH',d:'Work — jobs, templates and references',secs:['Jobs','Templates','References']},sitrep:{n:'SITREP',d:'Live world — weather · traffic + cameras · live news · airport · world',secs:['Weather','Traffic + Cameras','Live News','Airport','World']}};
 const briefOk=()=>D.brief&&Date.now()-D.brief.at<CFG.brief.staleMs;
@@ -915,9 +936,9 @@ function wbLine(){const b=D.brief&&D.brief.wb;
 const GORD=['OAKLEY','CLAUDE','CHATGPT','GEMINI','PERPLEXITY'];
 const ggH=m=>m.pct==null?'<span class="gg"><span class="gn">'+m.n+'</span><span class="gp">'+esc(m.cnt||'')+' '+esc(m.cntl||'')+'</span></span>':'<span class="gg"><span class="gn">'+m.n+'</span><span class="gr"><span class="gb"><i style="width:'+m.pct+'%"></i></span><span class="gp">'+m.pct+'%</span></span></span>';
 const WBPTS=[['BLUEPRINT','own app'],['KÜL','LIVE PWA'],['TRELLIS','7 planned'],['SITEVISION','ground-up'],['NB APP','not built']];
-function doorSnap(key){if(key==='deck')return '<span class="snap">'+['Projects','Team lanes'].map(q=>'<span class="pt"><b>'+q+'</b></span>').join('')+'</span>';
- if(key==='wb')return '<span class="snap">'+WBPTS.map(q=>'<span class="pt"><b>'+q[0]+'</b> '+q[1]+'</span>').join('')+'</span>';
- if(key==='day')return '<span class="snap"><span class="pt">'+calNext()+'</span></span>';if(key==='sitrep')return '<span class="snap">'+DOORS.sitrep.secs.map(q=>'<span class="pt"><b>'+esc(q)+'</b></span>').join('')+'</span>';return ''}
+function doorSnap(key){if(key==='deck')return '<span class="snap">'+'<span class="pt"><b>2 SECTIONS</b></span>'+'</span>';
+ if(key==='wb')return '<span class="snap">'+'<span class="pt"><b>'+WBPTS.length+' APPS</b></span>'+'</span>';
+ if(key==='day')return '<span class="snap"><span class="pt"><b>'+DOORS.day.secs.length+' SECTIONS</b></span></span>';if(key==='sitrep')return '<span class="snap">'+'<span class="pt"><b>'+DOORS.sitrep.secs.length+' SECTIONS</b></span>'+'</span>';return ''}
 function door(id,key,ln){const d=DOORS[key],u=dest(key),b='<span class="in"><span class="nm">'+d.n+'</span><span class="ln">'+ln+'</span></span><span class="go">▸</span>'+doorSnap(key);
   return u?'<a id="'+id+'" class="door" href="'+esc(u)+'">'+b+'</a>':'<button id="'+id+'" class="door" data-a="door:'+key+'" aria-label="'+d.n+' — opens its section page">'+b+'</button>'}
 const sitrepLine=()=>{if(D.wx&&D.wx.cur)return 'Ottawa now '+Math.round(D.wx.cur.temp)+'° · '+esc(D.wx.cur.cond||'')+' — weather, traffic, news, airport &amp; world inside';return DOORS.sitrep.d};function rDoors(){setH($('#doors'),door('d-sitrep','sitrep',sitrepLine())+door('d-deck','deck',deckLine())+door('d-day','day',dayLine())+door('d-wb','wb',wbLine()))}
@@ -1384,17 +1405,34 @@ html:not(.stk) .chrono{grid-column:3;grid-row:1}
  </div>
 </div>
 <!-- CANOPY FINISH PASS — floating assistant (Oakley's face; tap to talk, drag to move) -->
-<button id="abub" class="abub" aria-label="Talk to Oakley — tap to open, drag to move" title="Talk to Oakley"><img class="nblogo" src="./assets/northbirch-head-only-v11-clear.svg" alt="Oakley"></button>
+<button id="abub" class="abub" aria-label="Talk to Oakley — tap to open, drag to move" title="Talk to Oakley"><img class="nblogo" src="./assets/northbirch-head-only-v10-clear.svg" alt="Oakley"></button>
 <!-- CANOPY FINISH PASS — neon section wheel (phone navigation) -->
-<button id="wheelbtn" class="wheelbtn" aria-label="Open the Canopy section wheel"><img class="nblogo" src="./assets/northbirch-head-only-v11.svg" alt="" aria-hidden="true"><span>SECTIONS</span></button>
+<style id="pass2-2026-11-21">
+/* ============ CANOPY PASS 2 (2026-11-21) — Home: the roadmap panel gets the 240ms slide-in; the phone wheel carries every section ============ */
+#road:not([hidden]){animation:roadIn 240ms ease-out}
+@keyframes roadIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+@media (prefers-reduced-motion:reduce){#road:not([hidden]){animation:none}}
+.nwheel{overflow-y:auto;padding:1rem 0}
+.nw-more{width:min(92vw,27rem);max-height:34vh;overflow-y:auto;display:flex;flex-direction:column;gap:.5rem;padding:.15rem;scrollbar-width:thin;flex:none}
+.nw-grp{display:flex;flex-wrap:wrap;gap:.35rem;align-items:center}
+.nw-grp>span{font:700 .58rem var(--fm,ui-monospace,monospace);letter-spacing:.14em;color:#f5c542;margin-right:.1rem}
+.nw-grp a{font:700 .6rem var(--fm,ui-monospace,monospace);letter-spacing:.05em;color:#e8e4d8;text-decoration:none;background:#121316;border:1px solid #2c2c31;border-radius:2rem;padding:.4rem .6rem;min-height:2rem;display:inline-flex;align-items:center}
+</style>
+<button id="wheelbtn" class="wheelbtn" aria-label="Open the Canopy section wheel"><img class="nblogo" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true"><span>SECTIONS</span></button>
 <div id="nwheel" class="nwheel" hidden role="dialog" aria-modal="true" aria-label="Canopy sections">
  <div class="nw-dial">
   <div class="nw-ring"></div><div class="nw-ring2"></div>
-  <button class="nw-hub" data-nw="close" aria-label="Close the wheel"><img class="nblogo" src="./assets/northbirch-head-only-v11.svg" alt="" aria-hidden="true"></button>
-  <span class="nw-st nw-home cur" aria-current="page"><img class="nblogo" src="./assets/northbirch-head-only-v11.svg" alt="" aria-hidden="true">HOME</span> <a class="nw-st nw-sit" href="./sitrep.html#tab=1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><path d="M8.5 15.5a5 5 0 0 1 0-7M15.5 8.5a5 5 0 0 1 0 7M5.6 18.4a9 9 0 0 1 0-12.8M18.4 5.6a9 9 0 0 1 0 12.8"/></svg>SITREP</a>
+  <button class="nw-hub" data-nw="close" aria-label="Close the wheel"><img class="nblogo" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true"></button>
+  <span class="nw-st nw-home cur" aria-current="page"><img class="nblogo" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true">HOME</span> <a class="nw-st nw-sit" href="./sitrep.html#tab=1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><path d="M8.5 15.5a5 5 0 0 1 0-7M15.5 8.5a5 5 0 0 1 0 7M5.6 18.4a9 9 0 0 1 0-12.8M18.4 5.6a9 9 0 0 1 0 12.8"/></svg>SITREP</a>
   <a class="nw-st nw-deck" href="./deck.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 15a8 8 0 1 1 16 0"/><path d="M12 15l4.2-4.2"/><circle cx="12" cy="15" r="1.3" fill="currentColor" stroke="none"/></svg>DECK</a>
   <a class="nw-st nw-wb" href="./workbench.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M9 8V6a3 3 0 0 1 6 0v2M3 13h18"/></svg>WORKBENCH</a>
   <a class="nw-st nw-day" href="./daybook.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M8 3v4M16 3v4"/></svg>DAYBOOK</a>
+ </div>
+ <div class="nw-more" aria-label="Every Canopy section">
+  <div class="nw-grp"><span>SITREP</span><a href="./sitrep.html#sec=home">SITREP HOME</a><a href="./sitrep.html#sec=weather">WEATHER</a><a href="./sitrep.html#sec=cams">CAMERAS</a><a href="./sitrep.html#sec=airport">AIRPORT</a><a href="./sitrep.html#sec=tv">LIVE TV</a><a href="./sitrep.html#sec=world">WORLD</a></div>
+  <div class="nw-grp"><span>DECK</span><a href="./deck.html#/team">TEAM ROOM</a><a href="./deck.html#/member/oakley">OAKLEY</a><a href="./deck.html#/member/claude">CLAUDE</a><a href="./deck.html#/member/chatgpt">CHATGPT</a><a href="./deck.html#/member/gemini">GEMINI</a><a href="./deck.html#/member/perplexity">PERPLEXITY</a><a href="./deck.html#/eng">ENGINEERING</a><a href="./deck.html#/media">MEDIA</a></div>
+  <div class="nw-grp"><span>DAYBOOK</span><a href="./daybook.html#view=day">DAY TO DAY</a><a href="./daybook.html#view=calendar">CALENDAR</a><a href="./daybook.html#view=budget">BUDGET</a><a href="./daybook.html#view=invest">INVESTMENTS</a><a href="./daybook.html#view=shopping">SHOPPING</a><a href="./daybook.html#view=notes">NOTES</a><a href="./daybook.html#view=automation">AUTOMATION</a><a href="./daybook.html#view=commute">COMMUTE</a><a href="./daybook.html#view=truck">TRUCK</a><a href="./daybook.html#view=security">SECURITY</a><a href="./daybook.html#view=social">SOCIAL</a></div>
+  <div class="nw-grp"><span>WORKBENCH</span><a href="./workbench.html">ALL APPS</a></div>
  </div>
  <button class="nw-x" data-nw="close">✕ CLOSE</button>
 </div>
@@ -1465,7 +1503,7 @@ var nwEl=$('#nwheel'),wbtn=$('#wheelbtn');
 function wheelClose(){nwEl.hidden=true}
 if(wbtn)wbtn.addEventListener('click',function(){nwEl.hidden=false});
 $$('[data-nw="close"]',nwEl).forEach(function(b){b.addEventListener('click',wheelClose)});
-nwEl.addEventListener('click',function(e){if(e.target===nwEl)wheelClose()});
+nwEl.addEventListener('click',function(e){if(e.target===nwEl||e.target.closest('a'))wheelClose()});
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!nwEl.hidden)wheelClose()});
 })();
 

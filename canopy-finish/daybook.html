@@ -386,12 +386,22 @@ body .tag{box-shadow:0 .06rem .2rem rgb(0 0 0/.35),inset 0 1px 0 rgb(255 255 255
   .favctl{margin-top:.2rem}
 }
 </style>
+<style id="enrich-2026-11-21">
+/* ENRICHMENT 2026-11-21 (Gemini spec): doors lift 4px / cards 2px @150ms, press scale .98 @100ms; depth = layered section-tinted shadows (base) */
+body .door{transition:transform 150ms ease,box-shadow 150ms ease,border-color 150ms ease,background 150ms ease,filter 150ms ease}
+body .door:hover{transform:translateY(-4px)}
+body .door:active{transform:scale(.98);transition-duration:100ms}
+body .card{transition:transform 150ms ease,box-shadow 150ms ease}
+body .card:hover{transform:translateY(-2px)}
+body .card:active{transform:scale(.98);transition-duration:100ms}
+</style>
+<style>@keyframes pgin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}body{animation:pgin 200ms ease-out}@media (prefers-reduced-motion:reduce){body{animation:none}}</style>
 </head>
 <body>
 <header>
   <div class="hctl">
     <a id="hm-logo" href="./index.html" aria-label="Home">
-      <span class="logo-mark"><img class="nb-head" src="./assets/northbirch-head-only-v11.svg" alt="" aria-hidden="true"></span>
+      <span class="logo-mark"><img class="nb-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true"></span>
       <span class="logo-word">CANOPY</span>
     </a>
     <a id="hm-clock" href="./index.html" aria-label="Home" title="Home (clock shows this device's time; weather is a snapshot, Ottawa — not live)">
@@ -622,9 +632,9 @@ const DOORS=[
 const TEAMSNAP=[['OAKLEY',59],['CLAUDE',0],['CHATGPT',82],['GEMINI',25],['PERPLEXITY',null]];
 const WBPTS=[['BLUEPRINT','own app'],['KÜL','LIVE PWA'],['TRELLIS','7 planned'],['SITEVISION','ground-up'],['NB APP','not built']];
 const SRPTS=['WEATHER','CAMERAS','AIRPORT','WORLD'];
-function doorSnap(d){if(d.k==='deck')return '<span class="snap"><span class="stag">SNAPSHOT · 2026-11-05</span>'+TEAMSNAP.map(g=>g[1]==null?'<span class="gg"><span class="gn">'+g[0]+'</span><span class="gp">400 PRO LEFT</span></span>':'<span class="gg"><span class="gn">'+g[0]+'</span><span class="gr"><span class="gb"><i style="width:'+g[1]+'%"></i></span><span class="gp">'+g[1]+'%</span></span></span>').join('')+'</span>';
- if(d.k==='wb')return '<span class="snap"><span class="stag">APPS · SNAPSHOT</span>'+WBPTS.map(q=>'<span class="pt"><b>'+q[0]+'</b> '+q[1]+'</span>').join('')+'</span>';
- if(d.k==='sitrep')return '<span class="snap"><span class="stag">SECTIONS · SNAPSHOT</span>'+SRPTS.map(q=>'<span class="pt"><b>'+q+'</b></span>').join('')+'</span>';return ''}
+function doorSnap(d){if(d.k==='deck')return '<span class="snap">'+'<span class="pt"><b>2 SECTIONS</b></span>'+'</span>';
+ if(d.k==='wb')return '<span class="snap">'+'<span class="pt"><b>'+WBPTS.length+' APPS</b></span>'+'</span>';
+ if(d.k==='sitrep')return '<span class="snap">'+'<span class="pt"><b>'+SRPTS.length+' SECTIONS</b></span>'+'</span>';return ''}
 $('#doors').innerHTML=DOORS.map(d=>{
   const body='<span class="din"><span class="nm">'+d.n+'</span><br><span class="ln">'+d.ln+'</span>'+doorSnap(d)+'</span><span class="go">'+(d.cur?'●':'▸')+'</span>';
   return d.cur?'<button class="door on" style="--dc:'+d.c+'" aria-current="page">'+body+'</button>'
@@ -853,16 +863,30 @@ apply();addEventListener('hashchange',apply)})();
 @media (prefers-reduced-motion:reduce){.nwheel:not([hidden]) .nw-dial{animation:none}}
 
 </style>
-<button id="abub" class="abub" aria-label="Talk to Oakley — tap to open, drag to move" title="Talk to Oakley"><img class="nb-head" src="./assets/northbirch-head-only-v11-clear.svg" alt="" aria-hidden="true"></button>
-<button id="wheelbtn" class="wheelbtn" aria-label="Open the Canopy section wheel"><img class="nb-head" src="./assets/northbirch-head-only-v11.svg" alt="" aria-hidden="true"><span>SECTIONS</span></button>
+<button id="abub" class="abub" aria-label="Talk to Oakley — tap to open, drag to move" title="Talk to Oakley"><img class="nb-head" src="./assets/northbirch-head-only-v10-clear.svg" alt="" aria-hidden="true"></button>
+<style id="pass2-2026-11-21">
+/* ============ CANOPY PASS 2 (2026-11-21) — Daybook: the phone wheel carries every section ============ */
+.nwheel{overflow-y:auto;padding:1rem 0}
+.nw-more{width:min(92vw,27rem);max-height:34vh;overflow-y:auto;display:flex;flex-direction:column;gap:.5rem;padding:.15rem;scrollbar-width:thin;flex:none}
+.nw-grp{display:flex;flex-wrap:wrap;gap:.35rem;align-items:center}
+.nw-grp>span{font:700 .58rem var(--fm,ui-monospace,monospace);letter-spacing:.14em;color:#f5c542;margin-right:.1rem}
+.nw-grp a{font:700 .6rem var(--fm,ui-monospace,monospace);letter-spacing:.05em;color:#e8e4d8;text-decoration:none;background:#121316;border:1px solid #2c2c31;border-radius:2rem;padding:.4rem .6rem;min-height:2rem;display:inline-flex;align-items:center}
+</style>
+<button id="wheelbtn" class="wheelbtn" aria-label="Open the Canopy section wheel"><img class="nb-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true"><span>SECTIONS</span></button>
 <div id="nwheel" class="nwheel" hidden role="dialog" aria-modal="true" aria-label="Canopy sections">
  <div class="nw-dial">
   <div class="nw-ring"></div><div class="nw-ring2"></div>
-  <button class="nw-hub" data-nw="close" aria-label="Close the wheel"><img class="nb-head" src="./assets/northbirch-head-only-v11.svg" alt="" aria-hidden="true"></button>
-  <a class="nw-st nw-home" href="./index.html"><img class="nb-head" src="./assets/northbirch-head-only-v11.svg" alt="" aria-hidden="true">HOME</a> <a class="nw-st nw-sit" href="./sitrep.html#tab=1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><path d="M8.5 15.5a5 5 0 0 1 0-7M15.5 8.5a5 5 0 0 1 0 7M5.6 18.4a9 9 0 0 1 0-12.8M18.4 5.6a9 9 0 0 1 0 12.8"/></svg>SITREP</a>
+  <button class="nw-hub" data-nw="close" aria-label="Close the wheel"><img class="nb-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true"></button>
+  <a class="nw-st nw-home" href="./index.html"><img class="nb-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true">HOME</a> <a class="nw-st nw-sit" href="./sitrep.html#tab=1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><path d="M8.5 15.5a5 5 0 0 1 0-7M15.5 8.5a5 5 0 0 1 0 7M5.6 18.4a9 9 0 0 1 0-12.8M18.4 5.6a9 9 0 0 1 0 12.8"/></svg>SITREP</a>
   <a class="nw-st nw-deck" href="./deck.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 15a8 8 0 1 1 16 0"/><path d="M12 15l4.2-4.2"/><circle cx="12" cy="15" r="1.3" fill="currentColor" stroke="none"/></svg>DECK</a>
   <a class="nw-st nw-wb" href="./workbench.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M9 8V6a3 3 0 0 1 6 0v2M3 13h18"/></svg>WORKBENCH</a>
   <span class="nw-st nw-day cur" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M8 3v4M16 3v4"/></svg>DAYBOOK</span>
+ </div>
+ <div class="nw-more" aria-label="Every Canopy section">
+  <div class="nw-grp"><span>SITREP</span><a href="./sitrep.html#sec=home">SITREP HOME</a><a href="./sitrep.html#sec=weather">WEATHER</a><a href="./sitrep.html#sec=cams">CAMERAS</a><a href="./sitrep.html#sec=airport">AIRPORT</a><a href="./sitrep.html#sec=tv">LIVE TV</a><a href="./sitrep.html#sec=world">WORLD</a></div>
+  <div class="nw-grp"><span>DECK</span><a href="./deck.html#/team">TEAM ROOM</a><a href="./deck.html#/member/oakley">OAKLEY</a><a href="./deck.html#/member/claude">CLAUDE</a><a href="./deck.html#/member/chatgpt">CHATGPT</a><a href="./deck.html#/member/gemini">GEMINI</a><a href="./deck.html#/member/perplexity">PERPLEXITY</a><a href="./deck.html#/eng">ENGINEERING</a><a href="./deck.html#/media">MEDIA</a></div>
+  <div class="nw-grp"><span>DAYBOOK</span><a href="./daybook.html#view=day">DAY TO DAY</a><a href="./daybook.html#view=calendar">CALENDAR</a><a href="./daybook.html#view=budget">BUDGET</a><a href="./daybook.html#view=invest">INVESTMENTS</a><a href="./daybook.html#view=shopping">SHOPPING</a><a href="./daybook.html#view=notes">NOTES</a><a href="./daybook.html#view=automation">AUTOMATION</a><a href="./daybook.html#view=commute">COMMUTE</a><a href="./daybook.html#view=truck">TRUCK</a><a href="./daybook.html#view=security">SECURITY</a><a href="./daybook.html#view=social">SOCIAL</a></div>
+  <div class="nw-grp"><span>WORKBENCH</span><a href="./workbench.html">ALL APPS</a></div>
  </div>
  <button class="nw-x" data-nw="close">✕ CLOSE</button>
 </div>
@@ -879,7 +903,7 @@ var nwEl=$('#nwheel'),wbtn=$('#wheelbtn');
 function wheelClose(){nwEl.hidden=true}
 if(wbtn)wbtn.addEventListener('click',function(){nwEl.hidden=false});
 $$('[data-nw="close"]',nwEl).forEach(function(b){b.addEventListener('click',wheelClose)});
-nwEl.addEventListener('click',function(e){if(e.target===nwEl)wheelClose()});
+nwEl.addEventListener('click',function(e){if(e.target===nwEl||e.target.closest('a'))wheelClose()});
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!nwEl.hidden)wheelClose()});
 })();
 </script>

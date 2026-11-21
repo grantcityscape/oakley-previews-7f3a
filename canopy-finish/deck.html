@@ -330,14 +330,25 @@ body .pill{box-shadow:0 .08rem .25rem rgb(0 0 0/.4),inset 0 1px 0 rgb(255 255 25
   body .card,body .portal,body .door,body .btn{transition:none}
 }
 </style>
+<style id="enrich-2026-11-21">
+/* ENRICHMENT 2026-11-21 (Gemini spec): doors lift 4px / cards 2px @150ms, press scale .98 @100ms; depth = layered section-tinted shadows (base) */
+body .door{transition:transform 150ms ease,box-shadow 150ms ease,filter 150ms ease}
+body .door:hover{transform:translateY(-4px)}
+body .door:active{transform:scale(.98);transition-duration:100ms}
+body .card{transition:transform 150ms ease,box-shadow 150ms ease}
+body .card:hover{transform:translateY(-2px)}
+body .card:active{transform:scale(.98);transition-duration:100ms}
+</style>
+<style>@keyframes pgin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}body{animation:pgin 200ms ease-out}@media (prefers-reduced-motion:reduce){body{animation:none}}</style>
 </head><body>
 <nav class="cstrip" id="cstrip" aria-label="Canopy destinations"><a href="./index.html" data-door="canopy">CANOPY</a><a href="./daybook.html" data-door="day">DAYBOOK</a><a href="./workbench.html" data-door="wb">WORKBENCH</a><span class="sp"></span></nav>
 <div class="bridge" id="bridge">
- <header class="top"><a class="hlogo" id="hm-logo" aria-label="Northbirch — return to Home" title="Home"><img class="nb-head" src="./assets/northbirch-head-only-v11.svg" alt="" aria-hidden="true"></a><div class="chrono"><a class="ckin" id="hm-clock" aria-label="Clock — return to Home" title="Home"><b id="ck" class="num">--:--:--</b><span><i id="dt">---</i><i id="ut">---</i><i class="chrome-wm" aria-hidden="true">CANOPY</i></span></a><a class="wxdoor" href="./index.html#win=weather" aria-label="Weather, Ottawa — opens the Weather window on Canopy Home" title="Weather — snapshot, Ottawa · opens the Weather window"><span class="wx" aria-hidden="true"><svg viewBox="0 0 48 30"><g class="rays" stroke="#FACC15" stroke-width="2.4" stroke-linecap="round" fill="none"><path d="M14 2v4M5 6l3 3M23 6l-3 3M2 15h4"/></g><circle cx="14" cy="15" r="5.4" fill="#FACC15"/><path class="cld" d="M20 24.6h17.4a4.9 4.9 0 0 0 .8-9.7 8.2 8.2 0 0 0-15.7-1.6A5.4 5.4 0 0 0 20 24.6Z" fill="#dfe9f5"/></svg></span><span class="wxt">WX ▸</span><span class="wxc">SNAPSHOT · OTTAWA</span></a></div><nav class="doors" id="doors" aria-label="Sections"></nav></header>
+ <header class="top"><a class="hlogo" id="hm-logo" aria-label="Northbirch — return to Home" title="Home"><img class="nb-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true"></a><div class="chrono"><a class="ckin" id="hm-clock" aria-label="Clock — return to Home" title="Home"><b id="ck" class="num">--:--:--</b><span><i id="dt">---</i><i id="ut">---</i><i class="chrome-wm" aria-hidden="true">CANOPY</i></span></a><a class="wxdoor" href="./index.html#win=weather" aria-label="Weather, Ottawa — opens the Weather window on Canopy Home" title="Weather — snapshot, Ottawa · opens the Weather window"><span class="wx" aria-hidden="true"><svg viewBox="0 0 48 30"><g class="rays" stroke="#FACC15" stroke-width="2.4" stroke-linecap="round" fill="none"><path d="M14 2v4M5 6l3 3M23 6l-3 3M2 15h4"/></g><circle cx="14" cy="15" r="5.4" fill="#FACC15"/><path class="cld" d="M20 24.6h17.4a4.9 4.9 0 0 0 .8-9.7 8.2 8.2 0 0 0-15.7-1.6A5.4 5.4 0 0 0 20 24.6Z" fill="#dfe9f5"/></svg></span><span class="wxt">WX ▸</span><span class="wxc">SNAPSHOT · OTTAWA</span></a></div><nav class="doors" id="doors" aria-label="Sections"></nav></header>
  <main class="deck" id="deck">
   <section class="view" id="v-home" aria-label="Command Deck — primary screen">
    <div class="stkey" id="stkey"></div>
    <div class="mrow" id="mrow"></div>
+   <section class="card mbox tbox" id="teamroom" tabindex="0" role="button" data-a="team:" aria-label="Open the team room — the whole team's group chat"></section>
    <div class="brow">
     <section class="card" id="usage"><div class="hdw"></div><div class="bd" id="usage-bd"></div></section>
     <section class="card" id="tasks"><div class="hdw"></div><div class="bd" id="tasks-bd"></div></section>
@@ -345,7 +356,9 @@ body .pill{box-shadow:0 .08rem .25rem rgb(0 0 0/.4),inset 0 1px 0 rgb(255 255 25
     <div class="pcol" id="pcol"></div>
    </div>
   </section>
+  <div id="scrim" hidden></div>
   <section class="view" id="v-member" hidden aria-label="Member — full chat room and code box"></section>
+  <section class="view" id="v-team" hidden aria-label="Team room — the whole team's group chat"></section>
   <section class="view" id="v-eng" hidden aria-label="Engineering portal"></section>
   <section class="view" id="v-media" hidden aria-label="Media portal"></section>
  </main>
@@ -367,7 +380,7 @@ body .pill{box-shadow:0 .08rem .25rem rgb(0 0 0/.4),inset 0 1px 0 rgb(255 255 25
      stations  {asOf,source,stations:[{id,state,note}]}        id = claude|chatgpt|perplexity|gemini|oakley · state = WORKING|IDLE|PARKED|FLAGGED|NEEDS GRANT
      tasks     {asOf,source,tasks:[{id,title,owner,due}]}       the team's open task list
      flags     {asOf,source,flags:[{id,project,raisedBy,reason,app}]}   open flags raised by any lane or the checker, one-line reason
-     chat:<room>  {asOf,source,messages:[{who,at,text}]}        room = claude|chatgpt|perplexity|gemini|oakley|eng|media
+     chat:<room>  {asOf,source,messages:[{who,at,text}]}        room = team|claude|chatgpt|perplexity|gemini|oakley|eng|media
      code:<id> {asOf,source,title,file,lines:[text]}            the member's current work / build pane
      eng       {asOf,source,projects:[{id,name,app,state}],chain:{freecad,blender,preview}}
      mvid | mpic | mads  {asOf,source,items:[{id,name,app,note}]}   Media portal: videos · pictures · advertising projects
@@ -380,7 +393,7 @@ const ROOMS=MEMBERS.map(m=>m.id).concat(['eng','media']);
 const CFG={
   doors:{home:'./index.html',day:'./daybook.html',wb:'./workbench.html',sitrep:'./sitrep.html?tab=1'},   // PACKAGED (Phase 0): stable names — Home, Daybook and Workbench all exist; an empty address would still read NOT CONNECTED
   feeds:{},
-  talk:{claude:'',chatgpt:'',perplexity:'',gemini:'',oakley:'',eng:'',media:''},
+  talk:{team:'',claude:'',chatgpt:'',perplexity:'',gemini:'',oakley:'',eng:'',media:''},
   /* project spine: six folder slots per portal. The names were not in the rulings — an empty slot reads "name not set". */
   spine:{eng:['','','','','',''],media:['','','','','','']},
   /* Workbench company apps a Deck project can link back to. Names only for now — addresses land at integration (empty = NOT CONNECTED). */
@@ -397,7 +410,7 @@ const CFG={
 (function(){const F=(every,stale)=>({url:'',every,stale});
   CFG.feeds.hubfeed=F(15000,60000);CFG.feeds.stations=F(15000,120000);CFG.feeds.tasks=F(30000,300000);CFG.feeds.flags=F(30000,300000);
   CFG.feeds.eng=F(30000,300000);CFG.feeds.mvid=F(30000,300000);CFG.feeds.mpic=F(30000,300000);CFG.feeds.mads=F(30000,300000);
-  ROOMS.forEach(r=>CFG.feeds['chat:'+r]=F(10000,60000));MEMBERS.forEach(m=>CFG.feeds['code:'+m.id]=F(10000,60000))})();
+  ROOMS.forEach(r=>CFG.feeds['chat:'+r]=F(10000,60000));CFG.feeds['chat:team']=F(10000,60000);MEMBERS.forEach(m=>CFG.feeds['code:'+m.id]=F(10000,60000))})();
 
 /* station lamp vocabulary (ruled): one of these five, or NOT CONNECTED when no station feed exists */
 const LAMPS={'WORKING':{c:'s-working',d:'on an active job'},'IDLE':{c:'s-idle',d:'clocked in, no active job'},'PARKED':{c:'s-parked',d:'clocked out or stood down'},'FLAGGED':{c:'s-flagged',d:'blocked, or a checker flag is open on it'},'NEEDS GRANT':{c:'s-grant',d:'waiting on Grant'}};
@@ -441,12 +454,10 @@ const DOORS=[
 const ctxUrl=(u,x)=>{if(!okUrl(u))return null;u=u.trim();const p=new URLSearchParams(Object.assign({from:'deck'},x||{}));return u+(u.indexOf('?')<0?'?':'&')+p.toString()};
 const WBPTS=[['BLUEPRINT','own app'],['KÜL','LIVE PWA'],['TRELLIS','7 planned'],['SITEVISION','ground-up'],['NB APP','not built']];
 const DAYPTS=['Day to Day','Calendar','Finance & Investments','Home Automation & Security','Budgeting'];
-function doorGauges(){const ms=['OAKLEY','CLAUDE','CHATGPT','GEMINI','PERPLEXITY'].map(n=>CFG.team.members.find(x=>x.n===n)).filter(Boolean);
- return '<span class="snap">'+ms.map(m=>{const w=m.pri==='s'?m.s:m.w;if(w&&w.pct!=null)return '<span class="gg"><span class="gn">'+m.n+'</span><span class="gr"><span class="gb"><i style="width:'+w.pct+'%"></i></span><span class="gp">'+w.pct+'%</span></span></span>';return '<span class="gg"><span class="gn">'+m.n+'</span><span class="gp">'+esc(m.cnt||'')+' '+esc(m.cntl||'')+'</span></span>'}).join('')+'</span>'}
-function doorStag(d){return d.k==='deck'?'SNAPSHOT · '+CFG.team.asOf:d.k==='day'?'IN DAYBOOK · SNAPSHOT':d.k==='sitrep'?'SECTIONS · SNAPSHOT':'APPS · SNAPSHOT'}
-const SRPTS=['WEATHER','TRAFFIC + CAMERAS','LIVE NEWS','AIRPORT','WORLD'];function doorSnap(d){if(d.k==='sitrep')return '<span class="snap">'+SRPTS.map(q=>'<span class="pt"><b>'+q+'</b></span>').join('')+'</span>';if(d.k==='deck')return doorGauges();if(d.k==='wb')return '<span class="snap">'+WBPTS.map(q=>'<span class="pt"><b>'+q[0]+'</b> '+q[1]+'</span>').join('')+'</span>';if(d.k==='day')return '<span class="snap">'+DAYPTS.map(q=>'<span class="pt"><b>'+q+'</b></span>').join('')+'</span>';return ''}
+/* PASS 2 (2026-11-21): doorGauges/doorStag deleted — usage gauges live ONLY in the Team Usage panel, never inside doors or member boxes. */
+const SRPTS=['WEATHER','TRAFFIC + CAMERAS','LIVE NEWS','AIRPORT','WORLD'];function doorSnap(d){if(d.k==='sitrep')return '<span class="snap">'+'<span class="pt"><b>'+SRPTS.length+' SECTIONS</b></span>'+'</span>';if(d.k==='deck')return '<span class="snap">'+'<span class="pt"><b>2 SECTIONS</b></span>'+'</span>';if(d.k==='wb')return '<span class="snap">'+'<span class="pt"><b>'+WBPTS.length+' APPS</b></span>'+'</span>';if(d.k==='day')return '<span class="snap">'+'<span class="pt"><b>'+DAYPTS.length+' SECTIONS</b></span>'+'</span>';return ''}
 function doorHTML(d){const id='d-'+d.k,u=d.cur?null:ctxUrl(d.url&&d.url());
-  const body='<span class="in"><span class="nm">'+d.n+'</span><span class="ln">'+(d.cur?'you are here':u?d.ln:NC+'not connected')+'</span><span class="stag">'+doorStag(d)+'</span></span><span class="go">'+(d.cur?'●':'▸')+'</span>'+doorSnap(d);
+  const body='<span class="in"><span class="nm">'+d.n+'</span><span class="ln">'+(d.cur?'you are here':u?d.ln:NC+'not connected')+'</span></span><span class="go">'+(d.cur?'●':'▸')+'</span>'+doorSnap(d);
   if(d.cur)return '<button id="'+id+'" class="door on" data-a="go:deck" aria-current="page" aria-label="Command Deck — this surface; returns to its primary screen">'+body+'</button>';
   return u?'<a id="'+id+'" class="door" href="'+esc(u)+'" aria-label="'+d.n+'">'+body+'</a>':'<button id="'+id+'" class="door" data-a="door:'+d.k+'" aria-label="'+d.n+' — not connected">'+body+'</button>'}
 function rHome(){const u=ctxUrl(CFG.doors.home);['hm-logo','hm-clock'].forEach(id=>{const e=$('#'+id);if(!e)return;if(u){e.setAttribute('href',u);e.removeAttribute('data-a')}else{e.removeAttribute('href');e.setAttribute('data-a','homenc:1');e.setAttribute('role','button');e.setAttribute('tabindex','0')}})}
@@ -480,7 +491,7 @@ function rStations(){const c=lampCounts(),it=(k,cls,w)=>'<span class="ki" title=
 
 /* UNKNOWN feeds: the full 'UNKNOWN · <why>' badge sits as a strip at the top of the panel (headers are too narrow for it), content stays visible below */
 const ukHTML=f=>'<div class="ukb">'+bdg(['UNKNOWN · '+f.why,'err',ptt(f)])+'</div>';
-const STRIPS=[['#mv-codep',()=>codeF(V.member)],['#tasks-bd',()=>fs('tasks')],['#flags-bd',()=>fs('flags')],['#mv-tasks .bd',()=>fs('tasks')],['#mv-flags .bd',()=>fs('flags')],['#eng-list .bd',()=>fs('eng')],['#media-list .bd',()=>fs((COLLS[V.coll]||COLLS.videos).k)],['#mv-stn .bd',()=>lampOf(MEMBERS.find(x=>x.id===V.member)||MEMBERS[0]).f],['#eng-chat .bd',()=>fs('chat:eng')],['#media-chat .bd',()=>fs('chat:media')],['#mv-msgs',()=>fs('chat:'+V.member)]];
+const STRIPS=[['#mv-codep',()=>codeF(V.member)],['#tasks-bd',()=>fs('tasks')],['#flags-bd',()=>fs('flags')],['#mv-tasks .bd',()=>fs('tasks')],['#mv-flags .bd',()=>fs('flags')],['#eng-list .bd',()=>fs('eng')],['#media-list .bd',()=>fs((COLLS[V.coll]||COLLS.videos).k)],['#mv-stn .bd',()=>lampOf(MEMBERS.find(x=>x.id===V.member)||MEMBERS[0]).f],['#eng-chat .bd',()=>fs('chat:eng')],['#media-chat .bd',()=>fs('chat:media')],['#mv-msgs',()=>fs('chat:'+V.member)],['#team-msgs',()=>fs('chat:team')]];
 function placeStrips(){STRIPS.forEach(([sel,get])=>{const e=$(sel);if(!e)return;const f=get(),has=e.firstElementChild&&e.firstElementChild.classList.contains('ukb');
   if(f.s==='UNKNOWN'){const h=ukHTML(f);if(has){if(e.firstElementChild._h!==h){e.firstElementChild.outerHTML=h;e.firstElementChild._h=h}}else{e.insertAdjacentHTML('afterbegin',h);e.firstElementChild._h=h}}
   else if(has)e.firstElementChild.remove()})}
@@ -507,19 +518,52 @@ function hl(line){const s=String(line);let o='',i=0;const n=s.length,w=(c,t)=>{o
 const msgs=id=>arr('chat:'+id,'messages');
 const codeJ=id=>{const d=D['code:'+id];return d&&d.ok&&d.j?d.j:null};
 const laneName=id=>id==='oakley'?'GRANT ↔ OAKLEY':'OAKLEY ↔ '+(MEMBERS.find(m=>m.id===id)||{n:id.toUpperCase()}).n;
-function chatOv(id){const f=chatF(id);if(f.s==='NC')return '<span class="ph">'+laneName(id)+'</span><span class="ph2">no lane feed set</span>';
+/* ---------- team-room EXAMPLE content (pass 2, examples doctrine): shown ONLY while a room's live feed is not connected, always under an EXAMPLE pill; the moment a feed answers, real data replaces it. Tasks, flags, lamps and usage keep their honest states — examples never stand in for them. ---------- */
+const XCHAT={
+team:[
+{who:"OAKLEY",at:"",text:"Clock-in confirmed — every lane has an assignment and the board is current."},
+{who:"CLAUDE",at:"",text:"Checker note: the enrichment gate is the standard. Send builds, not summaries."},
+{who:"CHATGPT",at:"",text:"KÜL gate lines walked — evidence is in the receipt, gaps named."},
+{who:"GEMINI",at:"",text:"SITREP spec updated: panels never resize on refresh, and stale is labelled with its time."},
+{who:"PERPLEXITY",at:"",text:"ECCC citypage route verified — hour-folder pattern. Camera inventory is keyless."},
+{who:"OAKLEY",at:"",text:"Standing rule: a completion is announced with its content, or it did not happen."}],
+claude:[
+{who:"OAKLEY",at:"",text:"Run the acceptance plan against the staging copy when it lands."},
+{who:"CLAUDE",at:"",text:"On it — the verdict comes back pass or fail per line, with evidence."}],
+chatgpt:[
+{who:"OAKLEY",at:"",text:"The KÜL and Lions Gate gates are yours when the builds land."},
+{who:"CHATGPT",at:"",text:"Ready — I will walk every line against the app as built, not as briefed."}],
+gemini:[
+{who:"OAKLEY",at:"",text:"Home proportions landed well. The SITREP layout spec is next."},
+{who:"GEMINI",at:"",text:"Drafting it now — density, hierarchy and the no-reflow rule baked in."}],
+perplexity:[
+{who:"OAKLEY",at:"",text:"Confirm the camera certificate route before the SITREP build starts."},
+{who:"PERPLEXITY",at:"",text:"Confirmed: inventory is keyless; stills ride the certificate route, one per 60 seconds."}],
+oakley:[
+{who:"GRANT",at:"",text:"Show me the Deck with the team rooms on it."},
+{who:"OAKLEY",at:"",text:"Building it now — group room on the face, one box per lane, usage in its panel only."}]};
+const XCODE={
+claude:["// gate check — canopy acceptance run","const autoFail = ['dead page', 'flat section', 'dead button'];","verdict(line) => line.evidence ? 'PASS' : 'FAIL — no evidence'","// 36 criteria · 9 auto-FAILs · receipts over claims"],
+chatgpt:["// KÜL gate walk — lines 14-25","check('client cards carry real photos')","check('no placeholder names anywhere')","// evidence: the build as shipped, not as briefed"],
+gemini:["/* SITREP layout spec v2 */",".panel { refresh: repaint-only; } /* never resize */","stale: label with its time, always","density: operator-grade — no bland lists"],
+perplexity:["// ECCC citypage — hour-folder pattern","GET dd.weather.gc.ca/today/citypage_weather/ON/{HH}/","// the latest s0000430 file in the folder wins","cameras: inventory keyless · stills via certificate"],
+oakley:["// hub — pass 2 build","rooms: team room + five member boxes on the Deck face","usage: the Team Usage panel ONLY","receipt: every item mapped to code evidence"]};
+const xPill=()=>bdg(['EXAMPLE','ice']);
+const xMsgs=(id,n)=>XCHAT[id].slice(-n).map(x=>'<div class="ml"><b>'+esc(clip(x.who,14))+'</b>'+esc(clip(x.text,160))+'</div>').join('');
+function chatOv(id){const f=chatF(id);if(f.s==='NC')return '<div class="cdx">'+xPill()+'</div>'+xMsgs(id,6);
   const l=msgs(id).slice(-6);if(!l.length)return (f.s==='UNKNOWN'?ukHTML(f):'')+'<span class="ph">'+laneName(id)+'</span><span class="ph2">'+(f.s==='UNKNOWN'?'age unknown · feed lists nothing':f.s==='OFFLINE'?'feed not answering':f.s==='WAIT'?'waiting for the feed':'no messages in the feed')+'</span>';
   return (f.s==='UNKNOWN'?ukHTML(f):'')+l.map(x=>'<div class="ml"><b>'+esc(clip(x.who,14))+'</b>'+esc(clip(x.text,160))+'</div>').join('')}
 function codeOv(id){const f=codeF(id),j=codeJ(id),R=(n,h,c)=>'<div class="ml cn1'+(c?' '+c:'')+'"><i class="ln">'+n+'</i>'+h+'</div>';
   /* every row carries its own line number: header row = 1, code rows follow; the empty state numbers its two rows the same way */
-  if(f.s==='NC'||!j)return '<div class="cd">'+(f.s==='UNKNOWN'?ukHTML(f):'')+R(1,'<span class="ph">WORK PANE</span>')+R(2,'<span class="ph2"><i class="cur"></i>'+(f.s==='NC'?'no work-pane feed set':f.s==='UNKNOWN'?'age unknown · feed lists nothing':f.s==='OFFLINE'?'feed not answering':'waiting for the feed')+'</span>')+'</div>';
+  if(f.s==='NC')return '<div class="cd">'+R(1,'<span class="ph">WORK PANE</span> '+xPill())+(XCODE[id]||[]).map((x,k)=>R(k+2,hl(clip(x,120)))).join('')+'</div>';
+  if(!j)return '<div class="cd">'+(f.s==='UNKNOWN'?ukHTML(f):'')+R(1,'<span class="ph">WORK PANE</span>')+R(2,'<span class="ph2"><i class="cur"></i>'+(f.s==='UNKNOWN'?'age unknown · feed lists nothing':f.s==='OFFLINE'?'feed not answering':'waiting for the feed')+'</span>')+'</div>';
   const ls=(Array.isArray(j.lines)?j.lines:[]).slice(0,6).map((x,k)=>R(k+2,hl(clip(x,120)))).join('');
   return '<div class="cd">'+(f.s==='UNKNOWN'?ukHTML(f):'')+R(1,'<span class="ph">'+esc(clip(j.title||j.file||'current work',60))+'</span>')+ls+'</div>'}
 function boxHTML(m){const L=lampOf(m);
   return '<article class="card mbox" tabindex="0" role="button" data-a="m:'+m.id+'" aria-label="Open '+esc(m.nm)+' — full chat room and code box. Station '+esc(L.word)+'">'
    +'<div class="hd mh"><span class="mt1"><i class="lamp '+L.cls+'"></i><span class="mnm">'+m.n+(m.hub?'<em>HUB</em>':'')+'</span></span><span class="mt2"><span class="stw">'+esc(L.word)+'</span><span class="opn">OPEN ▸</span></span></div>'
-   +'<div class="bd"><div class="sec"><span>'+(chatF(m.id).s==='UNKNOWN'?'LANE':'HUB LANE')+'</span>'+pillFor(chatF(m.id))+'</div><div class="pane pchat">'+chatOv(m.id)+'</div>'
-   +'<div class="sec"><span>CODE</span>'+pillFor(codeF(m.id))+'</div><div class="pane pcode">'+codeOv(m.id)+'</div></div></article>'}
+   +'<div class="bd"><div class="sec"><span>'+(chatF(m.id).s==='UNKNOWN'?'LANE':'HUB LANE')+'</span>'+(chatF(m.id).s==='NC'?xPill():pillFor(chatF(m.id)))+'</div><div class="pane pchat">'+chatOv(m.id)+'</div>'
+   +'<div class="sec"><span>CODE</span>'+(codeF(m.id).s==='NC'?xPill():pillFor(codeF(m.id)))+'</div><div class="pane pcode">'+codeOv(m.id)+'</div></div></article>'}
 function rMembers(){setH($('#mrow'),MEMBERS.map(m=>boxHTML(m)).join(''))}
 
 /* ---------- big usage meter / team information ---------- */
@@ -539,7 +583,7 @@ function rTasks(){const f=fs('tasks'),l=arr('tasks','tasks');
   setH($('#tasks .hdw'),hdr('OPEN TASKS',pillS(f)));
   setH($('#tasks-bd'),'<div class="cols"><span>OWNER</span><span>TASK</span>'+cnote(f,l.length,'OPEN')+'</div>'+(l.length?'<div class="rows">'+l.map(t=>'<div class="rw"><span class="ow">'+esc(clip(t.owner,12).toUpperCase())+'</span><span class="tt" title="'+esc(clip(t.title,200))+'">'+esc(clip(t.title,120))+'</span></div>').join('')+'</div>':f.s==='NC'?ncb('No task feed is set. The team’s open tasks show here once the hub feed is connected.'):f.s==='OFFLINE'?ncb('The task feed is not answering.','OFFLINE'):f.s==='UNKNOWN'?ncb(unkTxt(f),'UNKNOWN · '+f.why):f.s==='WAIT'?ncb('Waiting for the task feed.','WAITING'):ncb('The feed reports no open tasks.','NONE OPEN')))}
 const appOf=id=>CFG.apps.find(a=>a.id===id);
-function appLink(id,x){const a=appOf(id);if(!a)return '';const u=ctxUrl(a.url,x);return u?'<a class="lnk" href="'+esc(u)+'" title="Opens the '+esc(a.n)+' app — it offers the way back">↗ '+esc(a.n)+'</a>':'<span class="lnk nc" title="'+esc(a.n)+' — address not supplied yet">↗ '+esc(a.n)+' · NC</span>'}
+function appLink(id,x){const a=appOf(id);if(!a)return '';const u=ctxUrl(a.url,x);return u?'<a class="lnk linked" href="'+esc(u)+'" title="Opens the '+esc(a.n)+' app — it offers the way back">↗ '+esc(a.n)+'<span class="lkb">LINK</span></a>':'<span class="lnk nc" title="'+esc(a.n)+' — address not supplied yet">↗ '+esc(a.n)+' · NC</span>'}
 function flagRow(x){return '<div class="rw fl"><span class="tt" title="'+esc(clip(x.project,120))+'">'+esc(clip(x.project,80))+'</span><span class="ow">'+esc(clip(x.raisedBy,14).toUpperCase())+'</span><span class="rs" title="'+esc(clip(x.reason,300))+'">'+esc(clip(x.reason,160))+'</span></div>'}
 function rFlags(){const f=fs('flags'),l=arr('flags','flags');
   setH($('#flags .hdw'),hdr('FLAGGED PROJECTS',pillS(f)));
@@ -567,6 +611,8 @@ function buildShells(){
    +'<section class="card" id="mv-code"><div class="hdw"></div><div class="codeh" id="mv-codeh"></div><div class="bd codep" id="mv-codep"></div></section></div>'
    +'<div class="mvf"><section class="card" id="mv-stn"><div class="hdw"></div><div class="bd"></div></section><section class="card" id="mv-tasks"><div class="hdw"></div><div class="bd"></div></section><section class="card" id="mv-flags"><div class="hdw"></div><div class="bd"></div></section></div>';
   const vh=(p,t,sub)=>'<div class="vh"><button class="btn bk" data-a="back:" aria-label="Back to the Command Deck primary screen">◂ COMMAND DECK</button><div class="vt"><b>'+t+'</b><span>'+sub+'</span></div><span class="sp"></span><button class="btn" data-a="apps:'+p+'" id="apps-btn-'+p+'" aria-expanded="false" aria-label="Workbench company apps this portal\'s projects can link back to">↗ WORKBENCH APPS ▾</button><div class="pop" id="pop-'+p+'" hidden></div></div>';
+  $('#v-team').innerHTML='<div class="vh"><button class="btn bk" data-a="back:" aria-label="Back to the Command Deck primary screen">◂ COMMAND DECK</button><div class="vt"><b>TEAM ROOM</b><span>group chat · the whole team in one room</span></div><div class="vs" id="team-st"></div></div>'
+   +chatCard('team','Team chat — whole team');
   $('#v-eng').innerHTML=vh('eng','ENGINEERING PORTAL','whole area · CAD working screen · team chat · folder spine · projects')
    +'<div class="pvb"><div class="lcol">'+spineCard('eng')+'<section class="card" id="eng-list"><div class="hdw"></div><div class="bd"></div></section></div>'
    +'<section class="card wscr" id="eng-scr"><div class="hdw"></div><div class="chain2" id="chain2"></div><div class="stage" id="stage"><canvas id="cad" aria-label="Interactive CAD working screen — drag to orbit, shift-drag to pan, wheel to zoom"></canvas><div class="ovl"><b>NO MODEL LOADED</b><span>The viewport works — orbit, pan, zoom — but no geometry feed is connected, so no model is shown.</span></div></div><div class="hud"><span id="cad-hud"></span><span>DRAG orbit · SHIFT+DRAG pan · WHEEL zoom</span></div></section>'
@@ -581,10 +627,10 @@ function buildShells(){
 
 /* ---------- member view (a box opened big, in place) ---------- */
 function msgHTML(x){return '<div class="msg"><div class="mh2">'+esc(clip(x.who,20))+(x.at?'<i>'+esc(clip(x.at,24))+'</i>':'')+'</div><div class="mb">'+esc(clip(x.text,1200))+'</div></div>'}
-function rChat(card,room,title,sub,narrow){const f=fs('chat:'+room),l=msgs(room),el=$('#'+card);
-  setH($('.hdw',el),hdr(title,narrow?pillS(f):pillFor(f)));
+function rChat(card,room,title,sub,narrow){const f=fs('chat:'+room),l=msgs(room),el=$('#'+card),xr=!!XCHAT[room]&&f.s==='NC';
+  setH($('.hdw',el),hdr(title,xr?xPill():narrow?pillS(f):pillFor(f)));
   const bd=$('.msgs',el),near=bd.scrollHeight-bd.scrollTop-bd.clientHeight<40;
-  setH(bd,l.length?l.map(msgHTML).join(''):f.s==='NC'?ncb('No conversation feed is set for '+sub+'. Messages show here once the hub feed is connected — none are invented.'):f.s==='OFFLINE'?ncb('The conversation feed is not answering.','OFFLINE'):f.s==='UNKNOWN'?ncb(unkTxt(f),'UNKNOWN · '+f.why):f.s==='WAIT'?ncb('Waiting for the conversation feed.','WAITING'):ncb('The feed has no messages yet.','EMPTY'));
+  setH(bd,l.length?l.map(msgHTML).join(''):xr?XCHAT[room].map(msgHTML).join(''):f.s==='NC'?ncb('No conversation feed is set for '+sub+'. Messages show here once the hub feed is connected — none are invented.'):f.s==='OFFLINE'?ncb('The conversation feed is not answering.','OFFLINE'):f.s==='UNKNOWN'?ncb(unkTxt(f),'UNKNOWN · '+f.why):f.s==='WAIT'?ncb('Waiting for the conversation feed.','WAITING'):ncb('The feed has no messages yet.','EMPTY'));
   if(near)bd.scrollTop=bd.scrollHeight}
 function rMemberView(){const m=MEMBERS.find(x=>x.id===V.member)||MEMBERS[0],L=lampOf(m);
   setH($('#mtabs'),MEMBERS.map(x=>'<button class="btn" data-a="m:'+x.id+'" aria-pressed="'+(x.id===m.id)+'"><i class="lamp '+lampOf(x).cls+'"></i>'+x.n+'</button>').join(''));
@@ -595,15 +641,22 @@ function rMemberView(){const m=MEMBERS.find(x=>x.id===V.member)||MEMBERS[0],L=la
   rChat('mv-chat',m.id,'LANE · '+laneName(m.id),m.nm+'’s lane with Oakley');
   const j=codeJ(m.id),cf=codeF(m.id);
   setH($('#mv-code .hdw'),hdr('CODE BOX · '+m.n+' CURRENT WORK / BUILD',pillFor(cf)));
-  setH($('#mv-codeh'),j?'<span>'+esc(clip(j.title||'current work',80))+'</span><span>'+esc(clip(j.file||'',80))+'</span>':'<span>WORK PANE</span><span>'+(cf.s==='NC'?'no work-pane feed set':cf.s==='UNKNOWN'?'age unknown · feed lists nothing':cf.s==='OFFLINE'?'feed not answering':'waiting for the feed')+'</span>');
+  setH($('#mv-codeh'),j?'<span>'+esc(clip(j.title||'current work',80))+'</span><span>'+esc(clip(j.file||'',80))+'</span>':'<span>WORK PANE</span><span>'+(cf.s==='NC'?'EXAMPLE · no work-pane feed set':cf.s==='UNKNOWN'?'age unknown · feed lists nothing':cf.s==='OFFLINE'?'feed not answering':'waiting for the feed')+'</span>');
   const ls=j&&Array.isArray(j.lines)?j.lines.slice(0,400):[];
-  setH($('#mv-codep'),ls.length?ls.map((x,i)=>'<div class="cl"><i>'+(i+1)+'</i><span>'+hl(clip(x,300))+'</span></div>').join(''):ncb('No work-pane feed is set for '+m.nm+'. The member’s current work / build shows here in a code box once the hub feed is connected.',cf.s==='UNKNOWN'?'UNKNOWN · '+cf.why:cf.s==='OFFLINE'?'OFFLINE':'NOT CONNECTED'));
+  setH($('#mv-codep'),ls.length?ls.map((x,i)=>'<div class="cl"><i>'+(i+1)+'</i><span>'+hl(clip(x,300))+'</span></div>').join(''):cf.s==='NC'?'<div class="cdx">'+xPill()+'</div>'+(XCODE[m.id]||[]).map((x,i)=>'<div class="cl"><i>'+(i+1)+'</i><span>'+hl(clip(x,300))+'</span></div>').join(''):ncb('No work-pane feed is set for '+m.nm+'. The member’s current work / build shows here in a code box once the hub feed is connected.',cf.s==='UNKNOWN'?'UNKNOWN · '+cf.why:cf.s==='OFFLINE'?'OFFLINE':'NOT CONNECTED'));
   const tl=arr('tasks','tasks').filter(t=>String(t.owner||'').toLowerCase()===m.id),tf=fs('tasks');
   setH($('#mv-tasks .hdw'),hdr('OPEN TASKS',pillS(tf)));
   setH($('#mv-tasks .bd'),tl.length?'<div class="rows">'+tl.map(t=>'<div class="rw" style="grid-template-columns:minmax(0,1fr)"><span class="tt">'+esc(clip(t.title,120))+'</span></div>').join('')+'</div>':tf.s==='NC'?ncb('No task feed is set.'):tf.s==='OFFLINE'?ncb('The task feed is not answering.','OFFLINE'):tf.s==='UNKNOWN'?ncb(unkTxt(tf),'UNKNOWN · '+tf.why):ncb('No open tasks for '+m.nm+' in the feed.','NONE OPEN'));
   const fl=arr('flags','flags').filter(x=>String(x.raisedBy||'').toLowerCase()===m.id),ff=fs('flags');
   setH($('#mv-flags .hdw'),hdr('FLAGS RAISED',pillS(ff)));
   setH($('#mv-flags .bd'),fl.length?'<div class="rows">'+fl.map(flagRow).join('')+'</div>':ff.s==='NC'?ncb('No flag feed is set.'):ff.s==='OFFLINE'?ncb('The flag feed is not answering.','OFFLINE'):ff.s==='UNKNOWN'?ncb(unkTxt(ff),'UNKNOWN · '+ff.why):ncb('No open flags raised by '+m.nm+'.','NONE OPEN'))}
+
+/* ---------- team room (group chat: the face box shows the last two messages; the room opens as its own view) ---------- */
+function rTeamBox(){const f=chatF('team'),l=msgs('team'),src=f.s==='NC'?XCHAT.team:l,last=src.slice(-2);
+  setH($('#teamroom'),'<div class="hd mh"><span class="mt1"><span class="mnm">TEAM ROOM</span><em>GROUP CHAT</em></span><span class="mt2">'+(f.s==='NC'?xPill():pillFor(f))+'<span class="opn">OPEN ▸</span></span></div>'
+   +'<div class="bd"><div class="pane pchat">'+(f.s==='UNKNOWN'?ukHTML(f):'')+(last.length?last.map(x=>'<div class="ml"><b>'+esc(clip(x.who,14))+'</b>'+esc(clip(x.text,220))+'</div>').join(''):'<span class="ph2">no messages in the feed yet</span>')+'</div></div>')}
+function rTeamView(){setH($('#team-st'),MEMBERS.map(m=>{const L=lampOf(m);return '<span class="tchip"><i class="lamp '+L.cls+'"></i>'+m.n+'</span>'}).join(''));
+  rChat('team-chat','team','TEAM CHAT · WHOLE TEAM','the team room')}
 
 /* ---------- portals (whole areas) ---------- */
 function rSpine(p){const names=CFG.spine[p],el=$('#'+p+'-spine'),set=names.filter(Boolean).length;
@@ -626,7 +679,7 @@ function rMedia(){const c=COLLS[V.coll]||COLLS.videos,k=c.k,f=fs(k),l=arr(k,'ite
 function rApps(){const el=$('#pop-'+V.view);if(!el)return;setH(el,'<span class="ph3">WORKBENCH COMPANY APPS</span><span class="pn2">A Deck project links back to the app it belongs to — a labelled door with a return door, never a copy. BluePrint and the Northbirch app have no address on file yet.</span><div class="ag">'+CFG.apps.map(a=>appLink(a.id,{portal:V.view==='media'?'media':'eng'})).join('')+'</div>')}
 
 /* ---------- talk (one app-wide control; the main person is OAKLEY) ---------- */
-const CTXN={home:'COMMAND DECK',member:null,eng:'ENGINEERING',media:'MEDIA'};
+const CTXN={home:'COMMAND DECK',member:null,team:'TEAM ROOM',eng:'ENGINEERING',media:'MEDIA'};
 const ctxName=()=>V.view==='member'?(MEMBERS.find(m=>m.id===V.member)||MEMBERS[0]).n:CTXN[V.view]||'COMMAND DECK';
 const ctxNow=()=>({surface:'deck',view:V.view,member:V.view==='member'?V.member:undefined,collection:V.view==='media'?V.coll:undefined,at:new Date().toISOString()});
 const flashT={};function flash(id,txt,bad){const e=$('#'+id);if(!e)return;e._h=null;e.textContent=txt;e.style.color=bad?'#f87171':'';clearTimeout(flashT[id]);flashT[id]=setTimeout(()=>{flashT[id]=0;e.textContent='';e.style.color='';e._h=null;paint()},5000)}
@@ -638,7 +691,7 @@ function rDock(){const L=lampOf(MEMBERS[4]);$('#dock').classList.toggle('hasret'
   setH($('#tk-ctx'),'CONTEXT <b>'+esc(ctxName())+'</b>');
   if(!flashT['tk-st'])setH($('#tk-st'),okUrl(CFG.talk.oakley)?bdg(['READY','live']):bdg(['OAKLEY · NOT CONNECTED','pend']))}
 function rTalkRoomSt(){const nc='talk address not set';
-  [['eng-cst','eng'],['media-cst','media'],['mv-cst',V.member]].forEach(a=>{const e=$('#'+a[0]);if(e&&!flashT[a[0]])setH(e,okUrl(CFG.talk[a[1]])?'':nc)})}
+  [['team-cst','team'],['eng-cst','eng'],['media-cst','media'],['mv-cst',V.member]].forEach(a=>{const e=$('#'+a[0]);if(e&&!flashT[a[0]])setH(e,okUrl(CFG.talk[a[1]])?'':nc)})}
 
 /* ---------- return door (doors carry context; the owner offers the way back) ---------- */
 const QS=new URLSearchParams(location.search);
@@ -670,15 +723,22 @@ function cadInit(){const c=$('#cad');let m=null;
 const V={view:'home',member:'claude',coll:'videos'};
 function parseHash(){const p=(location.hash||'').replace(/^#\/?/,'').split('/');
   if(p[0]==='member'&&MEMBERS.some(m=>m.id===p[1])){V.view='member';V.member=p[1]}
+  else if(p[0]==='team')V.view='team';
   else if(p[0]==='eng')V.view='eng';
   else if(p[0]==='media'){V.view='media';if(COLLS[p[1]])V.coll=p[1]}
   else V.view='home'}
 const go=h=>{if(location.hash===h)route();else location.hash=h};
 let lastView=null;
-function route(){parseHash();closeApps();$$('.view').forEach(e=>{e.hidden=e.id!=='v-'+V.view});
-  const el=$('#v-'+V.view);if(lastView!==V.view){el.classList.remove('in');void el.offsetWidth;el.classList.add('in')}lastView=V.view;paint();if(V.view==='eng')cadAsk()}
-function paint(){rDoors();rStations();rMembers();rUsage();rTasks();rFlags();rPortals();
-  if(V.view==='member')rMemberView();else if(V.view==='eng')rEng();else if(V.view==='media')rMedia();
+function route(){parseHash();closeApps();
+  /* PASS 2: a member station opens as a DRAWER over the Deck (240ms slide-in + scrim), not a page swap; every other view keeps the swap. */
+  const isM=V.view==='member';
+  $$('.view').forEach(e=>{if(e.id!=='v-member')e.hidden=e.id!=='v-'+V.view});
+  const dr=$('#v-member'),sc=$('#scrim');
+  if(isM){if(dr.hidden){dr.hidden=false;void dr.offsetWidth}dr.classList.add('open');sc.hidden=false;void sc.offsetWidth;sc.classList.add('on')}
+  else if(dr.classList.contains('open')||!dr.hidden){dr.classList.remove('open');sc.classList.remove('on');setTimeout(()=>{if(V.view!=='member'){dr.hidden=true;sc.hidden=true}},260)}
+  const el=$('#v-'+V.view);if(!isM&&lastView!==V.view){el.classList.remove('in');void el.offsetWidth;el.classList.add('in')}lastView=V.view;paint();if(V.view==='eng')cadAsk()}
+function paint(){rDoors();rStations();rMembers();rTeamBox();rUsage();rTasks();rFlags();rPortals();
+  if(V.view==='member')rMemberView();else if(V.view==='team')rTeamView();else if(V.view==='eng')rEng();else if(V.view==='media')rMedia();
   rDock();rTalkRoomSt();placeStrips()}
 function closeApps(){['eng','media'].forEach(p=>{const e=$('#pop-'+p),b=$('#apps-btn-'+p);if(e&&!e.hidden){e.hidden=true;if(b)b.setAttribute('aria-expanded','false')}})}
 function toggleApps(){const p=$('#pop-'+V.view),b=$('#apps-btn-'+V.view);if(!p||!b)return;const open=p.hidden;closeApps();if(open){rApps();p.hidden=false;b.setAttribute('aria-expanded','true')}}
@@ -694,11 +754,12 @@ function clock(){const d=new Date();$('#ck').textContent=pad(d.getHours())+':'+p
 document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');
   if(!e.target.closest('.pop')&&!e.target.closest('[id^=apps-btn]'))closeApps();
   if(!b)return;const a=b.dataset.a,i=a.indexOf(':'),k=a.slice(0,i),v=a.slice(i+1);
-  if(k==='m')go('#/member/'+v);else if(k==='go'||k==='back')go('#/deck');else if(k==='portal')go('#/'+v);
+  if(k==='m')go('#/member/'+v);else if(k==='team')go('#/team');else if(k==='go'||k==='back')go('#/deck');else if(k==='portal')go('#/'+v);
   else if(k==='coll'){V.coll=v;go('#/media/'+v)}
   else if(k==='cad')cadPreset(v);else if(k==='apps')toggleApps();
   else if(k==='homenc'){toast('<b>HOME</b> · NOT CONNECTED — the Home wall address is not set, so nothing is simulated.')}
   else if(k==='door'){const d=DOORS.find(x=>x.k===v);toast('<b>'+esc(d?d.n:v)+'</b> · NOT CONNECTED — this surface is not part of this file and its address is not supplied yet, so nothing is simulated. It lands at integration.')}});
+$('#scrim').addEventListener('click',()=>go('#/deck'));
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){const p=$('#pop-'+V.view);if(p&&!p.hidden){closeApps();return}if(V.view!=='home')go('#/deck')}
   else if(e.key==='/'&&!/^(INPUT|TEXTAREA)$/.test((document.activeElement||{}).tagName||'')){e.preventDefault();$('#tk-in').focus()}
@@ -752,15 +813,40 @@ boot();
 @media (prefers-reduced-motion:reduce){.chrono .wxdoor .rays,.chrono .wxdoor .cld{animation:none}}
 
 </style>
-<button id="wheelbtn" class="wheelbtn" aria-label="Open the Canopy section wheel"><img class="nb-head" src="./assets/northbirch-head-only-v11.svg" alt="" aria-hidden="true"><span>SECTIONS</span></button>
+<style id="pass2-2026-11-21">
+/* ============ CANOPY PASS 2 (2026-11-21) — Deck: member stations open as a DRAWER over the Deck (240ms slide-in + scrim); team room; cross-area app links flagged (glow + LINK badge); phone wheel carries every section ============ */
+#scrim{position:fixed;inset:0;z-index:280;background:rgba(2,5,3,.62);backdrop-filter:blur(2px);opacity:0;transition:opacity 240ms ease}
+#scrim.on{opacity:1}
+#v-member{position:fixed;top:0;right:0;height:100dvh;width:min(80rem,97vw);z-index:290;background:var(--hull);border-left:1px solid var(--ld);box-shadow:-1.2rem 0 2.5rem rgba(0,0,0,.55);transform:translateX(103%);transition:transform 240ms ease;overflow-y:auto}
+#v-member.open{transform:none}
+#v-team{grid-template-rows:var(--ct) minmax(0,1fr)}
+#teamroom{cursor:pointer}
+.tchip{display:inline-flex;align-items:center;gap:.3rem;font:700 .62rem var(--fm);letter-spacing:.06em}
+.cdx{padding:.05rem 0 .3rem}
+a.lnk.linked{border:1px solid rgb(var(--r-ice)/.55);border-radius:.25rem;padding:.05rem .35rem;box-shadow:0 0 .5rem rgb(var(--r-ice)/.35)}
+.lkb{font:700 .52rem var(--fm);letter-spacing:.08em;border:1px solid currentColor;border-radius:.2rem;padding:.02rem .25rem;margin-left:.35rem}
+@media (prefers-reduced-motion:reduce){#v-member,#scrim{transition:none}}
+.nwheel{overflow-y:auto;padding:1rem 0}
+.nw-more{width:min(92vw,27rem);max-height:34vh;overflow-y:auto;display:flex;flex-direction:column;gap:.5rem;padding:.15rem;scrollbar-width:thin;flex:none}
+.nw-grp{display:flex;flex-wrap:wrap;gap:.35rem;align-items:center}
+.nw-grp>span{font:700 .58rem var(--fm,ui-monospace,monospace);letter-spacing:.14em;color:#f5c542;margin-right:.1rem}
+.nw-grp a{font:700 .6rem var(--fm,ui-monospace,monospace);letter-spacing:.05em;color:#e8e4d8;text-decoration:none;background:#121316;border:1px solid #2c2c31;border-radius:2rem;padding:.4rem .6rem;min-height:2rem;display:inline-flex;align-items:center}
+</style>
+<button id="wheelbtn" class="wheelbtn" aria-label="Open the Canopy section wheel"><img class="nb-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true"><span>SECTIONS</span></button>
 <div id="nwheel" class="nwheel" hidden role="dialog" aria-modal="true" aria-label="Canopy sections">
  <div class="nw-dial">
   <div class="nw-ring"></div><div class="nw-ring2"></div>
-  <button class="nw-hub" data-nw="close" aria-label="Close the wheel"><img class="nb-head" src="./assets/northbirch-head-only-v11.svg" alt="" aria-hidden="true"></button>
-  <a class="nw-st nw-home" href="./index.html"><img class="nb-head" src="./assets/northbirch-head-only-v11.svg" alt="" aria-hidden="true">HOME</a> <a class="nw-st nw-sit" href="./sitrep.html#tab=1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><path d="M8.5 15.5a5 5 0 0 1 0-7M15.5 8.5a5 5 0 0 1 0 7M5.6 18.4a9 9 0 0 1 0-12.8M18.4 5.6a9 9 0 0 1 0 12.8"/></svg>SITREP</a>
+  <button class="nw-hub" data-nw="close" aria-label="Close the wheel"><img class="nb-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true"></button>
+  <a class="nw-st nw-home" href="./index.html"><img class="nb-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true">HOME</a> <a class="nw-st nw-sit" href="./sitrep.html#tab=1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><path d="M8.5 15.5a5 5 0 0 1 0-7M15.5 8.5a5 5 0 0 1 0 7M5.6 18.4a9 9 0 0 1 0-12.8M18.4 5.6a9 9 0 0 1 0 12.8"/></svg>SITREP</a>
   <span class="nw-st nw-deck cur" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 15a8 8 0 1 1 16 0"/><path d="M12 15l4.2-4.2"/><circle cx="12" cy="15" r="1.3" fill="currentColor" stroke="none"/></svg>DECK</span>
   <a class="nw-st nw-wb" href="./workbench.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M9 8V6a3 3 0 0 1 6 0v2M3 13h18"/></svg>WORKBENCH</a>
   <a class="nw-st nw-day" href="./daybook.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M8 3v4M16 3v4"/></svg>DAYBOOK</a>
+ </div>
+ <div class="nw-more" aria-label="Every Canopy section">
+  <div class="nw-grp"><span>SITREP</span><a href="./sitrep.html#sec=home">SITREP HOME</a><a href="./sitrep.html#sec=weather">WEATHER</a><a href="./sitrep.html#sec=cams">CAMERAS</a><a href="./sitrep.html#sec=airport">AIRPORT</a><a href="./sitrep.html#sec=tv">LIVE TV</a><a href="./sitrep.html#sec=world">WORLD</a></div>
+  <div class="nw-grp"><span>DECK</span><a href="./deck.html#/team">TEAM ROOM</a><a href="./deck.html#/member/oakley">OAKLEY</a><a href="./deck.html#/member/claude">CLAUDE</a><a href="./deck.html#/member/chatgpt">CHATGPT</a><a href="./deck.html#/member/gemini">GEMINI</a><a href="./deck.html#/member/perplexity">PERPLEXITY</a><a href="./deck.html#/eng">ENGINEERING</a><a href="./deck.html#/media">MEDIA</a></div>
+  <div class="nw-grp"><span>DAYBOOK</span><a href="./daybook.html#view=day">DAY TO DAY</a><a href="./daybook.html#view=calendar">CALENDAR</a><a href="./daybook.html#view=budget">BUDGET</a><a href="./daybook.html#view=invest">INVESTMENTS</a><a href="./daybook.html#view=shopping">SHOPPING</a><a href="./daybook.html#view=notes">NOTES</a><a href="./daybook.html#view=automation">AUTOMATION</a><a href="./daybook.html#view=commute">COMMUTE</a><a href="./daybook.html#view=truck">TRUCK</a><a href="./daybook.html#view=security">SECURITY</a><a href="./daybook.html#view=social">SOCIAL</a></div>
+  <div class="nw-grp"><span>WORKBENCH</span><a href="./workbench.html">ALL APPS</a></div>
  </div>
  <button class="nw-x" data-nw="close">✕ CLOSE</button>
 </div>
@@ -777,7 +863,7 @@ var nwEl=$('#nwheel'),wbtn=$('#wheelbtn');
 function wheelClose(){nwEl.hidden=true}
 if(wbtn)wbtn.addEventListener('click',function(){nwEl.hidden=false});
 $$('[data-nw="close"]',nwEl).forEach(function(b){b.addEventListener('click',wheelClose)});
-nwEl.addEventListener('click',function(e){if(e.target===nwEl)wheelClose()});
+nwEl.addEventListener('click',function(e){if(e.target===nwEl||e.target.closest('a'))wheelClose()});
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!nwEl.hidden)wheelClose()});
 })();
 </script>

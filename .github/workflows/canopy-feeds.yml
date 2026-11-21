@@ -4,7 +4,7 @@
 # Placement: this file must live at .github/workflows/canopy-feeds.yml
 # in the repo root, on the default branch, before it takes effect.
 #
-# Every 10 minutes (and on manual dispatch) this fetches the 9 Canopy
+# Every 10 minutes (and on manual dispatch) this fetches the 14 Canopy
 # feeds into canopy-finish/data/ and commits only if the data changed.
 # It mirrors feeds-workflow/refresh-snapshots.sh (same feed list, same
 # honesty rules) inline, so the runner needs nothing beyond curl and
@@ -71,6 +71,39 @@ jobs:
             else
               status="200"
             fi
+            if [ "$status" = "200" ] && [ "$fname" = "yow-flights.json" ]; then
+              # YOW FIDS trim (airport-free-feed-report-2026-11-21 §2): the raw
+              # body is ~1 MB, mostly per-record AirlineLogo srcsets. Keep only
+              # the board's fields and today+tomorrow (Ottawa local); the
+              # verbatim-body rule for the other feeds would mean ~1 MB of git
+              # churn every 10 minutes. A trim failure is treated like an
+              # invalid fetch: the previous file and its fetched_at are kept.
+              OTTAWA_TODAY="$(TZ=America/Toronto date +%F)"
+              if python3 - "$tmp" "$OTTAWA_TODAY" <<'PYEOF'
+          import json, sys
+          path, today = sys.argv[1], sys.argv[2]
+          d = json.load(open(path, "rb"))
+          KEEP = ["MasterFlight","ArrDep","FlightDate","DisplayFlight","CarrierCode","AirlineName","SchedTime","EstTime","ScheduledTime","ExpectedTime","Status","ActualGate","ActualCarousels","ActualCities","IATA","Sector","Codeshares","UpdateTime","SecondsInDay"]
+          def trim(recs):
+              out = {}
+              for day, rows in (recs or {}).items():
+                  if day < today:
+                      continue
+                  out[day] = [{k: r[k] for k in KEEP if k in r} for r in rows]
+              return out
+          o = {"cached": d.get("cached"), "arrivals": trim(d.get("arrivals")), "departures": trim(d.get("departures"))}
+          if not o["arrivals"] and not o["departures"]:
+              sys.exit(1)
+          with open(path, "w") as f:
+              json.dump(o, f, separators=(",", ":"))
+          PYEOF
+              then
+                echo "OK   $fname: trimmed to board fields"
+              else
+                status="invalid_json"
+                echo "FAIL $fname: YOW trim failed"
+              fi
+            fi
             if [ "$status" = "200" ]; then
               fetched_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
               bytes="$(wc -c < "$tmp" | tr -d ' ')"
@@ -95,6 +128,7 @@ jobs:
           fetch_feed "osiris-earthquakes.json"  "https://osirisai.live/api/earthquakes"          "json"
           fetch_feed "osiris-health.json"     "https://osirisai.live/api/health"                 "json"
           fetch_feed "osiris-stats.json"      "https://osirisai.live/api/stats"                  "json"
+          fetch_feed "yow-flights.json"       "https://www.yow.ca/api/flights/get"               "json"
 
           DATA_DIR="$DATA_DIR" RESULTS="$RESULTS" python3 - <<'PYEOF'
           import json, os

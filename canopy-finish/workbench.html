@@ -44,7 +44,7 @@ button,input,textarea{font:inherit;color:inherit}button{background:none;border:0
 .sdoor .tk{width:.55rem;height:.55rem;border-radius:.13rem;background:rgb(var(--d));box-shadow:0 0 .45rem rgb(var(--d)/.55);flex:none}
 .sdoor:hover{color:var(--tmax);border-bottom-color:rgb(var(--d)/.65)}
 .sdoor .nc{font:700 .56rem/1 var(--fm);letter-spacing:.1em;color:rgb(var(--d));border:1px solid rgb(var(--d)/.6);border-radius:.15rem;padding:.14rem .3rem}
-#d-deck{--d:var(--deckl)}#d-day{--d:var(--day)}
+#d-deck{--d:var(--deckl)}#d-day{--d:var(--day)}#d-sitrep{--d:var(--gold)}
 #d-day:hover{border-bottom-color:rgb(var(--gold)/.85)}
 #d-day .nc{color:rgb(var(--gold));border-color:rgb(var(--gold)/.6)}
 .sdoor.on{cursor:default;color:var(--tmax)}
@@ -242,7 +242,7 @@ a.syslbl{text-decoration:none}a.syslbl:hover,a.syslbl:focus-visible{color:#facc1
 <template id="logo-lockup-src"><img src="./assets/northbirch-lockup-reversed.svg" alt="NORTHBIRCH" width="2106" height="798"></template>
 <script>(function(){'use strict';
 /* ============ config: the only places an address lives ============ */
-const CFG={doors:{home:'./index.html',deck:'./deck.html',day:'./daybook.html',sitrep:'./sitrep.html'},
+const CFG={doors:{home:'./index.html',deck:'./deck.html',day:'./daybook.html',sitrep:'./sitrep.html?tab=1'},
  previewBase:'https://grantcityscape.github.io/oakley-previews-7f3a/',
  /* PHASE 0: preview file names under previewBase (map 5.7–5.13) — retires the dead previewBase config */
  previews:{lgy:'lions-gate-yachts-v1.1.4.html',bma:'brand-my-aqua-v1.0.html',cms:'cms-construction-v1.0.html',pez:'purenzyme-v1.0.html',siq:'structureiq-v1.0.html',e12:'8twelve-v1.0.html',atra:'atra-lend-v1.0.html'}};
@@ -325,9 +325,9 @@ function phoneShelf(sh){page=0;const all=entries().map((e,i)=>({e,i})).concat([{
 function paintChips(){const L=entries(),cnt=k=>L.filter(e=>e.state===k||(k==='nobuilt'&&e.state==='new')).length,defs=[['live','LIVE'],['preview','PREVIEW'],['external','EXTERNAL'],['nobuilt','NOT BUILT'],['yours','YOURS']];
  $('#chips').innerHTML='<span class="chip" style="--c:var(--wb)"><b>'+L.length+'</b>ON THE SHELF</span>'+defs.filter(d=>cnt(d[0])).map(d=>'<span class="chip'+(d[0]==='nobuilt'?' nb':'')+'" style="--c:'+STATE_C[d[0]]+'"><b>'+cnt(d[0])+'</b>'+d[1]+'</span>').join('')}
 /* ============ header ============ */
-const DOORS=[{k:'deck',n:'COMMAND DECK',url:()=>CFG.doors.deck},{k:'day',n:'DAYBOOK',url:()=>CFG.doors.day}];
+const DOORS=[{k:'sitrep',n:'SITREP',url:()=>CFG.doors.sitrep},{k:'deck',n:'COMMAND DECK',url:()=>CFG.doors.deck},{k:'day',n:'DAYBOOK',url:()=>CFG.doors.day}];
 /* NO HOME TAB — Home is reached by the clock area or the logo icon only. THE LOOKOUT gets no door here (Amendment A1). DOORS SHOW ONLY WHERE YOU CAN GO (Grant 2026-11-18): this surface IS Workbench, so its own door leaves the row — the row lists destinations only. */
-const SC={deck:'TEAM ON',day:'MONEY BOOK'};
+const SC={deck:'TEAM ON',day:'MONEY BOOK',sitrep:'LIVE WORLD'};
 function paintDoors(){$('#doors').innerHTML=DOORS.map(d=>{const u=d.cur?'':CFG.doors[d.k],body='<span class="tk" aria-hidden="true"></span><span class="nm">'+d.n+'</span>'+(SC[d.k]?'<span class="sc">'+SC[d.k]+'</span>':'')+(d.cur?'':okUrl(u)?'':'<span class="nc">NOT CONNECTED</span>');
  if(d.cur)return '<button id="d-wb" class="sdoor on" data-a="home" aria-current="page" aria-label="Workbench — this surface; returns to the businesses home">'+body+'</button>';
  return okUrl(u)?'<a id="d-'+d.k+'" class="sdoor" href="'+esc(ctxUrl(u))+'" aria-label="'+d.n+'">'+body+'</a>':'<button id="d-'+d.k+'" class="sdoor" data-a="nc:'+d.k+'" aria-label="'+d.n+' — not connected">'+body+'</button>'}).join('');
@@ -486,7 +486,7 @@ apply();addEventListener('hashchange',apply)})();
 .nw-home{left:50%;top:0;transform:translateX(-50%);border:2px solid #f5c542;box-shadow:0 0 1rem rgba(245,197,66,.55)}
 .nw-deck{right:0;top:50%;transform:translateY(-50%);border:2px solid #35d07f;box-shadow:0 0 1rem rgba(53,208,127,.55)}
 .nw-wb{left:50%;bottom:0;transform:translateX(-50%);border:2px solid #4da3ff;box-shadow:0 0 1rem rgba(77,163,255,.55)}
-.nw-day{left:0;top:50%;transform:translateY(-50%);border:2px solid #ff5a5a;box-shadow:0 0 1rem rgba(255,90,90,.55)}
+.nw-day{left:0;top:50%;transform:translateY(-50%);border:2px solid #ff5a5a;box-shadow:0 0 1rem rgba(255,90,90,.55)}.nw-sit{left:62.25%;top:10.25%;border:2px solid #ff9f1c;box-shadow:0 0 1rem rgba(255,159,28,.55)}
 .nw-st.cur{outline:2px solid #fff;outline-offset:2px}
 .nw-x{font:700 .72rem var(--fm);letter-spacing:.1em;color:#e8e4d8;background:#121316;border:1px solid #2c2c31;border-radius:.3rem;padding:.5rem 1rem;cursor:pointer;min-height:2.4rem}
 @media (prefers-reduced-motion:reduce){.nwheel:not([hidden]) .nw-dial{animation:none}}
@@ -498,7 +498,7 @@ apply();addEventListener('hashchange',apply)})();
  <div class="nw-dial">
   <div class="nw-ring"></div><div class="nw-ring2"></div>
   <button class="nw-hub" data-nw="close" aria-label="Close the wheel"><img class="nb-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true"></button>
-  <a class="nw-st nw-home" href="./index.html"><img class="nb-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true">HOME</a>
+  <a class="nw-st nw-home" href="./index.html"><img class="nb-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true">HOME</a> <a class="nw-st nw-sit" href="./sitrep.html#tab=1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><path d="M8.5 15.5a5 5 0 0 1 0-7M15.5 8.5a5 5 0 0 1 0 7M5.6 18.4a9 9 0 0 1 0-12.8M18.4 5.6a9 9 0 0 1 0 12.8"/></svg>SITREP</a>
   <a class="nw-st nw-deck" href="./deck.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 15a8 8 0 1 1 16 0"/><path d="M12 15l4.2-4.2"/><circle cx="12" cy="15" r="1.3" fill="currentColor" stroke="none"/></svg>DECK</a>
   <span class="nw-st nw-wb cur" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M9 8V6a3 3 0 0 1 6 0v2M3 13h18"/></svg>WORKBENCH</span>
   <a class="nw-st nw-day" href="./daybook.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M8 3v4M16 3v4"/></svg>DAYBOOK</a>

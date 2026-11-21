@@ -212,17 +212,17 @@ html.embed .pn.flash{outline:2px solid var(--gold);outline-offset:-2px}
 </style>
 <script>/* CANOPY FINISH PASS (2026-11-18) — SITREP is abolished as a section/destination: Canopy IS SITREP.
    This file is now only the live-world engine that renders INSIDE Canopy Home's full windows.
-   A top-level visit routes straight into the matching Home window; embedded, it renders just its section. */
+   A top-level visit routes straight into the matching Home window; embedded, it renders just its section; opened with #tab=1 it stands as the SITREP tab's own page (Grant ruling 2026-11-21, superseding the 2026-11-18 abolition). */
 (function(){var inFrame=false;try{inFrame=window.self!==window.top}catch(e){inFrame=true}
-var h=(location.hash||'').replace(/^#/,'');var o={};h.split('&').forEach(function(p){var i=p.indexOf('=');if(i>0)o[p.slice(0,i)]=decodeURIComponent(p.slice(i+1))});
+var h=(location.hash||'').replace(/^#/,'');var o={};h.split('&').forEach(function(p){var i=p.indexOf('=');if(i>0)o[p.slice(0,i)]=decodeURIComponent(p.slice(i+1))});(location.search||'').replace(/^\?/,'').split('&').forEach(function(p){var i=p.indexOf('=');if(i>0)o[p.slice(0,i)]=decodeURIComponent(p.slice(i+1))});
 var map={weather:'weather',wx:'weather',cams:'cams',cc:'cams',commute:'cams',airport:'airport',yow:'airport',tv:'tv',world:'world'};
 var win=map[o.sec]||'';
 if(inFrame||o.embed==='1'){window.__EMBED=true;document.documentElement.classList.add('embed')}
-else{location.replace('./index.html'+(win?'#win='+win:''))}})();
+else if(o.tab==='1'){window.__TAB=true;document.documentElement.classList.add('tab')}else{location.replace('./index.html'+(win?'#win='+win:''))}})();
 </script>
 </head><body>
 <div class="app" id="app">
- <nav class="strip" id="strip" aria-label="Canopy destinations"><button class="sd cap" data-a="door:canopy"><svg class="sl-logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="1.5" y="1.5" width="29" height="29" rx="5" fill="#1E4D2B" stroke="#6C8574"/><path d="M13 27V12M19 27V8" stroke="#e8f1ea" stroke-width="3" stroke-linecap="round"/><path d="M13 15l-4-3M13 21l4-2M19 12l4-3M19 19l-3-2M19 23l4-1" stroke="#a9efc3" stroke-width="1.6" stroke-linecap="round"/><path d="M13 19v.01M19 15v.01" stroke="#1E4D2B" stroke-width="2" stroke-linecap="round"/></svg><span class="chrome-wm">CANOPY</span></button><button class="sd cap" data-a="door:deck">COMMAND DECK</button><button class="sd cap" data-a="door:daybook">DAYBOOK</button><button class="sd cap" data-a="door:wb">WORKBENCH</button><span class="sp"></span><span class="ssnap cap" aria-hidden="true">WEATHER · CAMS · AIRPORT · TV · WORLD</span><span class="sn cap">SITREP · LIVE-WORLD SURFACE</span></nav>
+ <nav class="strip" id="strip" aria-label="Canopy destinations"><button class="sd cap" data-a="door:canopy"><svg class="sl-logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="1.5" y="1.5" width="29" height="29" rx="5" fill="#1E4D2B" stroke="#6C8574"/><path d="M13 27V12M19 27V8" stroke="#e8f1ea" stroke-width="3" stroke-linecap="round"/><path d="M13 15l-4-3M13 21l4-2M19 12l4-3M19 19l-3-2M19 23l4-1" stroke="#a9efc3" stroke-width="1.6" stroke-linecap="round"/><path d="M13 19v.01M19 15v.01" stroke="#1E4D2B" stroke-width="2" stroke-linecap="round"/></svg><span class="chrome-wm">CANOPY</span></button><span class="sd cap" aria-current="page" style="color:var(--gold)">SITREP</span><button class="sd cap" data-a="door:deck">COMMAND DECK</button><button class="sd cap" data-a="door:daybook">DAYBOOK</button><button class="sd cap" data-a="door:wb">WORKBENCH</button><span class="sp"></span><span class="ssnap cap" aria-hidden="true">WEATHER · CAMS · AIRPORT · TV · WORLD</span><span class="sn cap">SITREP · LIVE-WORLD SURFACE</span></nav>
  <header class="top">
   <button class="mast" id="mast" data-a="home" aria-label="Northbirch — return to Home" title="Home"></button>
   <div class="clk"><b class="num" id="ck">--:--:--</b><span class="ci"><i id="dt">---</i><i>DEVICE TIME</i></span><button class="wgw" data-a="go:weather" aria-label="Weather — go to the weather section"><div class="wg" id="wg" aria-hidden="true"></div><span class="wgl cap" id="wgl">WX · SNAPSHOT</span></button></div>
@@ -635,4 +635,8 @@ var iv=setInterval(function(){tries++;var el=document.querySelector('[data-fl="'
 if(host){host.scrollIntoView({block:'start'});host.classList.add('flash');setTimeout(function(){host.classList.remove('flash')},2600);clearInterval(iv)}
 else if(tries>24)clearInterval(iv)},250)})();
 </script>
+<style>
+/* SITREP TAB (Grant ruling 2026-11-21): on narrow screens the strip and the section tabs scroll sideways, so every door and every section stays reachable */
+@media (max-width:760px){.strip{overflow-x:auto;scrollbar-width:none}.strip::-webkit-scrollbar{display:none}.tabs{overflow-x:auto;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}.tabs .tab{flex:none}}
+</style>
 </body></html>

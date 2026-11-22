@@ -6,7 +6,7 @@
       <link>https://www.cbc.ca/news/canada/ottawa/?cmp=rss</link>
       <copyright><![CDATA[Copyright: (C) Canadian Broadcasting Corporation, http://www.cbc.ca/aboutcbc/discover/termsofuse.html#Rss]]></copyright>
       <docs><![CDATA[https://www.cbc.ca/rss]]></docs>
-      <lastBuildDate>Sat, 21 Nov 2026 18:57:32 EST</lastBuildDate>
+      <lastBuildDate>Sun, 22 Nov 2026 00:36:27 EST</lastBuildDate>
       <atom:link href="https://www.cbc.ca/webfeed/rss/rss-canada-ottawa" rel="self" type="application/rss+xml"/>
       <image>
          <title><![CDATA[CBC | Ottawa News]]></title>
@@ -16,10 +16,20 @@
       <item>
          <title><![CDATA[Cavalry FC defeats Atlético Ottawa 3-2 to claim CPL title and historic double]]></title>
          <link>https://www.cbc.ca/sports/soccer/cpl/cpl-final-atletico-ottawa-cavalry-fc-calgary-november-21-9.7429768?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/7efe5c34-29c5-4ba5-987a-d52f0f12de79,1795302311776/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1920%2C1080%29%3B' alt='Cavalry FC hoist North Start Cup after winning CPL final 3-2 over Atletico Ottawa on Saturday in Calgary.' width='620' height='349' title='Cavalry FC hoist North Start Cup after winning CPL final 3-2 over Atletico Ottawa on Saturday in Calgary.'/><p>Cavalry FC defeated Atlético Ottawa 3-2 to claim the Canadian Premier League title and an unprecedented double in the soccer league.</p>]]></description>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/7efe5c34-29c5-4ba5-987a-d52f0f12de79,1795302311776/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1920%2C1080%29%3B' alt='Cavalry FC hoist North Start Cup after winning CPL final 3-2 over Atletico Ottawa on Saturday in Calgary.' width='620' height='349' title='Cavalry FC hoist North Start Cup after winning CPL final 3-2 over Atletico Ottawa on Saturday in Calgary.'/><p>Cavalry FC earned a historic soccer double in the Canadian Premier League with a 3-2 win over Atlético Ottawa for the North Star Cup on Saturday.</p>]]></description>
          <pubDate>Sat, 21 Nov 2026 17:21:50 EST</pubDate>
          <category>Sports/Soccer/CPL</category>
          <guid isPermaLink="false">9.7429768</guid>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Test trains to begin running Sunday between Tunney's Pasture, Trim stations]]></title>
+         <link>https://www.cbc.ca/news/canada/ottawa/ottawa-lrt-otrain-line-1-east-extension-trim-station-testing-begins-9.7427123?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/bea90b89-cf28-490e-96bd-374e0af5c89a,1793883153348/full/max/0/default.jpg?im=Crop%2Crect%3D%28966%2C312%2C5033%2C2831%29%3B' alt='A photo of a public train and a sign reading &quot;east to Trim.&quot;' width='620' height='349' title='Photo of a sign reading &apos;East to Trim&apos; at Place d&apos;Orléans station in Ottawa on Sept. 26, 2026. The station is part of OC Transpo&apos;s eastern extension of the O-Train Line 1.'/><p>OC Transpo says it is on track to begin testing LRT Line 1's eastern extension this weekend after its train control software was reprogrammed last Sunday, but track upgrades will temporarily pause testing next week.</p>]]></description>
+         <pubDate>Wed, 18 Nov 2026 16:50:43 EST</pubDate>
+         <category>News/Canada/Ottawa</category>
+         <guid isPermaLink="false">9.7427123</guid>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
@@ -82,16 +92,6 @@ sawing disciplines.'/><p>Ottawa's ByWard Market will be the spot to be for extre
          <pubDate>Wed, 18 Nov 2026 11:30:22 EST</pubDate>
          <category>News/Canada/Ottawa</category>
          <guid isPermaLink="false">9.7426522</guid>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[OC Transpo's Line 1 tests set to begin this weekend, but will need to pause for track upgrades]]></title>
-         <link>https://www.cbc.ca/news/canada/ottawa/ottawa-lrt-otrain-line-1-east-extension-trim-station-testing-begins-9.7427123?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/bea90b89-cf28-490e-96bd-374e0af5c89a,1793883153348/full/max/0/default.jpg?im=Crop%2Crect%3D%28966%2C312%2C5033%2C2831%29%3B' alt='A photo of a public train and a sign reading &quot;east to Trim.&quot;' width='620' height='349' title='Photo of a sign reading &apos;East to Trim&apos; at Place d&apos;Orléans station in Ottawa on Sept. 26, 2026. The station is part of OC Transpo&apos;s eastern extension of the O-Train Line 1.'/><p>OC Transpo says it is on track to begin testing the light rail's eastern extension this weekend after its train control software was reprogrammed Sunday, but track upgrades will temporarily pause testing.</p>]]></description>
-         <pubDate>Wed, 18 Nov 2026 16:50:43 EST</pubDate>
-         <category>News/Canada/Ottawa</category>
-         <guid isPermaLink="false">9.7427123</guid>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>

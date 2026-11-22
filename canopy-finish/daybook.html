@@ -722,7 +722,7 @@ $('#portal-grid').innerHTML=PORTALS.map(p=>p.auto?autoBoxHTML(p):'<button class=
   if(ax&&abox)ax.addEventListener('click',()=>{const open=abox.classList.toggle('xp');ax.setAttribute('aria-expanded',open);ax.textContent=open?'FEWER SETTINGS ▴':'MORE SETTINGS ▾';const vd=document.getElementById('v-day');if(vd)vd.classList.toggle('growscroll',open);if(open)setTimeout(()=>abox.scrollIntoView({block:'nearest'}),30);});
 })();
 /* ---------- views ---------- */
-function go(v){$$('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v)); window.scrollTo(0,0);}
+function go(v){$$('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v)); window.scrollTo(0,0); const _nv=document.getElementById('v-'+v); if(_nv){_nv.classList.remove('cnd-rise'); void _nv.offsetWidth; _nv.classList.add('cnd-rise')}}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-go]'); if(b) go(b.dataset.go);});
 /* ---------- budgeting (sample) ---------- */
 $('#budget-book').innerHTML='<table><tr><th>ITEM</th><th>STATE</th><th class="num">AMOUNT</th></tr>'+
@@ -1194,7 +1194,7 @@ function boot(){
   myT(function(){sweepTo(snap)},350);
   myT(function(){var snap2=myT(function(){},0);myT(function(){sweepTo(snap2)},60)},1400);
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+if(document.body)boot();else document.addEventListener('DOMContentLoaded',boot);
 })();</script>
 
 
@@ -1209,5 +1209,20 @@ header{height:60px!important;overflow:visible!important}
 .abub{bottom:4.2rem!important;right:1rem!important}
 </style>
 
-<style>/* ===== ROUND 3 · GEMINI TOKENS (final cascade) ===== */.cnd,.card,.mbox,.portal{transition:transform 150ms ease,box-shadow 150ms ease,border-color 150ms ease,background-color 150ms ease}.card:hover,.mbox:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.45);border-color:rgba(214,69,65,.45)}.cnd:hover{transform:translateY(-4px);box-shadow:0 0 0 1px rgba(214,69,65,.70),0 0 16px rgba(214,69,65,.50),0 12px 28px rgba(0,0,0,.55)!important;border-color:rgba(214,69,65,.55)}.cnd.linked{box-shadow:0 0 0 1px rgba(214,69,65,.55),0 0 16px rgba(214,69,65,.40)!important}.card:active,.mbox:active,.portal:active{transform:scale(.98)!important;box-shadow:0 1px 2px rgba(0,0,0,.35)!important;transition-duration:100ms}.cnd:active{transform:scale(.98)!important;box-shadow:0 0 0 1px rgba(214,69,65,.55),0 0 16px rgba(214,69,65,.40)!important;transition-duration:100ms}button:active,.btn:active{transform:translateY(1px);filter:brightness(.92);box-shadow:none!important;transition-duration:100ms}.lkbadge:active{filter:brightness(.92)}:focus-visible{outline:2px solid rgba(214,69,65,.8);outline-offset:2px}.rw:hover,.tag:hover,.chip:hover{transform:none}@media (prefers-reduced-motion:reduce){*{transition-duration:120ms!important;animation-duration:120ms!important;animation-iteration-count:1!important}}</style></body>
+<style>/* ===== ROUND 3 · GEMINI TOKENS (final cascade) ===== */.cnd,.card,.mbox,.portal{transition:transform 150ms ease,box-shadow 150ms ease,border-color 150ms ease,background-color 150ms ease}.card:hover,.mbox:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.45);border-color:rgba(214,69,65,.45)}.cnd:hover{transform:translateY(-4px);box-shadow:0 0 0 1px rgba(214,69,65,.70),0 0 16px rgba(214,69,65,.50),0 12px 28px rgba(0,0,0,.55)!important;border-color:rgba(214,69,65,.55)}.cnd.linked{box-shadow:0 0 0 1px rgba(214,69,65,.55),0 0 16px rgba(214,69,65,.40)!important}.card:active,.mbox:active,.portal:active{transform:scale(.98)!important;box-shadow:0 1px 2px rgba(0,0,0,.35)!important;transition-duration:100ms}.cnd:active{transform:scale(.98)!important;box-shadow:0 0 0 1px rgba(214,69,65,.55),0 0 16px rgba(214,69,65,.40)!important;transition-duration:100ms}button:active,.btn:active{transform:translateY(1px);filter:brightness(.92);box-shadow:none!important;transition-duration:100ms}.lkbadge:active{filter:brightness(.92)}:focus-visible{outline:2px solid rgba(214,69,65,.8);outline-offset:2px}.rw:hover,.tag:hover,.chip:hover{transform:none}@media (prefers-reduced-motion:reduce){*{transition-duration:120ms!important;animation-duration:120ms!important;animation-iteration-count:1!important}}</style>
+<style id="cnd-r4-daybook">
+/* ===== CORRECTION ROUND 4 — DAYBOOK: R4-12 interaction tokens (red accent) + R4-3 badge lane + R4-7 floating clearance ===== */
+:root{--r4a:214,69,65}
+.door,.box,.btn,.bk{transition:transform 150ms ease,box-shadow 150ms ease,filter 150ms ease,border-color 150ms ease,background 150ms ease!important}
+body .door:hover{transform:translateY(-4px) scale(1.012)!important;box-shadow:0 0 0 1px rgba(var(--r4a),.72),0 0 22px rgba(var(--r4a),.55),0 18px 38px rgba(0,0,0,.6)!important;border-color:rgba(var(--r4a),.75)!important;filter:brightness(1.15)}
+body .box:hover{transform:translateY(-3px)!important;box-shadow:0 0 0 1px rgba(var(--r4a),.38),0 14px 30px rgba(0,0,0,.55),0 0 18px rgba(var(--r4a),.22)!important;border-color:rgba(var(--r4a),.6)!important}
+body .door:active,body .box:active,body .btn:active,body .bk:active{transform:scale(.96)!important;filter:brightness(.82);transition-duration:90ms!important}
+.door.cnd.linked{box-shadow:0 0 0 1px rgba(var(--r4a),.5),0 0 22px rgba(var(--r4a),.42),0 .5rem 1.2rem rgba(0,0,0,.45)}
+/* R4-3 badge lane: LINK pill rides a reserved right lane, vertically centred; titles keep the rest */
+.door.cnd{padding-right:54px}
+.cnd.linked::after{top:50%!important;transform:translateY(-50%);right:8px}
+/* R4-7: the Talk bubble's home corner is the standard 56px zone; the day wall's last box keeps clear of it */
+#abub{width:56px!important;height:56px!important;right:16px!important;bottom:64px!important}
+#v-day .box[data-go="shopping"]{margin-right:5.5rem}
+</style></body>
 </html>

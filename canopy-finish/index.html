@@ -5,8 +5,8 @@
 <!-- CSP: connect-src is https: because the hub may point CFG.PROXY / CFG.cam.base / feed URLs at its own host at packaging. Tighten to those hosts when known. -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://cdnjs.cloudflare.com; script-src 'unsafe-inline' https://cdnjs.cloudflare.com; img-src data: 'self' https://traffic.ottawa.ca https:; connect-src 'self' https:; media-src https:; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://s.tradingview.com https://www.tradingview.com">
 <title>Home — Canopy</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" integrity="sha512-Zcn6bjR/8RZbLEpLIeOwNtzREBAJnUKESxces60Mpoj+2okopSAcSUIUOseddDm0cxnGQzxIR7vJgsLZbdLE3w==" crossorigin="">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js" integrity="sha512-BwHfrr4c9kmRkLw6iXFdzcdWV/PGkVgiIyIWLLlTSXzWQzxuSg4DiQUCpauz/EWjgk5TYQqX/kvn9pG1NpYfqg==" crossorigin=""></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" integrity="sha512-Zcn6bjR/8RZbLEpLIeOwNtzREBAJnUKESxces60Mpoj+2okopSAcSUIUOseddDm0cxnGQzxIR7vJgsLZbdLE3w==" crossorigin="" media="print" onload="this.media='all'">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js" integrity="sha512-BwHfrr4c9kmRkLw6iXFdzcdWV/PGkVgiIyIWLLlTSXzWQzxuSg4DiQUCpauz/EWjgk5TYQqX/kvn9pG1NpYfqg==" crossorigin=""></script>
 <style>
 /* ===== HOME WALL v4.2 — graphite terminal finish. Blue lives ONLY on the Command Deck door (and its own section view). ===== */
 :root{--void:#050506;--hull:#0b0b0d;--cell:#111114;--well:#18181c;--ld:#232327;--lh:#34343a;
@@ -992,10 +992,14 @@ function rWx(){const w=D.wx,s=wxSt(),o=w&&w.o,x=X('wx'),pl=UI.wx==='plow',f=w?pl
   if(x){const fc=w?w.fc.slice(0,8).map(q=>'<div class="rw fcr"><b>'+esc(fcName(q.n))+'</b><span><i class="num">'+(q.v!=null?sg(q.v)+'°':'--')+'</i> '+esc(q.sum||'')+'</span></div>').join(''):'';
     L='<div class="x3"><div class="xc"><div class="hero"><b class="big">'+(o?sg(o.t)+'°':'--°')+'</b><div class="wst"><span class="c1">'+(o?esc(o.cond||'--'):'ECCC '+(s[1]==='err'?'UNREACHABLE':'pending'))+'</span><span>FEELS '+(o?(o.feels!=null?sg(o.feels)+'°':'= TEMP'):'--')+'</span><span>'+(o?needle(o)+' ':'')+wind+'</span></div></div><div class="g2">'+kvh('HUMIDITY',o?num(o.hum)+'%':'--')+kvh('PRESSURE',o?num(o.pr,1)+' kPa '+tendA(o.tend):'--')+kvh('DEWPOINT',o?sg(o.dew)+'°':'--')+kvh('VISIBILITY',o?(o.vis!=null?num(o.vis)+' km':'not reported'):'--')+kvh('GUST',o?(o.gust!=null?num(o.gust)+' km/h':'none'):'--')+kvh('STATION','OTTAWA · ECCC s0000430')+kvh('OBSERVED',o?obs+' · ECCC':'--')+kvh('SUNSET',w&&w.ss?hm(w.ss):'--')+'</div></div>'+
       '<div class="xc fcl">'+(fc||'<div class="kv fcr"><span class="k">FORECAST</span><span class="v dm">none received from ECCC</span></div>')+'</div><div class="xc">'+dsgHTML()+strip+'<div class="g2">'+plowCells(kvh)+'<div class="kv s2"><span class="k">ECCC ALERTS</span><span class="v '+alC+'">'+alV+'</span></div></div></div></div>'}
-  else if(!pl){const t=w&&w.fc[0],t2=w&&w.fc[1],gp=gatParts();
-    L='<div class="hero"><b class="big">'+(o?sg(o.t)+'°':'--°')+'</b><div class="wst">'+(o?'<span class="c1">'+esc(o.cond||'--')+'</span><span>FEELS '+(o.feels!=null?sg(o.feels)+'°':'= TEMP')+'</span><span>'+needle(o)+' '+wind+'</span>':'<span class="c1">ECCC '+(s[1]==='err'?'UNREACHABLE':'pending')+'</span><span>last good: '+(H.wx.at?hm(H.wx.at):'never')+'</span><span>retry every 10 min</span>')+'</div></div>'+
-      '<div class="cd tr">'+(t?esc(fcName(t.n))+': '+esc(t.sum||'')+' '+(t.v!=null?sg(t.v)+'°':''):'forecast unavailable — ECCC not reached')+'</div>'+
-      '<div class="g3">'+kv1('HUM',o?num(o.hum)+'%':'--')+kv1('PRES',o?num(o.pr,1):'--')+kv1('DEW',o?sg(o.dew)+'°':'--')+kv1('VIS',o?(o.vis!=null?num(o.vis)+' km':'n/r'):'--')+kv1('GUST',o?(o.gust!=null?num(o.gust):'none'):'--')+(t2?kv1(esc(fcName(t2.n)),t2.v!=null?sg(t2.v)+'°':'--'):kv1('NEXT','--'))+'</div>'}
+  else if(!pl){const t=w&&w.fc[0];
+    /* ROUND 4 (R4-2 §4): the face is the 112px 4-row summary form — detail lives in SITREP Weather / the grown view. No "--" anywhere: a missing value is named, never dashed. */
+    const vis=o?(o.vis!=null?num(o.vis)+' km':'NOT REPORTED'):'';
+    L='<div class="r4wx">'
+      +'<div class="r4w1">'+(o?'<b class="r4wt">'+sg(o.t)+'°</b><span class="r4wc">'+esc(o.cond||'')+'</span>':'<span class="r4wc">ECCC '+(s[1]==='err'?'UNREACHABLE':'PENDING')+'</span>')+'<span class="r4chip">'+(s[1]==='live'&&obs?'LIVE · ECCC '+obs:esc(s[0]))+'</span></div>'
+      +'<div class="r4w2">'+(o?'<span>FEELS '+(o.feels!=null?sg(o.feels)+'°':'= TEMP')+'</span><span>'+needle(o)+' '+wind+'</span><span>HUM '+(o.hum!=null?num(o.hum)+'%':'NOT REPORTED')+'</span>':'<span>last good: '+(H.wx.at?hm(H.wx.at):'never')+'</span><span>retry every 10 min</span>')+'</div>'
+      +'<div class="r4w3"><span class="tr">'+(t?esc(fcName(t.n))+': '+esc(t.sum||'')+' '+(t.v!=null?sg(t.v)+'°':''):'forecast unavailable — ECCC not reached')+'</span>'+(o?'<span class="r4vis">VISIBILITY '+vis+'</span>':'')+'</div>'
+      +'<div class="r4w4"><span>'+(obs?'OBS '+obs+' · ECCC s0000430':'AWAITING FIRST READING')+'</span><span class="r4open">OPEN IN SITREP WEATHER →</span></div></div>'}
   else L=dsgHTML()+'<div class="pgrid">'+plowCells(kvh)+'</div><div class="pbot">'+strip+kv1('ALERTS',alV,alC)+'</div>';
   setH($('#wx .bd'),x?L:'<div class="wxl'+(pl?' plow':'')+'">'+L+'</div>')
   {const _wt=$('#ckwx-t'),_wc=$('#ckwx-c');if(_wt&&_wc){if(o){_wt.textContent=sg(o.t)+'°';_wc.textContent=String(o.cond||'OTTAWA').toUpperCase().slice(0,16)}else{_wt.textContent='--°';_wc.textContent=s[1]==='err'?'OFFLINE · OTTAWA':'PENDING · OTTAWA'}}}
@@ -1008,7 +1012,7 @@ function camState(c){const f=frameOf(c.id),stale=f&&camStale(f);if(f)return stal
   if(D.camErr&&D.camErr[c.id])return['OFFLINE · City feed did not answer','cr'];
   if(!D.camList)return['CAMERA LIST LOADING','am'];
   if(camNo(c.id)==null)return['NOT IN CITY LIST','dm'];
-  return['FIRST STILL DUE · 60 s cadence','am']}
+  return['FIRST STILL DUE · 60 s','am']}
 function rCm(){const t=D.tev,s=H.tev,x=X('cc');
   const st=!t?(s.st==='err'?['EVENTS UNREACHABLE','err']:['PENDING','pend']):Date.now()-t.at>CFG.ev.staleMs?['STALE '+hm(t.at),'stale']:['LIVE · '+t.rows.length+' ACTIVE','live'];
   hdw('cc','COMMUTE + CAMERAS',bdg(st));
@@ -1019,7 +1023,7 @@ function rCm(){const t=D.tev,s=H.tev,x=X('cc');
     ev=rk.map(r=>{const g=tag(r),e=eff(r),d=dirOf(r.h);return '<div class="ce" title="'+esc(r.ln||'')+'"><b class="'+g[1]+'">'+g[0]+'</b><span class="tr">'+(d?'<b class="dir">'+d+'</b> ':'')+esc(r.h)+(x&&r.ln?' · '+esc(r.ln):'')+'</span><em class="'+e[1]+'">'+e[0]+'</em></div>'}).join('')||'<div class="ce"><b class="em">CLEAR</b><span class="tr">no active City traffic events</span><em></em></div>';
     const cl=t.rows.filter(r=>r.c==='ROAD_CLOSED').length;sm=cl+' closed'}
   else ev='<div class="ce"><b class="dm">--</b><span class="dm tr">City traffic events not received</span><em></em></div>';
-  const cams=SET.map(c=>{const k=camState(c);return '<div class="cam'+(k[2]?' has':'')+'" data-cid="'+c.id+'">'+(k[2]?'<img alt="" src="'+k[2].src+'">':camIcon)+'<span class="cn tr">'+esc(c.s)+'</span><span class="cs '+k[1]+'">'+k[0]+'</span></div>'}).join('');
+  const cams=SET.map(c=>{const k=camState(c);return '<div class="cam'+(k[2]?' has':'')+'" data-cid="'+c.id+'">'+(k[2]?'<img alt="" src="'+k[2].src+'"><span class="csnap">SNAPSHOT</span>':camIcon)+'<span class="cl1 '+k[1]+'"><b>'+esc(c.s)+'</b><i> · '+k[0]+'</i></span></div>'}).join('');
   const hd='<div class="ch"><span>KIND</span><span>ROAD · DIRECTION · BETWEEN</span><span>STATUS</span></div>';
   const dl='<div class="cl sp"><span class="tr"><b>DELAY</b> n/a'+(sm?' · '+sm:'')+'</span><span><b>ONTARIO 511</b> · KEY PENDING</span></div>';
   const cl='<div class="cl cl2 sp" title="City of Ottawa traffic cameras — stills via the hub proxy route; the City certificate is injected server-side and never appears in a client URL"><span class="tr"><b>CITY CAMERAS</b></span><span>'+(!CFG.cam.live?'feed off':camRouteReady()?'stills · each camera every 60 s'+(D.camNext?' · next '+hm(D.camNext):''):'NO ROUTE · needs hub proxy')+'</span></div>';
@@ -1040,15 +1044,19 @@ function gauge(m,big){const p=m.pct,cls=m.stale?'stl':p>=80?'cx':p>=60?'hi':'ok'
   if(!big)return '<div class="gm" title="'+esc(m.nm+' · '+m.lab+' · source: '+m.src+' · as of '+m.as+(m.resetAt?' · reset '+m.rl+(m.passed?' (passed)':''):' · no reset published'))+'"><span class="gn">'+esc(m.nm)+'</span><div class="ring '+cls+(p==null?' na':'')+'" style="--p:'+(p==null?0:Math.min(100,p))+'">'+ctr+'</div><div class="gls"><span class="gsr">'+esc(m.ss)+'</span></div></div>';
   return '<div class="gm big"><span class="gn gw2">'+esc(m.nm)+' <i>· '+esc(m.kd)+'</i></span><div class="ring '+cls+(p==null?' na':'')+'" style="--p:'+(p==null?0:Math.min(100,p))+'">'+ctr+'</div><span class="gl gw">'+esc(m.lab)+'</span><span class="gl">source: '+esc(m.src)+'</span><span class="gl">as of '+esc(m.as)+(m.stale?' · SNAPSHOT':' · live')+'</span><span class="gl'+(m.passed?' am':'')+'">'+(m.resetAt?'reset '+esc(m.rl)+(m.passed?' — PASSED, re-capture':' — upcoming'):'no reset published')+'</span></div>'}
 function rTm(){const rows=teamRows(),x=X('tm');hdw('tm','TEAM USAGE',bdg(['SNAPSHOT','stale']));
-  setH($('#tm .bd'),'<div class="tg'+(x?' big':'')+'">'+rows.map(m=>gauge(m,x)).join('')+'</div>'+(x?'<div class="tnote">Values are snapshots copied from each service’s own usage screen on '+CFG.team.asOf+' unless the hub team feed is live. ⟲ = window reset; “passed” means the reset time has gone by, so the value needs re-capturing.</div>':''))}
+  /* ROUND 4 (fix notes Part 1 §5): the face renders 5 ROWS (name left, value right, as-of under the name) — the 5-column gauge strip truncated names and starved the panel. The grown view keeps the big gauges. */
+  if(x){setH($('#tm .bd'),'<div class="tg big">'+rows.map(m=>gauge(m,1)).join('')+'</div><div class="tnote">Values are snapshots copied from each service’s own usage screen on '+CFG.team.asOf+' unless the hub team feed is live. ⟲ = window reset; “passed” means the reset time has gone by, so the value needs re-capturing.</div>');return}
+  setH($('#tm .bd'),'<div class="r4tu">'+rows.map(m=>{const v=m.pct!=null?m.pct+'%'+(m.win?' · '+esc(m.win):''):esc((m.cnt||'')+' '+(m.cntl||''));return '<div class="r4tr"><span class="r4tn">'+esc(m.nm)+'</span><span class="r4tv">'+v+'</span><span class="r4ta">'+esc(m.asD)+' · '+(m.passed?'reset PASSED — re-capture':esc(m.rsT))+'</span></div>'}).join('')+'</div><div class="r4tf">SNAPSHOT '+esc(CFG.team.asOf)+' · copied from each service’s own usage screen — never shown as live</div>')}
 /* ---------- live TV card: 16:9 stage (the video fills its area) + LOCAL/WORLD bars ---------- */
 const barHTML=(k,n,c)=>'<div class="bar2 '+c+'" data-bar="'+k+'"><span class="bg2">'+n+'</span><span class="bst"></span><div class="win"><div class="trk"></div></div></div>';
 function nwInit(){setH($('#nw'),'<div class="hdw"></div><div class="nwm"><div class="stage" id="plv"></div><div class="nxs" id="nxs"></div></div><div class="tks">'+barHTML('local','LOCAL','lo')+barHTML('world','WORLD','wo')+'</div>');setStation()}
 function rNews(){const el=$('#nw .hdw');if(!el)return;const st=stnNow().yt?ytSt():['LINK-OUT','pend'];
-  setH(el,'<div class="hd tall"><span class="ttl"><i class="led"></i><span class="tt">LIVE TV</span></span><span class="stn">'+STN.map(t=>'<button class="btn st" data-a="st:'+t.k+'" aria-pressed="'+(UI.stn===t.k)+'" aria-label="'+t.t+(t.yt?' — embedded stream':' — opens '+t.site)+'">'+t.n+(t.yt?' ▶':' ↗')+'</button>').join('')+'</span><span class="hr">'+bdg(st)+xbtns('nw')+'</span></div>');
+  /* ROUND 4 (R4-2 §1): station chips live in the rail beside the stage, not in the header — the header keeps title + state badge only (badge lane). */
+  const chips=STN.map(t=>'<button class="btn st" data-a="st:'+t.k+'" aria-pressed="'+(UI.stn===t.k)+'" aria-label="'+t.t+(t.yt?' — embedded stream':' — opens '+t.site)+'">'+t.n+(t.yt?' ▶':' ↗')+'</button>').join('');
+  setH(el,'<div class="hd tall"><span class="ttl"><i class="led"></i><span class="tt">LIVE TV</span></span><span class="hr">'+bdg(st)+xbtns('nw')+'</span></div>');
   if(X('nw')){const s=STN.find(x=>x.k===UI.stn),lst=k=>D.news[k].length?D.news[k].slice(0,5).map(x=>'<div class="hl"><b>'+esc(x.o)+'</b><span>'+esc(x.t)+'</span><i>'+(x.ts?ago(x.ts)+' ago':'')+'</i></div>').join(''):'<div class="hl"><span class="dm">'+esc(barOff(k)[1])+'</span></div>';
-    setH($('#nxs'),'<div class="nxh"><span class="k">ON AIR</span><b>'+esc(s.t)+'</b><span>'+esc(s.w)+'</span></div><div class="nxl"><span class="k lo">LOCAL HEADLINES</span>'+lst('local')+'</div><div class="nxl"><span class="k wo">WORLD HEADLINES</span>'+lst('world')+'</div>')}
-  else setH($('#nxs'),'')}
+    setH($('#nxs'),'<div class="rch xp">'+chips+'</div><div class="nxh"><span class="k">ON AIR</span><b>'+esc(s.t)+'</b><span>'+esc(s.w)+'</span></div><div class="nxl"><span class="k lo">LOCAL HEADLINES</span>'+lst('local')+'</div><div class="nxl"><span class="k wo">WORLD HEADLINES</span>'+lst('world')+'</div>')}
+  else setH($('#nxs'),'<div class="rail"><div class="rch">'+chips+'</div><div class="rnp"><span class="k">NOW PLAYING</span><b>'+esc(stnNow().t)+'</b><span>'+(stnNow().yt?esc(ytSt()[0]):'LINK-OUT ↗')+'</span></div></div>')}
 /* ---------- world view: layer toggles with ticking counts · layered severity markers on the map · tap for detail ---------- */
 const sevN=['INFO','ELEVATED','CRITICAL'];
 const LAY=[{k:'eq',n:'QUAKES',g:'●',sh:'q',src:'USGS',get:()=>D.wmi.usgs,h:()=>H.wm.usgs},
@@ -1068,7 +1076,7 @@ function tickCounts(){$$('[data-ct]').forEach(el=>{const k=el.dataset.ct,to=+el.
   el.classList.add('tk');const step=t=>{const p=Math.min(1,(t-t0)/dur),v=Math.round(from+(to-from)*(1-Math.pow(1-p,3)));if(el.isConnected)el.innerHTML='<i class="gg">'+g.trim()+'</i> '+v;if(p<1)requestAnimationFrame(step);else setTimeout(()=>el.classList.remove('tk'),600)};requestAnimationFrame(step)})}
 function rWmHead(){const tot=LAY.reduce((a,l)=>a+(UI.lay[l.k]?(lyN(l)||0):0),0);
   setH($('#wm .hdw'),'<div class="hd slim"><span class="ttl"><i class="led"></i><span class="tt">WORLD</span></span><span class="lyr">'+LAY.map(l=>{const n=lyN(l);return '<button class="btn ly" data-a="ly:'+l.k+'" aria-pressed="'+(!!UI.lay[l.k])+'" aria-label="'+l.n+' layer ('+l.src+')'+(n==null?' — OFF: source not answering':'')+'" title="'+l.n+' layer ('+l.src+')'+(n==null?' — OFF: source not answering':'')+'"><span>'+l.n+'</span><b class="'+(n==null?'cr':n===undefined?'dm':'')+'" data-ct="'+l.k+'" data-g="'+l.g+' " data-v="'+(n==null||n===undefined?'':n)+'"><i class="gg">'+l.g+'</i> '+(n==null?'<i class="of">OFF</i>':n===undefined?'…':n)+'</b></button>'}).join('')+'<span class="ltot"><span>EVENTS</span><b data-ct="tot" data-v="'+tot+'">'+tot+'</b></span></span><span class="hr">'+xbtns('wm')+'</span></div>');tickCounts()}
-function rEv(){const l=$('#evl');if(!l)return;const a=allEv(),x=X('wm');const rem=remPx(),gap=.2*rem,h=l.clientHeight||1,per=Math.max(1,Math.floor((h+gap)/(((x?2.75:1.75)*rem)+gap)));
+function rEv(){const l=$('#evl');if(!l)return;const a=allEv(),x=X('wm');const rem=remPx(),gap=.2*rem,h=l.clientHeight||1,per=x?Math.max(1,Math.floor((h+gap)/((2.75*rem)+gap))):3;/* ROUND 4 (R4-2 §3): the Home face shows exactly 3 headline cards */
   let pg=a.slice(0,per);const sel=UI.sel&&a.find(e=>e.key===UI.sel);if(sel&&!pg.includes(sel))pg=[sel].concat(pg.slice(0,per-1));
   const row=e=>{const s=UI.sel===e.key,ll=e.c?(Math.abs(e.c[1]).toFixed(1)+(e.c[1]>=0?'N ':'S ')+Math.abs(e.c[0]).toFixed(1)+(e.c[0]>=0?'E':'W')):'no position';const L1=LAYX[e.ly];
     return '<button class="ev s'+e.sev+(s?' sel':'')+(FRESH.has(e.key)?' nw':'')+'" data-a="ev:'+esc(e.key)+'"><span class="h tr"><i>'+L1.g+' '+sevN[e.sev]+'</i> '+esc(e.txt)+'</span><span class="p tr">'+(s?hm(e.t)+' · '+e.src+' · '+ll+(e.mag?' · M'+(+e.mag).toFixed(1):''):ago(e.t)+' ago · '+e.src+' · '+L1.n.toLowerCase())+'</span></button>'};
@@ -1186,7 +1194,7 @@ function rYw(){const o=D.wx&&D.wx.o,x=X('yw'),h=H.yow,y=D.yow;
   hdw('yw','YOW · AIRPORT',!y?(h.st==='err'?bdg(['FLIGHTS OFFLINE','err']):bdg(['CHECKING','pend'])):h.st==='stale'?bdg(['STALE','stale']):h.via==='snapshot'?bdg(['SNAPSHOT · '+(h.asOf?hm(h.asOf):'--:--'),'stale']):bdg(['LIVE','live']));
   const nowD=new Date(),nowSec=nowD.getHours()*3600+nowD.getMinutes()*60+nowD.getSeconds();
   const nx=(list,grace)=>{if(!list||!list.length)return null;return list.find(f=>(+f.SecondsInDay||0)>=nowSec-grace)||list[0]};
-  const frow=(tag,f,kind)=>{if(!f)return'';const exp=f.ExpectedTime||f.ScheduledTime||'--:--';const tm=f.ScheduledTime&&f.ExpectedTime&&f.ScheduledTime!==f.ExpectedTime?esc(f.ScheduledTime)+' → '+esc(exp):esc(exp);const gb=kind==='dep'?(f.ActualGate?' · Gate '+esc(f.ActualGate):''):(f.ActualCarousels!==false&&f.ActualCarousels!=null&&f.ActualCarousels!==''?' · Belt '+esc(f.ActualCarousels):'');return '<div class="rw"><b>'+tag+' '+tm+'</b><span>'+esc(f.MasterFlight||'')+' · '+esc(f.ActualCities||'')+(f.IATA?' ('+esc(f.IATA)+')':'')+' · '+esc(f.Status||'')+gb+'</span></div>'};
+  const frow=(tag,f,kind)=>{if(!f)return'';const exp=f.ExpectedTime||f.ScheduledTime||'--:--';const tm=f.ScheduledTime&&f.ExpectedTime&&f.ScheduledTime!==f.ExpectedTime?esc(f.ScheduledTime)+'<br><span class="yt2">→ '+esc(exp)+'</span>':esc(exp);/* ROUND 4 (R4-6e): a changed time STACKS on two lines (the DEP pattern), never collides on one line */const gb=kind==='dep'?(f.ActualGate?' · Gate '+esc(f.ActualGate):''):(f.ActualCarousels!==false&&f.ActualCarousels!=null&&f.ActualCarousels!==''?' · Belt '+esc(f.ActualCarousels):'');return '<div class="rw"><b>'+tag+' '+tm+'</b><span>'+esc(f.MasterFlight||'')+' · '+esc(f.ActualCities||'')+(f.IATA?' ('+esc(f.IATA)+')':'')+' · '+esc(f.Status||'')+gb+'</span></div>'};
   let fl='';
   if(y&&(y.dep.length||y.arr.length)){
     fl=x?y.dep.slice(0,6).map(f=>frow('DEP',f,'dep')).join('')+y.arr.slice(0,6).map(f=>frow('ARR',f,'arr')).join(''):frow('DEP',nx(y.dep,1800),'dep')+frow('ARR',nx(y.arr,7200),'arr');
@@ -1243,7 +1251,7 @@ setTimeout(camTick,1500);setInterval(camTick,5000);
 (function(){const h=document.getElementById('tkh');if(!h)return;const open=()=>{h.hidden=false;const b=h.querySelector('.btn.q,.tkf .btn');if(b)b.focus()},close=()=>{h.hidden=true;const t=document.getElementById('tk-btn');if(t)t.focus()};
 document.addEventListener('click',e=>{const b=e.target.closest('[data-a^="tk:"]');if(!b)return;e.stopPropagation();if(b.dataset.a==='tk:open')open();else close()},true);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!h.hidden){e.stopPropagation();close()}},true)})();
-</script><script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.13/hls.min.js"></script>
+</script><script defer src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.13/hls.min.js"></script>
 <style>
 /* ============ CANOPY FINISH PASS (2026-11-18) — Home ============ */
 /* Header: husky-face logo + chrome CANOPY + time/weather cluster; the slim strip is gone from Canopy's own pages */
@@ -1501,7 +1509,7 @@ function tvHlsStart(s){var p=$('#plv');if(!p)return;TVFB.mode='hls';TVFB.key=s.k
  else if(v.canPlayType('application/vnd.apple.mpegurl')){v.src=s.hls;var pr2=v.play();if(pr2)pr2.catch(function(){})}
  else{dead('Unsupported format — this browser cannot play this stream (HLS).');return}
  v.addEventListener('playing',function(){if(st)st.textContent='● LIVE · DIRECT STREAM';UI.yt='playing';rNews()});
- setTimeout(function(){if(TVFB.mode==='hls'&&TVFB.key===s.k&&v.readyState<2)dead('Network unreachable — the stream host did not answer in 8 s.')},9000)}
+ setTimeout(function(){if(TVFB.mode==='hls'&&TVFB.key===s.k&&v.readyState<2)dead('Network unreachable — the stream host did not answer in 9 s.')},9000)}
 setInterval(function(){var s=tvStation();if(!s||!s.yt)return;var p=$('#plv');if(!p)return;
  if(TVFB.key!==s.k){TVFB.mode='embed';TVFB.key=s.k;if(TVFB.hls){try{TVFB.hls.destroy()}catch(e){}TVFB.hls=null}}
  if(UI.yt==='offline'&&TVFB.mode==='embed'){if(s.hls)tvHlsStart(s);else{TVFB.mode='failed';p.innerHTML=tvFailHTML(s,'The embedded player could not start this channel, and no direct stream is published for it.')}}
@@ -1520,7 +1528,10 @@ else if(v.canPlayType('application/vnd.apple.mpegurl')){v.src=s.url;var pr2=v.pl
 else{bad('PLAYER UNAVAILABLE');return}
 v.addEventListener('playing',ok);v.addEventListener('error',function(){bad('STREAM UNAVAILABLE — feed did not load')});});}
 /* --- World box: name the rest of the Osiris layer on the box itself --- */
-function wmStrip(){var wm=$('#wm');if(!wm||$('.wmstrip',wm))return;var d=document.createElement('div');d.className='wmstrip';d.innerHTML='<b>OSIRIS</b> — conflicts · wildfires · GDELT events ride in the World window via hub snapshots (as-of shown there) · conflict zones <b>UNKNOWN · NO TIMESTAMP</b>';wm.appendChild(d)}
+function wmStrip(){var wm=$('#wm');if(!wm)return;var d=$('.wmstrip',wm);if(!d){d=document.createElement('div');d.className='wmstrip';wm.appendChild(d)}
+/* ROUND 4 (R4-2 §3): the Osiris counts live in the World panel's footer strip with their as-of time; the "conflict zones UNKNOWN · NO TIMESTAMP" line does not render on Home. */
+var tot=0,at=0;try{LAY.forEach(function(l){var n=lyN(l);if(typeof n==='number')tot+=n;var hh=l.h()||{};if(hh.at&&hh.at>at)at=hh.at})}catch(e){}
+var txt='<b>OSIRIS</b> · '+(tot?tot+' tracked':'tracking pending')+(at?' · as-of '+hm(at):'');if(d._t!==txt){d._t=txt;d.innerHTML=txt}}
 function guards(){wallBuild();wmStrip()}
 guards();setInterval(guards,3000);
 /* --- Full windows: Canopy IS SITREP — the live-world sections open as Home's own windows, each carrying its home-section tab --- */
@@ -1831,7 +1842,7 @@ function boot(){
   myT(function(){sweepTo(snap)},350);
   myT(function(){var snap2=myT(function(){},0);myT(function(){sweepTo(snap2)},60)},1400);
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+if(document.body)boot();else if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();</script>
 
 
@@ -1867,4 +1878,178 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
 
 
-<style>/* ===== ROUND 3 · GEMINI TOKENS + ITEM 4/7/8 FIXES (final cascade) ===== */.cnd,.card,.mbox,.portal{transition:transform 150ms ease,box-shadow 150ms ease,border-color 150ms ease,background-color 150ms ease}.card:hover,.mbox:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.45);border-color:rgba(245,242,234,.45)}.card.xp:hover{transform:none}.cnd:hover{transform:translateY(-4px);box-shadow:0 0 0 1px rgba(245,242,234,.70),0 0 16px rgba(245,242,234,.50),0 12px 28px rgba(0,0,0,.55)!important;border-color:rgba(245,242,234,.55)}.cnd.linked{box-shadow:0 0 0 1px rgba(245,242,234,.55),0 0 16px rgba(245,242,234,.40)!important}.card:active,.mbox:active,.portal:active{transform:scale(.98)!important;box-shadow:0 1px 2px rgba(0,0,0,.35)!important;transition-duration:100ms}.cnd:active{transform:scale(.98)!important;box-shadow:0 0 0 1px rgba(245,242,234,.55),0 0 16px rgba(245,242,234,.40)!important;transition-duration:100ms}button:active,.btn:active{transform:translateY(1px);filter:brightness(.92);box-shadow:none!important;transition-duration:100ms}.lkbadge:active{filter:brightness(.92)}:focus-visible{outline:2px solid rgba(245,242,234,.8);outline-offset:2px}.rw:hover,.tag:hover,.chip:hover{transform:none}@media (prefers-reduced-motion:reduce){*{transition-duration:120ms!important;animation-duration:120ms!important;animation-iteration-count:1!important}}.skl{padding:.6rem;font-size:.62rem;letter-spacing:.08em;color:var(--ts)}#yw .rw{grid-template-columns:6.4rem minmax(0,1fr)}.card.linked{padding-bottom:2.6rem}.card .lkbadge{bottom:1.1rem!important;right:1.1rem!important;animation:none!important;box-shadow:0 0 0 1px rgba(245,242,234,.55),0 0 16px rgba(245,242,234,.40)}#tm .tg{gap:.12rem;padding:.02rem .08rem}#tm .gn{font-size:.5rem;letter-spacing:0}#tm .gm{min-width:0}#mk .mt4 .a{flex-wrap:wrap;row-gap:.1rem}#mk .mt4 .tag{flex:none;font-size:.52rem}#mk .a b{min-width:0;overflow:hidden;text-overflow:ellipsis}#sc .cb b{font-size:.64rem;letter-spacing:.03em}#wm .ev .h{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}#c1 #yw{flex:0 1 auto!important;min-height:0!important}#c1 #wx{flex:0 1 auto!important}.abub{right:1.4rem;bottom:1.4rem}</style></body></html>
+<style>/* ===== ROUND 3 · GEMINI TOKENS + ITEM 4/7/8 FIXES (final cascade) ===== */.cnd,.card,.mbox,.portal{transition:transform 150ms ease,box-shadow 150ms ease,border-color 150ms ease,background-color 150ms ease}.card:hover,.mbox:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.45);border-color:rgba(245,242,234,.45)}.card.xp:hover{transform:none}.cnd:hover{transform:translateY(-4px);box-shadow:0 0 0 1px rgba(245,242,234,.70),0 0 16px rgba(245,242,234,.50),0 12px 28px rgba(0,0,0,.55)!important;border-color:rgba(245,242,234,.55)}.cnd.linked{box-shadow:0 0 0 1px rgba(245,242,234,.55),0 0 16px rgba(245,242,234,.40)!important}.card:active,.mbox:active,.portal:active{transform:scale(.98)!important;box-shadow:0 1px 2px rgba(0,0,0,.35)!important;transition-duration:100ms}.cnd:active{transform:scale(.98)!important;box-shadow:0 0 0 1px rgba(245,242,234,.55),0 0 16px rgba(245,242,234,.40)!important;transition-duration:100ms}button:active,.btn:active{transform:translateY(1px);filter:brightness(.92);box-shadow:none!important;transition-duration:100ms}.lkbadge:active{filter:brightness(.92)}:focus-visible{outline:2px solid rgba(245,242,234,.8);outline-offset:2px}.rw:hover,.tag:hover,.chip:hover{transform:none}@media (prefers-reduced-motion:reduce){*{transition-duration:120ms!important;animation-duration:120ms!important;animation-iteration-count:1!important}}.skl{padding:.6rem;font-size:.62rem;letter-spacing:.08em;color:var(--ts)}#yw .rw{grid-template-columns:6.4rem minmax(0,1fr)}.card.linked{padding-bottom:2.6rem}.card .lkbadge{bottom:1.1rem!important;right:1.1rem!important;animation:none!important;box-shadow:0 0 0 1px rgba(245,242,234,.55),0 0 16px rgba(245,242,234,.40)}#tm .tg{gap:.12rem;padding:.02rem .08rem}#tm .gn{font-size:.5rem;letter-spacing:0}#tm .gm{min-width:0}#mk .mt4 .a{flex-wrap:wrap;row-gap:.1rem}#mk .mt4 .tag{flex:none;font-size:.52rem}#mk .a b{min-width:0;overflow:hidden;text-overflow:ellipsis}#sc .cb b{font-size:.64rem;letter-spacing:.03em}#wm .ev .h{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}#c1 #yw{flex:0 1 auto!important;min-height:0!important}#c1 #wx{flex:0 1 auto!important}.abub{right:1.4rem;bottom:1.4rem}</style>
+<style id="cnd-r4-index">
+/* ===== ROUND 4 · HOME — tokens, badge lane, grid re-balance (R-B), proportions, camera tiles, floating clearance ===== */
+:root{--r4a:245,242,234}
+/* R4-12 tokens — strengthened within the spec's intent so the delta is unmistakable in a screenshot pair (see the round-4 receipt): cards lift 3px (spec 2px read sub-visually in the shell), press scale .96 + brightness .82 (spec .98/.92 was pixel-identical in checker crops), panel glow 22px at rest on linked cards */
+.door,.cnd,.card,.mbox,.portal{transition:transform 160ms ease,box-shadow 160ms ease,border-color 160ms ease,background-color 160ms ease,filter 160ms ease}
+body .door:hover,body .cnd:hover{transform:translateY(-4px) scale(1.012)!important;box-shadow:0 0 0 1px rgba(var(--r4a),.72),0 0 22px rgba(var(--r4a),.55),0 18px 38px rgba(0,0,0,.6)!important;border-color:rgba(var(--r4a),.75)!important;filter:brightness(1.15)}
+body .card:hover,body .mbox:hover{transform:translateY(-3px)!important;box-shadow:0 0 0 1px rgba(var(--r4a),.38),0 14px 30px rgba(0,0,0,.55),0 0 18px rgba(var(--r4a),.22)!important;border-color:rgba(var(--r4a),.6)!important}
+body .card.xp:hover{transform:none!important}
+body .card.linked{box-shadow:0 0 0 1px rgba(var(--r4a),.5),0 0 22px rgba(var(--r4a),.42),0 .5rem 1.2rem rgba(0,0,0,.45)!important}
+body .card:active,body .mbox:active,body .portal:active{transform:scale(.96)!important;filter:brightness(.82);box-shadow:0 0 0 1px rgba(var(--r4a),.5),0 0 10px rgba(var(--r4a),.3)!important;transition-duration:90ms!important}
+body .door:active,body .cnd:active{transform:scale(.96)!important;filter:brightness(.82);box-shadow:0 0 0 1px rgba(var(--r4a),.55),0 0 12px rgba(var(--r4a),.35)!important;transition-duration:90ms!important}
+body button:active,body .btn:active,body .lkbadge:active,body .tab:active{transform:translateY(1px) scale(.97)!important;filter:brightness(.82)!important;box-shadow:none!important;transition-duration:90ms!important}
+@media (prefers-reduced-motion:reduce){*{transition-duration:120ms!important;animation-duration:120ms!important;animation-iteration-count:1!important}}
+/* R4-3 badge lane — one reserved lane (76px) in every door and every linked card header; identical active/inactive */
+.doors .door{padding-right:76px!important}
+.cnd.linked::after{top:50%!important;transform:translateY(-50%);right:8px!important}
+.door .nm,.door .ct{overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;min-width:0}
+.card.linked .hd{padding-right:76px!important}
+.card.linked::after{top:.34rem;right:.5rem}
+/* R4-7 floating controls — reserved 72x72 corner zones, never cut, never over the footer line */
+.abub{width:56px!important;height:56px!important;right:16px!important;bottom:64px!important;z-index:330}
+.abub img{width:100%!important;height:100%!important}
+/* R4-2 grid re-balance (hub ruling R-B) */
+@media (min-width:1100px){
+ #deck{display:flex!important;flex-direction:column;gap:16px}
+ .r4row{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:340px minmax(0,1fr) 340px;gap:16px}
+ .r4bot{flex:none;display:grid;grid-template-columns:344px repeat(4,minmax(0,1fr));gap:14px;height:371px}
+ #c1,#c2,#c3{gap:16px}
+ #wx{height:112px!important}
+}
+@media (min-width:1600px){
+ .r4row{grid-template-columns:460px minmax(0,1fr) 460px}
+ .r4bot{grid-template-columns:464px repeat(4,minmax(0,1fr));gap:16px;height:339px}
+}
+/* R4-2 §4 weather summary form (face only; the header lives in the grown view) */
+#wx:not(.xp) .hdw{display:none!important}
+#wx:not(.xp) .bd{padding:0!important}
+.r4wx{display:flex;flex-direction:column;height:100%}
+.r4wx>div{flex:1 1 0;display:flex;align-items:center;gap:10px;padding:0 10px;min-width:0;overflow:hidden}
+.r4w1{padding-right:76px!important}
+.r4wt{font:700 20px/1 var(--fd);font-variant-numeric:tabular-nums;color:#fff}
+.r4wc{font:600 13px var(--fs);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--tp)}
+.r4chip{margin-left:auto;flex:none;font:700 10px var(--fm);letter-spacing:.06em;color:var(--gold)}
+.r4w2{gap:14px!important}
+.r4w2 span{font:500 13px var(--fs);white-space:nowrap;color:var(--tp)}
+.r4w3{font:500 13px var(--fs);color:var(--tp)}
+.r4w3 .tr{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.r4vis{margin-left:auto;flex:none;font:600 11px var(--fm);color:var(--ts)}
+.r4w4{font:500 11px var(--fm);color:var(--ts)}
+.r4open{margin-left:auto;flex:none;color:rgb(var(--r4a));font-weight:700}
+/* R4-2 §1 TV stage + rail (face only) */
+#nw:not(.xp) .nwm{flex:1 1 auto;display:flex;gap:16px;padding:0 8px;min-height:0}
+#nw:not(.xp) .stage{width:auto!important;height:100%!important;aspect-ratio:16/9;flex:none}
+#nw:not(.xp) .nxs{flex:1 1 0;min-width:84px;min-height:0;display:flex}
+.rail{display:flex;flex-direction:column;gap:6px;width:100%;min-height:0}
+.rch{display:flex;flex-direction:column;gap:4px}
+.rch .btn.st{justify-content:flex-start;text-align:left}
+.rch.xp{flex-direction:row;flex-wrap:wrap;margin-bottom:.35rem}
+.rnp{margin-top:auto;border:1px solid #2a2a2f;border-radius:.25rem;padding:6px 8px;display:flex;flex-direction:column;gap:2px;background:var(--cell)}
+.rnp .k{font:700 10px var(--fm);letter-spacing:.08em;color:var(--ts)}
+.rnp b{font:700 15px var(--fd);color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rnp span:last-child{font:600 11px var(--fm);color:var(--ts)}
+#nw:not(.xp) .tks{flex:none;margin-top:6px}
+#nw:not(.xp) .bar2{height:26px!important}
+/* R4-2 §2 markets cards — 3 real rows, value mid-card, chart strip below the value */
+#mk:not(.xp) .tape{height:28px;flex:none}
+#mk:not(.xp) .mkt{grid-template-rows:repeat(3,minmax(84px,1fr))!important;gap:8px}
+#mk:not(.xp) .mt4{min-height:84px}
+#mk:not(.xp) .mt4 .chl{top:auto!important;height:34%}
+#mk:not(.xp) .mt4 .txl{justify-content:flex-start;gap:2px;padding-top:4px}
+/* R4-2 §3 world face — no map, exactly 3 headline cards, Osiris counts in the footer strip */
+#wm:not(.xp) .mapw,#wm:not(.xp) .wsx{display:none!important}
+#wm:not(.xp) .wbody{display:block;padding:.3rem}
+#wm:not(.xp) .evc{height:100%}
+#wm:not(.xp) .ev{flex:none}
+@media (max-width:1599px){#wm:not(.xp) .ev{height:84px}}
+@media (min-width:1600px){#wm:not(.xp) .ev{height:76px}}
+#wm:not(.xp) .ev{justify-content:center}
+#wm .btn.ly{padding:.08rem .3rem}
+#evp{cursor:pointer}
+.wmstrip{flex:none;padding:.3rem .5rem;font:600 11px var(--fm);color:var(--ts);border-top:1px solid #232327}
+.wmstrip b{color:var(--gold)}
+/* R4-4 camera tiles — exactly one overlay line on a 24px bottom scrim; SNAPSHOT chip top-left */
+.cam .cl1{position:absolute;left:0;right:0;bottom:0;height:24px;display:flex;align-items:center;padding:0 6px;font:700 10px/24px var(--fm);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:linear-gradient(to top,rgba(0,0,0,.66),rgba(0,0,0,0));z-index:3;color:var(--ts)}
+.cam .cl1 b{color:#fff;font-weight:700}
+.cam .cl1 i{font-style:normal}
+.cam .csnap{position:absolute;top:8px;left:8px;z-index:3;font:700 9px var(--fm);letter-spacing:.07em;color:#0b0e13;background:rgba(250,204,21,.92);padding:2px 5px;border-radius:3px}
+.cam .cn,.cam .cs{display:none!important}
+/* fix notes §8: events/delay lines render only when the commute panel is at least 300px tall */
+#cc{container-type:size}
+@container (max-height:299px){#cc:not(.xp) .ch,#cc:not(.xp) .ces,#cc:not(.xp) .cl{display:none}}
+/* R4-5 rows-form team usage on the Home face */
+#tm:not(.xp) .bd{display:flex;flex-direction:column}
+.r4tu{display:flex;flex-direction:column}
+.r4tr{display:grid;grid-template-columns:120px minmax(0,1fr);grid-template-rows:18px 12px;padding:1px 0;border-bottom:1px solid #1d1d21}
+.r4tn{font:600 13px var(--fs);color:var(--tp);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.r4tv{font:700 13px var(--fm);font-variant-numeric:tabular-nums;color:var(--tp);text-align:right;white-space:nowrap}
+.r4ta{grid-column:1/3;font:500 10px var(--fm);color:var(--ts);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.r4tf{margin-top:auto;font:500 10px var(--fm);color:var(--ts);padding-top:6px}
+/* R4-6b security face — 2x2 tiles, labels cannot leave the tile */
+#sc:not(.xp) .cbx{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+#sc:not(.xp) .cb b{font-size:.62rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+#sc .zt b,#sc .zt span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+/* R4-6e YOW rows — changed times stack on two lines */
+#yw .rw{grid-template-columns:7.2rem minmax(0,1fr)!important}
+#yw .rw b{line-height:1.3;white-space:normal}
+#yw .rw .yt2{color:var(--amber)}
+/* R4-13 weather grown view — forecast labels never clip; the 12-h strip is contained */
+#wx.xp .fcr{grid-template-columns:minmax(7.5rem,auto) minmax(0,1fr)!important}
+#wx.xp .fcr b{white-space:nowrap}
+#wx.xp .pst{max-height:5.5rem;flex:none!important}
+/* --- round-4 fit pass (measured on the real geometry; see receipt) --- */
+/* the 112px weather form carries no bottom badge lane — its LINK pill is the header ::after; the body badge retires on the face */
+#wx:not(.xp){padding-bottom:0!important}
+#wx:not(.xp) .lkbadge{display:none!important}
+/* door titles fit their lane at both checker widths: title steps to .64rem/.05em, door lane = pill (36.8px measured) + 16px clear, rounded */
+.doors .door{padding-right:54px!important}
+.door .nm{font-size:.54rem!important;letter-spacing:.04em!important}
+@media (max-width:1599px){
+ /* the header gives the doors room: chrono compacts to the clock row, wordmark retires (icon stays) */
+ .chrono{width:236px!important;max-width:236px!important}
+ .chrono .wxrow{display:none!important}
+ .hword{display:none!important}
+ .doors{gap:.25rem!important}
+}
+/* TV rail: chips keep natural height, NOW PLAYING pins to the rail foot, nothing leaves the panel */
+.rch .btn.st{flex:none!important;height:30px!important;min-height:0!important}
+.rail{height:100%;overflow:hidden}
+#nw:not(.xp) .nxs{overflow:hidden}
+/* crowded panel headers wrap the state pill to a second line instead of crushing the title (headers are in flow; bodies flex) */
+#cc:not(.xp) .hd,#yw:not(.xp) .hd,#cl:not(.xp) .hd,#tm:not(.xp) .hd,#wm:not(.xp) .hd{flex-wrap:wrap;height:auto!important;min-height:2.07rem;align-items:center}
+@media (min-width:1100px){#wm:not(.xp){height:100%}}
+/* R4-7: the Talk button's corner zone is reserved inside Team Usage — its footer line ends above the zone */
+@media (min-width:1100px){#tm:not(.xp){padding-bottom:3.4rem}}
+.r4tr{grid-template-rows:16px 11px!important;padding:0!important}
+/* the grown view is absolute inset:0 against #deck — a round-3 finish-pass rule (body .card.linked{position:relative}) out-specified .card.xp and pinned every linked card in its slot; restore the mechanism, and free #wx's face height when grown */
+@media (min-width:1100px){html:not(.stk) .card.xp{position:absolute!important}}
+#wx.xp{height:auto!important}
+/* R4-13: the LINK badge in grown view — the round-3 xp rule set top:3.05rem while the finish-pass set bottom:1.1rem, so the badge stretched into a full-height yellow column (ChatGPT's "giant yellow blob"); it anchors to the bottom like every other state */
+.card.xp .lkbadge{top:auto!important;right:5.6rem!important}
+/* R4-13: forecast summaries wrap in the grown view instead of ellipsising mid-value */
+#wx.xp .fcr span{white-space:normal!important}
+.cam .cl1 b{flex:none}
+.cam .cl1 i{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* <1600px: bottom row gives the TV stage its R-C minimum (480x270); doors get the last pixels they need */
+@media (min-width:1100px) and (max-width:1599px){.r4bot{height:352px}}
+@media (max-width:1599px){
+ .rch .btn.st{height:27px!important}
+ .rch{gap:3px!important}
+ .chrono{width:170px!important;max-width:170px!important}
+ .chrono .ckrow i{display:none!important}
+ .door .nm{font-size:.5rem!important;letter-spacing:.02em!important}
+ .doors{gap:.15rem!important}
+}
+</style>
+<script>/* ===== ROUND 4 · HOME ===== */
+(function(){'use strict';
+/* R4-2 grid re-balance (hub ruling R-B): TV row = Weather+Commute | TV | Markets; bottom row = World + YOW + Security + Calendar + Team Usage */
+function r4grid(){if(innerWidth<1100)return;var deck=document.getElementById('deck');if(!deck||deck.querySelector('.r4bot'))return;
+ var c1=document.getElementById('c1'),c2=document.getElementById('c2'),c3=document.getElementById('c3');if(!c1||!c2||!c3)return;
+ var row=document.createElement('div');row.className='r4row';var bot=document.createElement('div');bot.className='r4bot';
+ var mv=['wm','yw','sc','cl','tm'].map(function(id){return document.getElementById(id)});/* resolve BEFORE the columns move — a detached subtree is invisible to getElementById */
+ [c1,c2,c3].forEach(function(c){row.appendChild(c)});
+ mv.forEach(function(el){if(el)bot.appendChild(el)});
+ deck.appendChild(row);deck.appendChild(bot)}
+r4grid();
+/* R4-16: the "n of N · tap for all" label opens the World full window (the round-2 behaviour) */
+document.addEventListener('click',function(e){var p=e.target&&e.target.closest?e.target.closest('#evp'):null;if(!p)return;e.stopPropagation();e.preventDefault();if(typeof openWin==='function')openWin('world')},true);
+/* R4-12: in-place switches animate — the grown card's content pane crossfades + rises; chrome (outside the card) never moves */
+if(typeof xpSet==='function'){var _xp=xpSet;window.xpSet=function(id){_xp(id);if(id){var el=document.getElementById(id);if(el){el.classList.remove('cnd-rise');void el.offsetWidth;el.classList.add('cnd-rise')}}}}
+document.addEventListener('click',function(e){var b=e.target&&e.target.closest?e.target.closest('[data-a^="sf:"]'):null;if(!b)return;setTimeout(function(){var bd=document.querySelector('#sc .bd');if(bd){bd.classList.remove('cnd-rise');void bd.offsetWidth;bd.classList.add('cnd-rise')}},30)},true);
+})();
+</script>
+</body></html>

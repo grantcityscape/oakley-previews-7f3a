@@ -371,7 +371,7 @@ document.addEventListener('click',ev=>{const t=ev.target.closest('[data-a]');if(
  if(a==='close')closeSheet();else if(a==='home'){closeSheet();page=0;paintShelf()}
  else if(a==='theme')setTheme(document.documentElement.dataset.theme==='light'?'dark':'light',true);
  else if(a==='talk')talkSheet();else if(a==='add')addSheet();
- else if(a.startsWith('inst:')){store.instance=a.slice(5);page=0;save();paintAll()}
+ else if(a.startsWith('inst:')){store.instance=a.slice(5);page=0;save();paintAll();const _bn=document.getElementById('bench');if(_bn){_bn.classList.remove('cnd-rise');void _bn.offsetWidth;_bn.classList.add('cnd-rise')}}
  else if(a.startsWith('sheet:'))doorSheet(a.slice(6));
  else if(a.startsWith('nc:'))toast('<b>'+(a==='nc:home'?'HOME':a.slice(3).toUpperCase())+'</b> · NOT CONNECTED — its address is not supplied in this file, so nothing is simulated. It lands at integration.');
  else if(a.startsWith('setdoor:')){const id=a.slice(8),v=$('#sh-u').value.trim();if(v&&!okUrl(v)){$('#sh-e').textContent='That address is not usable — use https:// or a .html file name.';return}if(v)store.doors[id]=v;else delete store.doors[id];const c=store.custom[store.instance].find(e=>e.id===id);if(c)c.url=v;save();closeSheet();paintAll()}
@@ -830,7 +830,7 @@ function boot(){
   myT(function(){sweepTo(snap)},350);
   myT(function(){var snap2=myT(function(){},0);myT(function(){sweepTo(snap2)},60)},1400);
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+if(document.body)boot();else document.addEventListener('DOMContentLoaded',boot);
 })();</script>
 
 
@@ -845,4 +845,22 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 .sysbar .wxdoor .wxc{white-space:nowrap!important}
 </style>
 
-<style>/* ===== ROUND 3 · GEMINI TOKENS (final cascade) ===== */.cnd,.card,.mbox,.portal{transition:transform 150ms ease,box-shadow 150ms ease,border-color 150ms ease,background-color 150ms ease}.card:hover,.mbox:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.45);border-color:rgba(62,143,224,.45)}.cnd:hover{transform:translateY(-4px);box-shadow:0 0 0 1px rgba(62,143,224,.70),0 0 16px rgba(62,143,224,.50),0 12px 28px rgba(0,0,0,.55)!important;border-color:rgba(62,143,224,.55)}.cnd.linked{box-shadow:0 0 0 1px rgba(62,143,224,.55),0 0 16px rgba(62,143,224,.40)!important}.card:active,.mbox:active,.portal:active{transform:scale(.98)!important;box-shadow:0 1px 2px rgba(0,0,0,.35)!important;transition-duration:100ms}.cnd:active{transform:scale(.98)!important;box-shadow:0 0 0 1px rgba(62,143,224,.55),0 0 16px rgba(62,143,224,.40)!important;transition-duration:100ms}button:active,.btn:active{transform:translateY(1px);filter:brightness(.92);box-shadow:none!important;transition-duration:100ms}.lkbadge:active{filter:brightness(.92)}:focus-visible{outline:2px solid rgba(62,143,224,.8);outline-offset:2px}.rw:hover,.tag:hover,.chip:hover{transform:none}@media (prefers-reduced-motion:reduce){*{transition-duration:120ms!important;animation-duration:120ms!important;animation-iteration-count:1!important}}</style></body></html>
+<style>/* ===== ROUND 3 · GEMINI TOKENS (final cascade) ===== */.cnd,.card,.mbox,.portal{transition:transform 150ms ease,box-shadow 150ms ease,border-color 150ms ease,background-color 150ms ease}.card:hover,.mbox:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.45);border-color:rgba(62,143,224,.45)}.cnd:hover{transform:translateY(-4px);box-shadow:0 0 0 1px rgba(62,143,224,.70),0 0 16px rgba(62,143,224,.50),0 12px 28px rgba(0,0,0,.55)!important;border-color:rgba(62,143,224,.55)}.cnd.linked{box-shadow:0 0 0 1px rgba(62,143,224,.55),0 0 16px rgba(62,143,224,.40)!important}.card:active,.mbox:active,.portal:active{transform:scale(.98)!important;box-shadow:0 1px 2px rgba(0,0,0,.35)!important;transition-duration:100ms}.cnd:active{transform:scale(.98)!important;box-shadow:0 0 0 1px rgba(62,143,224,.55),0 0 16px rgba(62,143,224,.40)!important;transition-duration:100ms}button:active,.btn:active{transform:translateY(1px);filter:brightness(.92);box-shadow:none!important;transition-duration:100ms}.lkbadge:active{filter:brightness(.92)}:focus-visible{outline:2px solid rgba(62,143,224,.8);outline-offset:2px}.rw:hover,.tag:hover,.chip:hover{transform:none}@media (prefers-reduced-motion:reduce){*{transition-duration:120ms!important;animation-duration:120ms!important;animation-iteration-count:1!important}}</style>
+<style id="cnd-r4-workbench">
+/* ===== CORRECTION ROUND 4 — WORKBENCH: R4-12 interaction tokens (blue accent) + R4-3 badge lane + R4-7 floating clearance ===== */
+:root{--r4a:62,143,224}
+.door,.card,.btn{transition:transform 150ms ease,box-shadow 150ms ease,filter 150ms ease,border-color 150ms ease,background 150ms ease!important}
+body .door:hover{transform:translateY(-4px) scale(1.012)!important;box-shadow:0 0 0 1px rgba(var(--r4a),.72),0 0 22px rgba(var(--r4a),.55),0 18px 38px rgba(0,0,0,.6)!important;border-color:rgba(var(--r4a),.75)!important;filter:brightness(1.15)}
+body .card:hover{transform:translateY(-3px)!important;box-shadow:0 0 0 1px rgba(var(--r4a),.38),0 14px 30px rgba(0,0,0,.55),0 0 18px rgba(var(--r4a),.22)!important;border-color:rgba(var(--r4a),.6)!important}
+body .door:active,body .card:active,body .btn:active{transform:scale(.96)!important;filter:brightness(.82);transition-duration:90ms!important}
+.door.cnd.linked{box-shadow:0 0 0 1px rgba(var(--r4a),.5),0 0 22px rgba(var(--r4a),.42),0 .5rem 1.2rem rgba(0,0,0,.45)}
+/* R4-3 badge lane: LINK pill rides a reserved right lane, vertically centred; titles keep the rest */
+.door.cnd{padding-right:54px}
+.cnd.linked::after{top:50%!important;transform:translateY(-50%);right:8px}
+/* R4-7: the Talk bubble's home corner is the standard 56px zone, lifted clear of the footer row; the bench footer and the Empire action row keep their right ends clear of the zone */
+#abub{width:56px!important;height:56px!important;right:16px!important;bottom:64px!important}
+.bench .foot{padding-right:5.5rem}
+#empire .ac{padding-right:5.5rem}
+/* workbench's shell doors are .sdoor — the R4-12 press token applies to them too */
+body .sdoor:active{transform:translateY(1px) scale(.97)!important;filter:brightness(.82)!important}
+</style></body></html>

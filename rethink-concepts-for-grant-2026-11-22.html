@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Explaining Canopy — four ideas from the team</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #0d0f12;
+    color: #f2f3f5;
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 19px;
+    line-height: 1.65;
+  }
+  main { max-width: 720px; margin: 0 auto; padding: 28px 20px 56px; }
+  h1 { font-size: 32px; line-height: 1.25; margin: 8px 0 16px; }
+  h2 { font-size: 26px; line-height: 1.3; margin: 6px 0 4px; }
+  h3 {
+    font-size: 16px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: #b9bec7; margin: 26px 0 6px;
+  }
+  p { margin: 8px 0; }
+  ul, ol { margin: 8px 0 8px 0; padding-left: 24px; }
+  li { margin: 5px 0; }
+  .intro { color: #d7dae0; }
+  section.concept {
+    border-top: 1px solid #2a2e36;
+    margin-top: 44px;
+    padding-top: 26px;
+  }
+  .tag {
+    display: inline-block;
+    font-size: 14px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    color: #0d0f12;
+    padding: 4px 12px; border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .tag-chatgpt { background: #C9A227; }
+  .tag-perplexity { background: #D64541; color: #ffffff; }
+  .tag-gemini { background: #2FA866; }
+  .tag-claude { background: #3E8FE0; }
+  .working { color: #7fd6a4; font-weight: 600; }
+  .optional { color: #e8c96a; font-weight: 600; }
+  .watch { color: #9db8d6; font-weight: 600; }
+  .closing {
+    margin-top: 52px; padding: 22px;
+    border: 1px solid #2a2e36; border-radius: 12px;
+    font-size: 21px; font-weight: 600; text-align: center;
+  }
+  .headline-list li { font-style: italic; }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Explaining Canopy — four ideas from the team</h1>
+
+<p class="intro">The combined map-and-list piece didn't land, so it's gone back to the drawing board. Each member of the team went away and thought it through again, and each came back with one idea of their own.</p>
+
+<p class="intro">Every idea here is built around your example: follow the Lions Gate yacht walkthrough video as it travels back to the Media Portal inside the Command Deck, so the links themselves are the thing being shown — never just boxes sitting near each other.</p>
+
+<p class="intro">Four ideas follow, each in its maker's own words. Pick the one that feels right, and that's the direction we build.</p>
+
+<!-- ============ CHATGPT ============ -->
+<section class="concept">
+  <span class="tag tag-chatgpt">ChatGPT</span>
+  <h2>Follow One Thing — “The Currents of Canopy”</h2>
+
+  <h3>The idea</h3>
+  <p>This is not a map of places — it is a map of movements. The piece follows real things as they travel through Canopy — a storm warning, a paycheque, a listing photo, a yacht walkthrough video, a lead, a day — each one drawn as a single named ribbon with arrowheads, from where it starts to where the person sees it, passing through every app and area it touches, in order. If a link exists, it is a ribbon you can point at; if there is no ribbon, there is no link — nothing is implied by two things sitting near each other.</p>
+  <p>On one landscape page, the shared sources sit along the left edge, each drawn once as a single spring — Environment Canada weather, the 432 live traffic camera views (403 City of Ottawa + 29 Ontario highway), Ontario 511, Google Calendar, Google Maps, Google Drive, Home Assistant, Google Cast, WhatsApp and Telegram, ElevenLabs, and the rest of the sixteen shared sources. The person sits at the right edge. In between, six thick hero ribbons run left to right, each with a plain headline:</p>
+  <ul class="headline-list">
+    <li>“A storm warning reaches the house”</li>
+    <li>“A paycheque becomes a budget”</li>
+    <li>“A listing photo sells a house”</li>
+    <li>“A yacht video finds a buyer”</li>
+    <li>“A stranger becomes a lead”</li>
+    <li>“A day, planned and remembered”</li>
+  </ul>
+  <p>The areas are not boxes: they are stretches of the journey, tinted with the owner's colour — gold for SITREP and home, red for Daybook, green for the Command Deck, blue for the Workbench — so colour follows the owner wherever a ribbon goes. The three kinds are told apart by shape, not just colour. Canopy's own built-in features are the riverbed itself — the solid channel the ribbon runs in. Our own apps are named locks the ribbon passes through — Trellis, SiteVision, BluePrint, KÜL Real Estate, Lions Gate Yachts, Northbirch, and the seven trades — drawn as a gate with the app's name and its sections inside it. Outside services are the springs feeding in from the edge — a circle with the service's name, drawn once, however many ribbons drink from it. God's Eye View (Osiris) is a gold-lit stretch inside the SITREP current, never its own place. The Media and Engineering portals are two named locks inside the green Command Deck stretch, and “Talk to Assistant” is one small kiosk where the ribbons cross, labelled exactly that. No bare numbers anywhere: every count is written out in plain words.</p>
+
+  <h3>How the links show — the video, step by step</h3>
+  <p>Your example is one of the hero ribbons — “A yacht video finds a buyer” — with five numbered steps on the ribbon itself:</p>
+  <ol>
+    <li>The video is filmed at the marina for a Lions Gate yacht — the ribbon starts in the blue Workbench stretch, at the Lions Gate lock.</li>
+    <li>The raw video travels to the Media Portal — the ribbon leaves blue, enters the green Command Deck stretch, and passes through the Media Portal lock, where it is edited. The label says, in plain words, “edited in the Media Portal.”</li>
+    <li>The finished video travels back — the ribbon returns to the Lions Gate lock and is attached to that vessel's listing, so the listing now shows the video.</li>
+    <li>The same ribbon branches: one branch goes to the Command Deck's Sales side, where the video is used in advertising, and one branch goes out through Facebook Lead Ads, so a stranger who watches it can become a lead.</li>
+    <li>The lead travels back along a second ribbon, “A stranger becomes a lead,” into HubSpot (Johnny's own copy) and into the Daybook, where it becomes a task.</li>
+  </ol>
+  <p>Every step is an arrow, a label, and a place — a stranger can follow it with a finger, and can see that the video does not just sit in Lions Gate: it is linked back to the Command Deck and the Media Portal, exactly as you asked. The same treatment carries the other links: the CREA listings feed feeds the KÜL lock as a spring, labelled “listings, permission-based”; MarineTraffic vessel tracking feeds the Lions Gate lock; listing photos travel from KÜL and Lions Gate into the Media Portal lock for editing, then back to the listings; and a paycheque ribbon starts at the QuickBooks lock in Trellis and ends in the red Daybook money book — with the Trellis copy and the BluePrint copy of QuickBooks drawn as two separate locks, never merged. The link type is written on the ribbon in plain words — “live feed,” “link out,” “typed in by hand,” “file import” — so a stranger is never promised a live connection a link-out cannot deliver.</p>
+
+  <h3>How the roadmap shows</h3>
+  <p>Status is the state of the water, and only the three words are used. <span class="working">Working</span> ribbons are solid and flowing, with water in them. <span class="optional">Optional — add if you have it</span> ribbons are a dug channel with a closed gate across it, labelled with that exact phrase — the channel is ready, the water is not running until the person adds it. <span class="watch">Watch list</span> ribbons are a channel only staked out on the bank, dotted, labelled “Watch list” — planned, not built. So the roadmap reads at a glance: how much of Canopy flows today, how much is ready to open, and how much is still staked out. No other status language appears anywhere.</p>
+
+  <h3>The 30-second read</h3>
+  <p>Six headlines, left to right: a storm warning reaches the house; a paycheque becomes a budget; a listing photo sells a house; a yacht video finds a buyer; a stranger becomes a lead; a day, planned and remembered. That is the whole of Canopy in one breath — it watches the home, it keeps the day and the money, it runs the work, it sells houses and boats. The detail is there for the person who wants it, but nobody needs it to understand the idea.</p>
+
+  <h3>Its honest weakness</h3>
+  <p>Two, stated plainly. First, a river metaphor has to be learned: a stranger must be told once that a ribbon is a link and a spring is a shared source, or they will read it as decoration — the legend has to do real work, and if the drawing is pretty but the legend is small, the piece fails. Second, density: the full inventory cannot all be hero ribbons. The six hero ribbons carry the stories; every other item appears as a named tributary ribbon joining a hero ribbon, or as a row in an “Every link, in order” ledger strip along the bottom edge of the same page — present and checkable, but not all drawn large. Ribbon crossings are also a real risk where many feeds share Google services and Home Assistant: the drawing must route those shared springs carefully, or the crossings will tangle exactly the way the old diagrams did.</p>
+</section>
+
+<!-- ============ PERPLEXITY ============ -->
+<section class="concept">
+  <span class="tag tag-perplexity">Perplexity</span>
+  <h2>A Day With Canopy</h2>
+
+  <h3>The idea</h3>
+  <p>Canopy explained as a story, not a diagram. One day in one person's life, told in panels like a storyboard or a guided-tour article — and inside that day, one thing is followed on its whole journey through the system: a Lions Gate yacht walkthrough video. Every area, app, and connector appears in the story at the moment it does its job. This is not a diagram of any kind — no boxes, no map, no house, no metro lines. It is a narrative piece, and it doubles as the first media piece: the same story can be printed as an article, read aloud as a tour, or filmed as a video script. Your vision is the headline, in your words: “you plug everything you use into one app and it figures everything out for you.”</p>
+  <p>The day has four acts, one per area, in the area's colour. Act 1, Morning — SITREP and home, gold: weather, commute, cameras, markets, the world (including God's Eye View, Osiris, as a room inside the home, never its own place). Act 2, The day's work — Daybook, red: money, home, truck, social, health. Act 3, The team at work — Command Deck, green: station lamps, member rooms, Sales, and inside it the Media Portal and Engineering Portal as rooms of the Deck. Act 4, The workshops — Workbench, blue: your apps (Trellis, SiteVision, Northbirch, BluePrint) and Johnny's apps (KÜL, Lions Gate, CMS Construction, StructureIQ, 8Twelve Mortgages, Brand My Aqua, purEnzyme, Atra Lend) as the workshops where the things in the story are made. A closing checklist — “every app and connector in this story” — maps each beat back to the “What We're Using” list, so nothing is left out and the list stays the detail.</p>
+  <p>The three kinds stay unmistakable through the whole story: Canopy's built-in features are drawn as the room itself — the walls, the furniture, part of the house. Our own apps are workshops and people with a square name badge. Outside services are visitors arriving through a door with a diamond badge — one plain legend, carried through every panel. And no bare numbers anywhere: the camera panel's caption reads “432 live traffic camera views — 403 City of Ottawa + 29 Ontario highway” in full.</p>
+
+  <h3>How the links show — handoffs, not lines</h3>
+  <p>Each link is a handoff: a drawn arrow carrying the actual item — the video, a lead, a plow proof, an invoice, a snow alert — from the panel where it was made to the panel where it is used, with a plain-words label saying what moved and who sent it to whom. Your example, worked through:</p>
+  <ol>
+    <li>Lions Gate (Johnny's app, Workbench blue) — the broker films the walkthrough aboard the boat.</li>
+    <li>The video is handed to the Media Portal (inside the Command Deck, green) — edited, staged, and captioned on the built-in editing screen.</li>
+    <li>The finished video is handed to the Command Deck (green) — it appears in Sales, attached to the listing and the deal file.</li>
+    <li>The finished video is handed back to Lions Gate — the listing now shows it — and to Daybook (red) — the showing is booked in the calendar, and the client gets a personal video after the showing, sent through Gmail.</li>
+  </ol>
+  <p>Every panel shows where the video came from and where it goes next; the video is the thread the reader follows, and the link-back is visible in every panel, never implied. The sixteen chains become sixteen story beats — each chain is one cause-and-effect moment in the day (storm watch writes Snow SITREP; a finished plow becomes proof, then an invoice, then paid). Shared sources are drawn once: a shared source is one character who reappears — the weather is the same character in the morning panel, the snow panel, and the sea-trial panel, never duplicated, always the same face.</p>
+
+  <h3>How the roadmap shows</h3>
+  <p>The story has three tenses, drawn differently, using only the three status words. <span class="working">Working</span> beats are full colour, present tense: “this happens today.” <span class="optional">Optional — add if you have it</span> beats are a side panel with a dashed frame: “if you have one of these, this is where it joins the day.” <span class="watch">Watch list</span> beats are pencil-sketch panels: “this is the next chapter — the route isn't open yet.” The roadmap is the story's future chapters: the reader can see at a glance which beats are today, which are add-ons, and which are still sketches.</p>
+
+  <h3>The 30-second read</h3>
+  <p>The headline (your vision), then three panels: 6 a.m. — the morning SITREP wakes up and tells you about the snow; midday — the walkthrough video travels from Lions Gate to the Media Portal to the Command Deck; evening — the deal closes and the money lands in Daybook. Plus the legend. In 30 seconds a stranger knows what Canopy is, has seen one link work end to end, and knows which parts are working today.</p>
+
+  <h3>Its honest weakness</h3>
+  <p>A story shows one path, not all of them. It proves the links it walks and leaves the rest to the checklist and the list — a stranger who only reads the story will not have seen every connector, only the ones the day needed. It is also longer to take in than a poster: if the first three panels don't hook the reader, they won't start, so the 30-second version has to work on its own. And it lives or dies on the writing and drawing — a dull storyboard is worse than a dull diagram, and it needs a real illustrator and writer to land. The checklist plus the “What We're Using” list carry the completeness; the story carries the understanding.</p>
+</section>
+
+<!-- ============ GEMINI ============ -->
+<section class="concept">
+  <span class="tag tag-gemini">Gemini</span>
+  <h2>A Day Inside Canopy</h2>
+
+  <h3>The idea</h3>
+  <p>A single-page visual story, told as a film strip, not a diagram. No nodes, no boxes-and-lines, no map, no house, no city. The page reads like a short picture story about one household's day, in six scenes: 1) Morning — the house wakes up and briefs them (SITREP: weather, cameras, the day's first look); 2) The day, planned (Daybook: calendar, money, the assistant answering); 3) The work room (Command Deck: the team, the sales board, the Media and Engineering portals at work); 4) The boat sale (Johnny's apps: Lions Gate sells, KÜL lists, the shared pipeline carries the lead); 5) The house, watched (SITREP again at night: God's Eye View inside it, the world layer as the closing wide shot); 6) The bench (Workbench: where our own apps live and where new ones get built — your apps and Johnny's apps, side by side).</p>
+  <p>Each scene is one captioned panel with a small illustration or screenshot-style still, a one-line caption in plain English, and the area colour as the panel's edge and caption bar: SITREP gold, Command Deck green, Daybook red, Workbench blue. Under the strip, a cast rail carries every app and connector exactly once, grouped by area colour, each entry with its plain name and its status word. The “What We're Using” list page remains the detail companion; the story is the explanation.</p>
+  <p>What the eye does — first, second, third. First: the headline and the promise in one line — “Canopy is one place for your home, your day, your work, and your apps — here is a day inside it” — plus two tiny legends at the top: the four area colours with plain names, and the three kinds. Second: scene 1, top left — the morning — read across the strip like a comic; each scene takes five seconds. Third: follow any labelled arrow that catches the eye, and drop to the cast rail to find anything by name. A stranger never has to learn a diagram language first; they just read a story.</p>
+  <p>The three kinds are unmistakable at a glance, by frame treatment, not by position. Built into Canopy: solid full-colour panels, area colour filling the frame. Our own apps: panels drawn as app screens with a small “Ours — built by the team” ribbon in Workbench blue. Outside services: “postcard” frames — dashed border, always carrying the outside name in plain words (Environment Canada, Google, HubSpot, CREA, MarineTraffic). The top legend shows the three treatments side by side with those exact words, so a stranger can sort anything on the page in one look. Owner colour follows the item wherever it appears.</p>
+
+  <h3>How the links show — arrows with verbs</h3>
+  <p>Links are the heroes, drawn as first-class things, never implied by nearness. Every link is a visible arrow between two panels (or between a panel and a cast entry) with a verb and a named thing travelling on it — “sends,” “feeds,” “carries.” Your example, worked through in scene 4: the panel shows Johnny filming the walkthrough on the boat; a green arrow labelled “the raw walkthrough video” runs from the Lions Gate panel to the Media Portal panel (“Media Portal cuts and titles it”); a second green arrow labelled “the finished video” runs from the Media Portal into the Command Deck panel (“Command Deck plays it in the sales room”); a third, thinner arrow labelled “the lead it wins” runs back from the Command Deck to the shared HubSpot pipeline and into KÜL.</p>
+  <p>The same treatment carries the other load-bearing links: one weather reading (Environment Canada) drawn once in the cast rail, with arrows from it into the morning scene, the SITREP scene, and the apps — never redrawn; one calendar (Google Calendar) feeding Daybook and the house; one pipeline (HubSpot) carrying KÜL, Lions Gate, and Cityscape leads into Deck Sales; the 432 live traffic camera views (403 City of Ottawa + 29 Ontario highway — never the bare number) feeding the morning scene from a single cast entry. If a link has no arrow and no verb, it is not shown — that is the rule that kills the old failure mode.</p>
+
+  <h3>How the roadmap shows</h3>
+  <p>Status is a word on everything, never colour alone. Every scene beat and every cast entry carries one of only three words: <span class="working">Working</span> (solid dot), <span class="optional">Optional — add if you have it</span> (hollow dot), <span class="watch">Watch list</span> (dashed dot). The story itself is all Working — it is a day that happens today. The cast rail is where the roadmap lives: a short “On the bench next” row at the rail's end gathers the Optional and Watch list entries together, so the future is visible without pretending it is already built. No fourth status word anywhere.</p>
+
+  <h3>The 30-second read</h3>
+  <p>A stranger who gives it 30 seconds can say: Canopy is one place for home, day, work, and apps; the house watches itself (gold), the day is planned (red), the work room sells and makes (green), our apps live on the bench (blue); a boat video goes from Lions Gate to the Media Portal to the Command Deck; and what is working now is separate from what is optional or on the watch list. If they give it two minutes, they can find any named app or connector in the cast rail and follow its arrows.</p>
+
+  <h3>Its honest weakness</h3>
+  <p>A story shows the journeys, not the whole catalogue at once. A reader who wants the full inventory must use the cast rail and the “What We're Using” list; the six scenes are an editorial choice, so you must approve which journeys star (if the video journey is wrong, the piece is wrong); and when a journey changes, a scene must be redrawn — unlike a diagram, you cannot just move a box. Density is the tightest risk: six scenes plus a full cast rail on one page is a lot, and on a phone it becomes a vertical scroll — acceptable for a story, but the one-screen ideal is given up, and the strip must be designed phone-first or the phone version will read as a wall of panels. The concept also leans on illustration quality: a badly drawn strip will look like a children's book, not a product piece — the art direction (real app stills, not clip art) is load-bearing.</p>
+</section>
+
+<!-- ============ CLAUDE ============ -->
+<section class="concept">
+  <span class="tag tag-claude">Claude</span>
+  <h2>Follow the Thing — Canopy in four stories</h2>
+
+  <h3>The idea</h3>
+  <p>A storyboard, not a map and not a diagram. Your example <em>is</em> the method — trace one thing end to end — and the piece does it four times. Four horizontal story strips, each following one thing through Canopy from left to right, like a comic strip. Every frame is a place plus a moment plus the thing in it. The arrows between frames <em>are</em> the links — thick, and labelled with exactly what travels (“the video file,” “the edited cut,” “the lead”). Nothing is implied by boxes sitting near each other: if two things are linked, there is an arrow between them with the thing that flows written on it; if there is no arrow, there is no link.</p>
+  <p>The four strips:</p>
+  <ul>
+    <li><strong>The Video</strong> — the hero strip, the biggest. See it worked through below.</li>
+    <li><strong>The Storm</strong> — forecast → Snow SITREP (gold) → Flurry builds the routes (blue, Trellis) → crew runs them → photo proof comes back → invoice → the paycheque lands in Daybook Finances (red).</li>
+    <li><strong>The Listing</strong> — new listing → KÜL (blue) → matched buyer → showing → offer → signature → close → the GCI counts it.</li>
+    <li><strong>The Paycheque</strong> — your own governing example: signed quote → deposit → QuickBooks payroll → paycheque → Daybook Finances (red).</li>
+  </ul>
+  <p>Each frame is tinted its area colour with the area name on the frame's edge — the areas are the “sets” the stories walk through (SITREP gold, Command Deck green, Daybook red, Workbench blue). The Media and Engineering portals are rooms inside the green Command Deck frames. Workbench's two benches are named on the blue frames: Johnny's apps (KÜL, Lions Gate) and your apps (Northbirch: Trellis + SiteVision; Cityscape: BluePrint). The three kinds are unmistakable because they are three different things in a story: Canopy's built-in features are the <em>set</em> itself — the room (SITREP's weather window is drawn as part of the gold frame, not as an object); our own apps are the <em>characters</em> — solid figures with names; outside services are the <em>props</em> — labelled tools the characters pick up, each with a small plug mark. The legend says it in plain words: “The rooms are Canopy itself. The people are our apps. The tools are outside services you plug in.” No bare numbers: any number is spelled out — “432 live traffic camera views — 403 City of Ottawa + 29 Ontario highway” is the caption on the camera prop in the Storm strip.</p>
+
+  <h3>How the links show — the video, frame by frame</h3>
+  <p>Johnny films a yacht walkthrough on the boat (Lions Gate, blue) → the video file goes to the Media Portal (green, a room inside the Command Deck) → it is edited there → the finished cut plays from the Media Portal on the listing and on social → a viewer asks about the boat → Facebook Lead Ads carries the lead into the Command Deck's Sales room (green) → the lead lands in the pipeline → Johnny follows up from Lions Gate (blue).</p>
+  <p>And the link <em>back</em> is drawn: the video lives in the Media Portal, and the Command Deck and the listing both point to it — return arrows (“watch it here”) run from the Deck and from the listing back to the Media Portal, so the video is shown once and linked from everywhere. That is your example, frame by frame, with every link drawn.</p>
+  <p>Shared sources are drawn once, as a recurring character — the same face, same colour, same name wherever it appears (Google Maps is one character who shows up in the Storm strip and the Listing strip; Gmail is one character in the Day and Paycheque strips). The legend says so: “If you see the same face twice, it is the same source, not a copy.” Below the strips, a compact cast band carries the full inventory — every app and connector, grouped by area colour, one line each (name, kind mark, status mark, what it links to) — drawn from the “What We're Using” list, one entry per list entry, so nothing is missing. The strips explain; the cast proves.</p>
+
+  <h3>How the roadmap shows</h3>
+  <p>Status is the frame border: solid = <span class="working">Working</span>; dashed = <span class="optional">Optional — add if you have it</span>; dotted = <span class="watch">Watch list</span>. The same border code marks every cast entry, and one line under the legend says: “Solid is working now. Dashed you add if you have it. Dotted is on the watch list.” No other status words anywhere.</p>
+
+  <h3>The 30-second read</h3>
+  <p>The headline says “Follow one thing through Canopy.” The hero strip — the video, six frames — tells the whole idea alone: a thing is made in one app, finished in a portal, used in the Deck, and linked back. That is Canopy: things move between rooms, and every link is drawn. The other three strips show the pattern repeats for weather, houses, and money. The cast is the reference for later.</p>
+
+  <h3>Its honest weakness</h3>
+  <p>Four stories cannot carry the whole inventory — the long tail (pharmacy refills, the library, waste day, the Daybook errands) never gets a frame; it lives only in the cast, so those links are listed, not shown. And the format depends on drawing: if the frames are drawn as boxes with arrows, it collapses straight back into the flow diagram you rejected — the frames must be scenes (a boat, a portal room, a desk), not boxes, which needs a real illustrator, not a diagram tool. The piece teaches the pattern, not the catalogue: a reader who wants the full list must read the cast, which is dense. Fit is tight — hero strip big, three small strips, compact cast band on one wide page; if it crowds, the cast is the part that shrinks, never the stories.</p>
+</section>
+
+<div class="closing">Pick one — or tell us what's missing — and that's the direction we build.</div>
+
+</main>
+</body>
+</html>

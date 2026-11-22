@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Follow One Thing — The Currents of Canopy</title>
+<style>
+  * { box-sizing: border-box; }
+  :root{
+    --gold:#f5c542; --red:#ff6b5e; --green:#3ddc84; --blue:#4da3ff;
+    --ink:#eef2f7; --dim:#aeb9c6; --panel:#0b1017; --panel2:#101826;
+    --working:#3ddc84; --optional:#f5c542; --watch:#8fb8e8;
+  }
+  html,body{ margin:0; padding:0; background:#04060a; color:var(--ink);
+    font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+  body{ background:
+    radial-gradient(1100px 500px at 15% -5%, rgba(77,163,255,.14), transparent 60%),
+    radial-gradient(900px 480px at 85% 0%, rgba(245,197,66,.10), transparent 60%),
+    radial-gradient(1000px 700px at 50% 110%, rgba(61,220,132,.08), transparent 60%),
+    #04060a; }
+  .wrap{ max-width:1460px; margin:0 auto; padding:26px 22px 60px; }
+  header.hero{ text-align:left; padding:10px 4px 4px; }
+  .kicker{ letter-spacing:.22em; font-size:12px; text-transform:uppercase; color:var(--gold); font-weight:700; }
+  h1{ font-size:42px; line-height:1.12; margin:8px 0 6px; font-weight:800;
+    text-shadow:0 0 22px rgba(245,197,66,.35), 0 2px 0 rgba(0,0,0,.6); }
+  h1 .thin{ color:var(--dim); font-weight:600; }
+  .promise{ font-size:19px; line-height:1.55; color:#d7dee8; max-width:980px; margin:6px 0 0; }
+  .promise b{ color:#fff; }
+  /* ---------- legend ---------- */
+  .legend{ display:flex; flex-wrap:wrap; gap:10px 26px; margin:20px 0 6px; padding:14px 18px;
+    background:linear-gradient(180deg,var(--panel2),var(--panel)); border:1px solid #22314a; border-radius:14px;
+    box-shadow:0 10px 30px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.06); font-size:15px; }
+  .legend .grp{ display:flex; align-items:center; gap:9px; }
+  .legend .cap{ color:var(--dim); font-size:13px; letter-spacing:.06em; text-transform:uppercase; margin-right:2px; }
+  .shape{ display:inline-block; vertical-align:middle; }
+  .shape-bed{ width:30px; height:12px; border-radius:6px; background:linear-gradient(180deg,#3a4a63,#1c2739);
+    border:1px solid #5b7ba6; box-shadow:inset 0 2px 3px rgba(255,255,255,.25); }
+  .shape-app{ width:20px; height:20px; border-radius:5px; background:#12233d; border:2px solid var(--blue);
+    box-shadow:0 0 10px rgba(77,163,255,.55), inset 0 0 6px rgba(77,163,255,.4); }
+  .shape-src{ width:19px; height:19px; border-radius:50%; background:radial-gradient(circle at 35% 30%, #fff8, transparent 45%), #274b73;
+    border:2px solid #9fc6ff; box-shadow:0 0 10px rgba(159,198,255,.6); }
+  .st{ font-weight:700; } .st-working{ color:var(--working);} .st-optional{ color:var(--optional);} .st-watch{ color:var(--watch);}
+  /* ---------- scene ---------- */
+  .stage{ display:grid; grid-template-columns:minmax(0,1fr) 348px; gap:16px; margin-top:14px; align-items:stretch; }
+  @media (max-width:1080px){ .stage{ grid-template-columns:1fr; } }
+  .scene{ background:linear-gradient(180deg,#0a1220,#060b14); border:1px solid #22314a; border-radius:18px;
+    padding:10px 6px 4px; box-shadow:0 18px 44px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.05); overflow:hidden; }
+  .scene svg{ width:100%; height:auto; display:block; }
+  .ribbons{ display:flex; flex-wrap:wrap; gap:8px; margin:2px 4px 10px; }
+  .rbtn{ cursor:pointer; border:1px solid #2b3d5c; background:#0d1626; color:var(--ink); border-radius:999px;
+    padding:7px 13px; font-size:14.5px; font-weight:600; transition:all .15s; }
+  .rbtn:hover{ transform:translateY(-1px); border-color:#47648f; }
+  .rbtn.on{ box-shadow:0 0 0 2px currentColor inset, 0 0 16px rgba(255,255,255,.12); background:#14243d; }
+  /* explain panel */
+  .explain{ background:linear-gradient(180deg,var(--panel2),var(--panel)); border:1px solid #22314a; border-radius:18px;
+    padding:18px 18px 14px; box-shadow:0 18px 44px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.05); }
+  .explain h2{ margin:2px 0 4px; font-size:22px; line-height:1.25; }
+  .explain .kindline{ font-size:13px; letter-spacing:.05em; text-transform:uppercase; color:var(--dim); margin-bottom:8px; }
+  .explain p{ font-size:15.5px; line-height:1.55; color:#d7dee8; margin:7px 0; }
+  .explain ol{ margin:8px 0 8px 2px; padding-left:22px; font-size:15px; line-height:1.5; color:#d7dee8; }
+  .explain ol li{ margin:5px 0; }
+  .explain .flows{ border-top:1px solid #22314a; margin-top:10px; padding-top:9px; font-size:14.5px; color:var(--dim); line-height:1.5; }
+  .explain .flows b{ color:var(--ink); }
+  .resetbtn{ margin-top:12px; cursor:pointer; background:#14243d; color:var(--ink); border:1px solid #2b3d5c;
+    border-radius:9px; padding:7px 12px; font-size:14px; font-weight:600; }
+  /* svg bits */
+  .zone{ rx:18; stroke-width:1.6; }
+  .zonelabel{ font-size:16px; font-weight:800; letter-spacing:.04em; }
+  .zonesub{ font-size:11.5px; fill:#9fb0c4; }
+  .spring{ cursor:pointer; }
+  .spring circle{ fill:#12283f; stroke:#9fc6ff; stroke-width:2; }
+  .spring text{ fill:#cfe2ff; font-size:11.5px; font-weight:600; }
+  .node{ cursor:pointer; }
+  .node rect{ fill:#0e1a2c; stroke-width:2; }
+  .node text{ fill:#eef2f7; font-size:13.5px; font-weight:700; }
+  .node .sub{ fill:#9fb0c4; font-size:10.5px; font-weight:500; }
+  .ribbon{ fill:none; stroke-width:9; stroke-linecap:round; opacity:.42; cursor:pointer; transition:opacity .2s; }
+  .ribbonbase{ fill:none; stroke:#ffffff10; stroke-width:15; stroke-linecap:round; }
+  .stepdot{ fill:#04060a; stroke-width:2.4; }
+  .stepnum{ fill:#fff; font-size:11px; font-weight:800; text-anchor:middle; }
+  svg.dim .ribbon{ opacity:.07; } svg.dim .node{ opacity:.35; } svg.dim .spring{ opacity:.35; }
+  svg.dim .ribbon.lit{ opacity:.95; filter:drop-shadow(0 0 7px currentColor); }
+  svg.dim .node.lit{ opacity:1; } svg.dim .spring.lit{ opacity:1; }
+  .godseye{ fill:rgba(245,197,66,.13); stroke:var(--gold); stroke-width:1.6; stroke-dasharray:5 4; }
+  /* ---------- catalogue ---------- */
+  .cathead{ margin:38px 0 4px; font-size:27px; font-weight:800; text-shadow:0 0 16px rgba(77,163,255,.25); }
+  .catsub{ color:var(--dim); font-size:16px; line-height:1.55; max-width:1020px; margin:0 0 6px; }
+  section.area{ margin-top:26px; border:1px solid #22314a; border-radius:18px; padding:18px 18px 8px;
+    background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,0) 40%), var(--panel);
+    box-shadow:0 14px 34px rgba(0,0,0,.5); }
+  section.area > h3{ margin:0 0 2px; font-size:23px; }
+  section.area .areaintro{ color:var(--dim); font-size:15.5px; line-height:1.55; margin:2px 0 8px; max-width:1060px; }
+  .cat{ margin:14px 0 16px; }
+  .cat h4{ margin:0 0 3px; font-size:17.5px; }
+  .cat .how{ color:#c3cedd; font-size:15px; line-height:1.55; margin:0 0 9px; max-width:1060px; }
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; }
+  .chip{ cursor:pointer; display:inline-flex; align-items:center; gap:8px; border:1px solid #2b3d5c; background:#0d1626;
+    border-radius:11px; padding:7px 11px; font-size:14.5px; transition:all .13s; max-width:100%; text-align:left; color:var(--ink); }
+  .chip:hover{ transform:translateY(-1px); border-color:#47648f; }
+  .chip .nm{ font-weight:650; }
+  .chip .st{ font-size:12.5px; }
+  .chip.sel{ box-shadow:0 0 0 2px #fff inset, 0 0 14px rgba(255,255,255,.15); background:#182a47; }
+  .chip.rel{ border-color:#5b83b8; box-shadow:0 0 10px rgba(120,170,255,.35); }
+  .chip.out{ opacity:.62; border-style:dashed; }
+  .chip.out .nm{ text-decoration:line-through; }
+  .chip .outtag{ color:#ff9d94; font-weight:700; font-size:12.5px; }
+  .mini{ width:14px; height:14px; flex:0 0 auto; }
+  .mini-bed{ border-radius:4px; background:linear-gradient(180deg,#3a4a63,#1c2739); border:1px solid #5b7ba6; }
+  .mini-app{ border-radius:4px; background:#12233d; border:2px solid var(--blue); }
+  .mini-src{ border-radius:50%; background:#274b73; border:2px solid #9fc6ff; }
+  /* app boxes */
+  .appboxes{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:8px; }
+  @media (max-width:1080px){ .appboxes{ grid-template-columns:1fr; } }
+  .appbox{ border:1px solid #2b4a77; border-radius:16px; padding:14px 14px 6px; background:linear-gradient(180deg,#0c1830,#081120);
+    box-shadow:0 14px 34px rgba(0,0,0,.5), inset 0 0 34px rgba(77,163,255,.05); }
+  .appbox > h4{ margin:0 0 2px; font-size:20px; color:#cfe2ff; }
+  .appbox .boxsub{ color:var(--dim); font-size:14.5px; margin:0 0 8px; line-height:1.5; }
+  details.app{ border:1px solid #223d63; border-radius:12px; margin:9px 0; background:#0a1424; overflow:hidden; }
+  details.app > summary{ cursor:pointer; list-style:none; padding:11px 13px; font-size:16.5px; font-weight:750;
+    display:flex; align-items:center; gap:9px; }
+  details.app > summary::-webkit-details-marker{ display:none; }
+  details.app > summary .plus{ margin-left:auto; color:var(--blue); font-weight:800; }
+  details.app .inside{ padding:2px 13px 12px; }
+  details.app .inside .lbl{ font-size:12px; letter-spacing:.07em; text-transform:uppercase; color:var(--dim); margin:9px 0 5px; }
+  details.app .blurb{ font-size:14.5px; color:#c3cedd; line-height:1.5; margin:4px 0 2px; }
+  .goldframe{ border-color:rgba(245,197,66,.55) !important; background:linear-gradient(180deg,rgba(245,197,66,.07),rgba(245,197,66,0) 55%), var(--panel) !important; }
+  footer{ margin-top:44px; border-top:1px solid #22314a; padding-top:16px; color:var(--dim); font-size:14.5px; line-height:1.6; }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="kicker">Canopy — the sendable explainer</div>
+  <h1>Follow One Thing <span class="thin">— the Currents of Canopy</span></h1>
+  <p class="promise">Canopy is not a map of places — it is a map of <b>movements</b>. Everything a person uses — work or personal — plugs into one app, and this page follows real things as they travel through it: a storm warning, a paycheque, a listing photo, a yacht walkthrough video, a lead, a day. <b>Click any ribbon, any app, any area, or anything in the lists below</b> and it roadmaps itself — its whole path lights up, with a plain explanation of where it goes and what it does there. If there is no ribbon, there is no link: nothing here is implied by two things sitting near each other.</p>
+</header>
+
+<div class="legend" aria-label="How to read this page">
+  <span class="grp"><span class="cap">Three kinds</span></span>
+  <span class="grp"><span class="shape shape-bed"></span> <span><b>Built into Canopy</b> — the riverbed itself: Canopy's own features</span></span>
+  <span class="grp"><span class="shape shape-app"></span> <span><b>Our own apps</b> — named locks a current passes through</span></span>
+  <span class="grp"><span class="shape shape-src"></span> <span><b>Outside services</b> — springs feeding in from the edge, drawn once each</span></span>
+  <span class="grp"><span class="cap">Status — only three words</span></span>
+  <span class="grp"><span class="st st-working">Working</span><span>— flowing today</span></span>
+  <span class="grp"><span class="st st-optional">Optional</span><span>— add if you have it</span></span>
+  <span class="grp"><span class="st st-watch">Watch list</span><span>— staked out, not built yet</span></span>
+</div>
+
+<div class="stage">
+  <div class="scene">
+    <div class="ribbons" id="ribbonbtns"></div>
+    <svg id="scene" viewBox="0 0 1240 680" role="img" aria-label="The currents of Canopy — six journeys flowing from shared sources on the left, through Canopy's areas and apps, to you on the right">
+      <!-- zones -->
+      <rect class="zone" x="185" y="24" width="400" height="196" fill="rgba(245,197,66,.05)" stroke="#8a6d1f"/>
+      <rect class="zone" x="185" y="244" width="400" height="200" fill="rgba(61,220,132,.05)" stroke="#1f7a4a"/>
+      <rect class="zone" x="185" y="468" width="400" height="188" fill="rgba(255,107,94,.05)" stroke="#8a3a33"/>
+      <rect class="zone" x="620" y="24" width="470" height="632" fill="rgba(77,163,255,.05)" stroke="#2b5a94"/>
+      <text class="zonelabel" x="203" y="50" fill="#f5f5f2">SITREP — Home</text>
+      <text class="zonesub" x="203" y="67">the home's base is black-and-white neutral; SITREP's own things are gold</text>
+      <text class="zonelabel" x="203" y="270" fill="#3ddc84">Command Deck</text>
+      <text class="zonesub" x="203" y="287">the team's room — the Media and Engineering portals live inside it</text>
+      <text class="zonelabel" x="203" y="494" fill="#ff6b5e">Daybook</text>
+      <text class="zonesub" x="203" y="511">the personal side — money, home, truck, social</text>
+      <text class="zonelabel" x="638" y="50" fill="#4da3ff">Workbench</text>
+      <text class="zonesub" x="638" y="67">the sandbox the main apps plug into — everything they carry then works across Canopy</text>
+
+      <!-- ribbon bases + ribbons -->
+      <path class="ribbonbase" d="M84,86 C180,70 240,72 268,78 C420,92 580,100 690,106 C770,112 820,240 780,340 C730,460 480,530 316,540 M316,556 C560,580 940,430 1128,350"/>
+      <path class="ribbonbase" d="M722,206 C700,360 480,470 316,528 M316,552 C600,580 950,420 1128,352"/>
+      <path class="ribbonbase" d="M84,250 C300,230 520,270 690,292 M700,326 C560,345 420,338 302,330 M302,306 C450,290 600,300 690,282 M978,290 C1040,300 1080,320 1128,336"/>
+      <path class="ribbonbase" d="M922,296 C720,272 470,296 302,310 M302,336 C470,352 720,330 922,326 M922,352 C760,420 520,408 380,404 M384,406 C620,382 950,362 1128,344"/>
+      <path class="ribbonbase" d="M84,332 C400,360 700,340 920,338 M900,362 C884,380 862,390 850,394 M822,402 C650,420 480,410 386,406 M386,420 C400,470 420,502 428,528"/>
+      <path class="ribbonbase" d="M84,414 C220,470 340,520 430,540 M472,528 C560,400 560,200 522,112 M522,92 C800,58 1000,200 1128,330"/>
+
+      <path class="ribbon" id="rj-storm" data-journey="storm" stroke="#f5c542" color="#f5c542" d="M84,86 C180,70 240,72 268,78 C420,92 580,100 690,106 C770,112 820,240 780,340 C730,460 480,530 316,540 M316,556 C560,580 940,430 1128,350"/>
+      <path class="ribbon" id="rj-pay" data-journey="pay" stroke="#ff7a59" color="#ff7a59" d="M722,206 C700,360 480,470 316,528 M316,552 C600,580 950,420 1128,352"/>
+      <path class="ribbon" id="rj-photo" data-journey="photo" stroke="#b78cff" color="#b78cff" d="M84,250 C300,230 520,270 690,292 M700,326 C560,345 420,338 302,330 M302,306 C450,290 600,300 690,282 M978,290 C1040,300 1080,320 1128,336"/>
+      <path class="ribbon" id="rj-yacht" data-journey="yacht" stroke="#37c8e8" color="#37c8e8" d="M922,296 C720,272 470,296 302,310 M302,336 C470,352 720,330 922,326 M922,352 C760,420 520,408 380,404 M384,406 C620,382 950,362 1128,344"/>
+      <path class="ribbon" id="rj-lead" data-journey="lead" stroke="#ff6fa5" color="#ff6fa5" d="M84,332 C400,360 700,340 920,338 M900,362 C884,380 862,390 850,394 M822,402 C650,420 480,410 386,406 M386,420 C400,470 420,502 428,528"/>
+      <path class="ribbon" id="rj-day" data-journey="day" stroke="#51e39a" color="#51e39a" d="M84,414 C220,470 340,520 430,540 M472,528 C560,400 560,200 522,112 M522,92 C800,58 1000,200 1128,330"/>
+
+      <!-- springs (shared sources, drawn once) -->
+      <g class="spring" data-node="eccc"><circle cx="58" cy="86" r="17"/><text x="84" y="82">Environment</text><text x="84" y="96">Canada weather</text></g>
+      <g class="spring" data-node="cameras"><circle cx="58" cy="168" r="17"/><text x="84" y="164">Traffic cameras</text><text x="84" y="178">+ Ontario 511</text></g>
+      <g class="spring" data-node="crea"><circle cx="58" cy="250" r="17"/><text x="84" y="246">CREA listings</text><text x="84" y="260">feed</text></g>
+      <g class="spring" data-node="leadads"><circle cx="58" cy="332" r="17"/><text x="84" y="328">Facebook</text><text x="84" y="342">Lead Ads</text></g>
+      <g class="spring" data-node="gcal"><circle cx="58" cy="414" r="17"/><text x="84" y="410">Google</text><text x="84" y="424">Calendar</text></g>
+      <g class="spring" data-node="homeassistant"><circle cx="58" cy="496" r="17"/><text x="84" y="492">Home</text><text x="84" y="506">Assistant</text></g>
+      <g class="spring" data-node="elevenlabs"><circle cx="58" cy="578" r="17"/><text x="84" y="574">ElevenLabs</text><text x="84" y="588">voice</text></g>
+      <text x="30" y="640" fill="#7e8ea3" font-size="11.5">springs — shared sources, each drawn once</text>
+
+      <!-- SITREP nodes -->
+      <g class="node" data-node="sitrep-weather"><rect x="205" y="76" width="150" height="40" rx="9" stroke="#f5c542"/><text x="217" y="95">Weather</text><text class="sub" x="217" y="109">one shared reading</text></g>
+      <g class="node" data-node="sitrep-cameras"><rect x="368" y="76" width="196" height="40" rx="9" stroke="#f5c542"/><text x="380" y="95">Traffic &amp; cameras</text><text class="sub" x="380" y="109">403 City of Ottawa + 29 Ontario highway</text></g>
+      <rect class="godseye" x="205" y="126" width="360" height="82" rx="12"/>
+      <text x="219" y="148" fill="#f5c542" font-size="13.5" font-weight="800">God's Eye View — Osiris, inside SITREP</text>
+      <text x="219" y="168" fill="#d8cfae" font-size="11.5">Earthquakes (USGS) · disaster alerts (GDACS) · natural events — wildfires,</text>
+      <text x="219" y="184" fill="#d8cfae" font-size="11.5">storms, volcanoes (NASA) · rain radar over the world map · travel watch</text>
+      <text x="219" y="200" fill="#9a8f6a" font-size="10.5">shown here in the diagram's own style — part of SITREP, never its own box</text>
+
+      <!-- Deck nodes -->
+      <g class="node" data-node="media"><rect x="205" y="300" width="168" height="46" rx="9" stroke="#3ddc84"/><text x="217" y="320">Media Portal</text><text class="sub" x="217" y="335">editing built in · inside the Deck</text></g>
+      <g class="node" data-node="engineering"><rect x="388" y="300" width="176" height="46" rx="9" stroke="#3ddc84"/><text x="400" y="320">Engineering Portal</text><text class="sub" x="400" y="335">CAD &amp; 3D · inside the Deck</text></g>
+      <g class="node" data-node="deck-sales"><rect x="282" y="382" width="170" height="42" rx="9" stroke="#3ddc84"/><text x="294" y="401">Deck — Sales</text><text class="sub" x="294" y="415">leads land here</text></g>
+
+      <!-- Daybook nodes -->
+      <g class="node" data-node="finances"><rect x="205" y="524" width="170" height="44" rx="9" stroke="#ff6b5e"/><text x="217" y="544">Daybook Finances</text><text class="sub" x="217" y="558">the money book</text></g>
+      <g class="node" data-node="daybook-cal"><rect x="392" y="524" width="160" height="44" rx="9" stroke="#ff6b5e"/><text x="404" y="544">Daybook Calendar</text><text class="sub" x="404" y="558">every calendar, one view</text></g>
+
+      <!-- Workbench locks -->
+      <g class="node" data-node="trellis"><rect x="640" y="80" width="180" height="52" rx="9" stroke="#4da3ff"/><text x="652" y="102">Trellis — seven trades</text><text class="sub" x="652" y="118">Northbirch's umbrella</text></g>
+      <g class="node" data-node="flurry"><rect x="640" y="142" width="180" height="40" rx="9" stroke="#4da3ff"/><text x="652" y="161">Flurry — snow</text><text class="sub" x="652" y="175">Dispatch · Residential · Commercial</text></g>
+      <g class="node" data-node="quickbooks-trellis"><circle cx="722" cy="200" r="13" fill="#12283f" stroke="#9fc6ff" stroke-width="2"/><text x="742" y="197" fill="#cfe2ff" font-size="11.5" font-weight="600">QuickBooks — Trellis's copy</text><text x="742" y="211" fill="#8fa5bd" font-size="10.5">payroll lives here; the paycheque flows to Daybook</text></g>
+      <g class="node" data-node="blueprint"><rect x="880" y="80" width="180" height="52" rx="9" stroke="#4da3ff"/><text x="892" y="102">BluePrint</text><text class="sub" x="892" y="118">Cityscape sales work</text></g>
+      <g class="node" data-node="kul"><rect x="640" y="268" width="180" height="52" rx="9" stroke="#4da3ff"/><text x="652" y="290">KÜL Real Estate</text><text class="sub" x="652" y="306">Johnny's — houses</text></g>
+      <g class="node" data-node="lionsgate"><rect x="880" y="268" width="180" height="52" rx="9" stroke="#4da3ff"/><text x="892" y="290">Lions Gate Yachts</text><text class="sub" x="892" y="306">Johnny's — boats</text></g>
+      <g class="node" data-node="hubspot"><circle cx="838" cy="398" r="13" fill="#12283f" stroke="#9fc6ff" stroke-width="2"/><text x="858" y="395" fill="#cfe2ff" font-size="11.5" font-weight="600">HubSpot — one shared pipeline</text><text x="858" y="409" fill="#8fa5bd" font-size="10.5">each business keeps its own copy</text></g>
+      <g class="node" data-node="sitevision"><rect x="640" y="440" width="180" height="46" rx="9" stroke="#4da3ff"/><text x="652" y="460">SiteVision</text><text class="sub" x="652" y="474">stands by itself under Northbirch</text></g>
+      <g class="node" data-node="johnny-shelf"><rect x="880" y="440" width="180" height="46" rx="9" stroke="#4da3ff"/><text x="892" y="460">Johnny's shelf</text><text class="sub" x="892" y="474">CMS · StructureIQ · 8Twelve + more</text></g>
+
+      <!-- Talk to Assistant kiosk -->
+      <g class="node" data-node="assistant">
+        <circle cx="602" cy="344" r="24" fill="#101826" stroke="#eef2f7" stroke-width="2"/>
+        <text x="602" y="340" text-anchor="middle" fill="#eef2f7" font-size="10.5" font-weight="800">TALK TO</text>
+        <text x="602" y="354" text-anchor="middle" fill="#eef2f7" font-size="10.5" font-weight="800">ASSISTANT</text>
+        <text x="602" y="388" text-anchor="middle" fill="#9fb0c4" font-size="10.5">where the currents cross</text>
+      </g>
+
+      <!-- You -->
+      <g class="node" data-node="you">
+        <circle cx="1166" cy="342" r="30" fill="#101826" stroke="#eef2f7" stroke-width="2.4"/>
+        <text x="1166" y="348" text-anchor="middle" fill="#fff" font-size="15" font-weight="800">You</text>
+        <text x="1166" y="392" text-anchor="middle" fill="#9fb0c4" font-size="10.5">every current ends with a person</text>
+      </g>
+    </svg>
+  </div>
+
+  <aside class="explain" id="explain" aria-live="polite"></aside>
+</div>
+
+<h2 class="cathead">Everything in the picture, in words</h2>
+<p class="catsub">The same Canopy, as a list — every area, every app, every outside service, broken down by category. Each category opens with how it works, the way the commute explanation does: what it gathers, which apps it uses, and how they connect. Click anything and its current lights up in the picture above. The diagram and this list are one document and must always agree.</p>
+
+<div id="catalog"></div>
+
+<h2 class="cathead">The two app boxes, opened up</h2>
+<p class="catsub">Workbench is a sandbox: a main app plugs in, and everything that app carries then works across Canopy. A service worked into one app sits under that app — never loose under Workbench — and own-account services (an accounts program, a customer system) appear under every app that uses them, as that app's own copy. Open any app to see what is inside it and what it uses.</p>
+<div class="appboxes" id="appboxes"></div>
+
+<h2 class="cathead">The chains — what joining things up makes possible</h2>
+<p class="catsub">Sixteen chains are switched on, and new ones get added as they surface. You set the thresholds — how much snow, how much warning — and one rule always holds: <b>chains draft, people decide</b>. Every message to a client stays a draft until a person approves it.</p>
+<div class="chips" id="chains"></div>
+
+<footer>
+  <p><b style="color:#eef2f7">How this page stays honest.</b> Status is only ever one of three words — Working, Optional, Watch list — and the paid services Grant ruled out are shown marked out, not hidden: the paid all-in-one media editor and Matterport are out. There are no bare numbers: every count is written in plain words (the traffic cameras are "432 live traffic camera views — 403 City of Ottawa cameras and 29 Ontario highway cameras, from the City's published list"; the City notes about 275 physical cameras are installed, because one location can carry several list entries). God's Eye View (Osiris) lives inside SITREP and is shown in this page's own style — it never gets its own box. There is no scanner feed anywhere on this page: Grant removed it. Put together 22 November 2026 from the team's "What We're Using" list, the connectors roadmap, and the app-layer connection map.</p>
+</footer>
+
+</div>
+<script>
+"use strict";
+/* ============ journeys ============ */
+const JOURNEYS = {
+  yacht:{ title:"A yacht video finds a buyer", color:"#37c8e8",
+    intro:"Grant's own example, end to end: a walkthrough video filmed for a Lions Gate yacht travels to the Media Portal inside the Command Deck to be edited, comes back to the listing, works in Sales, and wins a lead.",
+    steps:[
+      ["lionsgate","Filmed at the marina — the video starts at the Lions Gate lock, in the blue Workbench stretch."],
+      ["media","Edited in the Media Portal — the ribbon leaves blue, enters the green Command Deck stretch, and passes through the Media Portal lock. The label says it in plain words: edited in the Media Portal."],
+      ["lionsgate","Back to the listing — the finished video returns to Lions Gate and is attached to that vessel's listing, so the listing now shows the video."],
+      ["deck-sales","Used in Sales — a branch runs to the Command Deck's Sales side, where the video works in advertising."],
+      ["leadads","A stranger becomes a lead — a branch goes out through Facebook Lead Ads, so someone who watches can ask about the boat."],
+      ["hubspot","Into the pipeline — the lead lands in HubSpot (Johnny's own copy) and becomes a task in the Daybook. The lead's own journey is the pink ribbon."]]},
+  storm:{ title:"A storm warning reaches the house", color:"#f5c542",
+    intro:"The flagship chain: the same weather reading that lights up SITREP also builds the snow work — because it is one reading, the house and the crews can never be working from different forecasts.",
+    steps:[
+      ["eccc","Environment Canada fires a snowfall warning — one shared reading feeds Home, SITREP, and every app."],
+      ["sitrep-weather","SITREP brings the snow card forward — Weather Mode: the weather spot changes its face for snow and settles back when it clears."],
+      ["flurry","Flurry builds the night — Dispatch takes the storm plus the client list and drafts the plow routes (Routific) and the crew schedule; measured snow on the ground comes from CoCoRaHS, road-surface conditions from Vaisala Xweather, and truck positions from Samsara and Geotab."],
+      ["finances","Proof becomes paid — a finished plow sends a GPS punch and a photo; the invoice raises itself, the payment link goes out as a draft, and the bank payment marks the job paid in Daybook Finances. Snow fighters did the work; the paperwork keeps up by itself."]]},
+  pay:{ title:"A paycheque becomes a budget", color:"#ff7a59",
+    intro:"Grant's governing example for app-layer links: a connector can belong to an app, and its link back into Canopy is drawn, not implied.",
+    steps:[
+      ["quickbooks-trellis","QuickBooks sits under Trellis — the trades business runs its books and payroll there, in its own account."],
+      ["finances","The paycheque flows through — payroll lands in Daybook Finances, where it becomes part of the household's money picture."],
+      ["blueprint","Two copies, never merged — BluePrint carries Cityscape's own QuickBooks copy, and FieldCentral (HindSite Software's field app) talks to BluePrint only through that copy's two-way sync: BluePrint to QuickBooks to FieldCentral."]]},
+  photo:{ title:"A listing photo sells a house", color:"#b78cff",
+    intro:"Listings and their pictures flow in automatically — that is in Canopy's DNA, for KÜL, for Lions Gate, and for every app after them.",
+    steps:[
+      ["crea","Listings flow in — CREA's listings feed (permission-based, through Johnny's own member access) and KÜL's own website feed bring live listings and their photos into KÜL automatically."],
+      ["kul","A new listing is matched — KÜL matches it to waiting buyers and books showings into the calendar."],
+      ["media","Photos are finished in the Media Portal — listing photos travel from KÜL to the Media Portal lock for editing, then flow back to the listing."],
+      ["kul","Back on the listing — the finished media shows on the listing itself, and on the client card too: pictures sit on the card and inside the client's file."]]},
+  lead:{ title:"A stranger becomes a lead", color:"#ff6fa5",
+    intro:"One ad set per business; the ad itself never lives inside the apps — the lead does, with its own door into the right client file.",
+    steps:[
+      ["leadads","Facebook Lead Ads — a stranger taps an ad for KÜL, Lions Gate, or Cityscape. Meta's review gates the route, and Meta keeps leads for ninety days only, so Canopy collects them promptly."],
+      ["lionsgate","The lead lands in the app — in the business's own client files, not in a spreadsheet."],
+      ["hubspot","Into HubSpot — one shared pipeline carries KÜL, Lions Gate, and Cityscape leads; each business keeps its own copy of the system."],
+      ["deck-sales","Sales works it — the lead surfaces in the Command Deck's Sales side, and follow-up happens from the app."],
+      ["daybook-cal","It becomes part of the day — the follow-up lands as a task and a booking in the Daybook."]]},
+  day:{ title:"A day, planned and remembered", color:"#51e39a",
+    intro:"One calendar behind everything: the same events fill Daybook's day and Home's calendar box — shared, never copied twice.",
+    steps:[
+      ["gcal","Google Calendar is the spring — one calendar feeds Daybook's combined view and Home's calendar box."],
+      ["daybook-cal","The day gathers itself — Daybook draws the commute from today's calendar: it gathers traffic information from Google, looks at the traffic cameras and the weather, and the car app can start the truck before you leave, if you want."],
+      ["sitrep-weather","The same day, on the wall — Home shows the day at a glance, with the shared weather riding along, labelled with its source and date."],
+      ["you","And it ends with you — the 6 a.m. morning SITREP pulls the whole picture together on one page: the day's jobs, annotated against the weather and the roads."]]}
+};
+/* ============ node facts (for things clicked in the picture or the lists) ============ */
+const NODES = {
+  "eccc":{n:"Environment Canada weather",k:"src",s:"Working",b:"The shared weather spring: current conditions, hourly, forecast, and alerts for Ottawa and Gatineau. One reading feeds Home, SITREP, and every app, so the weather can never contradict itself. It reaches the page through a small team-run relay.",f:"Feeds: SITREP Weather · Flurry's snow stack · the commute picture · reschedules across the apps."},
+  "cameras":{n:"Traffic cameras and Ontario 511",k:"src",s:"Working",b:"432 live traffic camera views across Ottawa — 403 City of Ottawa cameras and 29 Ontario highway (Ministry of Transportation) cameras, from the City's published traffic camera list. Honest note: the City says about 275 physical cameras are installed — 432 is the number of entries in its list, because one location can carry several entries. Pictures are snapshots, refreshed about once a minute — never labelled live.",f:"Feeds: SITREP Traffic & Cameras · Daybook's Commute · Flurry's road picture."},
+  "crea":{n:"CREA listings feed",k:"src",s:"Watch list",b:"Live Canadian listings for KÜL, through the REALTOR.ca data distribution feed. Permission-based — members and brokers only — so it runs through Johnny's own access. It is a different source from KÜL's own website feed, which already flows in automatically.",f:"Feeds: KÜL's listings · the matched-buyer chain · Deck Sales."},
+  "leadads":{n:"Facebook Lead Ads",k:"src",s:"Working",b:"Lead ads that drop straight into the apps — one ad set per business (Cityscape, KÜL, Lions Gate), each with its own door into that business's client files. The route is real but gated: Meta's review is mandatory and takes days to weeks, and Meta keeps leads for ninety days only.",f:"Feeds: the lead ribbon · HubSpot · Deck Sales."},
+  "gcal":{n:"Google Calendar",k:"src",s:"Working",b:"The calendar spring: the personal calendar plus every linked business calendar, in one combined view. The same calendar fills Home's calendar box — shared, never copied twice.",f:"Feeds: Daybook's day · Home's calendar box · showings and sea trials booked in the apps."},
+  "homeassistant":{n:"Home Assistant — the one bridge",k:"src",s:"Working",b:"Canopy does not talk to seventeen company clouds. It talks to one Home Assistant hub in the home, and the hub talks to the devices — cameras, sensors, lights, locks, thermostat — locally where possible. Whichever brand a person actually has plugs into the bridge the same way. The truck rides this bridge too.",f:"Feeds: Daybook's security, monitoring, and automation · FordPass on the Ranger · Home's security box."},
+  "elevenlabs":{n:"ElevenLabs — voice and production",k:"src",s:"Working",b:"Already connected to the team: it is Oakley's voice. Inside Canopy it powers Talk to Assistant and the Media Portal's voice work — narration for listing and vessel videos. One hard rule: voice proposes, a human tap commits. Voice alone never sends, buys, or changes anything.",f:"Feeds: Talk to Assistant · the Media Portal · the apps' shared deal-flow kit."},
+  "sitrep-weather":{n:"SITREP — Weather",k:"bed",s:"Working",b:"Built into Canopy. One shared Environment Canada reading, with alerts: when a warning fires, Weather Mode changes the weather spot's face — snow, rain, heat, or storm — brings the right SITREP card forward, then settles back when it clears.",f:"Flows to: Flurry (storm watch) · Mainline (freeze alerts) · every app's reschedules."},
+  "sitrep-cameras":{n:"SITREP — Traffic & Cameras",k:"bed",s:"Working",b:"Built into Canopy. The City of Ottawa's camera list and road events, plus Ontario 511 for the highways — searchable, with the actual pictures. 432 live traffic camera views: 403 City of Ottawa cameras and 29 Ontario highway cameras.",f:"Shared with: Daybook's Commute — the same camera supply, never copied twice."},
+  "media":{n:"Media Portal — inside the Command Deck",k:"bed",s:"Working",b:"Built into Canopy, and it lives inside the Command Deck — it links to the Deck, not to Canopy's centre. Every project's photos and videos gather here, and editing is built in: a real editing screen, not a viewer. Listing and vessel media flows in from the apps, gets edited, and flows back to the listing it belongs to.",f:"Flows: KÜL and Lions Gate media in and back · Trellis project media · YouTube channel numbers and Google Analytics sit inside it."},
+  "engineering":{n:"Engineering Portal — inside the Command Deck",k:"bed",s:"Working",b:"Built into Canopy, inside the Command Deck. A project walks down the chain: designed in FreeCAD, finished in Blender on the desktop — Blender itself cannot live inside a web page — then the model comes back into the app, where Babylon.js, the model viewer, and Autodesk Viewer let you turn it, measure it, and stand a camper at true full scale in a client's driveway with the phone's augmented reality. GitHub sits inside it too.",f:"Flows: a door to BluePrint's plans · build status up to the Deck floor."},
+  "deck-sales":{n:"Command Deck — Sales",k:"bed",s:"Working",b:"Built into Canopy. Leads that arrive through Facebook Lead Ads land here, each with its own door into the right business's client files. The shared HubSpot pipeline carries KÜL, Lions Gate, and Cityscape leads into this one Sales picture.",f:"Flows: signed documents and commissions land in Daybook's finances."},
+  "finances":{n:"Daybook Finances — the money book",k:"bed",s:"Working",b:"Built into Canopy. The real figures come from the team's finance record — the workbook in Google Drive is the record of truth, and anything typed in by hand always wins. Paycheques arrive from QuickBooks under the apps; deposits arrive through Stripe; TD feeds in through Plaid when Grant gives the go — read-only, a few times a day, never called live.",f:"Receives: paycheques · invoices marked paid · commissions on closed deals."},
+  "daybook-cal":{n:"Daybook Calendar",k:"bed",s:"Working",b:"Built into Canopy. All calendars in one view — and the day's commute is drawn from it, never typed twice. Showings, sea trials, and estimates booked in the apps land here.",f:"Shares: Home's calendar box · the apps' bookings."},
+  "trellis":{n:"Trellis — the green-trades umbrella",k:"app",s:"Working",b:"Our own app family: the products Northbirch sells — Mainline, Lumen, Flurry, Course, Bole, Tend, Glimmer. The trades link to each other, not just to Canopy: BluePrint's plans flow to Course, Mainline, and Lumen; Flurry and Tend share routing and crews; a freeze alert in SITREP becomes a winterise job in Mainline. Open Trellis in the app boxes below to see each trade's insides and tools.",f:"Flows: jobs into Deck Tasks · leads and proposals into Deck Sales · money into Daybook Finances."},
+  "flurry":{n:"Flurry — snow",k:"app",s:"Working",b:"Our own app, under Trellis. Its insides: Dispatch, Residential, Commercial — and Snow SITREP, its storm-operations mode, carrying the snow-fighter identity: kind of like firefighters, but snow fighters — they fight Mother Nature, and if they weren't out there clearing roads and parking lots, the city would shut down. Its kit: Environment Canada's data services and measured precipitation, Ontario 511, Tomorrow.io snow depth, home weather-station ground truth, CoCoRaHS measured snow on the ground, Vaisala Xweather road weather, Geotab tracking plus Flurry's own truck readers, and Samsara on Cityscape's existing account.",f:"Flows: routes into Deck Tasks · proof into invoice into paid, in Daybook Finances · client texts through WhatsApp and Telegram."},
+  "quickbooks-trellis":{n:"QuickBooks — Trellis's own copy",k:"src",s:"Optional",b:"The books and payroll for a Trellis business, in that business's own account. Its paycheque flows through to Daybook Finances — that link back is drawn as the orange ribbon. BluePrint and the Deck carry their own copies, drawn separately on purpose: own-account services are never merged into one node.",f:"Flows: paycheques, invoices, and job costing into Daybook Finances."},
+  "blueprint":{n:"BluePrint — Cityscape's sales-workflow app",k:"app",s:"Working",b:"Grant's own app, under Cityscape beside Northbirch. Its insides: Social, Email, Calendar, Assistant, Quotes, Leads. Its kit: Aspire and LMN feed schedules and costs in and billing back out; Google Maps carries the job sites; its own QuickBooks copy holds its finances, and FieldCentral reaches it only through that copy's two-way sync. Workforce is still an open question — three products share the name, and Grant has not said which one.",f:"Flows: plans to Course, Lumen, and Mainline · billing into Daybook Finances · a door from the Engineering Portal's CAD viewer."},
+  "kul":{n:"KÜL Real Estate — Johnny's",k:"app",s:"Working",b:"Our own app, in Johnny's box. Its insides: Today with the worklist, Listings, Transactions, Developments, Open Houses, Clients — third on the list, the same in both apps — Calendar, Email, Social as real posts with pictures, Toolkit, and Tucker, his assistant. Listings and photos feed in automatically from CREA and from KÜL's own website; pictures sit on the client cards and inside the client files.",f:"Flows: leads into HubSpot and Deck Sales · photos to the Media Portal and back · showings into Daybook's calendar · commissions into Daybook's finances."},
+  "lionsgate":{n:"Lions Gate Yachts — Johnny's",k:"app",s:"Working",b:"Our own app, in Johnny's box. Its insides: Fleet, Clients — third on the list, matching KÜL — the Service Board, Calendar, Email, Social, Toolkit, and the Assistant. The walkthrough video on the cyan ribbon is filmed here. Its marine layer — vessel positions, marine weather, official tides — is shared with SITREP. Lions Gate is a sales brokerage; charter marketplaces are deliberately not part of it.",f:"Flows: media to the Media Portal and back · arrivals into leads in Deck Sales · slip bookings into Daybook's calendar · parts pricing into Daybook's finances."},
+  "hubspot":{n:"HubSpot — the customer system",k:"src",s:"Optional",b:"One sales pipeline carrying KÜL, Lions Gate, and Cityscape leads into Deck Sales. It is an own-account service: Trellis carries Cityscape's copy, and KÜL and Lions Gate carry Johnny's — drawn once here as the shared spring, and named under each app in the boxes below, because each business's copy is its own account.",f:"Flows: leads and deals in · pipeline status and contacts back out."},
+  "sitevision":{n:"SiteVision",k:"app",s:"Working",b:"Our own app: a brand-new product, built from the ground up, standing by itself under Northbirch. The team's record names no app-specific outside services for it — it connects by its door and Canopy's shared layers: Google Maps, the shared weather, and the Assistant.",f:"Flows: through its Workbench door, both ways."},
+  "johnny-shelf":{n:"Johnny's shelf — the rest of his box",k:"app",s:"Working",b:"CMS Construction, StructureIQ, and 8Twelve Mortgages sit in Johnny's box with the same insides-showing treatment as KÜL and Lions Gate; Brand My Aqua, purEnzyme, and Atra Lend are preview doors on the same shelf. For the thinner apps the record names no app-specific outside services — family pattern only: a door out and a door back, Google Maps everywhere, and Social, Email, Calendar, and Assistant inside. 8Twelve's mortgage door opens from inside KÜL.",f:"Flows: 8Twelve links deal details out and mortgage options in, and ties to Daybook's finances."},
+  "assistant":{n:"Talk to Assistant",k:"bed",s:"Working",b:"Built into Canopy — one small kiosk where the currents cross, not a section of its own. The assistant runs under every section: it points at doors and opens them, and it never pastes one app inside another or merges two apps into one view. You talk through ElevenLabs; the assistant proposes, and a human tap commits.",f:"Reaches: every area, every app, every door on this page."},
+  "you":{n:"You",k:"bed",s:"Working",b:"Every current ends with a person. Canopy is for anybody — Grant, Johnny, his sisters, his dad, or old Betty Lou walking down the side of the road: everybody has hundreds of apps, and Canopy plugs them all into one place that combines and links and figures everything out, with the AI team helping them run their life.",f:""}
+};
+</script>
+<script>
+"use strict";
+/* ============ catalogue: [id, name, kind, status, blurb] — kind: bed|app|src ============ */
+const CATALOG = [
+{ area:"SITREP — Home", color:"#f5c542",
+  intro:"Home is the wall — weather, commute, markets, team, and the world at a glance. SITREP is the situation report inside Home: Weather, Commute and Cameras, Live TV, Airport, and World. Home's base stays black-and-white neutral; SITREP's own things are gold; anything visiting from another area wears its own area's colour. Connects to: Flurry (storm watch, snow depth, and road conditions flow down; routes flow back up) · Mainline (freeze alerts become winterise jobs) · the job apps (an outage drafts the reschedule; the 6 a.m. morning picture pulls it all together) · Daybook (the same camera supply and calendar, shared, never copied) · Lions Gate (this layer's marine weather, tides, and vessel positions feed the sea-trial window).",
+  cats:[
+   { h:"Weather", how:"Your weather gathers its readings from Environment Canada — one shared reading feeds Home, SITREP, and every app, so the weather can never contradict itself. When a warning fires for your area, the weather spot changes its face — snow, rain, heat, or storm — brings the right SITREP card forward, then settles back when it clears.",
+     e:[["eccc","Environment Canada weather — Ottawa","src","Working","Current conditions, hourly, and forecast. One shared reading for the whole of Canopy, arriving through a small team-run relay."],
+        [null,"Environment Canada weather — Gatineau","src","Working","The second city's weather, beside Ottawa's."],
+        [null,"Weather and emergency alerts","src","Working","Warnings for the Ottawa area, through the common alerting protocol."],
+        ["sitrep-weather","Weather Mode","bed","Working","The weather spot adapts to whatever is actually happening — snow, rain, heat, storm — brings the right SITREP card forward, then settles back when it clears."],
+        [null,"Operator layer for snow work","bed","Working","Snowfall rate, road conditions, visibility, and wind chill. The source stack: Environment Canada's measured precipitation analysis (what actually fell — a checking source, not a live trigger), Ontario 511 road conditions, Tomorrow.io snow depth, and home weather-station ground truth. Ontario's road-weather station network is not public."]]},
+   { h:"Traffic and cameras", how:"Your traffic picture gathers the City of Ottawa's camera list and road events, plus Ontario 511 for the highways. You search the cameras and look at the actual pictures — snapshots refreshed about once a minute, never labelled live, because that is the honest truth of them.",
+     e:[["cameras","City of Ottawa traffic cameras — the full list","src","Working","432 live traffic camera views across Ottawa: 403 City of Ottawa cameras and 29 Ontario highway (Ministry of Transportation) cameras, from the City's published list. Searchable. The City says about 275 physical cameras are installed — 432 is the number of list entries, because one location can carry several entries."],
+        [null,"Camera pictures","bed","Working","The actual camera stills; a rotating set of four on Home. Snapshots, refreshed no faster than once a minute — never labelled live. The City's certificate stays on the team's relay, never in the app."],
+        [null,"City of Ottawa road events","src","Working","Closures, construction, and incidents."],
+        [null,"Ontario 511 road conditions","src","Working","The highway layer — and the operator layer for snow work."]]},
+   { h:"News and live TV", how:"Your news gathers headlines from CBC Ottawa, CityNews, the BBC, DW, and Al Jazeera — each card shows its source and its time, and tapping it opens the full story at the source. The world channels play right inside the app; the Canadian channels open their own pages, by Grant's ruling.",
+     e:[[null,"News headlines — CBC Ottawa, CityNews Ottawa, BBC World, DW, Al Jazeera","src","Working","Local and world headlines; cards carry their source and time, and link out to the full article."],
+        [null,"DW live TV","src","Working","Deutsche Welle's live stream, playing inside the app on tap."],
+        [null,"Live world TV — TRT World, CNA, NHK World, Arirang","src","Working","The SITREP TV wall, with an honest checking-live-stream state instead of a frozen picture."],
+        [null,"CBC Gem, CTV, Global live pages","src","Working","Canadian channels link out — Grant's ruling. That is the honest end state for these three."]]},
+   { h:"God's Eye View — Osiris, inside SITREP", how:"Your world layer gathers earthquakes from the USGS, disaster alerts from GDACS, and natural events from NASA, and plots them on the world map with rain radar over it, refreshing on a short rhythm through the team's relay. When you travel, it watches the places you are going, not just home. It is drawn here in the diagram's own style, as a gold-lit stretch of the SITREP current — never its own box, never a side note. There is no scanner feed in it: Grant removed that.",
+     e:[[null,"Earthquakes — United States Geological Survey","src","Working","Earthquakes worldwide (magnitude 4.5 and up) and any quake within 250 kilometres of home."],
+        [null,"Disaster alerts — GDACS","src","Working","Global disaster alerts: floods, storms, earthquakes — from the United Nations and European Commission system."],
+        [null,"Natural events — NASA EONET","src","Working","Wildfires, storms, floods, and volcanoes, worldwide."],
+        [null,"World map with rain radar","src","Working","OpenStreetMap with Environment Canada's map layer and RainViewer rain radar over it."],
+        [null,"Osiris — the world-data layer itself","bed","Working","Earthquakes, disaster alerts, natural events, and weather on one map, as a section inside SITREP. Its feeds were verified live on 21 November 2026, on a sixty-second rhythm, through the team relay."],
+        [null,"Ottawa airport (YOW) — a door","src","Working","A door to the airport's own site. Grant's ruling: no paid flight data, ever — the boards never invent flights."]]},
+   { h:"Markets", how:"Your markets box gathers the Bitcoin price, the dollar exchange rate, and the charts — and once a day it takes a snapshot of the tracked markets at the previous close, labelled with its source and its date. It never calls itself live, because no honest free live feed exists.",
+     e:[[null,"Bitcoin price and its day chart","src","Working","CoinGecko first, Coinbase and Binance as fallbacks."],
+        [null,"Dollar exchange rate (US dollar / Canadian dollar)","src","Working","Bank of Canada, with the European Central Bank as fallback."],
+        [null,"Markets snapshot — previous close","bed","Working","The previous day's closing picture for the tracked markets, labelled with its source and date. Never labelled live."],
+        [null,"TradingView charts and Stooq quotes","src","Working","The charts and quotes behind the snapshot."]]},
+   { h:"The Ottawa layer — confirmed in by Grant", how:"Your Ottawa layer gathers your power outages and your real electricity use from Hydro Ottawa, emergency alerts through Alert Ready, the air you breathe from Environment Canada's index, and the river levels from the Water Survey of Canada — the city's own facts, sitting beside your weather.",
+     e:[[null,"Hydro Ottawa outages","src","Working","Confirmed in by Grant — free. Honest limit: the outage map has no public connection, so it is embedded or polled, which is fragile."],
+        [null,"Hydro Ottawa Green Button","src","Working","Your real electricity use, with the account holder's consent. For anyone else's use, Hydro Ottawa's own onboarding and an industry certification are required — it is not an open connection."],
+        [null,"Alert Ready","src","Working","Emergency alerts. The full all-hazard feed needs registration with the alert system's operator; Grant's call is yes — pursue the registration. Weather alerts already arrive through Environment Canada."],
+        [null,"Air quality — the Air Quality Health Index","src","Working","Through Environment Canada, free. The commercial pollen source stays out under the no-paid rule."],
+        [null,"River levels for Ottawa — Water Survey of Canada","src","Working","River height and flow every five minutes, free, no key: the Ottawa River at Britannia, and the Rideau River at Ottawa — checked live on 22 November 2026."],
+        [null,"Open data, free","src","Working","Ontario GeoHub, Statistics Canada, national mapping and geography data, and the City of Ottawa's plow tracker (in development — watch it, do not build on it yet)."]]},
+   { h:"Home and world — for where you live, and where you are going", how:"Wherever you live — or wherever you are headed — this layer gathers the hazards that fit the place: hurricane tracks on a coast, fire detections from satellites, river levels, tides, snowpack, even the northern lights. Tell Canopy where you are travelling and it watches that place, and taps you if something is coming.",
+     e:[[null,"Travel-aware alerts","bed","Working","The world layer follows where the person is and where they are travelling to, and notifies them about alerts, tides, and storms for that place — not just for home."],
+        [null,"A SITREP for every kind of home","bed","Working","Coastal storm (tides, surge, and move the car off the low road by six) · Wildfire smoke · Well and septic (the household's own log) · Condo (building notices typed in — most buildings offer no connection at all, and Canopy never pretends to read the building's system) · Farm (frost tonight, livestock checked, rain coming) · Power-out (the utility's outage map by link, plus the household's own generator-fuel log)."],
+        [null,"Hurricane tracking — the National Hurricane Center","src","Working","Storm tracks and cones that plot straight onto the map, for a Gulf or Atlantic coast."],
+        [null,"Earthquakes for Europe and the Mediterranean","src","Working","The European-Mediterranean Seismological Centre: faster and denser there than the worldwide feed. Free, no key."],
+        [null,"Active fires — NASA FIRMS","src","Working","Near-real-time fire detections from satellites. Different from a smoke forecast — this is where fires actually are. Free key."],
+        [null,"River levels for the United States","src","Working","The US Geological Survey's water services: the American counterpart to Canada's river data."],
+        [null,"Northern lights forecast","src","Working","A thirty-to-ninety-minute forecast of where the aurora will be and how strong, from the national space-weather centre. Free, no key."],
+        [null,"Tides for United States coasts","src","Working","Water levels every six minutes; the American counterpart to the Canadian tide service."],
+        [null,"Mountain snowpack — SNOTEL","src","Working","Measured snow water, depth, and temperature from mountain stations. Measured snow, not a forecast."]]},
+   { h:"Home's own boxes", how:"Your Home wall gathers the day at a glance: your calendar fills the calendar box, your home's security state fills the security box, and the camera snapshots rotate through — all fed by the same connections you set up in Daybook, never copied twice.",
+     e:[[null,"Calendar box","bed","Working","The day's events, from the same Google Calendar spring that feeds Daybook."],
+        [null,"Home security box","bed","Working","Zones, doors, locks, smoke, water, temperature, and alarm state — arriving through the Home Assistant bridge in Daybook."],
+        [null,"Team usage and briefing counts","bed","Working","The AI team's state, and the needs-attention counts that ride on Home's doors."],
+        [null,"Home camera snapshots","bed","Optional","Driveway, Front Door, Garage, Backyard — from the home's own camera system. Needs one snapshot address per zone, from the home's records. No passwords ever go in an address."]]},
+   { h:"TV and streaming — add the ones you have", how:"Your streaming works by deep links: Canopy points you at the service that has the show, because none of the big streamers offers a real connection — it never promises a live sync it cannot do. Casting is worked in: from inside the app, you put a view on your Google Cast TV.",
+     e:[[null,"Casting — Google Cast, and TVs as screens","src","Working","Worked into Canopy, by Grant's ruling: cast the morning SITREP on the wall, a listing and its tour on the TV at a showing, a vessel and its route at a sea trial, a proposal on the big screen. It is a way of showing, not a place — no TV door exists. Honest catch: casting sends media, not the whole app."],
+        [null,"Netflix, Prime Video, Disney+, Crave, Apple TV+, Paramount+","src","Optional","None of them offers a public connection. What Canopy honestly offers: deep links, plus its own shared watchlist."],
+        [null,"The watchlist — what to watch, and where","src","Optional","The movie database (TMDB, free) plus Trakt for syncing, with deep links out to watch."],
+        [null,"Free streaming — Tubi, Pluto TV, the Roku Channel, Plex","src","Optional","Free-with-ads services; Plex is for households with their own film and TV library on a home computer — it has a real local connection."],
+        [null,"TV control — LG and Samsung sets","src","Optional","Control on the home network where the model supports it; otherwise a link to the TV's own remote app."]]}
+  ]},
+{ area:"Daybook — the personal side", color:"#ff6b5e",
+  intro:"The day stream, money, home, truck, health, and social. There is deliberately no weather in Daybook — weather lives on the Home and SITREP path. Connects to: Home (the calendar behind Daybook's combined view also fills Home's calendar box; Commute shares Home and SITREP's camera supply) · the business apps (paycheques arrive from QuickBooks under Trellis; payments and deposits arrive through Stripe; showings and sea trials booked in the apps land in this calendar; signed deals and commissions land in these finances; a personal video after a showing arrives in Gmail) · the truck (FordPass arrives through the Home Assistant bridge — the same bridge that carries this section's security, monitoring, and automation).",
+  cats:[
+   { h:"The day itself — and the commute, the model for every explanation on this page", how:"Your day gathers itself in one stream. Your commute is drawn from today's calendar — never typed twice — it gathers traffic information from Google, it looks at the traffic cameras and the weather so it uses those apps as well, and your car apps, because it can start your car if you want. The doors work simply: tap Canada Post and you are on Canada Post's own tracking page — nothing is copied into Daybook.",
+     e:[["daybook-cal","Calendar — all calendars in one view","bed","Working","The personal calendar plus every linked business calendar. Showings, sea trials, and estimates booked in the apps land here."],
+        [null,"Commute","bed","Working","Drawn from today's calendar, never typed twice. It gathers traffic from Google, looks at the traffic cameras and the weather, and the car app can start the truck before you leave, if you want. Roads and traffic cameras ride inside it — the same 432-camera City and highway supply as Home and SITREP."],
+        [null,"Day-to-day capture and day stream","bed","Working","Quick captures and the day's record, stored on the device."],
+        [null,"Notes collections","bed","Working","Collections that point back to their day pages."],
+        ["assistant","Talk to Assistant bar","bed","Working","On every Daybook page. Today it honestly answers that talk is not connected in the standalone build."],
+        [null,"Canada Post parcel tracking — a door","src","Working","Confirmed in by Grant: the door opens Canada Post's own tracking. A door is a reference that opens the outside service — nothing is copied into Daybook. Free."],
+        [null,"Ottawa waste day — a door","src","Working","Confirmed in by Grant: the door opens the City of Ottawa's collection calendar — which bin, which day — with a typed-in fallback for anything the calendar does not cover. Free."],
+        [null,"Pharmacy refills — a door","src","Working","Confirmed in by Grant: the door opens the pharmacy's own refill page (Shoppers Drug Mart, Rexall). Refills stay in the pharmacy's hands — the door just takes you there. Free."]]},
+   { h:"Money", how:"Your money book gathers the real figures from the team's finance record — the workbook in Google Drive is the record of truth, and anything you type in by hand always wins. When you give the go, your TD account feeds in through Plaid: read-only, a few times a day, never called live. Bobby keeps your subscriptions counted by hand, on purpose.",
+     e:[["finances","The money book (budgeting)","bed","Working","Records only — the view moves no money. Hand-typed entries always win. Today the standalone view shows sample figures, labelled as samples."],
+        [null,"TD bank through Plaid","src","Working","The researched bank-feed route. Plaid covers TD in Canada, its free trial plan suffices, and Plaid holds a direct data-access agreement with TD, so for TD the bank itself authorises the connection — no login details are shared with the middleman. Balances and transactions only, read-only, refreshing a few times a day — never to be called live. Researched 4–7 November 2026. Not connected: it waits on Grant's go and his sign-in."],
+        [null,"Investments","bed","Working","Holdings and prices appear when an account is linked; review notes work today. The standing position is paper accounts only, no brokerage opened — linking anything real is Grant's call."],
+        [null,"Bobby — subscription tracking","src","Working","Confirmed in by Grant: subscriptions tracked by hand, on purpose — no bank access, no live sync. Honest by design."],
+        [null,"The Canopy Rewards Shelf","bed","Working","One shelf holding: a deep link per programme, the person's own phone-wallet pass where one exists (PC Optimum, Scene+, and Aeroplan have real wallet passes — a card and barcode, not a balance feed), current offers by link-out, and a balance the person types in themselves, labelled entered by you, not live."],
+        [null,"The rewards pick-list","src","Optional","Ranked by everyday breadth: PC Optimum · Triangle · Tim's Rewards · Scene+ · Aeroplan · Starbucks · AIR MILES (it is changing to Blue Rewards — verify before building) · Rakuten · Journie · and 1Password, a daily driver with a real connection. Live balances would need commercial partner deals with the programmes themselves."],
+        [null,"Plaid — the middleman itself","src","Optional","It holds direct data-access agreements with RBC (2022) and TD (2023): for those banks, no login details are shared at all — the bank authorises the connection itself. No published prices: the trial is free, then pay-as-you-go or a quote. Plaid's 2022 settlement (58 million United States dollars, no admission of wrongdoing) is disclosed, not hidden."],
+        [null,"Statement import","bed","Optional","For any bank the middlemen do not cover: the person brings a statement file. There is no scraping fallback, ever."],
+        [null,"Canadian money depth the hunt also found","src","Optional","Inverite · Borrowell (free credit score) · Equifax and TransUnion Canada · Plooto, Rotessa, Payment Evolution (payments) · Interac · tax pages by link-out."]]},
+   { h:"Home, security, and monitoring — pick what you use", how:"Your home talks to Canopy through one bridge — Home Assistant, sitting in your home. The bridge gathers your camera frames, your door and motion sensors, and your lights, locks, and thermostat, so Canopy talks to one hub instead of seventeen company clouds. At setup the team asks once what you actually use — your cameras, your alarm, your locks — you pick yours, and it sets up. That pick-what-you-use pattern is the same for banking, monitoring of every kind, and every category on this page.",
+     e:[["homeassistant","Home Assistant — the bridge","src","Working","Free and open-source. Canopy talks to the one hub; the hub talks to the devices, locally where possible. This is the platform Daybook's monitoring, automation, security, and truck feeds all ride on."],
+        [null,"Security camera frames","bed","Working","Front, Garage, Back, Basement — from the home's own cameras, through the bridge."],
+        [null,"Home monitoring","bed","Working","Door, motion, and environment sensors, through the bridge."],
+        [null,"Home automation","bed","Working","Lights, thermostat, locks, and plugs, through the same bridge."],
+        [null,"Camera and alarm brands — the pick-list","src","Optional","Ring (events, snapshots, alarm arm and disarm — no guaranteed continuous live wall) · Nest (a real public connection, but event-based, not continuous video) · Arlo · Blink · Eufy · Wyze (fragile — its direct-video firmware was discontinued; never promise live video from it) · Reolink and UniFi Protect and wired cameras on the open standards (the local-first cameras the bridge reaches best) · alarm systems, door and window sensors, motion sensors, water and leak sensors, smoke and carbon-monoxide sensors, glass-break sensors, locks, doorbells, and garage doors — each rated the same honest way."],
+        [null,"Home platforms and devices — the pick-list","src","Optional","Google Home, Apple HomeKit, Hue lights, Ecobee thermostats · Tuya and Smart Life devices, and Shelly (adopted by Grant; the developer reality: Tuya's free trial forbids commercial use and its commercial tier is a one-year contract — local-first standards are the alternative) · Kasa and Tapo plugs and lights · robot vacuums and mowers (Roborock, iRobot, Automower — the mowers also link to Trellis's Tend, as a reference, never with the controls inside a client file) · Matter, one standard that unlocks both the Apple and Google accessory worlds (cameras and doorbells are not covered by it yet)."]]},
+   { h:"Health and fitness layer", how:"Your health layer gathers sleep, readiness, and strain from the monitors you wear — Oura and WHOOP connect through their own sign-ins. It is a picture of your days, never a medical alert system.",
+     e:[[null,"Oura ring","src","Working","Sleep, readiness, and activity through Oura's own sign-in connection. Watch the free-tier limit on how many users it covers."],
+        [null,"WHOOP","src","Working","Strain, recovery, and sleep. Needs WHOOP's partner approval first."],
+        [null,"Apple Health and Samsung Health","src","Optional","The health data already on the phone."],
+        [null,"Fitbit","src","Watch list","Fitbit's old web connection was turned off in October/November 2026. The Google Health connection is its replacement."],
+        [null,"Garmin","src","Watch list","Watches and activity — partly connected today."],
+        [null,"Monitoring of every kind — the pick-list","src","Optional","Health and wearables (health-data middlemen are the practical route for the rest) · vehicle monitors · home energy and water (utility pages, Sense and Emporia energy monitors, Flo and Phyn water monitors) · kids and family location · pet trackers · baby and senior monitoring — every brand rated on the same scale, each ending in its setup pick."]]},
+   { h:"The truck", how:"Your truck connects through the same Home Assistant bridge as your home: through the bridge, FordPass can lock and unlock, remote-start, and locate your Ranger. FordPass on the web can do none of that — this route works precisely because it is not a web route. It takes one short setup sitting with you, and a second Ford account kept just for this, for safety.",
+     e:[[null,"FordPass — the 2026 Ford Ranger, through Home Assistant","src","Working","Lock and unlock, remote start, and location genuinely work through Home Assistant's FordPass connection. Researched 18 November 2026 — verdict: go, with guardrails: a dedicated second Ford account only (Ford has disabled accounts over this connection), and a one-time setup taking about twenty-five to forty minutes of Grant. Setup has not started."]]},
+   { h:"Social — being worked in, not linked out", how:"Your social gathers your Facebook, Instagram, Messenger, and Threads into Daybook — feeds you read in place, and one writing box that posts across them — instead of four links out. The accounts are already connected behind the scenes, so there is no new sign-in.",
+     e:[[null,"Facebook, Instagram, Messenger, Threads","src","Working","Today these are four links; Grant ruled that links are not the end state — real social belongs inside Daybook: feeds you can read in place, plus one writing box that posts across the networks, each under its own posting rules and daily limits. Open networks like Bluesky and Mastodon can feed in place. Photo memories would be built only from photos the person picks."],
+        [null,"WhatsApp and Telegram","src","Working","Adopted by Grant — all of it. A messaging channel in Daybook beside the four above, and a lead-intake channel in the Command Deck. Messages stay references — never a merged inbox inside a client file. WhatsApp's business connection is real but gated: charged per delivered message, free-form replies only within twenty-four hours of the person's last message, approved templates outside that window, and Meta business verification required."]]},
+   { h:"Music and podcasts", how:"Your music gathers into one player bar: on a big screen it sits in the top bar, on the phone it is in the wheel. Spotify is the player connected today; the others below plug into the same bar, if you have them.",
+     e:[[null,"Spotify","src","Working","The music player lives in the top bar on big screens and in the wheel on the phone — Grant's layout law. On the phone, everything is the wheel: there is no top-bar menu. Playback needs the person's own account, and full playback needs Premium — stated honestly on screen."],
+        [null,"Apple Music","src","Optional","The second player, behind the same one player bar."],
+        [null,"YouTube · Pocket Casts · SoundCloud · Audible","src","Optional","More players and listening, behind the same bar."],
+        [null,"Sonos and Music Assistant","src","Optional","Music zones around the home. A showing in KÜL or a boat in Lions Gate can reference the music — the controls themselves never live inside a listing."],
+        [null,"Internet radio — Radio Browser","src","Optional","A free station directory. Honest catch: it is a one-person volunteer project with no uptime promise, so station lists are cached and it is never the only sound source."]]}
+  ]},
+{ area:"Command Deck — the team's room", color:"#3ddc84",
+  intro:"Every team member's state, work, and conversation. The Deck holds no records of its own — everything arrives by feed. The Engineering and Media portals live inside the Deck: they link to the Deck, not to Canopy's centre. Connects to: the Workbench apps (a door out to each app and a door back from each — references only, never copies) · Daybook (Sales leads land in client files; signed documents and commissions land in Daybook's finances) · Home (the team's state and needs-attention counts ride on Home's doors).",
+  cats:[
+   { h:"The Deck floor", how:"Your Deck gathers the team's state in one room: who is working, what is open, what needs you. Leads that arrive through Facebook Lead Ads land in Sales, each with its own door into the right business's client files — the ad itself never lives inside the apps.",
+     e:[[null,"Station lamps","bed","Working","Each team member's state: working, idle, parked, flagged, or needs Grant."],
+        [null,"Team usage, open tasks, and flags panels","bed","Working","What the team is using, what is open, and what is flagged — Todoist feeds the open-tasks picture."],
+        [null,"Member rooms","bed","Working","Five chats and five work panes — Claude, ChatGPT, Perplexity, Gemini, and Oakley: what each is saying and what each is working on."],
+        [null,"Talk — the team's talk service","bed","Working","Seven endpoints: the Oakley dock, the five member rooms, and the Engineering and Media rooms. Today every send honestly answers not sent — talk address not set."],
+        [null,"Doors to the Workbench apps","bed","Working","From the Deck to BluePrint, the Northbirch app, KÜL, Lions Gate, Brand My Aqua, CMS, purEnzyme, StructureIQ, 8Twelve, and Atra Lend. A door is a reference, never a copy — and every app opened from the Deck offers its door back."],
+        ["leadads","Facebook Lead Ads — into Sales","src","Working","One ad set per business (Cityscape, KÜL, Lions Gate), each with its own door into that business's client files. Adopted by Grant. Meta's review is mandatory and takes days to weeks, and Meta keeps leads for ninety days only."],
+        [null,"More for the Deck — add the ones your team uses","src","Optional","Figma (design files) · Asana (projects, tasks, owners, due dates) · Airtable (a shared database for jobs, clients, and stock) · Toggl Track (billable hours — crew time for landscape crews is different; that lives in the business tools) · Descript (edit podcasts and video by editing the words — a back end only) · Patreon (paying members, for creators) · Freshdesk (a support inbox) · Eventbrite (ticketed events) · CanadaHelps (donations — it states it offers no connection for outside software at all) · UptimeRobot (a service-health board; its free tier covers fifty monitors, and it also feeds the Engineering portal's status view)."],
+        [null,"Made by Canopy itself, no outside company","bed","Optional","A ship-it wind-down (today you closed two loops — here is tomorrow's top three, now go home) · a win bell that rings when a deal closes · an on-air light for recording · a voice idea inbox · a shout-out wall · a focus room with a twenty-five-minute timer."]]},
+   { h:"Media Portal — inside the Deck", how:"Your media gathers every project's photos and videos in one portal. Listing and vessel photos flow in from the apps, you edit them right on the built-in editing screen — a viewer does not count — and the finished media flows back to the listing it belongs to. All the free editors and the voice and production tools that have a free route are wired in here.",
+     e:[["media","Working and editing screen — editing built in","bed","Working","A real editing screen built into the portal: you edit in here. Grant's ruling: a viewer does not count as the working screen. Today the screen is a viewer and collection switcher; the free editor routes below are the ones that get built in."],
+        [null,"Videos, pictures, and advertising project feeds","bed","Working","Every project's media, gathered in one portal."],
+        [null,"Photopea — the free editor route","src","Working","The deepest free photo editor; it runs as a framed page with ads — a fallback route, stated honestly."],
+        [null,"Other editors the team checked","src","Working","Adobe Express (a real in-app editor, but tied to an Adobe account) · Shotstack (the editor is free; finished videos cost credits, so finished videos are paid) · Pintura (photo editor) · Polotno (templates and advertising creative) · CapCut (the video editor people actually use). Under Grant's no-paid rule, the free routes are the buildable ones."],
+        ["elevenlabs","ElevenLabs — voice","src","Working","Already connected to the team: narration and voice for listing and vessel videos, and Oakley's own voice."],
+        [null,"A live drawing canvas","src","Working","A sales-pitch surface (tldraw) fed by Canopy's real data, approved to wire in — you draw live while you pitch."],
+        [null,"YouTube channel numbers","src","Optional","Views, subscribers, and watch time: the numbers behind the media, inside the Media Portal."],
+        [null,"Google Analytics","src","Optional","Audience and traffic for the sites and media the portal publishes, with headline numbers on the Deck floor."],
+        [null,"The paid all-in-one media editor","src","Watch list","OUT — paid. Grant's rule: any paid ones we don't do. It is shown here marked out, not hidden. The free editors above are wired in instead.", true],
+        [null,"Paid production back ends","src","Watch list","OUT — paid, under the same rule: the generated-picture and video back ends, paid transcription, and per-picture background removal. ElevenLabs stays — it was already connected to the team and is not a new paid add.", true]]},
+   { h:"Engineering Portal — inside the Deck", how:"Your engineering gathers a project and walks it down the chain: designed in FreeCAD, finished in Blender on the desktop, then the model comes back into the app, where you turn it, pan it, and measure it — and stand a camper at true full scale in a client's driveway with the phone's augmented reality.",
+     e:[["engineering","Projects feed and tool-chain states","bed","Working","The project list, with each step's state: Engineering, then FreeCAD, then Blender, then the in-app 3D preview. FreeCAD and Blender are desktop programs; the chain hands real work to them and brings the result back."],
+        [null,"CAD working screen","bed","Working","An interactive screen built into the portal: turn, pan, and zoom a model; straight-on views from any side. It works today — and honestly draws nothing until a real model is loaded."],
+        [null,"Babylon.js","src","Working","A free 3D engine that runs inside the app, wired in on its free route."],
+        [null,"Model viewer (and Three.js)","src","Working","Free, lightweight 3D viewers that run inside the app in Canopy's own style. The model viewer also does augmented reality that works today: a camper at true full scale in a client's driveway, patio stones on a patio with colours swapped live, on a phone. Honest limit: life-size condominium augmented reality is not real yet — dollhouse scale or a headset is."],
+        [null,"Autodesk Viewer","src","Working","View, mark up, and measure real CAD drawings inside the app — the answer for an AutoCAD-built camper. Drawing itself stays on the desktop."],
+        [null,"GitHub","src","Working","Code repositories, issues, pull requests, and build status for the team's own code, inside the Engineering Portal, with a build-status summary on the Deck floor. The team's GitHub account is connected behind the scenes."],
+        [null,"Engineering spine and team chat","bed","Working","Six project folder slots (the team names them at packaging; today they honestly read name not set), and the portal's own room on the talk service."]]}
+  ]},
+{ area:"Behind the scenes — the accounts the team itself runs on", color:"#9fc6ff",
+  intro:"These are connected at the hub; the in-app surfaces join at packaging. They are the rails everything above rides on: the calendar feeds Daybook and Home's calendar box, Drive holds the finance workbook and the team's documents of record, Sheets is the apps' shared data layer, Todoist feeds the Deck's open-tasks picture, and GitHub serves every preview build Grant and Johnny open.",
+  cats:[
+   { h:"The team's rails", how:"Your accounts work like this: your calendar fills Daybook and Home's calendar box; Drive holds the finance workbook and the team's documents of record; Sheets is a shared data layer the apps draw on through doors — never a page pasted inside a client file; Todoist feeds the Deck's open-tasks picture; GitHub serves every preview you open.",
+     e:[[null,"Todoist","src","Working","The team's system of record for tasks. Oakley's tasks, the team's boards, and the Deck's open-tasks picture all trace back to it."],
+        [null,"Gmail","src","Working","Email across Grant's accounts. Reading, drafting, and sending run through the connection; sends to people wait for Grant's approval where the rules require it."],
+        ["gcal","Google Calendar","src","Working","The calendar behind Daybook's combined view and Home's calendar box."],
+        [null,"Google Drive","src","Working","The archive home and the team's document store: the finance workbook (the money record of truth), the team documents of record, and the personal archive's one safe copy."],
+        [null,"Google Contacts","src","Working","The people record behind the apps' client and contact work."],
+        [null,"Google Sheets","src","Working","The team state board and the team's spreadsheets — and a data source for the business apps: a source, never a page pasted inside a client file."],
+        [null,"Google Docs","src","Working","The main team record and the Johnny package list. Google documents are the team's memory and never go stale."],
+        [null,"GitHub","src","Working","Where Canopy's and the apps' preview builds live. Every preview link Grant and Johnny open is served from there."],
+        [null,"Vercel — the relay host","src","Working","Hosts the hub proxy: the small relay that fetches the camera, weather, news, markets, TV, and world feeds on the server side, keeps the City's camera certificate and the video key secret, and serves every user from one shared fetch. Free tier; if it ever pauses, the app honestly shows OFFLINE. The relay itself was built and live-tested on 18 November 2026; what is pending is only putting it on Vercel."],
+        ["elevenlabs","ElevenLabs","src","Working","Already connected to the team: it is Oakley's voice."]]}
+  ]},
+{ area:"Ideas for other people — add-ons somebody else might want", color:"#c9a7ff",
+  intro:"What somebody else might want, beyond the set above. None of these are part of Grant's working set — each one joins the area it belongs to as a door: a reference that opens the outside service, never content pasted inside Canopy.",
+  cats:[
+   { h:"Things Canopy can simply do itself", how:"These work from what is already in Canopy: your calendar plus the weather writes your morning briefing; what is in your kitchen suggests dinner; your trip builds its own packing list. No outside app — Canopy just joins up what it already knows.",
+     e:[[null,"From a person's own day","bed","Optional","A morning briefing (calendar plus weather) · what's for dinner, from what is already in the kitchen · gentle medication reminders, with a missed-dose nudge to a family member the person chooses (never a medical claim) · plant care that remembers · shared chores with fair rotation · birthdays and anniversaries, with a gift nudge a week early · a packing list that knows the trip and the destination's weather · a one-line-a-day private journal · what to wear today, in one line · bin day the night before."]]},
+   { h:"City services and life admin", how:"These work as doors: tap the library and you are in Libby, with your holds and due dates; tap a life-admin door and you are on that service's own page — those services keep your details behind their own sign-in and offer no feed. A door is the honest offer.",
+     e:[[null,"Ottawa Public Library and Libby","src","Optional","Ebooks, audiobooks, holds, and due dates."],
+        [null,"Honest doors — no live feed exists","src","Optional","School-bus delays and closures · the child-care waitlist · Health811 and emergency-room wait times · 211 Ontario (food banks, housing help, seniors' services) · Para Transpo booking · government benefits (the Canada Revenue Agency and Service Canada) · pharmacy refills · student loans. These are login-gated pages with no public feed for personal details — a door is the honest offer."],
+        [null,"Flipp flyers","src","Optional","Weekly grocery flyers — plan the week around the flyer."]]},
+   { h:"Mainstream household", how:"These join your household the same way: the flyers plan your week, your parcels gather in one place, and each service you actually have plugs in as itself. Canopy never promises a live sync that a service does not offer.",
+     e:[[null,"Household names","src","Optional","Flashfood (near-expiry groceries at a discount; a Canadian app) · Shop (parcels from many stores in one place) · Rocket Money (subscription detection — United-States-first: check Canadian bank coverage before promising anything live) · Airbnb · eBay · Ancestry · TheScore · Plex (already in the streaming shelf above)."]]},
+   { h:"Interests and hobbies — verified live", how:"Your hobbies gather the same way: a free key or a sign-in, and the feed lands in your day — the sky picture each morning, your chess puzzles, the events near you. Each one below was checked live by the team before it earned its place here.",
+     e:[[null,"The hobby shelf","src","Optional","Astronomy Picture of the Day (NASA — plus Mars rover photos and near-Earth objects; free key) · Open Library (free, no key) · Podcast Index (free and open) · Ticketmaster Discovery (events near you; free key) · Petfinder (adoptable pets near you; free key) · Lichess (chess; free, no key) · BoardGameGeek (suits a nightly update, not a live widget) · Bible verses by reference (free, keyless) · TheSportsDB (honest catch: live scores need its supporter plan) · OpenFarm (kept only with its warning: the project itself says its connection is not done) · Spoonacular (recipes — also the engine behind what's for dinner; its free allowance was not verified)."]]},
+   { h:"More the hunt found", how:"Each new find is placed by the same rule as everything else: under the area or app it serves, with its link back into Canopy drawn.",
+     e:[[null,"Ottawa and everyday data","src","Optional","OC Transpo bus times (live, from the transit agency's own free data — the named route for transit) · National Capital Commission feeds (Rideau Canal Skateway status; Gatineau Park ski and snowshoe conditions — free and official) · solar and grid data (Forecast.Solar and Electricity Maps) · ocean buoys · OpenAQ air quality · the space station's position · eBird bird sightings (free key). Lightning data has a hard limit: the volunteer network bans commercial use — personal display only, and only with permission."],
+        [null,"Everyday life","src","Optional","Food and household (OpenFoodFacts, free; groceries are mostly link-outs; meal kits link out) · outdoors (AllTrails; fishing rules always link out to the regulations, never copied) · family (school-board feeds; package tracking) · pets at home — PetDesk vet records and household pet services (Working: confirmed in by Grant) · learning and news depth (feed readers, NewsAPI, newsletters, courses, Libby) · household coordination (Cozi and TimeTree family calendars; school apps; post-Mint budgeting apps with real connections; Calm and Headspace; food-delivery deep links; family location by link-out only — never promise live tracking; shopping lists as a first-class feature of Canopy itself) · the fun and social layer (the hockey league's free public connection; open social feeds; Twitch and Steam) · platform worlds (Microsoft's account umbrella, Apple services, Samsung, Google Photos — Working: confirmed in by Grant)."]]}
+  ]}
+];
+</script>
+<script>
+"use strict";
+/* ============ app boxes ============ */
+const APPBOXES = [
+{ title:"Grant's Apps", sub:"Two houses side by side: Northbirch — Trellis and SiteVision — and Cityscape, holding BluePrint. Open any app to see its insides and the outside services that sit under it.",
+  apps:[
+   {id:"flurry", group:"Northbirch — Trellis, the seven trades", name:"Flurry — snow", s:"Working",
+    b:"Dispatch for the office and home, Operations for out plowing, Northbirch-only for now. Its storm mode is Snow SITREP, carrying the snow-fighter identity.",
+    inside:["Dispatch","Residential","Commercial","Snow SITREP — storm mode","Operations"],
+    uses:[["eccc","Environment Canada data services","src","Working","City forecasts, measured precipitation analysis, radar, and emergency alerts."],
+      [null,"CoCoRaHS — measured snow on the ground","src","Working","A volunteer network reporting daily rain, snowfall, and snow depth, including in Canada. The only free, verified source of measured snow depth — ground truth to check plowing and billing against, instead of a forecast. Confirmed in by Grant."],
+      [null,"Vaisala Xweather — road weather","src","Working","Forecast road-surface conditions: dry or wet, water, snow and ice thickness. Fills the road-sensor gap without needing the province's locked network. Confirmed in by Grant."],
+      [null,"Samsara — tracking","src","Working","Vehicle location and engine data for every vehicle, plus driver inspection reports. Cityscape already uses Samsara, so it comes in on Cityscape's existing account — not a new paid add. Confirmed in by Grant."],
+      [null,"Geotab, plus Flurry's own truck readers","src","Working","Telematics built for winter work, including how much salt each spreader used."],
+      [null,"Ontario 511 · Tomorrow.io · OpenWeather · Visual Crossing · home weather stations","src","Working","Road conditions and cameras · snow build-up and depth · snow amounts · history · ground truth from Weather Underground personal stations, Tempest, and Davis."],
+      [null,"Routific — route planning","src","Optional","Turns a storm plus the client list into plow routes; shared with Tend."],
+      [null,"SnowPlowTracker.ca · PlowDesk / Plow360","src","Optional","Snow-operations tracking and software."]]},
+   {id:null, group:"Northbirch — Trellis, the seven trades", name:"Mainline — irrigation", s:"Working",
+    b:"Its controllers carry the watering data; freeze alerts flow in from SITREP and become winterise jobs.",
+    inside:["Service","Install","Office","Routes","Crews","Equipment","Hardware"],
+    uses:[[null,"Hunter Hydrawise","src","Optional","Smart irrigation controllers, with a real connection."],
+      [null,"Rain Bird IQ4","src","Optional","Commercial irrigation, in the cloud."],
+      [null,"Google Maps","src","Working","Job sites and client addresses, in every app, everywhere."]]},
+   {id:null, group:"Northbirch — Trellis, the seven trades", name:"Lumen — lighting", s:"Working",
+    b:"Drawn as a single tile for now — the record names no sections inside it. Fixture specs flow into Sales proposals, and BluePrint's plans flow in.",
+    inside:[],
+    uses:[[null,"FX Luminaire catalogue","src","Optional","Fixture specs in, by catalogue and link-out."],
+      [null,"Kichler catalogue","src","Optional","Fixture specs in, the same way."]]},
+   {id:null, group:"Northbirch — Trellis, the seven trades", name:"Course — hardscaping and masonry", s:"Working",
+    b:"A lead and a site arrive from Sales for the quote; materials, designs, and measurements flow back into the proposal.",
+    inside:[],
+    uses:[[null,"Unilock · Techo-Bloc · Permacon, and Permacon Studio","src","Optional","Catalogues and design tools; Permacon Studio is a free picture-maker that shows a finished design."],
+      [null,"iScape AR","src","Optional","Augmented-reality landscape design in the client's own yard."],
+      [null,"Sun-and-shadow simulation · aerial mapping","src","Optional","Shadowmap and SunCalc; DroneDeploy maps and roof reports."]]},
+   {id:null, group:"Northbirch — Trellis, the seven trades", name:"Bole — arborist work (tree care)", s:"Working",
+    b:"Work orders sync into Deck Tasks; a finished job becomes an invoice in Daybook's finances.",
+    inside:[],
+    uses:[[null,"ArborNote","src","Optional","Arborist management, with a real connection."],
+      [null,"TreePlotter INVENTORY","src","Optional","The tree inventory flows into Sales proposals."]]},
+   {id:null, group:"Northbirch — Trellis, the seven trades", name:"Tend — grass cutting and maintenance", s:"Working",
+    b:"Recurring schedules sync into Deck Tasks; completed visits bill through Daybook's finances. Route planning (Routific) is shared with Flurry.",
+    inside:[],
+    uses:[[null,"Service Autopilot","src","Optional","Maintenance software for recurring schedules."],
+      [null,"RealGreen","src","Optional","The alternative to Service Autopilot."],
+      [null,"Routific — shared with Flurry","src","Optional","Optimised maintenance routes."]]},
+   {id:null, group:"Northbirch — Trellis, the seven trades", name:"Glimmer — holiday and event decorating", s:"Working",
+    b:"Its checklist and estimator exist as a standalone tool; the app itself is not built. Designs and schedules sync into Sales proposals; install dates land in Daybook's calendar.",
+    inside:[],
+    uses:[[null,"LumiOps · Strandr · LightHawk","src","Optional","Seasonal lighting and decor software."],
+      [null,"Wholesale lighting suppliers","src","Optional","Dekra-Lite Canada, Holiday Light Supplies Canada, Illuminations Canada — products and pricing in, by link-out."]]},
+   {id:"sitevision", group:"Northbirch — standing by itself", name:"SiteVision", s:"Working",
+    b:"A brand-new product, built from the ground up, sitting by itself under Northbirch. The record names no app-specific outside services for it.",
+    inside:[], uses:[]},
+   {id:null, group:"Northbirch — standing by itself", name:"The Northbirch app", s:"Working",
+    b:"The team-projects home — a placeholder today. It carries the family pattern every business app carries.",
+    inside:["Social","Email","Calendar","Assistant"], uses:[]},
+   {id:"blueprint", group:"Cityscape", name:"BluePrint — Grant's Cityscape sales-workflow app", s:"Working",
+    b:"Office sales work. BluePrint gathers Cityscape's kit like this: QuickBooks holds its finances, and FieldCentral — the scheduling and field app — talks to BluePrint only through QuickBooks' two-way sync, never a direct link. Aspire and LMN feed schedules and costs in; Google Maps carries the job sites. Its plans flow to Course, Lumen, and Mainline.",
+    inside:["Social","Email","Calendar","Assistant","Quotes","Leads"],
+    uses:[[null,"QuickBooks — BluePrint's own copy","src","Optional","BluePrint's finances. QuickBooks also sits under Trellis and on the Deck floor; each is that place's own account, drawn separately on purpose."],
+      [null,"HindSite and FieldCentral — one company, not two tools","src","Working","FieldCentral is HindSite Software's product: scheduling and routing, a field app for time, materials, and photos, assessments, billing, and customer messages — built for irrigation and lawn-care companies. Verified 22 November 2026. The only data route is its built-in two-way sync with QuickBooks — so the chain is BluePrint to QuickBooks to FieldCentral."],
+      [null,"Workforce — which one?","src","Optional","The name alone does not settle it. Three different products share it: Workforce.com (scheduling, time, and pay for hourly teams — the closest match for a crew business, with a public connection) · the ADP WorkForce Suite (big-company workforce management) · WorkForceFSM (a field-service scheduling assistant; its connection was not verified). Grant has not said which one."],
+      [null,"Aspire","src","Optional","Estimating and operations depth for Cityscape, with a real connection: schedules and costs out, billing back in."],
+      [null,"LMN","src","Optional","Landscaping business software with no public connection at all — the automation layer is its fallback route."],
+      [null,"Google Maps","src","Working","Job sites and client addresses."]]}
+  ],
+  shared:[{ h:"Tools that sit under Trellis — the family kit", how:"Whichever of these a business actually uses plugs in under Trellis as that business's own copy: its books in QuickBooks flow a paycheque through to Daybook's finances; its pipeline in HubSpot gathers its customers in one place. Every business's copy is its own account, drawn separately on purpose.",
+    e:[["quickbooks-trellis","QuickBooks — under Trellis","src","Optional","The books and payroll. Its paycheque flows through to Daybook's finances — the link back is drawn as the orange ribbon above."],
+      [null,"Jobber","src","Optional","Field-service operations: scheduling, dispatch, quoting, invoicing — jobs out, invoices and payments into Daybook's finances."],
+      ["hubspot","HubSpot — Cityscape's copy","src","Optional","Customer relationships — one sales pipeline. Canopy has no customer-relationship system today; this is the candidate. Trellis carries Cityscape's own copy; KÜL and Lions Gate carry Johnny's."],
+      [null,"Stripe, and the other payment routes","src","Optional","Stripe first, then Square, Moneris, PayPal — one shared payment rail into Daybook's finances."],
+      [null,"More operations depth","src","Optional","Housecall Pro · Go iLawn and ExaYard (measuring and take-offs) · Homebase (crew scheduling and payroll, free basic tier) · plant data with real routes (Perenual, Trefle) · accounting alternatives (Xero, FreshBooks, Wave) · signing (PandaDoc, DocuSign, Dropbox Sign, Adobe Sign) · Google Business Profile, Yelp, Mailchimp, HomeStars (Canadian trades leads — about two hundred Canadian dollars a month, shared leads, eyes open)."]]}]},
+{ title:"Johnny's Apps", sub:"Johnny Kulwartian's businesses, in their own box — with Tucker as his assistant. On the phone there is no top-bar menu: the phone goes straight to the wheel, for everything, all apps, Canopy included.",
+  apps:[
+   {id:"kul", group:"His shelf", name:"KÜL Real Estate", s:"Working",
+    b:"Johnny's real-estate app — the one Workbench card with a live address: it opens the shipped app. Today must match Lions Gate's Today exactly: same worklist, same weather treatment, same spacing and fonts.",
+    inside:["Today — the worklist","Listings","Transactions","Developments","Open Houses","Clients — third on the list, matching Lions Gate","Calendar","Email","Social — real posts with pictures","Commission Forecast","Toolkit","Assistant — Tucker"],
+    uses:[["crea","CREA listings feed (the REALTOR.ca data distribution feed)","src","Watch list","Live Canadian listings for KÜL. Permission-based: members and brokers only, so it needs Johnny's own access. A different source from KÜL's own website feed."],
+      [null,"Listings from KÜL's own website","src","Working","Grant's ruling: listings feeding in automatically from the business's own website — photos and all — is in Canopy's DNA, for all the apps. KÜL's own site carries its active listings with photos and a page per listing."],
+      [null,"ShowingTime and BrokerBay","src","Optional","Booking and managing showings."],
+      [null,"SentriLock and Supra eKEY","src","Optional","Lockboxes and showing access."],
+      [null,"SkySlope and Dotloop","src","Optional","Deal paperwork. SkySlope has a real connection; it also links back to Daybook's finances."],
+      [null,"Spectora","src","Optional","Home inspections. Warning from the hunt: Carson Dunlop's Horizon inspection system retires 15 December 2026 — do not build on it."],
+      [null,"Follow Up Boss","src","Optional","The realtor's customer-relationship system."],
+      [null,"Calendly","src","Optional","Clients book showings straight into the calendar."],
+      [null,"8Twelve — its mortgage door sits inside KÜL","app","Working","Deal details out, mortgage options in."],
+      [null,"Matterport — 3D tours","src","Watch list","OUT — paid. Grant's rule: any paid ones we don't do. Shown marked out, not hidden. Listing media is finished in the Media Portal instead.", true]]},
+   {id:"lionsgate", group:"His shelf", name:"Lions Gate Yachts", s:"Working",
+    b:"Johnny's yacht brokerage app. Its door address is filled in at packaging from the preview shelf. Lions Gate is a sales brokerage — the charter line is held, and charter marketplaces are deliberately not listed anywhere on this page.",
+    inside:["Today — matching KÜL's Today","Fleet","Clients — third on the list, matching KÜL","Service Board","Calendar","Email","Social — real posts with pictures","Toolkit","Assistant"],
+    uses:[[null,"MarineTraffic — vessel tracking","src","Watch list","Live boat positions, worked into Lions Gate. Sits under Lions Gate, never loose at Workbench level. The honest picture on ship-tracking data: the one genuinely free route is earned by running a receiver that feeds the network — for example, at the marina. Otherwise vessel data is paid."],
+      [null,"Canadian Hydrographic Service tides and water levels","src","Watch list","Official tides, free."],
+      [null,"Marine weather — Windy and Open-Meteo","src","Optional","Sea state beside the vessel positions; the sea-trial window finds itself from the weather and the tides."],
+      [null,"Dockwa and MarinaOffice","src","Optional","Marina bookings and management; slip bookings land in Daybook's calendar."],
+      [null,"Vessel Vanguard","src","Optional","Boat maintenance tracking; service coming due gathers its parts, its slot, and its estimate."],
+      [null,"Boat-supply shops (chandleries)","src","Optional","Binnacle Canada, West Marine, Western Marine wholesale — parts pricing lands in Daybook's finances."],
+      [null,"YachtWorld and Boat Trader","src","Watch list","Link-out first; their listing data is partner-gated, with no verified open connection. Listings flow out, inquiries flow back in."],
+      [null,"Listings from Lions Gate's own website","src","Working","The automatic-feed rule applies here too — with one honest gap: Lions Gate's yacht-sales page carries no named for-sale boats or listing photos, so an automatic feed cannot carry what the site does not publish. That gap stands until the site does."]]},
+   {id:null, group:"His shelf", name:"CMS Construction", s:"Working",
+    b:"In Johnny's box by Grant's ruling, with the same insides-showing treatment. The record names no app-specific outside services for it — the family pattern only.",
+    inside:["Social","Email","Calendar","Assistant"], uses:[]},
+   {id:null, group:"His shelf", name:"StructureIQ", s:"Working",
+    b:"In Johnny's box by Grant's ruling, with the same insides-showing treatment. The record names no app-specific outside services for it — the family pattern only.",
+    inside:["Social","Email","Calendar","Assistant"], uses:[]},
+   {id:null, group:"His shelf", name:"8Twelve Mortgages", s:"Working",
+    b:"Its mortgage door opens from inside KÜL, and its mortgage side links to Daybook's finances. One pre-ship note: Johnny's email needs a live check before 8Twelve ships.",
+    inside:["Social","Email","Calendar","Assistant","Mortgage door — sixty-five-plus lenders"],
+    uses:[[null,"Ratehub","src","Watch list","Mortgage rates and calculators — a candidate from the hunt record; the roadmap itself places nothing under 8Twelve beyond the door."],
+      [null,"nesto","src","Watch list","Mortgage rates and calculators — the same candidate standing."]]},
+   {id:"johnny-shelf", group:"His shelf", name:"Brand My Aqua · purEnzyme · Atra Lend", s:"Working",
+    b:"Preview doors on the shelf, filled the same way. For these thinner apps, the record names no app-specific outside services — family pattern only: a door out and a door back, Google Maps everywhere, and Social, Email, Calendar, and Assistant inside.",
+    inside:["Social","Email","Calendar","Assistant"], uses:[]}
+  ],
+  shared:[{ h:"The shared deal-flow kit — KÜL and Lions Gate together", how:"Johnny's two apps share one deal-flow kit: signatures, scheduling, personal video, and voice. A KÜL deal gathers like this: the feed brings the live listings in; a new listing is matched to waiting buyers; showings book into the calendar; and an accepted offer runs the paperwork chain — signatures out, then the deal's status and commission into finances.",
+    e:[["hubspot","HubSpot — Johnny's own copy","src","Optional","His customer relationships, under his apps — separate from Cityscape's copy under Trellis."],
+      ["leadads","Facebook Lead Ads","src","Working","Lead ads right into both apps — see the pink ribbon."],
+      [null,"DocuSign","src","Optional","Signatures out; signed documents back in; commission counts on close."],
+      [null,"Calendly","src","Optional","Showings and sea trials, booked straight into the calendar."],
+      [null,"WhatsApp and Telegram","src","Working","Client messages, in each business's own account."],
+      [null,"Personal video after a showing or sea trial","src","Optional","Sendspark and Bonjoro — the video goes out, and the link to the client comes back through Gmail."],
+      ["elevenlabs","ElevenLabs","src","Working","Voice for the kit: script out, narration in."],
+      [null,"Stripe — deposits","src","Optional","Deposit links out; deposits into Daybook's finances."],
+      [null,"Reviews and marketing","src","Optional","Google Business Profile and Yelp review excerpts in; Mailchimp marketing email, in each business's own audience."]]}]}
+];
+/* ============ chains ============ */
+const CHAINS = [
+ ["storm","1 · Storm watch becomes Snow SITREP by itself","The flagship: a snowfall warning writes the snow picture, drafts the routes and the crew schedule, and queues the client texts — all drafts."],
+ ["storm","2 · Plowing done becomes proof, becomes paid","A GPS punch and a photo raise the invoice; the payment marks the job paid; the season's snow revenue updates."],
+ [null,"3 · Freeze and thaw triggers the salt call","Freeze–thaw readings call the salt run before the ice does."],
+ [null,"4 · A watering-system freeze warning triggers winterising","SITREP's freeze alert becomes a Mainline winterise job."],
+ ["day","5 · The 6 a.m. morning SITREP","The whole day on one page, its jobs annotated against the weather and the roads."],
+ [null,"6 · An outage on a job drafts the reschedule","A power outage on a job's street drafts the reschedule message."],
+ ["photo","7 · A listing finds its matched buyers","A new listing is matched to waiting buyers; showings book themselves."],
+ ["photo","8 · A live listing feeds the media factory","Listing media flows to the Media Portal, is finished, and flows back."],
+ ["pay","9 · An accepted offer runs the paperwork chain","Signatures out, then deal status and commission into finances."],
+ ["yacht","10 · A boat's arrival becomes a lead","A vessel's arrival in port becomes a lead in Deck Sales."],
+ ["yacht","11 · The sea-trial weather window finds itself","Marine weather and tides pick the sea-trial window."],
+ [null,"12 · A service coming due gathers its parts, slot, and estimate","The service board assembles the job before anyone asks."],
+ ["pay","13 · A finished job becomes reconciled cash","Completion becomes an invoice becomes paid, in Daybook's finances."],
+ ["pay","14 · A lead becomes a quote, a signature, a deposit","The full run, across Sales, the apps, and Stripe."],
+ [null,"15 · A plan comes in, a proposal goes out","BluePrint's plans and the trades' materials converge into one proposal."],
+ [null,"16 · A finished job becomes the next lead","Reviews and referrals from a finished job feed the next lead."]];
+/* ============ rendering + tracing ============ */
+const ENTRIES = [];
+const ENTRY_JOURNEY = { lionsgate:"yacht", media:"yacht", crea:"photo", kul:"photo", leadads:"lead", eccc:"storm", flurry:"storm", "quickbooks-trellis":"pay", finances:"pay", gcal:"day" };
+const KINDWORD = { bed:"Built into Canopy", app:"Our own app", src:"Outside service" };
+const svg = document.getElementById("scene");
+const explainEl = document.getElementById("explain");
+function shapeHTML(k){ return '<span class="shape mini mini-'+k+'"></span>'; }
+function chipHTML(e){
+  const idx = ENTRIES.length; ENTRIES.push(e);
+  const out = e[5] === true;
+  const st = out ? '<span class="outtag">Out — paid</span>' : '<span class="st st-'+e[3].toLowerCase().replace(" ","")+'">'+e[3]+'</span>';
+  return '<button class="chip'+(out?" out":"")+'" data-idx="'+idx+'">'+shapeHTML(e[2])+'<span class="nm">'+e[1]+'</span>'+st+'</button>';
+}
+function renderCatalog(){
+  const host = document.getElementById("catalog"); let h = "";
+  for (const a of CATALOG){
+    h += '<section class="area"><h3><span style="color:'+a.color+'">●</span> '+a.area+'</h3><p class="areaintro">'+a.intro+'</p>';
+    for (const c of a.cats){
+      h += '<div class="cat"><h4>'+c.h+'</h4><p class="how">'+c.how+'</p><div class="chips">';
+      for (const e of c.e) h += chipHTML(e);
+      h += '</div></div>';
+    }
+    h += '</section>';
+  }
+  host.innerHTML = h;
+}
+function renderAppBoxes(){
+  const host = document.getElementById("appboxes"); let h = "";
+  for (const box of APPBOXES){
+    h += '<div class="appbox"><h4>'+box.title+'</h4><p class="boxsub">'+box.sub+'</p>';
+    let lastGroup = "";
+    for (const app of box.apps){
+      if (app.group && app.group !== lastGroup){ h += '<div class="lbl" style="font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--dim);margin:12px 0 2px">'+app.group+'</div>'; lastGroup = app.group; }
+      const uses = (app.uses||[]).map(u=>[app.id||null].length&&u[0]!==undefined?u:u);
+      h += '<details class="app"><summary>'+shapeHTML("app")+' '+app.name+' <span class="st st-'+app.s.toLowerCase()+'">'+app.s+'</span><span class="plus">+</span></summary><div class="inside">';
+      h += '<p class="blurb">'+app.b+'</p>';
+      if (app.inside && app.inside.length){
+        h += '<div class="lbl">Inside this app</div><div class="chips">';
+        for (const s of app.inside) h += chipHTML([app.id, app.name.split(" — ")[0]+" — "+s, "bed", app.s, "Part of "+app.name+": "+s+". It lives inside the app, in the app's own colours and layout, matched across the apps that share it."]);
+        h += '</div>';
+      }
+      if (app.uses && app.uses.length){
+        h += '<div class="lbl">Sits under this app</div><div class="chips">';
+        for (const u of app.uses) h += chipHTML(u);
+        h += '</div>';
+      }
+      h += '</div></details>';
+    }
+    for (const c of (box.shared||[])){
+      h += '<div class="cat"><h4>'+c.h+'</h4><p class="how">'+c.how+'</p><div class="chips">';
+      for (const e of c.e) h += chipHTML(e);
+      h += '</div></div>';
+    }
+    h += '</div>';
+  }
+  host.innerHTML = h;
+}
+function renderChains(){
+  const host = document.getElementById("chains"); let h = "";
+  for (const c of CHAINS){
+    const idx = ENTRIES.length; ENTRIES.push([null, c[1], "bed", "Working", c[2]]);
+    h += '<button class="chip" data-idx="'+idx+'" data-journey="'+(c[0]||"")+'">'+shapeHTML("bed")+'<span class="nm">'+c[1]+'</span><span class="st st-working">Working</span></button>';
+  }
+  host.innerHTML = h;
+}
+function renderRibbonBtns(){
+  const host = document.getElementById("ribbonbtns"); let h = "";
+  for (const id in JOURNEYS){
+    const j = JOURNEYS[id];
+    h += '<button class="rbtn" data-journey="'+id+'" style="color:'+j.color+'">● '+j.title+'</button>';
+  }
+  host.innerHTML = h;
+}
+function clearSel(){
+  svg.classList.remove("dim");
+  svg.querySelectorAll(".lit").forEach(el=>el.classList.remove("lit"));
+  document.querySelectorAll(".chip.sel,.chip.rel,.rbtn.on").forEach(el=>el.classList.remove("sel","rel","on"));
+}
+function lightJourneyNodes(jid){
+  const set = new Set(JOURNEYS[jid].steps.map(s=>s[0]));
+  set.forEach(id=>{
+    svg.querySelectorAll('[data-node="'+id+'"]').forEach(el=>el.classList.add("lit"));
+  });
+  return set;
+}
+function showJourney(jid){
+  clearSel();
+  const j = JOURNEYS[jid];
+  svg.classList.add("dim");
+  const r = document.getElementById("rj-"+jid); if (r) r.classList.add("lit");
+  const nodes = lightJourneyNodes(jid);
+  document.querySelectorAll('.rbtn[data-journey="'+jid+'"]').forEach(b=>b.classList.add("on"));
+  document.querySelectorAll(".chip").forEach(ch=>{
+    const e = ENTRIES[+ch.dataset.idx]; if (!e) return;
+    if (e[0] && nodes.has(e[0])) ch.classList.add("rel");
+    if (ch.dataset.journey === jid) ch.classList.add("sel");
+  });
+  let h = '<div class="kindline">A current — follow one thing</div><h2>'+j.title+'</h2><p>'+j.intro+'</p><ol>';
+  j.steps.forEach((s,i)=>{ h += '<li>'+s[1]+'</li>'; });
+  h += '</ol><button class="resetbtn" id="resetbtn">Show the whole picture again</button>';
+  explainEl.innerHTML = h;
+  document.getElementById("resetbtn").onclick = resetAll;
+  explainEl.scrollIntoView({block:"nearest", behavior:"smooth"});
+}
+function showEntry(idx){
+  const e = ENTRIES[idx]; if (!e) return;
+  const id = e[0];
+  if (id && ENTRY_JOURNEY[id]){ showJourney(ENTRY_JOURNEY[id]); return; }
+  clearSel();
+  document.querySelectorAll(".chip").forEach(ch=>{ if (+ch.dataset.idx === idx) ch.classList.add("sel"); });
+  if (id){
+    svg.querySelectorAll('[data-node="'+id+'"]').forEach(el=>{ svg.classList.add("dim"); el.classList.add("lit"); });
+    document.querySelectorAll(".chip").forEach(ch=>{ const ce = ENTRIES[+ch.dataset.idx]; if (ce && ce[0]===id) ch.classList.add("sel"); });
+  }
+  const fact = (id && NODES[id]) ? NODES[id] : null;
+  const name = fact ? fact.n : e[1];
+  const status = fact ? fact.s : e[3];
+  const body = fact ? fact.b : e[4];
+  const flows = fact ? fact.f : "";
+  let h = '<div class="kindline">'+KINDWORD[e[2]]+'</div><h2>'+name+'</h2><p><span class="st st-'+status.toLowerCase().replace(" ","")+'">'+status+'</span></p><p>'+body+'</p>';
+  if (flows) h += '<div class="flows"><b>Where it flows:</b> '+flows+'</div>';
+  h += '<button class="resetbtn" id="resetbtn">Show the whole picture again</button>';
+  explainEl.innerHTML = h;
+  document.getElementById("resetbtn").onclick = resetAll;
+}
+function resetAll(){
+  clearSel();
+  explainEl.innerHTML = DEFAULT_EXPLAIN;
+  document.getElementById("resetbtn").onclick = resetAll;
+}
+const DEFAULT_EXPLAIN = '<div class="kindline">Start here</div><h2>Follow the yacht video</h2><p>The cyan ribbon above is Grant\'s own example: a Lions Gate walkthrough video is filmed at the marina, travels to the <b>Media Portal inside the Command Deck</b> to be edited, returns to the listing, works in Sales, and wins a lead — every link drawn, none implied.</p><p>Click any ribbon, spring, lock, or anything in the lists below, and that thing roadmaps itself: its path lights up and its story appears here.</p><button class="resetbtn" id="resetbtn">Show the whole picture again</button>';
+renderCatalog(); renderAppBoxes(); renderChains(); renderRibbonBtns();
+explainEl.innerHTML = DEFAULT_EXPLAIN;
+document.getElementById("resetbtn").onclick = resetAll;
+document.addEventListener("click", ev=>{
+  const rb = ev.target.closest(".rbtn"); if (rb){ showJourney(rb.dataset.journey); return; }
+  const ch = ev.target.closest(".chip"); if (ch){ if (ch.dataset.journey){ showJourney(ch.dataset.journey); } else { showEntry(+ch.dataset.idx); } return; }
+  const nd = ev.target.closest("[data-node]");
+  if (nd && nd.closest("svg")){
+    const id = nd.dataset.node;
+    if (ENTRY_JOURNEY[id]){ showJourney(ENTRY_JOURNEY[id]); return; }
+    const fact = NODES[id];
+    if (fact){
+      clearSel(); svg.classList.add("dim"); nd.classList.add("lit");
+      let h = '<div class="kindline">'+KINDWORD[fact.k]+'</div><h2>'+fact.n+'</h2><p><span class="st st-'+fact.s.toLowerCase().replace(" ","")+'">'+fact.s+'</span></p><p>'+fact.b+'</p>';
+      if (fact.f) h += '<div class="flows"><b>Where it flows:</b> '+fact.f+'</div>';
+      h += '<button class="resetbtn" id="resetbtn">Show the whole picture again</button>';
+      explainEl.innerHTML = h; document.getElementById("resetbtn").onclick = resetAll;
+    }
+    return;
+  }
+  const rp = ev.target.closest(".ribbon"); if (rp){ showJourney(rp.dataset.journey); }
+});
+</script>
+</body>
+</html>

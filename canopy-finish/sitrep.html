@@ -268,7 +268,8 @@ body .door:active{transform:scale(.98);transition-duration:100ms}
  </header>
  <div class="tabs" id="tabs" role="tablist" aria-label="SITREP sections"></div>
  <main class="stage" id="stage"></main>
- <footer class="foot"><span class="sv" id="sv"></span><div class="lane"><div class="mem" id="mem"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><ellipse cx="12" cy="16.2" rx="4.6" ry="3.9"/><ellipse cx="5.1" cy="11" rx="1.9" ry="2.5"/><ellipse cx="9.4" cy="6.6" rx="1.9" ry="2.6"/><ellipse cx="14.6" cy="6.6" rx="1.9" ry="2.6"/><ellipse cx="18.9" cy="11" rx="1.9" ry="2.5"/></svg><span class="cap">In memory of Oakley</span></div></div><div class="seg" role="group" aria-label="Sample data"><button id="sm" data-a="sample" aria-pressed="false" title="Fill panels with data badged SAMPLE, for layout checks only">SAMPLE</button></div><button class="btn" data-a="talk"><span id="talk-n">TALK TO OAKLEY</span><span class="nc">SHELL</span></button></footer>
+ <footer class="foot"><span class="sv" id="sv"></span><div class="lane"><div class="mem" id="mem"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><ellipse cx="12" cy="16.2" rx="4.6" ry="3.9"/><ellipse cx="5.1" cy="11" rx="1.9" ry="2.5"/><ellipse cx="9.4" cy="6.6" rx="1.9" ry="2.6"/><ellipse cx="14.6" cy="6.6" rx="1.9" ry="2.6"/><ellipse cx="18.9" cy="11" rx="1.9" ry="2.5"/></svg><span class="cap">In memory of Oakley</span></div></div><div class="seg" role="group" aria-label="Sample data"><button id="sm" data-a="sample" aria-pressed="false" title="Fill panels with data badged SAMPLE, for layout checks only">SAMPLE</button></div></footer>
+<button id="abub" data-a="talk" aria-label="Talk to Oakley" title="Talk to Oakley"><img class="nblogo" src="./assets/northbirch-head-only-v10-clear.svg" alt="Oakley"></button>
 </div>
 <div id="sheetHost" role="dialog" aria-modal="true"></div>
 
@@ -545,7 +546,7 @@ PN.oper=()=>{const w=dwx(),o=w&&w.o,h=H.wx,snow=o&&/snow|flurr|blizzard/i.test(o
  return{t:'OPERATOR LAYER',pgid:'oper',body:'<div class="fl" data-fl="oper"></div>',src:'<b>Operator tiles</b> · each row says what it comes from; nothing is invented'}};
 PN['wx-doors']=()=>doorsPn('DOORS',[doorHTML('Flurry · Dispatch','flurryDispatch','Door only — Flurry owns it'),doorHTML('Flurry · Operations','flurryOps','Door only — Flurry owns it'),goDoor('Commute + Cameras','cams','Roads and cameras'),goDoor('World radar','world','Radar and events')]);
 /* ===== COMMUTE + CAMERAS ===== */
-function camChip(id){if(SM())return chip('samp','SAMPLE');const f=D.frames[id]||frameOf(id);if(f){if(!f.ts)return chip('unk','UNKNOWN · NO TIMESTAMP');return Date.now()-f.ts>CFG.cam.staleMs?chip('stale','STALE'):chip('snap','SNAPSHOT')}return (CFG.PROXY||CFG.cam.certificate)?chip('pend','FIRST STILL DUE · 60 S CADENCE'):chip('pend','NO ROUTE · NEEDS HUB PROXY (CERTIFICATE SERVER-SIDE)')}
+function camChip(id){if(SM())return chip('samp','SAMPLE');const f=D.frames[id]||frameOf(id);if(f){if(!f.ts)return chip('unk','UNKNOWN · NO TIMESTAMP');return Date.now()-f.ts>CFG.cam.staleMs?chip('stale','STALE'):chip('snap','SNAPSHOT')}return (CFG.PROXY||CFG.cam.certificate)?chip('pend','FIRST STILL DUE'):chip('pend','NO ROUTE')}
 PN.camtiles=()=>{const items=CFG.cam.set.map(c=>({id:c.id,s:c.s,n:c.n}));
  FL.camtiles={items,rowFn:(r,i)=>{const f=D.frames[r.id]||frameOf(r.id);const th=f?'<img alt="" src="'+esc(f.src)+'" style="width:3.6rem;height:2rem;object-fit:cover;border-radius:.2rem">':'<span class="dim" style="width:3.6rem;text-align:center">NO FRAME</span>';return rowB('3.8rem 1fr auto',th+cw('<b>'+esc(r.s)+'</b><br><small class="dim">'+esc(r.n)+(f&&f.ts?' · '+hm(f.ts):'')+'</small>','a')+camChip(r.id),'cam:'+r.id)},opt:{}};if(!('camtiles' in UI.pg))UI.pg.camtiles=0;
  const hh=H.cams;return{t:'HOME-SET CAMERAS',pgid:'camtiles',body:'<div class="fl" data-fl="camtiles"></div>',src:SM()?srcLine('',null):'<b>City of Ottawa traffic cameras</b> · frames are SNAPSHOTS, never live · '+'each camera refreshes on its own 60 s cadence, staggered across the set'+(CFG.PROXY?' · stills ride the hub proxy route — the City certificate is injected server-side, never in a client URL':CFG.cam.certificate?' · direct City route':' · NO ROUTE — frames need the hub proxy route (City certificate injected server-side) or the direct City route; no image request is made until a route is set')}};
@@ -586,10 +587,12 @@ PN.tapes=()=>{const h=H.news;return{t:'NEWS TAPES',chip:chipH(h,CFG.news.staleMs
 function tapeFit(){$$('.tape').forEach(t=>{const m=$('.tm',t);if(!m||RM)return;const rem=(parseFloat(getComputedStyle(document.documentElement).fontSize)||16)/16,sp=(+t.dataset.sp)*rem;m.style.animation='tick '+Math.max(8,m.scrollWidth/sp).toFixed(1)+'s linear infinite'})}
 /* ===== NEWS WALL — multiple live channels at once, all muted; LISTEN makes exactly one audible (Grant 2026-11-18) ===== */
 const WALL={aud:null,tiles:{}};
+function tvSub(){let n=0;try{const j=JSON.parse(localStorage.getItem('cnd-tv')||'null');if(j&&typeof j.n==='number'&&Date.now()-j.at<600000)n=j.n}catch(e){}return n+' of 4 channels playing + headline boards'}
 PN.wall=()=>{const tiles=CFG.wall.map(s=>'<div class="wtile" id="wt-'+s.id+'"><div class="wyt" id="ytp-'+s.id+'"></div><video muted playsinline preload="none" hidden></video><span class="wlive">● LIVE</span><div class="wstate">CONNECTING — trying '+esc(s.name)+' live stream…</div><div class="wfb" hidden></div><div class="wbar"><span class="wname">'+esc(s.name)+'</span><span class="wsub">'+esc(s.sub)+'</span><button class="waud" data-a="aud:'+s.id+'" aria-pressed="false">🔇 MUTED</button></div></div>').join('');
  return{t:'LIVE TV WALL',chip:chip('pend','CONNECTING'),body:'<div class="wall">'+tiles+'</div><div class="note">Four channels play at once, all muted. Tap <b>LISTEN</b> on a channel to hear it — only one channel has sound at a time; tap it again to mute.</div>',src:'<b>Official YouTube live embeds first</b> (video-ID embeds, playback-confirmed), with each broadcaster’s direct HLS stream as the fallback · played in place, never recorded here · a channel whose feed fails says why on its own tile, with a Watch on YouTube link'}};
 function wallStop(){Object.values(WALL.tiles).forEach(x=>{try{x.hls&&x.hls.destroy()}catch(e){}try{x.yt&&x.yt.destroy()}catch(e){}try{x.video.pause()}catch(e){}});WALL.tiles={};WALL.aud=null}
-function wallChip(){const el=$('#pn-wall .ph .chip');if(!el)return;const ts=Object.values(WALL.tiles);const np=ts.filter(x=>x.playing).length;if(ts.length&&np===ts.length)el.outerHTML=chip('live','LIVE');else if(np>0)el.outerHTML=chip('pend','PARTIAL · '+np+' of '+ts.length+' playing');else if(ts.some(x=>!x.tile.classList.contains('dead')))el.outerHTML=chip('pend','CONNECTING')}
+function wallChip(){const ts=Object.values(WALL.tiles);const np=ts.filter(x=>x.playing).length;try{localStorage.setItem('cnd-tv',JSON.stringify({n:np,at:Date.now()}))}catch(e){}
+ const el=$('#pn-wall .ph .chip');if(!el)return;if(ts.length&&np===ts.length)el.outerHTML=chip('live','LIVE');else el.outerHTML=chip('pend','PARTIAL '+np+' of '+(ts.length||4))}
 /* ROUND 3: playing state also arrives via the postMessage handshake (same pattern as Home's player) — the YT API events alone left a stale CONNECTING overlay over a playing TRT tile in the first-open audit. */
 setInterval(()=>{Object.entries(WALL.tiles).forEach(([id,T])=>{const fr=T.tile&&T.tile.querySelector('iframe');if(fr&&!fr.dataset.ls){fr.dataset.ls='1';const send=()=>{try{fr.contentWindow.postMessage(JSON.stringify({event:'listening',id:'ytp-'+id,channel:'widget'}),'*')}catch(e){}};fr.addEventListener('load',send);send()}})},1500);
 window.addEventListener('message',e=>{if(typeof e.data!=='string'||!/youtube/.test(e.origin))return;let d;try{d=JSON.parse(e.data)}catch(x){return}if(!d||d.event!=='onStateChange'||typeof d.id!=='string'||d.id.indexOf('ytp-')!==0)return;const T=WALL.tiles[d.id.slice(4)];if(!T)return;if(d.info===1){T.playing=true;T.tile.classList.add('playing');wallChip()}});
@@ -668,7 +671,7 @@ PN.osiris=()=>{const st=D.osirisStats,srcs=[['USGS QUAKES',H.osirisQuakes,CFG.qu
  return{t:'OSIRIS · WORLD LAYER',chip:chipH(H.osirisApi,CFG.osiris.staleMs),body:'<div class="osinum"><span><b>'+(st?st.s.flights:'—')+'</b><small>FLIGHTS TRACKED</small></span><span><b>'+(st?st.s.incidents:'—')+'</b><small>INCIDENTS</small></span><span><b>'+(D.flights||[]).length+'</b><small>FLIGHT PINS LOADED</small></span></div><div class="fl" data-fl="osisrc"></div><div class="cap" style="margin:.35rem 0 .1rem">TOP OSIRIS ITEMS</div><div class="fl" data-fl="ositop"></div>',src:'<b>OSIRIS public API</b> · read direct → hub proxy → hub snapshot, labelled per source above · conflict zones are standing conditions — <b>UNKNOWN · NO TIMESTAMP</b> · the full merge lives in the WORLD section'}};
 PN['sh-news']=()=>{const mk=k=>newsRows(k).slice(0,4).map(r=>'<button class="row shn linked" data-a="go:tv"><span class="l2 a" style="white-space:normal;line-height:1.25"><b class="gt">'+esc(r.o)+'</b> '+esc(r.t)+'</span><span class="nw b">'+(r.ts?hm(r.ts):'NO TIME')+'</span></button>').join('');
  return{t:'HEADLINES',chip:chipH(H.news,CFG.news.staleMs),body:'<div class="cap" style="margin-bottom:.15rem">LOCAL · OTTAWA</div>'+(mk('local')||'<div class="dim">No local headlines yet.</div>')+'<div class="cap" style="margin:.35rem 0 .15rem">WORLD</div>'+(mk('world')||'<div class="dim">No world headlines yet.</div>'),src:srcLine('CBC Ottawa · CityNews Ottawa · BBC · DW',H.news)}};
-PN['sh-doors']=()=>doorsPn('SECTIONS',[goDoor('Weather','weather','The full ECCC feed, radar and operator layer'),goDoor('Commute + Cameras','cams','Camera wall, searchable list, road events'),goDoor('Airport · YOW','airport','The airport\u2019s own free flight board'),goDoor('Live TV','tv','Four channels playing + headline boards'),goDoor('World','world','Radar, events map and the OSIRIS merge')]);
+PN['sh-doors']=()=>doorsPn('SECTIONS',[goDoor('Weather','weather','The full ECCC feed, radar and operator layer'),goDoor('Commute + Cameras','cams','Camera wall, searchable list, road events'),goDoor('Airport · YOW','airport','The airport\u2019s own free flight board'),goDoor('Live TV','tv',tvSub()),goDoor('World','world','Radar, events map and the OSIRIS merge')]);
 PN.wxdata=()=>{const w=dwx(),h=H.wx,rows=w&&w.hr?w.hr.filter(x=>x.ts>=Date.now()-3600000).slice(0,14):[];
  FL.wxdata={items:rows,rowFn:r=>rowB('4.2rem 3.2rem 3.6rem 5.2rem 1fr',nw(r.ts?hm(r.ts):'--','k')+nw(T(r.t,'°'),'a gt')+nw(r.lop==null?'--':r.lop+'% PoP','b')+nw(esc((r.wd||'')+' '+T(r.ws,' km/h')),'b')+cw(esc(r.cond||''),'a'),null),opt:{empty:'<div class="dim">No hourly data yet.</div>'}};if(!('wxdata' in UI.pg))UI.pg.wxdata=0;
  const fc0=w&&w.fc&&w.fc[0];
@@ -731,7 +734,7 @@ document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!
  else if(k==='cam')sheetRow('cam',a[1]);
  else if(k==='flt'){store.flt[a[1]]=a[2];save();UI.pg[a[1]==='cams'?'camlist':'wevents']=0;paint(a[1]==='cams'?'camlist':'wevents')}
  else if(k==='aud')wallAudio(a[1]);
- else if(k==='back'){const h=UI.hist||[];if(h.length){UI._back=true;go(h.pop())}}
+ else if(k==='back'){const h=UI.hist||[];if(h.length){const tgt=h[h.length-1];if(UI.sec==='airport'&&tgt==='world'){h.pop();location.href=homeBase()+'#box=wm'}else{UI._back=true;go(h.pop())}}}
  else if(k==='home')toHome(false);
  else if(k==='theme')setTheme(document.documentElement.dataset.theme==='light'?'dark':'light');
  else if(k==='sample'){store.ui.sample=!store.ui.sample;save();render()}
@@ -1172,4 +1175,80 @@ body .door:active,body .tab:active,body .btn:active{transform:scale(.96)!importa
 body .hlcard:active,body .row.linked:active{transform:scale(.96)!important;filter:brightness(.82);transition-duration:90ms!important}
 /* R4-6d: list rows never compress — the pager's fit loop measures true heights, so the last card on a page is whole or the page holds one fewer */
 .fl .row{flex:none}
-</style></body></html>
+</style>
+<style id="cnd-r5-sitrep">
+/* ===== CANOPY ROUND 5 — sitrep (R5-G tokens + brief items) ===== */
+.pn,.cwt,.row,.tab{transition:transform 150ms cubic-bezier(.2,0,0,1),box-shadow 150ms cubic-bezier(.2,0,0,1),border-color 150ms cubic-bezier(.2,0,0,1),background-color 150ms cubic-bezier(.2,0,0,1),filter 150ms cubic-bezier(.2,0,0,1)}
+.pn:hover{transform:translateY(-2px);border-color:rgba(201,162,39,.45);box-shadow:0 8px 20px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.35)}
+.pn:active,.cwt:active{transform:scale(.98);box-shadow:0 1px 2px rgba(0,0,0,.35);transition-duration:100ms}
+.cwt:hover{transform:translateY(-2px);border-color:rgba(53,182,201,.45);box-shadow:0 8px 20px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.35)}
+.row:hover{filter:brightness(1.08)}
+.tab:hover{filter:brightness(1.1)}
+/* linked glow — ring + halo stack with NO black elevation layer (R5-G construction) */
+.row.linked,.pn.linked{box-shadow:0 0 0 1px rgba(201,162,39,.55),0 0 16px rgba(201,162,39,.40),0 2px 6px rgba(0,0,0,.25)!important;position:relative;z-index:2}
+/* camera wall tiles — ONE bottom bar "NAME · STATE" (fix notes §3) */
+.cwt{position:relative}
+.cwb{position:absolute;left:0;right:0;bottom:0;height:28px;z-index:3;background:rgba(0,0,0,.55);display:flex;align-items:center;padding:0 8px;font-size:12px;text-transform:uppercase;color:#e8e4d8}
+.cwb b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700}
+.cwb b::after{content:' · '}
+.cwb .chip{background:none!important;border:0!important;padding:0!important;margin:0!important;color:inherit!important;font:inherit!important;letter-spacing:inherit!important;white-space:nowrap;flex:none}
+/* airport boards (item 15): TIME cell stacks on two clean lines, never overprints */
+.bd-r>span:first-child{line-height:1.35;white-space:normal}
+.bd-r>span{white-space:normal;overflow:visible;text-overflow:clip}
+/* footer (item 16): even spacing now the Talk button lives in the floating control */
+.foot{gap:.7rem;align-items:center}
+/* Talk — floating 72×72, right 24 / bottom 24 (R5-C: exactly two Talk treatments app-wide) */
+#abub{position:fixed;right:24px;bottom:24px;width:72px;height:72px;border-radius:50%;z-index:95;background:#10151b;border:1px solid rgba(201,162,39,.65);box-shadow:0 8px 20px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:10px}
+#abub img{width:100%;height:100%;object-fit:contain;pointer-events:none}
+#abub:hover{border-color:rgba(201,162,39,.9)}
+#abub:active{transform:scale(.96)}
+@media (prefers-reduced-motion:reduce){.pn,.cwt,.row,.tab{transition:none}}
+</style>
+<script>
+/* ===== CANOPY ROUND 5 — sitrep runtime ===== */
+(function(){
+'use strict';
+var RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)');
+function R5X(clone,target){
+  if(!clone||!target)return;
+  if(!RM||RM.matches){return}
+  var parent=target.parentElement;if(!parent)return;
+  if(getComputedStyle(parent).position==='static')parent.style.position='relative';
+  var pr=parent.getBoundingClientRect(),r=target.getBoundingClientRect();
+  if(!r.width||!r.height)return;
+  clone.removeAttribute('id');clone.setAttribute('aria-hidden','true');
+  clone.style.cssText+=';position:absolute;left:'+(r.left-pr.left+parent.scrollLeft)+'px;top:'+(r.top-pr.top+parent.scrollTop)+'px;width:'+r.width+'px;height:'+r.height+'px;margin:0;z-index:60;pointer-events:none;overflow:hidden';
+  parent.appendChild(clone);
+  requestAnimationFrame(function(){requestAnimationFrame(function(){
+    try{target.animate([{opacity:0,transform:'translateY(6px)'},{opacity:1,transform:'translateY(0)'}],{duration:200,easing:'cubic-bezier(.2,0,0,1)'})}catch(e){}
+    var a=null;try{a=clone.animate([{opacity:1},{opacity:0}],{duration:200,easing:'cubic-bezier(.2,0,0,1)'})}catch(e){}
+    if(a&&a.finished)a.finished.then(function(){clone.remove()});else setTimeout(function(){clone.remove()},280);
+  })});
+}
+/* Section switches crossfade the stage pane only (spec §3); chrome/tabs untouched.
+   The app core is IIFE-scoped, so the hook is DOM-level: capture the stage before the
+   app's own handler swaps it, crossfade after. */
+document.addEventListener('click',function(e){
+  var b=e.target&&e.target.closest?e.target.closest('[data-a^="tab:"],[data-a^="go:"]'):null;
+  if(!b)return;var a=b.getAttribute('data-a')||'';var sec=a.slice(a.indexOf(':')+1);
+  try{sessionStorage.setItem('cnd-sitrep-sec',sec)}catch(_){}
+  var st=document.querySelector('#stage');if(!st)return;
+  var cl=st.cloneNode(true);setTimeout(function(){R5X(cl,st)},0);
+},true);
+/* R5-L: in tab/shell mode the boot section is 'home' — restore the section the user
+   actually left, from sessionStorage, so a reload keeps it */
+window.addEventListener('load',function(){setTimeout(function(){try{
+  var s=sessionStorage.getItem('cnd-sitrep-sec');if(!s||s==='home')return;
+  var cr=document.querySelector('#cr');
+  if(cr&&/SITREP HOME/.test(cr.textContent)){var t=document.querySelector('[data-a="tab:'+s+'"]');if(t)t.click()}
+}catch(e){}},500)});
+/* R5-D: header weather in Home's format (time is the clock beside it) — temp + condition
+   from the one shared weather object, snapshot state as the secondary line */
+setInterval(function(){try{var j=JSON.parse(localStorage.getItem('cnd-wx')||'null');var el=document.querySelector('#wgl');if(!el)return;
+  if(j&&j.t!=null){var txt=j.t+'° · '+String(j.cond||'').toUpperCase();if(el.textContent!==txt)el.textContent=txt;
+    el.title='Weather snapshot · as of '+new Date(j.at).toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'})}}catch(e){}
+},4000);
+})();
+</script>
+
+</body></html>

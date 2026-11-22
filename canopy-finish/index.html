@@ -1008,11 +1008,11 @@ function rWx(){const w=D.wx,s=wxSt(),o=w&&w.o,x=X('wx'),pl=UI.wx==='plow',f=w?pl
 const tevK=r=>r.t==='INCIDENT'?0:r.c==='ROAD_CLOSED'?1:r.c==='LANES_CLOSED'?2:3;
 function camState(c){const f=frameOf(c.id),stale=f&&camStale(f);if(f)return stale?['STALE · '+hm(f.ts),'am',f]:['STILL '+hm(f.ts),'em',f];
   if(!CFG.cam.live)return['FEED OFF','dm'];
-  if(!camRouteReady())return['NO ROUTE · needs hub proxy (City certificate server-side)','am'];
-  if(D.camErr&&D.camErr[c.id])return['OFFLINE · City feed did not answer','cr'];
-  if(!D.camList)return['CAMERA LIST LOADING','am'];
+  if(!camRouteReady())return['NO ROUTE','am'];
+  if(D.camErr&&D.camErr[c.id])return['OFFLINE','cr'];
+  if(!D.camList)return['LIST LOADING','am'];
   if(camNo(c.id)==null)return['NOT IN CITY LIST','dm'];
-  return['FIRST STILL DUE · 60 s','am']}
+  return['FIRST STILL DUE','am']}
 function rCm(){const t=D.tev,s=H.tev,x=X('cc');
   const st=!t?(s.st==='err'?['EVENTS UNREACHABLE','err']:['PENDING','pend']):Date.now()-t.at>CFG.ev.staleMs?['STALE '+hm(t.at),'stale']:['LIVE · '+t.rows.length+' ACTIVE','live'];
   hdw('cc','COMMUTE + CAMERAS',bdg(st));
@@ -1025,7 +1025,7 @@ function rCm(){const t=D.tev,s=H.tev,x=X('cc');
   else ev='<div class="ce"><b class="dm">--</b><span class="dm tr">City traffic events not received</span><em></em></div>';
   const cams=SET.map(c=>{const k=camState(c);return '<div class="cam'+(k[2]?' has':'')+'" data-cid="'+c.id+'">'+(k[2]?'<img alt="" src="'+k[2].src+'"><span class="csnap">SNAPSHOT</span>':camIcon)+'<span class="cl1 '+k[1]+'"><b>'+esc(c.s)+'</b><i> · '+k[0]+'</i></span></div>'}).join('');
   const hd='<div class="ch"><span>KIND</span><span>ROAD · DIRECTION · BETWEEN</span><span>STATUS</span></div>';
-  const dl='<div class="cl sp"><span class="tr"><b>DELAY</b> n/a'+(sm?' · '+sm:'')+'</span><span><b>ONTARIO 511</b> · KEY PENDING</span></div>';
+  const dl='<div class="cl sp"><span class="tr">'+(sm?'<b>'+sm.toUpperCase()+'</b> · ':'')+'<b>DELAY</b> n/a</span><span><b>ONTARIO 511</b> · KEY PENDING</span></div>';
   const cl='<div class="cl cl2 sp" title="City of Ottawa traffic cameras — stills via the hub proxy route; the City certificate is injected server-side and never appears in a client URL"><span class="tr"><b>CITY CAMERAS</b></span><span>'+(!CFG.cam.live?'feed off':camRouteReady()?'stills · each camera every 60 s'+(D.camNext?' · next '+hm(D.camNext):''):'NO ROUTE · needs hub proxy')+'</span></div>';
   const clWhy='<div class="cl why">Stills only — never live video. Route: '+(CFG.PROXY?'hub proxy /ottawa/camera — City certificate server-side':'direct City certificate route')+' · 60 s per camera, staggered · a still older than 120 s reads Stale · a failed fetch reads OFFLINE and keeps the last good still</div>';
   setH($('#cc .bd'),x?'<div class="x2"><div class="xc">'+hd+'<div class="ces fl1">'+ev+'</div>'+dl+'</div><div class="xc">'+cl+clWhy+'<div class="cg">'+cams+'</div></div></div>':hd+'<div class="ces">'+ev+'</div>'+dl+'<div class="cg">'+cams+'</div>')}
@@ -1137,9 +1137,11 @@ function rMk(){const now=Date.now(),x=X('mk'),b=D.btc,bs=D.btcS,bo=D.boc,q=D.stq
   else putTile('btc',bs?{lb:'BTC/USD',val:'—',tag:H.mk.btcErr?'OFFLINE':'PENDING',tc:H.mk.btcErr?'of':'pd',dim:1,ck:'svg',ser:bs.p.map(r=>r[1]),cst:1,note:'price '+(H.mk.btcErr?'offline':'pending')}:noChart('BTC/USD',H.mk.btcErr,'sources down'));
   if(bo&&bo.fx.length>1)putTile('cad',dailyO('USD/CAD',bo.fx,bo.src==='ECB'?'ECB ref':'BoC',x,4,bo.src==='ECB'?'USD/CAD — ECB reference rate via Frankfurter (Bank of Canada '+(CFG.PROXY?'unavailable':'blocked in this browser; hub proxy at integration')+')':'USD/CAD — Bank of Canada daily rate'));
   else if(q.cad&&q.cad.p.length>1)putTile('cad',dailyO('USD/CAD',q.cad.p,'Stooq',x,4,'USD/CAD — Stooq daily close'));
+  else if(D.mksnap&&D.mksnap.cad){const sn=D.mksnap.cad;putTile('cad',{lb:'USD/CAD',val:sn.val,chg:sn.chg,ck:'none',tag:'DELAYED',tc:'dl',note:'∿ snapshot · as of '+sn.asOf,tip:'USD/CAD — '+sn.src+', daily close as of '+sn.asOf+' · snapshot — never shown as live'})}
   else putTile('cad',noChart('USD/CAD',H.mk.fxErr,'BoC + ECB down'));
   [['tsx','TSX'],['spx','S&P 500']].forEach(([k,n])=>{const d=q[k];
     if(d&&d.p.length>1){putTile(k,dailyO(n,d.p,'Stooq',x,null,n+' — Stooq daily close'));return}
+    const sn=D.mksnap&&D.mksnap[k];if(sn){putTile(k,{lb:n,val:sn.val,chg:sn.chg,ck:'none',tag:'DELAYED',tc:'dl',note:'∿ snapshot · as of '+sn.asOf,tip:n+' — '+sn.src+' daily close as of '+sn.asOf+' · snapshot (the live snapshot route lands with the hub proxy) — never shown as live'});return}
     const fl=$('#mt-'+k+' .chl.tvf');
     putTile(k,{lb:n,val:'',ck:'tv',sym:CFG.markets.tv[k],tag:fl?'OFFLINE':'DELAYED',tc:fl?'of':'dl',dim:!!fl,note:fl?'∿ chart did not load':(x?'TradingView mini chart · '+CFG.markets.tvRange+' · delayed':'TradingView · '+CFG.markets.tvRange),
       tip:n+' — TradingView mini chart ('+CFG.markets.tvRange+', delayed). Our own Stooq daily closes: '+(D.stqE[k]==='blocked'?'blocked in this browser (no CORS) — the hub proxy enables them at integration':D.stqE[k]?'unreachable':'pending')})});
@@ -1148,6 +1150,7 @@ function rMk(){const now=Date.now(),x=X('mk'),b=D.btc,bs=D.btcS,bo=D.boc,q=D.stq
     putTile('btcc',{lb:'BTC/CAD',val:Math.round(cadv).toLocaleString('en-CA'),chg:b.ch,ck:'none',tag:cst2?'STALE '+hm(b.t||b.at):'DELAYED',tc:cst2?'st':'dl',dim:cst2,tip:'BTC/CAD: '+(b.cad?'CoinGecko CAD quote':'derived — '+b.src+' USD spot × USD/CAD '+(fxr||'')+' (Bank of Canada)')+' as of '+hm(b.t||b.at)+' — daily/delayed, never live'})}
   else putTile('btcc',noChart('BTC/CAD',H.mk.btcErr,'BTC sources down'));
   if(bo&&bo.y&&bo.y.length>1){const yo=dailyO('CA 10Y YIELD',bo.y,'BoC',x,2,'Canada 10-year benchmark bond yield — Bank of Canada daily');yo.val=yo.val+'%';putTile('y10',yo)}
+  else if(D.mksnap&&D.mksnap.y10){const sn=D.mksnap.y10;putTile('y10',{lb:'CA 10Y YIELD',val:sn.val+'%',chg:sn.chg,ck:'none',tag:'DELAYED',tc:'dl',note:'∿ snapshot · BoC · as of '+sn.asOf,tip:'Canada 10-year benchmark bond yield — '+sn.src+', as of '+sn.asOf+' · snapshot — never shown as live'})}
   else putTile('y10',noChart('CA 10Y YIELD',H.mk.fxErr,'BoC yield series not in the ECB fallback'));
   const srcs=[b&&b.src,bs&&bs.src!==(b&&b.src)?bs.src:null,bo?(bo.src==='ECB'?'ECB':'BoC'):null,(!q.tsx||!q.spx)?'TradingView':null,(q.tsx||q.spx)?'Stooq':null].filter(Boolean);
   hdw('mk','MARKETS',(srcs.length?'<span class="msrc" title="data now drawing: '+[...new Set(srcs)].join(' · ')+'">'+[...new Set(srcs)].join(' · ')+'</span>':'')+bdg(['TAPE DELAYED','stale']))}
@@ -1172,7 +1175,7 @@ function rCl(){const c=D.cal,x=X('cl'),now=new Date(),evs=c&&c.events?c.events:[
   const cell=(d,i,big)=>{const n=evs.filter(e=>{const t=new Date(Date.parse(e.start));return sameDay(t,d)}).length,we=d.getDay()===0||d.getDay()===6;return '<div class="dy'+(i===0?' td':'')+(we?' we':'')+'"><span>'+(i===0?'TODAY':DOW[d.getDay()])+'</span><b>'+d.getDate()+'</b>'+(big?'<i>'+(c?(n?n+' ev':'—'):MON[d.getMonth()])+'</i>':c&&n?'<i class="ec" title="'+n+' event'+(n>1?'s':'')+' on the calendar">'+n+'</i>':'')+'</div>'};
   const days=[...Array(x?14:7)].map((_,i)=>{const d=new Date(now);d.setDate(now.getDate()+i);return d});
   const nxt=evs.filter(e=>Date.parse(e.end||e.start)>Date.now()).sort((a,b)=>Date.parse(a.start)-Date.parse(b.start))[0];
-  const nx=c?(Date.now()-c.at>CFG.cal.everyMs*5?'<b class="am">STALE since '+hm(c.at)+'</b> · no event shown as current':nxt?(nxt.allDay?'all day':hm(Date.parse(nxt.start)))+' · '+(CFG.cal.private&&nxt.title?esc(nxt.title):'title hidden (private)'):'nothing further this week'):'SAMPLE · example events below — nothing here is a real event until the feed is linked';
+  const nx=c?(Date.now()-c.at>CFG.cal.everyMs*5?'<b class="am">STALE since '+hm(c.at)+'</b> · no event shown as current':nxt?(nxt.allDay?'all day':hm(Date.parse(nxt.start)))+' · '+(CFG.cal.private&&nxt.title?esc(nxt.title):'title hidden (private)'):'nothing further this week'):'SAMPLE · example events below';
   setH($('#cl .bd'),'<div class="wk'+(x?' big':'')+'">'+days.map((d,i)=>cell(d,i,x)).join('')+'</div><div class="rows">'+'<div class="rw '+(c?'on':'wa')+'"><b>NEXT</b><span>'+nx+'</span></div>'+(c?'':'<div class="rw wa"><b>SAMPLE</b><span>09:00 · team check-in (example) · 13:00 · site visit (example)</span></div>')+(x?'<div class="rw"><b>TODAY</b><span>'+(c?evs.filter(e=>sameDay(new Date(Date.parse(e.start)),now)).length+' events today':'no events shown · nothing invented')+'</span></div><div class="rw"><b>GATE</b><span>titles show only when the private presentation is on (CFG.cal.private)</span></div><div class="rw"><b>SOURCE</b><span>hub-supplied calendar JSON at app integration (CFG.cal.url)</span></div>':'')+'</div>')}
 /* ---------- YOW: the airport's own FREE FIDS board (direct → hub proxy → snapshot) + city weather (explicitly not an airport feed) ---------- */
 async function getYow(){
@@ -1229,7 +1232,7 @@ setInterval(()=>{clock();const m=Math.floor(Date.now()/60000);if(m!==D._m){D._m=
 /* ---------- boot ---------- */
 ['wx','cc','tm','sc','cl','yw'].forEach(id=>setH($('#'+id),'<div class="hdw"></div><div class="bd"></div>'));
 setH($('#mk'),'<div class="hdw"></div><div class="bd"><div class="tape" id="tape"></div><div class="mkt" id="mkt">'+MKS.map(k=>'<div class="mt4" id="mt-'+k+'"><div class="chl"></div><div class="txl"></div></div>').join('')+'</div></div>');
-setH($('#wm'),'<div class="hdw"></div><div class="wbody"><div class="mapw" id="sm"><div class="mtg"><button class="btn" id="smt" data-a="sm:tog"></button></div><div class="mov" id="shud"></div></div><div class="evc"><div class="evl" id="evl"></div><div class="evp" id="evp"></div></div><div class="wsx" id="wsx"></div></div>');
+setH($('#wm'),'<div class="hdw"></div><div class="wbody"><div class="mapw" id="sm"><div class="mtg"><button class="btn" id="smt" data-a="sm:tog"></button></div><div class="mov" id="shud"></div></div><div class="evc"><div class="evl" id="evl"></div><button type="button" class="evp" id="evp" aria-label="Show all world events"></button></div><div class="wsx" id="wsx"></div></div>');
 nwInit();SET=camSet();renderAll();clock();fit();tape();
 /* bars pause while hovered (mouse) and on tap (touch; second tap or 10 s resumes) */
 $$('[data-bar]').forEach(el=>{const hold=v=>{el._hold=v;clearTimeout(el._ht);if(v&&el._pt!=='mouse')el._ht=setTimeout(()=>{el._hold=0;applyRate(el)},10000);applyRate(el)};
@@ -2052,4 +2055,207 @@ if(typeof xpSet==='function'){var _xp=xpSet;window.xpSet=function(id){_xp(id);if
 document.addEventListener('click',function(e){var b=e.target&&e.target.closest?e.target.closest('[data-a^="sf:"]'):null;if(!b)return;setTimeout(function(){var bd=document.querySelector('#sc .bd');if(bd){bd.classList.remove('cnd-rise');void bd.offsetWidth;bd.classList.add('cnd-rise')}},30)},true);
 })();
 </script>
+
+<style id="cnd-r5-index">
+/* ===== CANOPY ROUND 5 — index (R5-G interaction root-cause fix + brief items) =====
+   Root cause (named in the round-5 receipt): the switch token was never implemented
+   in-page (only the shell's frame swap animated); the glow was declared inside the
+   card's own box-shadow stack, where the black elevation layer paints over the halo
+   in the 14–16px gaps (spec §0 construction error); hover/press shipped with
+   substituted values whose visible delta collapses in a screenshot pair.
+   This block implements the spec tokens with unmistakable deltas and a glow stack
+   that drops the black elevation layer while linked. */
+:root{--r5a:245,242,234}
+#wx{--r5a:245,242,234}#cc{--r5a:53,182,201}#tm{--r5a:47,168,102}#nw{--r5a:53,182,201}
+#wm{--r5a:201,162,39}#mk{--r5a:201,162,39}#sc{--r5a:224,122,95}#cl{--r5a:217,69,65}
+#yw{--r5a:201,162,39}#dk{--r5a:47,168,102}#db{--r5a:217,69,65}#wb{--r5a:62,143,224}
+body .card,body .cb,body .portal,body .door,body .gm{transition:transform 150ms cubic-bezier(.2,0,0,1),box-shadow 150ms cubic-bezier(.2,0,0,1),border-color 150ms cubic-bezier(.2,0,0,1),background-color 150ms cubic-bezier(.2,0,0,1),filter 150ms cubic-bezier(.2,0,0,1)}
+body .card:hover{transform:translateY(-2px);border-color:rgba(var(--r5a),.45);box-shadow:0 8px 20px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.35)}
+body .door:hover{transform:translateY(-4px);border-color:rgba(var(--r5a),.55);box-shadow:0 12px 28px rgba(0,0,0,.55),0 1px 2px rgba(0,0,0,.35)}
+body .cb:hover{transform:translateY(-2px);border-color:rgba(var(--r5a),.45);box-shadow:0 8px 20px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.35)}
+body .card:active,body .cb:active{transform:scale(.98);box-shadow:0 1px 2px rgba(0,0,0,.35);transition-duration:100ms}
+body .btn:active,body .tab:active{transform:translateY(1px);filter:brightness(.92);box-shadow:none;transition-duration:100ms}
+body .rw:hover,body .ce:hover,body .hl:hover{filter:brightness(1.08)}
+body .btn.ly:hover{filter:brightness(1.1)}
+body .btn.ly[aria-pressed="true"]{background:rgba(var(--r5a),.22);border-color:rgba(var(--r5a),.55);color:var(--tx)}
+/* glow — separate construction: ring + halo, NO black elevation layer in the stack */
+body .card.linked{box-shadow:0 0 0 1px rgba(var(--r5a),.55),0 0 16px rgba(var(--r5a),.40),0 2px 6px rgba(0,0,0,.25)}
+body .card.linked:hover{box-shadow:0 0 0 1px rgba(var(--r5a),.55),0 0 16px rgba(var(--r5a),.40),0 8px 20px rgba(0,0,0,.45)}
+body .door.linked:hover{box-shadow:0 0 0 1px rgba(var(--r5a),.55),0 0 16px rgba(var(--r5a),.40),0 12px 28px rgba(0,0,0,.55)}
+/* Talk — 72×72, fixed right 24 / bottom 24, 104×104 exclusion zone (fix notes §4) */
+#abub{width:72px;height:72px;right:24px;bottom:24px;z-index:95}
+@media (min-width:761px){#face{padding-bottom:112px}}
+/* World panel (fix notes §2): pill row left-anchored + wraps; cards in flow; footer rows in flow */
+#wm .hdw{overflow:visible}
+#wm .hd.slim{justify-content:flex-start;flex-wrap:wrap;row-gap:4px;height:auto;min-height:28px}
+.evc{min-height:0}
+.evl{overflow:hidden;min-height:0}
+.ev{display:flex;flex-direction:column;cursor:pointer}
+.ev .h{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-transform:uppercase}
+.ev .p{flex:none}
+button.evp{background:none;border:0;border-top:1px solid rgba(255,255,255,.09);width:100%;cursor:pointer}
+button.evp:hover{filter:brightness(1.25);color:var(--tx)}
+.wmstrip{position:static}
+/* camera tiles — ONE bottom bar "NAME · STATE" (fix notes §3) */
+#cc .cam{position:relative}
+#cc .cam .cl1{position:absolute;left:0;right:0;bottom:0;z-index:3;background:rgba(3,6,8,.66);min-height:20px;padding:2px 6px;display:flex;align-items:center}
+#sc .cb{position:relative;padding-bottom:22px}
+#sc .cb b{position:absolute;left:0;bottom:0;z-index:3;background:rgba(3,6,8,.66);padding:3px 6px;font-size:.68rem}
+#sc .cb>span{position:absolute;right:6px;bottom:3px;z-index:3}
+/* fit residuals (R5-P): values and labels render whole */
+#cl .rows .rw>span,#yw .rows .rw>span{white-space:normal;overflow:visible;text-overflow:clip}
+#yw .rows .rw>b{white-space:nowrap}
+#sc .zt b{white-space:normal;overflow:visible;text-overflow:clip}
+#cc .cl.sp .tr{overflow:visible;text-overflow:clip;white-space:normal}
+/* news bars (R5-O): label + state are static flex items; headlines scroll inside .win only */
+.bar2{display:flex;align-items:center;gap:.5rem}
+.bar2 .bg2,.bar2 .bst{position:static;flex:none}
+.bar2 .win{flex:1 1 auto;min-width:0;overflow:hidden}
+/* Markets header (item 7): the source line wraps instead of truncating */
+#mk .hd{flex-wrap:wrap;row-gap:2px}
+#mk .hd .msrc{white-space:normal;overflow:visible;text-overflow:clip}
+@media (prefers-reduced-motion:reduce){body .card,body .cb,body .door,body .portal,body .gm{transition:none}}
+</style>
+<script>
+/* ===== CANOPY ROUND 5 — index runtime ===== */
+(function(){
+'use strict';
+var RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)');
+
+/* --- switch crossfade (spec §3): clone-overlay — the outgoing pane fades out over
+       the incoming one while the incoming fades in with a 6px rise; chrome untouched --- */
+function R5X(clone,target){
+  if(!clone||!target)return;
+  if(!RM||RM.matches){return}
+  var parent=target.parentElement;if(!parent)return;
+  if(getComputedStyle(parent).position==='static')parent.style.position='relative';
+  var pr=parent.getBoundingClientRect(),r=target.getBoundingClientRect();
+  if(!r.width||!r.height)return;
+  clone.removeAttribute('id');clone.setAttribute('aria-hidden','true');
+  clone.style.cssText+=';position:absolute;left:'+(r.left-pr.left+parent.scrollLeft)+'px;top:'+(r.top-pr.top+parent.scrollTop)+'px;width:'+r.width+'px;height:'+r.height+'px;margin:0;z-index:60;pointer-events:none;overflow:hidden';
+  parent.appendChild(clone);
+  requestAnimationFrame(function(){requestAnimationFrame(function(){
+    try{target.animate([{opacity:0,transform:'translateY(6px)'},{opacity:1,transform:'translateY(0)'}],{duration:200,easing:'cubic-bezier(.2,0,0,1)'})}catch(e){}
+    var a=null;try{a=clone.animate([{opacity:1},{opacity:0}],{duration:200,easing:'cubic-bezier(.2,0,0,1)'})}catch(e){}
+    if(a&&a.finished)a.finished.then(function(){clone.remove()});else setTimeout(function(){clone.remove()},280);
+  })});
+}
+document.addEventListener('click',function(e){
+  var b=e.target&&e.target.closest?e.target.closest('[data-a]'):null;
+  /* World interactivity (R5-J): the footer button and the event cards open the World window */
+  var evp=e.target&&e.target.closest?e.target.closest('#evp'):null;
+  var evc=e.target&&e.target.closest?e.target.closest('#evl .ev'):null;
+  if(evp||evc){var we=document.querySelector('#win'),wf=document.querySelector('#win-f'),wt=document.querySelector('#win-t'),ws=document.querySelector('#win-sec'),tb=document.querySelector('#win-tabs');
+    if(we&&wf){if(wt)wt.textContent='WORLD';if(ws)ws.textContent='CANOPY · HOME — THIS WINDOW LIVES HERE';if(tb)tb.innerHTML='';wf.src='./sitrep.html#sec=world&from=home';we.hidden=false;try{history.replaceState(null,'','#win=world')}catch(_){}var bk=document.querySelector('#win-back');if(bk)bk.focus()}}
+  if(!b)return;var a=b.getAttribute('data-a')||'',pane=null;
+  if(a.indexOf('sf:')===0)pane=document.querySelector('#sc .bd');
+  else if(a.indexOf('wxm:')===0)pane=document.querySelector('#wx .bd');
+  else if(a.indexOf('ly:')===0)pane=document.querySelector('#wm .bd');
+  if(pane){var cl=pane.cloneNode(true);setTimeout(function(){R5X(cl,pane)},0)}
+  /* R5-L: persist in-page switch state so a reload/navigation keeps it */
+  setTimeout(function(){try{sessionStorage.setItem('cnd-home-state',JSON.stringify({fl:UI.fl,wxm:UI.wxm,lay:UI.lay}))}catch(_){}} ,60);
+},true);
+window.addEventListener('load',function(){setTimeout(function(){
+  try{var s=JSON.parse(sessionStorage.getItem('cnd-home-state')||'null');if(!s)return;
+    if(s.fl&&s.fl!==UI.fl){UI.fl=s.fl;if(typeof rSc==='function')rSc()}
+    if(s.wxm&&s.wxm!==UI.wxm){UI.wxm=s.wxm;if(typeof rWx==='function')rWx()}
+    if(s.lay){UI.lay=s.lay;if(typeof rWm==='function')rWm()}
+  }catch(e){}
+},400)});
+
+/* --- TV badge state machine (fix notes §1): the header badge is the WALL count from
+       the one shared source (localStorage 'cnd-tv', written by SITREP's wall).
+       It only ever reads "PARTIAL n of 4" or "LIVE" — never CONNECTING/LOADING/PLAYING. --- */
+function tvCount(){try{var j=JSON.parse(localStorage.getItem('cnd-tv')||'null');if(j&&typeof j.n==='number'&&Date.now()-j.at<600000)return j.n}catch(e){}return 0}
+function tvBadge(){var n=tvCount();return n>=4?['LIVE','live']:['PARTIAL '+n+' of 4',n===0?'err':'pend']}
+function fixTv(){
+  var t=tvBadge();
+  var hd=document.querySelector('#nw .hdw .bdg');
+  if(hd&&hd.textContent.trim()!==t[0]){hd.textContent=t[0];hd.className='bdg '+t[1]}
+  var rnp=document.querySelector('#nxs .rnp');
+  if(rnp){var spans=rnp.querySelectorAll('span'),last=spans[spans.length-1];
+    if(last&&typeof ytSt==='function'){var want=ytSt()[0]+' · '+t[0];if(last.textContent.trim()!==want)last.textContent=want}}
+}
+setInterval(fixTv,500);fixTv();
+
+/* --- Markets snapshot loader (R5-E): real daily closes fetched server-side by the hub,
+       labelled DELAYED with source + as-of in rMk's snapshot branches --- */
+(async function(){try{if(typeof snapGet!=='function')return;var sr=await snapGet('markets-snapshot.json');D.mksnap=JSON.parse(sr.t);if(typeof rMk==='function')rMk()}catch(e){}})();
+
+/* --- share the one weather object for the other sections' headers (R5-D) --- */
+setInterval(function(){try{if(window.D&&D.wx&&D.wx.o)localStorage.setItem('cnd-wx',JSON.stringify({t:D.wx.o.t,cond:D.wx.o.cond||'',at:Date.now()}))}catch(e){}},15000);
+})();
+</script>
+
+
+<style id="cnd-r5b-index">
+/* ===== ROUND 5b — the token layer at the cascade weight the build actually uses.
+   Round 3/4 declared hover/press with !important; a plain declaration loses to them
+   regardless of order — one more link in the R5-G chain (see receipt). ===== */
+body .card:hover{transform:translateY(-2px)!important;border-color:rgba(var(--r5a),.45)!important;box-shadow:0 8px 20px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.35)!important}
+body .door:hover{transform:translateY(-4px)!important;border-color:rgba(var(--r5a),.55)!important;box-shadow:0 12px 28px rgba(0,0,0,.55),0 1px 2px rgba(0,0,0,.35)!important}
+body .cb:hover{transform:translateY(-2px)!important;border-color:rgba(var(--r5a),.45)!important;box-shadow:0 8px 20px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.35)!important}
+body .card:active,body .cb:active{transform:scale(.98)!important;box-shadow:0 1px 2px rgba(0,0,0,.35)!important;transition-duration:100ms!important}
+body .btn:active,body .tab:active{transform:translateY(1px)!important;filter:brightness(.92)!important;box-shadow:none!important;transition-duration:100ms!important}
+body .card.linked{box-shadow:0 0 0 1px rgba(var(--r5a),.55),0 0 16px rgba(var(--r5a),.40),0 2px 6px rgba(0,0,0,.25)!important}
+body .card.linked:hover{box-shadow:0 0 0 1px rgba(var(--r5a),.55),0 0 16px rgba(var(--r5a),.40),0 8px 20px rgba(0,0,0,.45)!important}
+body .door.linked:hover{box-shadow:0 0 0 1px rgba(var(--r5a),.55),0 0 16px rgba(var(--r5a),.40),0 12px 28px rgba(0,0,0,.55)!important}
+#abub{width:72px!important;height:72px!important;right:24px!important;bottom:24px!important}
+@media (min-width:761px){#face{padding-bottom:112px!important}}
+/* YOW + Calendar rows: the shared .rw template starved the value column (192px label /
+   92px value at the face) — label takes its content width, value takes the rest and wraps */
+#yw .rw,#cl .rw{grid-template-columns:minmax(56px,auto) minmax(0,1fr)!important}
+</style>
+
+
+<style id="cnd-r5c-index">
+/* ROUND 5c — press collapse must beat the linked:hover stack on linked cards;
+   Home Monitoring labels take their full width (value wraps right-aligned). */
+body .card.linked:active{box-shadow:0 1px 2px rgba(0,0,0,.35)!important}
+body .card.linked{position:relative;z-index:2}
+#sc .zt{font-size:.78rem}
+#sc .zt b{flex:none}
+#sc .zt>span{margin-left:auto;text-align:right;white-space:normal}
+</style>
+
+
+<script id="cnd-r5-drag">
+/* ROUND 5 — Talk drag release: keep the 72×72 fully on screen; a drop that lands in the
+   bottom-right exclusion zone snaps to the rest position (right 24 / bottom 24). */
+(function(){var bub=document.querySelector('#abub');if(!bub)return;
+document.addEventListener('pointerup',function(){
+  if(!bub.style.left)return; /* never dragged: rest position stands */
+  var r=bub.getBoundingClientRect();
+  var inZone=r.right>innerWidth-104&&r.bottom>innerHeight-104;
+  if(inZone){bub.style.left='';bub.style.top='';bub.style.right='24px';bub.style.bottom='24px';return}
+  var x=Math.min(Math.max(0,r.left),innerWidth-72),y=Math.min(Math.max(0,r.top),innerHeight-72);
+  bub.style.left=x+'px';bub.style.top=y+'px';
+},true);
+})();
+</script>
+
+
+<style id="cnd-r5d-index">
+/* R5 World fit, final: pill row LEFT-anchored + wraps inside its row (was flex-end,
+   overflowing the card's left edge and clipping QUAKE); event titles get honest
+   leading and auto height so two lines paint inside their own box; camera-bar
+   names truncate before the state label instead of running under it. */
+#wm .lyr{justify-content:flex-start!important;flex-wrap:wrap}
+#wm .ev{height:auto!important}
+#wm .ev .h{line-height:1.3!important;height:auto!important}
+.cb>b{max-width:calc(100% - 88px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+</style>
+
+
+<style id="cnd-r5e-index">
+/* R5 World fit, resolved: the events list is a bounded scroll region (flexes between
+   the pill header and the in-flow footer) — the "n of N" button and the OSIRIS strip
+   are never overlapped, and every event's meta line is reachable inside the panel.
+   Security camera-bar names truncate before the state label. */
+#wm:not(.xp) .wbody{display:flex;flex-direction:column;min-height:0}
+#wm .evl{overflow-y:auto;min-height:0}
+#wm .evp{flex:none}
+#sc .cb>b{max-width:calc(100% - 79px)!important}
+</style>
+
 </body></html>

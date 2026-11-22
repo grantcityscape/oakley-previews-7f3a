@@ -1224,5 +1224,79 @@ body .door:active,body .box:active,body .btn:active,body .bk:active{transform:sc
 /* R4-7: the Talk bubble's home corner is the standard 56px zone; the day wall's last box keeps clear of it */
 #abub{width:56px!important;height:56px!important;right:16px!important;bottom:64px!important}
 #v-day .box[data-go="shopping"]{margin-right:5.5rem}
-</style></body>
+</style>
+<style id="cnd-r5-daybook">
+/* ===== CANOPY ROUND 5 — daybook (R5-G tokens, R5-C Talk, R5-A badges, R5-D header) ===== */
+.card,.door,.panel{transition:transform 150ms cubic-bezier(.2,0,0,1),box-shadow 150ms cubic-bezier(.2,0,0,1),border-color 150ms cubic-bezier(.2,0,0,1),background-color 150ms cubic-bezier(.2,0,0,1),filter 150ms cubic-bezier(.2,0,0,1)}
+.card:hover,.panel:hover{transform:translateY(-2px);border-color:rgba(232,193,90,.45);box-shadow:0 8px 20px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.35)}
+.door:hover{transform:translateY(-4px);border-color:rgba(232,193,90,.55);box-shadow:0 12px 28px rgba(0,0,0,.5),0 2px 6px rgba(0,0,0,.4)}
+.card:active,.door:active,.panel:active{transform:scale(.98);box-shadow:0 1px 2px rgba(0,0,0,.35)}
+button:active{transform:translateY(1px);filter:brightness(.92);box-shadow:none}
+/* linked glow: ring + halo only (no black elevation layer in the stack) */
+.card.linked,.cnd.linked{position:relative;z-index:2}
+.card.linked:hover,.cnd.linked:hover{box-shadow:0 0 0 1px rgba(232,193,90,.55),0 0 16px rgba(232,193,90,.40)}
+/* R5-A / Ruling D: the LINK badge sits fully INSIDE the card (was top:-.42rem, half-clipped) */
+.cnd.linked::after,.card.linked::after,.cols4 .card.linked::after{top:.4rem;right:.4rem;z-index:6;font-size:.54rem;padding:.2rem .36rem;border-radius:.3rem}
+/* R5-C: Talk 72x72 at right 24 / bottom 24 (px — immune to root-font overrides) */
+#abub{width:72px!important;height:72px!important;right:24px!important;bottom:24px!important}
+@media (prefers-reduced-motion:reduce){.card,.door,.panel{transition:none}}
+</style>
+<script>
+/* ===== CANOPY ROUND 5 — daybook runtime ===== */
+(function(){
+'use strict';
+var RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)');
+function R5X(clone,target){
+  if(!clone||!target)return;
+  if(!RM||RM.matches){return}
+  var parent=target.parentElement;if(!parent)return;
+  if(getComputedStyle(parent).position==='static')parent.style.position='relative';
+  var pr=parent.getBoundingClientRect(),r=target.getBoundingClientRect();
+  if(!r.width||!r.height)return;
+  clone.removeAttribute('id');clone.setAttribute('aria-hidden','true');
+  clone.style.cssText+=';position:absolute;left:'+(r.left-pr.left+parent.scrollLeft)+'px;top:'+(r.top-pr.top+parent.scrollTop)+'px;width:'+r.width+'px;height:'+r.height+'px;margin:0;z-index:60;pointer-events:none;overflow:hidden';
+  parent.appendChild(clone);
+  requestAnimationFrame(function(){requestAnimationFrame(function(){
+    try{target.animate([{opacity:0,transform:'translateY(6px)'},{opacity:1,transform:'translateY(0)'}],{duration:200,easing:'cubic-bezier(.2,0,0,1)'})}catch(e){}
+    var a=null;try{a=clone.animate([{opacity:1},{opacity:0}],{duration:200,easing:'cubic-bezier(.2,0,0,1)'})}catch(e){}
+    if(a&&a.finished)a.finished.then(function(){clone.remove()});else setTimeout(function(){clone.remove()},280);
+  })});
+}
+/* view switches crossfade + survive reloads (R5-L) */
+function curView(){return document.querySelector('.view.on')}
+if(typeof go==='function'){
+  var go0=go;
+  go=function(v){
+    var cur=curView();var cl=cur?cur.cloneNode(true):null;
+    go0(v);
+    try{sessionStorage.setItem('cnd-daybook-view',v)}catch(e){}
+    var nv=document.getElementById('v-'+v);
+    if(cl&&nv&&nv!==cur)setTimeout(function(){R5X(cl,nv)},30);
+  };
+  window.addEventListener('load',function(){setTimeout(function(){try{
+    var v=sessionStorage.getItem('cnd-daybook-view');
+    if(v&&v!=='day'&&document.getElementById('v-'+v)&&(!curView()||curView().id!=='v-'+v))go0(v);
+  }catch(e){}},350)});
+}
+/* Security flip (CAMERAS / HOME MONITORING) crossfades its panes */
+document.addEventListener('click',function(e){
+  var b=e.target&&e.target.closest?e.target.closest('#flip-cam,#flip-mon'):null;
+  if(!b)return;
+  var cams=document.getElementById('sec-cams'),mon=document.getElementById('sec-mon');
+  if(!cams||!mon)return;
+  var vis=cams.style.display!=='none'?cams:mon, oth=vis===cams?mon:cams;
+  var cl=vis.cloneNode(true);
+  setTimeout(function(){if(oth.style.display!=='none')R5X(cl,oth)},40);
+},true);
+/* R5-D: header weather in Home's format — temp + condition, snapshot as the second line */
+setInterval(function(){try{var j=JSON.parse(localStorage.getItem('cnd-wx')||'null');if(!j||j.t==null)return;
+  var is=document.querySelectorAll('.wxdoor .wxl i');
+  if(is.length>=2){var a=j.t+'° '+String(j.cond||'').toUpperCase(),bb='SNAPSHOT · OTTAWA';
+    if(is[0].textContent!==a)is[0].textContent=a;
+    if(is[1].textContent!==bb)is[1].textContent=bb;}
+}catch(e){}},4000);
+})();
+</script>
+
+</body>
 </html>

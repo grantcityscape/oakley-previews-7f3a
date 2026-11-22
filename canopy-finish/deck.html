@@ -569,7 +569,7 @@ function codeOv(id){const f=codeF(id),j=codeJ(id),R=(n,h,c)=>'<div class="ml cn1
   return '<div class="cd">'+(f.s==='UNKNOWN'?ukHTML(f):'')+R(1,'<span class="ph">'+esc(clip(j.title||j.file||'current work',60))+'</span>')+ls+'</div>'}
 function boxHTML(m){const L=lampOf(m);
   return '<article class="card mbox" tabindex="0" role="button" data-a="m:'+m.id+'" aria-label="Open '+esc(m.nm)+' — full chat room and code box. Station '+esc(L.word)+'">'
-   +'<div class="hd mh"><span class="mt1"><i class="lamp '+L.cls+'"></i><span class="mav" style="background:'+MCOLID[m.id]+'">'+MINIT[m.id]+'</span><span class="mnm" style="color:'+MCOLID[m.id]+'">'+m.n+(m.hub?'<em>HUB</em>':'')+'</span></span><span class="mt2"><span class="stw" title="'+esc(L.def||L.note||'')+'">'+esc(L.word)+'</span><span class="opn">OPEN ▸</span></span></div>'
+   +'<div class="hd mh"><span class="mt1"><i class="lamp '+L.cls+'"></i><span class="mav" style="background:'+MCOLID[m.id]+'">'+MINIT[m.id]+'</span><span class="mnm" style="color:'+MCOLID[m.id]+'">'+m.n+(m.hub&&!/HUB$/.test(m.n)?'<em>HUB</em>':'')+'</span></span><span class="mt2"><span class="stw" title="'+esc(L.def||L.note||'')+'">'+esc(L.word)+'</span><span class="opn">OPEN ▸</span></span></div>'
    +'<div class="bd"><div class="sec"><span>'+(chatF(m.id).s==='UNKNOWN'?'LANE':'HUB LANE')+'</span>'+(chatF(m.id).s==='NC'?xPill():pillFor(chatF(m.id)))+'</div><div class="pane pchat">'+chatOv(m.id)+'</div>'
    +'<div class="sec scode"><span>CODE</span>'+(codeF(m.id).s==='NC'?xPill():pillFor(codeF(m.id)))+'</div><div class="pane pcode">'+codeOv(m.id)+'</div></div>'
    +'<div class="mfoot"><span>'+(L.key==='SAMPLE'?'EXAMPLE STATE · NO FEED':esc(L.word))+'</span><span>OPEN ▸</span></div></article>'}
@@ -578,15 +578,15 @@ function rMembers(){setH($('#mrow'),MEMBERS.map(m=>boxHTML(m)).join(''));$$('#mr
 /* ---------- big usage meter / team information ---------- */
 function uw(w,lb,r){if(!w)return '<div class="uw na"><span class="ul2">'+lb+'</span><span class="nr">not recorded</span></div>';
   const p=w.pct,bar='<span class="bar '+w.cls+(r.snap||r.unk?'':' lv')+'"><i style="width:'+Math.min(100,p==null?0:p)+'%"></i><u style="left:25%"></u><u style="left:50%"></u><u style="left:75%"></u></span>';
-  return '<div class="uw"><span class="ul2">'+esc(w.k||lb)+'</span>'+bar+'<b class="up">'+(p==null?'—':p+'%')+'</b><span class="rs">'+(w.resetAt||w.rl?esc(w.rsT)+(w.passed?' <b class="am">PASSED</b>':''):'no reset')+'</span></div>'}
+  return '<div class="uw"><span class="ul2">'+esc(w.k||lb)+'</span>'+bar+'<b class="up">'+(p==null?'—':p+'%')+'</b><span class="rs"><span class="rsd">'+(w.resetAt||w.rl?esc(w.rsT):'no reset')+'</span>'+(w.resetAt||w.rl?'<span class="rss">'+(w.passed?'<b class="am">PASSED</b>':'upcoming')+'</span>':'')+'</span></div>'}
 function ur(r){const asl=r.unk?'<span class="snp">UNKNOWN AGE</span>':'<span class="'+(r.snap?'snp':'snp lv')+'">'+(r.snap?'SNAPSHOT':'LIVE')+'</span> '+esc(r.asD);
   const tip=esc(r.nm+' · source: '+r.src+' · as of '+r.as+(r.unk?' (feed shown, age unknown — not live)':r.snap?' (snapshot — never live)':' (live)')+(r.lab?' · '+r.lab:'')+' · short window '+(r.sw?(r.sw.pct==null?'—':r.sw.pct+'%')+(r.sw.passed?' (reset passed — re-capture)':''):'not recorded')+' · weekly '+(r.ww?(r.ww.pct==null?'—':r.ww.pct+'%')+(r.ww.passed?' (reset passed — re-capture)':''):'not recorded'));
   if(!r.sw&&!r.ww&&r.cnt)return '<div class="ur'+(r.snap?' stale-dim':'')+'" title="'+tip+'"><div class="uh"><span class="un">'+esc(r.n)+'</span><span class="ua">'+asl+'</span></div><div class="uw ct2"><b class="cnt">'+esc(r.cnt)+'</b> '+esc(r.cntl||'')+'</div><div class="uw na"><span class="ul2">DAY·WK</span><span class="nr">not recorded · no cap</span></div></div>';
   return '<div class="ur '+r.cls+(r.snap?' stale-dim':'')+'" title="'+tip+'"><div class="uh"><span class="un">'+esc(r.n)+'</span><span class="ua">'+asl+'</span></div>'+uw(r.sw,'DAY',r)+uw(r.ww,'WK',r)+'</div>'}
 /* ROUND 4 (R4-5 §3): Team Usage renders BOTH forms; the panel's own measured width picks one (hub width rule) — wide = the designer's G5 columns, narrow = the rows form. */
 function uc(r){const w=r.sw||r.ww,v=w&&w.pct!=null?w.pct+'%':r.cnt?esc(r.cnt):'—';
-  const sub=w?((w===r.sw?'DAY':'WEEK')+' · '+esc(w.rsT||'no reset')+(w.passed?' · PASSED':'')):esc(r.cntl||'COUNT');
-  return '<div class="uc"><b class="uv">'+v+'</b><span class="un">'+esc(r.n)+'</span><span class="us">'+sub+'</span><span class="ua">'+(r.unk?'UNKNOWN AGE · ':'')+esc(r.asD)+'</span></div>'}
+  const sub=w?((w===r.sw?'DAY':'WEEK')+' · '+esc(w.rsT||'no reset')):esc(r.cntl||'COUNT');
+  return '<div class="uc"><b class="uv">'+v+'</b><span class="un">'+esc(r.n)+'</span><span class="us">'+sub+'</span>'+(w?'<span class="us2">'+(w.passed?'PASSED':'upcoming')+'</span>':'')+'<span class="ua">'+(r.unk?'UNKNOWN AGE · ':'')+esc(r.asD)+'</span></div>'}
 function rUsage(){const rows=teamRows(),snap=rows.some(r=>r.snap),d=ageDays();
   setH($('#usage .hdw'),hdr('TEAM USAGE',(rows.some(r=>r.unk)?bdg(['UNKNOWN · '+fs('hubfeed').why,'err',ptt(fs('hubfeed'))]):snap?'<span class="pill p-warn" title="Copied from each service’s own usage screen on '+esc(CFG.team.asOf)+' — never shown as live. PASSED = the reset has gone by, so the number needs re-capturing.">SNAPSHOT'+(d>0?' · '+d+(d===1?' DAY':' DAYS')+' OLD':'')+'</span>':bdg(['LIVE','live']))+'<button class="btn sm" data-a="urefresh" style="margin-left:.4rem" title="Re-read the usage snapshot held in this app and update its age in place">REFRESH SNAPSHOT</button>'));
   setH($('#usage-bd'),'<div class="ul rows">'+rows.map(ur).join('')+'</div><div class="ul cols">'+rows.map(uc).join('')+'</div>')}
@@ -602,7 +602,7 @@ function appLink(id,x){const a=appOf(id);if(!a)return '';const u=ctxUrl(a.url,x)
 function flagRow(x){return '<div class="rw fl"><span class="tt" title="'+esc(clip(x.project,120))+'">'+esc(clip(x.project,80))+'</span><span class="ow">'+esc(clip(x.raisedBy,14).toUpperCase())+'</span><span class="rs" title="'+esc(clip(x.reason,300))+'">'+esc(clip(x.reason,160))+'</span></div>'}
 function rFlags(){const f=fs('flags'),l=arr('flags','flags');
   setH($('#flags .hdw'),hdr('FLAGGED PROJECTS',pillS(f)+(f.s==='NC'&&!RMS.f?'<button class="btn sm" data-a="rms:f" style="margin-left:.4rem">✕ REMOVE SAMPLE</button>':'')));
-  setH($('#flags-bd'),'<div class="cols f"><span>PROJECT · REASON</span><span>'+(f.s==='NC'?'RAISED BY':cnote(f,l.length,'OPEN').replace('class="ct"','class="ct"'))+'</span></div>'+(l.length?'<div class="rows">'+l.map(flagRow).join('')+'</div><div class="term">— End of list —</div>':f.s==='NC'?(RMS.f?ncb('Sample removed. The hub flag feed is not connected — real flags raised by any lane or the checker show here once it is.','NOT CONNECTED'):'<div class="smp">'+ncb('Example flags — real flags show here once the hub flag feed is connected.','SAMPLE')+'</div><div class="rows">'+[flagRow({project:'Canopy — SITREP wall',raisedBy:'CLAUDE',reason:'Example flag — two of four wall tiles not playing'}),flagRow({project:'KÜL — client files',raisedBy:'CHECKER',reason:'Example flag — sample cards still showing'})].join('')+'</div><div class="term">— End of list —</div>'):f.s==='OFFLINE'?ncb('The flag feed is not answering.','OFFLINE'):f.s==='UNKNOWN'?ncb(unkTxt(f),'UNKNOWN · '+f.why):f.s==='WAIT'?ncb('Waiting for the flag feed.','WAITING'):ncb('The feed reports no open flags.','NONE OPEN')))}
+  setH($('#flags-bd'),'<div class="cols f"><span>PROJECT · REASON</span><span>'+(f.s==='NC'?'RAISED BY':cnote(f,l.length,'OPEN').replace('class="ct"','class="ct"'))+'</span></div>'+(l.length?'<div class="rows">'+l.map(flagRow).join('')+'</div><div class="term">— End of list —</div>':f.s==='NC'?(RMS.f?ncb('Sample removed. The hub flag feed is not connected — real flags raised by any lane or the checker show here once it is.','NOT CONNECTED'):'<div class="smp">'+ncb('Example flags — real flags show here once the hub flag feed is connected.','SAMPLE')+'<div class="rows">'+[flagRow({project:'Canopy — SITREP wall',raisedBy:'CLAUDE',reason:'Example flag — two of four wall tiles not playing'}),flagRow({project:'KÜL — client files',raisedBy:'CHECKER',reason:'Example flag — sample cards still showing'})].join('')+'</div></div><div class="term">— End of list —</div>'):f.s==='OFFLINE'?ncb('The flag feed is not answering.','OFFLINE'):f.s==='UNKNOWN'?ncb(unkTxt(f),'UNKNOWN · '+f.why):f.s==='WAIT'?ncb('Waiting for the flag feed.','WAITING'):ncb('The feed reports no open flags.','NONE OPEN')))}
 
 /* ---------- portal doors (summary data on the primary screen) ---------- */
 const ICON={eng:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 3.5 7.2v9.6l8.5 4.7 8.5-4.7V7.2zM3.5 7.2 12 12l8.5-4.8M12 12v9.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',media:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 9.2v5.6l4.8-2.8z" fill="currentColor"/></svg>'};
@@ -1367,4 +1367,100 @@ button:active,.btn:active,.lkbadge:active,.tab:active{transform:translateY(1px) 
 .portal .pkv i{font-size:.5rem!important}
 .portal .chain{font-size:.54rem!important}
 </style>
+
+<style id="cnd-r5-deck">
+/* ===== CANOPY ROUND 5 — deck (R5-G tokens + fix notes §5) ===== */
+.mbox,.portal,.card{transition:transform 150ms cubic-bezier(.2,0,0,1),box-shadow 150ms cubic-bezier(.2,0,0,1),border-color 150ms cubic-bezier(.2,0,0,1),background-color 150ms cubic-bezier(.2,0,0,1),filter 150ms cubic-bezier(.2,0,0,1)}
+.mbox:hover,.card:hover{transform:translateY(-2px);border-color:rgba(47,168,102,.45);box-shadow:0 8px 20px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.35)}
+.portal:hover{transform:translateY(-2px);border-color:rgba(47,168,102,.45);box-shadow:0 8px 20px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.35)}
+.lnk.linked{position:relative;z-index:2}
+/* §5.5: header action buttons live IN the header's flex row — never overlapping */
+.hdw{display:flex;align-items:center;gap:.4rem;min-height:40px}
+.hdw .hd{flex:1 1 auto;min-width:0}
+.hdw>.btn{flex:none;height:28px;margin-left:0!important}
+/* §5.2: member header = one flex row (dot · avatar · name · state · spacer · OPEN ▸) */
+#mrow .mbox .hd.mh{flex-direction:row;align-items:center;gap:.4rem;height:2.14rem}
+.hd.mh .mt1{display:flex;align-items:center;gap:.35rem;flex:1 1 auto;min-width:0}
+.hd.mh .mt2{display:flex;align-items:center;gap:.4rem;flex:none}
+.hd.mh .mnm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.hd.mh .opn{flex:none}
+/* five-station row fits the viewport: no child may widen the page grid */
+#v-home>*{min-width:0}
+.mbox{min-width:0;overflow:hidden}
+/* §5.2: line-number gutters fully visible; drawer chat lines wrap whole */
+.ml .ln{display:inline-block;min-width:1.15rem;text-align:right;margin-right:.45rem}
+.pane{scrollbar-gutter:stable}
+#mv-msgs .ml{white-space:normal}
+/* §5.3: reset block = date line over status line */
+.ur .rs{display:flex;flex-direction:column;line-height:1.2}
+.ur .ua{white-space:normal}
+/* §5.4: task / flag titles wrap to two lines before any ellipsis */
+#tasks .rows .rw .l2,#flags .rows .rw .l2{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+/* portal chain tabs wrap instead of clipping ("1 · ENGINEERING" etc.) */
+#chain2 .cn{min-width:0}
+#chain2 .cn b{white-space:normal}
+/* portal note: two full lines inside the portal, never cut mid-line */
+.portal .pn{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;white-space:normal}
+/* R5-K: the member drawer starts below the top navigation and keeps its scrim */
+#v-member{top:3.4rem!important}
+@media (prefers-reduced-motion:reduce){.mbox,.portal,.card{transition:none}}
+</style>
+<script>
+/* ===== CANOPY ROUND 5 — deck runtime ===== */
+(function(){
+'use strict';
+var RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)');
+function R5X(clone,target){
+  if(!clone||!target)return;
+  if(!RM||RM.matches){return}
+  var parent=target.parentElement;if(!parent)return;
+  if(getComputedStyle(parent).position==='static')parent.style.position='relative';
+  var pr=parent.getBoundingClientRect(),r=target.getBoundingClientRect();
+  if(!r.width||!r.height)return;
+  clone.removeAttribute('id');clone.setAttribute('aria-hidden','true');
+  clone.style.cssText+=';position:absolute;left:'+(r.left-pr.left+parent.scrollLeft)+'px;top:'+(r.top-pr.top+parent.scrollTop)+'px;width:'+r.width+'px;height:'+r.height+'px;margin:0;z-index:60;pointer-events:none;overflow:hidden';
+  parent.appendChild(clone);
+  requestAnimationFrame(function(){requestAnimationFrame(function(){
+    try{target.animate([{opacity:0,transform:'translateY(6px)'},{opacity:1,transform:'translateY(0)'}],{duration:200,easing:'cubic-bezier(.2,0,0,1)'})}catch(e){}
+    var a=null;try{a=clone.animate([{opacity:1},{opacity:0}],{duration:200,easing:'cubic-bezier(.2,0,0,1)'})}catch(e){}
+    if(a&&a.finished)a.finished.then(function(){clone.remove()});else setTimeout(function(){clone.remove()},280);
+  })});
+}
+/* view switches (station cards, team room, back buttons) crossfade the incoming view */
+document.addEventListener('click',function(e){
+  var b=e.target&&e.target.closest?e.target.closest('[data-a^="m:"],[data-a^="team:"],[data-a="back:"],[data-a^="eng:"],[data-a^="media:"],[data-a^="portal:"],[data-a^="apps:"]'):null;
+  if(!b)return;
+  var cur=document.querySelector('.view.on')||document.querySelector('#v-home');
+  if(!cur)return;var cl=cur.cloneNode(true);
+  setTimeout(function(){var nv=document.querySelector('.view.on');if(nv&&nv!==cur)R5X(cl,nv)},30);
+},true);
+/* R5-L: the Deck's view lives in the hash — keep it across reloads */
+window.addEventListener('hashchange',function(){try{sessionStorage.setItem('cnd-deck-hash',location.hash)}catch(e){}});
+window.addEventListener('load',function(){setTimeout(function(){try{
+  if(!location.hash){var h=sessionStorage.getItem('cnd-deck-hash');if(h&&h.length>2)location.hash=h}
+}catch(e){}},450)});
+/* R5-D: header weather in Home's format — temp + condition from the one shared object */
+setInterval(function(){try{var j=JSON.parse(localStorage.getItem('cnd-wx')||'null');if(!j||j.t==null)return;
+  var t=document.querySelector('.wxdoor .wxt'),c=document.querySelector('.wxdoor .wxc');
+  if(t&&t.textContent!==j.t+'°')t.textContent=j.t+'°';
+  var ct=String(j.cond||'').toUpperCase()+' · SNAPSHOT · OTTAWA';
+  if(c&&c.textContent!==ct)c.textContent=ct;
+  var d=document.querySelector('.wxdoor');if(d)d.title='Weather — snapshot, Ottawa · as of '+new Date(j.at).toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'})+' · opens the Weather window';
+}catch(e){}},4000);
+})();
+</script>
+
+
+<style id="cnd-r5b-deck">
+/* spec-exact hover/press — body-prefixed to outrank the round-4 body rules */
+body .mbox:hover,body .card:hover{transform:translateY(-2px)!important;border-color:rgba(47,168,102,.45)!important;box-shadow:0 8px 20px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.35)!important;filter:none!important}
+body .portal:hover{transform:translateY(-2px)!important;border-color:rgba(47,168,102,.45)!important;box-shadow:0 8px 20px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.35)!important;filter:none!important}
+body .mbox:active,body .portal:active,body .card:active{transform:scale(.98)!important;box-shadow:0 1px 2px rgba(0,0,0,.35)!important}
+/* §5.5: header pills + action buttons share ONE row inside the header */
+.hdw .hd{align-items:center}
+.hdw .hd .hr{display:flex;align-items:center;gap:.4rem;flex-wrap:nowrap;min-width:0}
+.hdw .btn{height:28px;min-height:28px;white-space:nowrap;flex:none;margin-left:0!important;align-self:center}
+.uc .us2{display:block;color:var(--amber);font-size:.82em;letter-spacing:.06em}
+</style>
+
 </body></html>

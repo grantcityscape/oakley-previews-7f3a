@@ -863,4 +863,59 @@ body .door:active,body .card:active,body .btn:active{transform:scale(.96)!import
 #empire .ac{padding-right:5.5rem}
 /* workbench's shell doors are .sdoor — the R4-12 press token applies to them too */
 body .sdoor:active{transform:translateY(1px) scale(.97)!important;filter:brightness(.82)!important}
-</style></body></html>
+</style>
+<style id="cnd-r5-workbench">
+/* ===== CANOPY ROUND 5 — workbench (R5-G tokens, R5-C Talk, R5-A badges, R5-D header) ===== */
+.card,.door,.panel,.appcard{transition:transform 150ms cubic-bezier(.2,0,0,1),box-shadow 150ms cubic-bezier(.2,0,0,1),border-color 150ms cubic-bezier(.2,0,0,1),background-color 150ms cubic-bezier(.2,0,0,1),filter 150ms cubic-bezier(.2,0,0,1)}
+.card:hover,.panel:hover,.appcard:hover{transform:translateY(-2px);border-color:rgba(232,193,90,.45);box-shadow:0 8px 20px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.35)}
+.door:hover{transform:translateY(-4px);border-color:rgba(232,193,90,.55);box-shadow:0 12px 28px rgba(0,0,0,.5),0 2px 6px rgba(0,0,0,.4)}
+.card:active,.door:active,.panel:active,.appcard:active{transform:scale(.98);box-shadow:0 1px 2px rgba(0,0,0,.35)}
+button:active{transform:translateY(1px);filter:brightness(.92);box-shadow:none}
+.card.linked,.cnd.linked{position:relative;z-index:2}
+.card.linked:hover,.cnd.linked:hover{box-shadow:0 0 0 1px rgba(232,193,90,.55),0 0 16px rgba(232,193,90,.40)}
+/* R5-A / Ruling D: LINK badge fully INSIDE the card (was top:-.42rem, half-clipped) */
+.cnd.linked::after,.card.linked::after{top:.4rem;right:.4rem;z-index:6;font-size:.54rem;padding:.2rem .36rem;border-radius:.3rem}
+/* R5-C: Talk 72x72 at right 24 / bottom 24 */
+#abub{width:72px!important;height:72px!important;right:24px!important;bottom:24px!important}
+@media (prefers-reduced-motion:reduce){.card,.door,.panel,.appcard{transition:none}}
+</style>
+<script>
+/* ===== CANOPY ROUND 5 — workbench runtime ===== */
+(function(){
+'use strict';
+var RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)');
+function R5X(clone,target){
+  if(!clone||!target)return;
+  if(!RM||RM.matches){return}
+  var parent=target.parentElement;if(!parent)return;
+  if(getComputedStyle(parent).position==='static')parent.style.position='relative';
+  var pr=parent.getBoundingClientRect(),r=target.getBoundingClientRect();
+  if(!r.width||!r.height)return;
+  clone.removeAttribute('id');clone.setAttribute('aria-hidden','true');
+  clone.style.cssText+=';position:absolute;left:'+(r.left-pr.left+parent.scrollLeft)+'px;top:'+(r.top-pr.top+parent.scrollTop)+'px;width:'+r.width+'px;height:'+r.height+'px;margin:0;z-index:60;pointer-events:none;overflow:hidden';
+  parent.appendChild(clone);
+  requestAnimationFrame(function(){requestAnimationFrame(function(){
+    try{target.animate([{opacity:0,transform:'translateY(6px)'},{opacity:1,transform:'translateY(0)'}],{duration:200,easing:'cubic-bezier(.2,0,0,1)'})}catch(e){}
+    var a=null;try{a=clone.animate([{opacity:1},{opacity:0}],{duration:200,easing:'cubic-bezier(.2,0,0,1)'})}catch(e){}
+    if(a&&a.finished)a.finished.then(function(){clone.remove()});else setTimeout(function(){clone.remove()},280);
+  })});
+}
+/* bench switch (GRANT / JOHNNY) and shelf paging crossfade the shelf */
+document.addEventListener('click',function(e){
+  var b=e.target&&e.target.closest?e.target.closest('[data-a^="inst:"],#pg-n,#pg-p'):null;
+  if(!b)return;
+  var shelf=document.getElementById('shelf');
+  if(!shelf)return;var cl=shelf.cloneNode(true);
+  setTimeout(function(){R5X(cl,shelf)},40);
+},true);
+/* R5-D: header weather in Home's format — temp + condition, snapshot as the second line */
+setInterval(function(){try{var j=JSON.parse(localStorage.getItem('cnd-wx')||'null');if(!j||j.t==null)return;
+  var is=document.querySelectorAll('.wxdoor .wxl i');
+  if(is.length>=2){var a=j.t+'° '+String(j.cond||'').toUpperCase(),bb='SNAPSHOT · OTTAWA';
+    if(is[0].textContent!==a)is[0].textContent=a;
+    if(is[1].textContent!==bb)is[1].textContent=bb;}
+}catch(e){}},4000);
+})();
+</script>
+
+</body></html>

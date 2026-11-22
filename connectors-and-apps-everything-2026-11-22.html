@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Canopy — Every Connector and App the Team Found</title>
+<style>
+:root{
+  --bg:#0c0e12; --panel:#15181f; --panel2:#1b1f28; --line:#2a2f3a;
+  --text:#eef1f6; --muted:#a7b0bf; --faint:#7c8698;
+  --green:#2fa866; --red:#d64541; --blue:#3e8fe0; --gold:#c9a227;
+  --live:#3fb96f; --part:#e0a83e; --link:#5b9bd5; --none:#e06666; --cand:#b48be0; --wait:#e08a3e;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:19px;line-height:1.55}
+.wrap{max-width:920px;margin:0 auto;padding:28px 20px 80px}
+h1{font-size:36px;line-height:1.2;margin:0 0 8px}
+h2{font-size:27px;margin:0}
+h3{font-size:22px;margin:26px 0 6px;color:var(--text)}
+p.sub{color:var(--muted);font-size:20px;margin:0 0 18px}
+nav.toc{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin:22px 0 34px}
+nav.toc a{color:var(--text);text-decoration:none;display:block;padding:7px 0;font-size:20px}
+nav.toc a:hover{text-decoration:underline}
+nav.toc span.n{color:var(--faint);display:inline-block;min-width:34px}
+section{margin:0 0 44px}
+.sec-head{display:flex;align-items:center;gap:14px;border-bottom:3px solid var(--line);padding-bottom:10px;margin-bottom:8px}
+.chipdot{width:20px;height:20px;border-radius:6px;flex:0 0 auto}
+.sec-note{color:var(--muted);margin:6px 0 14px}
+details{background:var(--panel);border:1px solid var(--line);border-radius:12px;margin:12px 0;padding:4px 18px}
+details[open]{background:var(--panel2)}
+summary{cursor:pointer;font-size:21px;font-weight:600;padding:12px 0;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸ ";color:var(--faint)}
+details[open ]>summary::before{content:"▾ "}
+ul.entries{list-style:none;margin:4px 0 14px;padding:0}
+ul.entries li{padding:11px 0;border-top:1px solid var(--line)}
+ul.entries li:first-child{border-top:none}
+.name{font-weight:700}
+.desc{color:var(--muted)}
+.note{display:block;color:var(--muted);font-size:17px;margin-top:3px}
+.tags{display:block;margin-top:5px}
+.tag{display:inline-block;font-size:14.5px;font-weight:600;border-radius:999px;padding:2px 11px;margin:2px 6px 2px 0;border:1.5px solid}
+.t-live{color:var(--live);border-color:var(--live)}
+.t-part{color:var(--part);border-color:var(--part)}
+.t-link{color:var(--link);border-color:var(--link)}
+.t-none{color:var(--none);border-color:var(--none)}
+.t-cand{color:var(--cand);border-color:var(--cand)}
+.t-wait{color:var(--wait);border-color:var(--wait)}
+.t-state{color:var(--muted);border-color:var(--faint)}
+.legend{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin:0 0 10px}
+.legend p{margin:6px 0}
+.warn{border-left:5px solid var(--gold);background:var(--panel);padding:12px 18px;border-radius:0 12px 12px 0;margin:14px 0}
+footer{color:var(--faint);font-size:16.5px;border-top:1px solid var(--line);padding-top:16px;margin-top:50px}
+a{color:var(--link)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Canopy — every connector and app the team found</h1>
+<p class="sub">Everything the team has worked into Canopy, or found and checked for it, in one place. Put together 22 November 2026 from the team's roadmap, its setup catalogues, and its research hunts. Nothing here was connected, bought, or built just because it appears on this page — every entry says honestly how it connects and where it stands.</p>
+
+<div class="legend">
+<p><strong>How to read the labels on every entry:</strong></p>
+<p><span class="tag t-live">Live feed</span> the service sends real data straight into Canopy.</p>
+<p><span class="tag t-part">Partly</span> some of it works — for example events and snapshots, but no continuous live video.</p>
+<p><span class="tag t-link">Link-out only</span> a door that opens the outside app or site. Nothing loads inside Canopy.</p>
+<p><span class="tag t-none">Nothing</span> no route exists. Canopy can record that the thing exists, and that is all.</p>
+<p><span class="tag t-cand">Candidate — not connected</span> the team found it and checked it. It connects only if Grant says so.</p>
+<p><span class="tag t-wait">Waiting on Grant</span> needs a decision, a sign-in, or information only Grant can give.</p>
+<p><span class="tag t-state">Working now</span> <span class="tag t-state">Wired by design</span> <span class="tag t-state">Direction set</span> where the work itself stands: working now means live in the current build; wired by design means the connection is designed and lights up when Canopy's five sections are packaged into one app; direction set means ruled and planned, not yet built.</p>
+</div>
+
+<div class="warn"><strong>The big idea, in Grant's words:</strong> everybody has hundreds of apps. Canopy takes everything a person uses and does — work or personal — plugs it into one app that combines and links and figures everything out, and helps them run their life with the AI team. Not just for Grant or Johnny — for his sisters, his dad, or old Betty Lou walking down the side of the road. Every list on this page is judged against that: it has to work for anybody.</div>
+
+<nav class="toc">
+<a href="#home"><span class="n">1</span>Home and SITREP — weather, traffic, news, the world</a>
+<a href="#daybook"><span class="n">2</span>Daybook — the personal side: money, home, truck, social</a>
+<a href="#deck"><span class="n">3</span>Command Deck — the team's room, plus the Engineering and Media portals</a>
+<a href="#workbench"><span class="n">4</span>Workbench — our own apps: Trellis, Flurry, BluePrint, SiteVision</a>
+<a href="#johnny"><span class="n">5</span>Johnny's apps — KÜL, Lions Gate, and the rest of his shelf</a>
+<a href="#behind"><span class="n">6</span>Behind the scenes — the accounts the team itself runs on</a>
+<a href="#picklists"><span class="n">7</span>Setup pick-lists — every category, every option found</a>
+<a href="#ideas"><span class="n">8</span>Ideas for other people — what somebody else might want</a>
+<a href="#hunt"><span class="n">9</span>More the hunt found — candidates waiting on Grant's say</a>
+<a href="#honest"><span class="n">10</span>Honest notes — what is not working, waiting, or unknown</a>
+</nav>
+
+<section id="home">
+<div class="sec-head"><div class="chipdot" style="background:var(--gold)"></div><h2>1 · Home and SITREP</h2></div>
+<p class="sec-note">Home is the wall — weather, commute, markets, team, and the world at a glance. SITREP is the situation report that sits inside Home (Grant's ruling, 22 November 2026: SITREP is a section within Home, not its own tab): Weather, Commute and Cameras, Live TV, Airport, and World. Weather Mode: the weather spot adapts to whatever is actually happening — snow, rain, heat, storm — brings the right SITREP card forward, then settles back when it clears.</p>
+
+<details open>
+<summary>Weather</summary>
+<ul class="entries">
+<li><span class="name">Environment Canada weather — Ottawa</span> <span class="desc">— current conditions, hourly, and forecast.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-state">Working now</span></span><span class="note">One shared weather reading feeds Home, SITREP, and the apps, so the weather can never contradict itself. It reaches the page through a small team-run relay (the hub proxy).</span></li>
+<li><span class="name">Environment Canada weather — Gatineau</span> <span class="desc">— the second city's weather beside Ottawa's.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-state">Working now</span></span></li>
+<li><span class="name">Weather alerts and emergency alerts (the common alerting protocol)</span> <span class="desc">— warnings for the Ottawa area.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-state">Wired by design</span></span></li>
+<li><span class="name">Operator layer for snow work</span> <span class="desc">— snowfall rate, road conditions, visibility, and wind chill.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-state">Wired by design</span></span><span class="note">The source stack is settled: Environment Canada's measured precipitation analysis (what actually fell — a checking source, not a live trigger), Ontario 511 road conditions, Tomorrow.io snow depth, and home weather-station ground truth. Ontario's road-weather station network is not public — the province keeps it on a secured site.</span></li>
+</ul>
+</details>
+
+<details>
+<summary>Traffic and cameras</summary>
+<ul class="entries">
+<li><span class="name">City of Ottawa traffic cameras — the full list</span> <span class="desc">— 432 live traffic camera views across Ottawa: 403 City of Ottawa cameras and 29 Ontario highway (Ministry of Transportation) cameras, from the City's traffic camera list. Searchable.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-state">Working now</span></span><span class="note">Honest note: the City says about 275 physical cameras are installed — 432 is the number of entries in its published list, because one location can carry several entries.</span></li>
+<li><span class="name">Camera pictures</span> <span class="desc">— the actual camera stills; a rotating set of four on Home.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-state">Wired by design</span></span><span class="note">Pictures are snapshots, refreshed no faster than once a minute — never labelled "live." The City's certificate stays on the team's relay, never in the app.</span></li>
+<li><span class="name">City of Ottawa road events</span> <span class="desc">— closures, construction, and incidents.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-state">Working now</span></span></li>
+<li><span class="name">Ontario 511 road conditions</span> <span class="desc">— the operator layer for snow work.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-state">Wired by design</span></span></li>
+</ul>
+</details>
+
+<details>
+<summary>News and live TV</summary>
+<ul class="entries">
+<li><span class="name">News headlines — CBC Ottawa, CityNews Ottawa, BBC World, DW (Deutsche Welle), Al Jazeera world</span> <span class="desc">— local and world headlines; cards carry their source and time, and link out to the full article.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-state">Wired by design</span></span></li>
+<li><span class="name">DW live TV</span> <span class="desc">— Deutsche Welle's live stream, playing inside the app on tap.</span><span class="tags"><span class="tag t-live">Plays inside Canopy</span><span class="tag t-state">Working now</span></span></li>
+<li><span class="name">Live world TV — TRT World, CNA, NHK World, Arirang</span> <span class="desc">— the SITREP TV wall, with an honest "checking live stream / stream unavailable" state instead of a frozen picture.</span><span class="tags"><span class="tag t-live">Plays inside Canopy</span><span class="tag t-state">Working now</span></span></li>
+<li><span class="name">CBC Gem, CTV, Global live pages</span> <span class="desc">— Canadian channels.</span><span class="tags"><span class="tag t-link">Link-out only</span></span><span class="note">Grant's ruling: Canadian channels link out. That is the honest end state for these three.</span></li>
+</ul>
+</details>
+
+<details>
+<summary>The world — God's Eye View</summary>
+<ul class="entries">
+<li><span class="name">Earthquakes — United States Geological Survey (USGS)</span> <span class="desc">— earthquakes worldwide (magnitude 4.5 and up) and any quake within 250 kilometres.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-state">Working now</span></span></li>
+<li><span class="name">Disaster alerts — GDACS</span> <span class="desc">— global disaster alerts: floods, storms, earthquakes.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-state">Wired by design</span></span></li>
+<li><span class="name">Natural events — NASA EONET</span> <span class="desc">— wildfires, storms, and volcanoes worldwide.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-state">Working now</span></span></li>
+<li><span class="name">World map</span> <span class="desc">— OpenStreetMap with Environment Canada's map layer and RainViewer rain radar over it.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-state">Working now</span></span></li>
+<li><span class="name">Osiris — the world-data layer</span> <span class="desc">— flights, satellites, earthquakes, fires, and weather, as its own section inside SITREP. Its feeds were verified live on 21 November 2026, on a 60-second rhythm, through the team relay.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-state">Wired by design</span></span></li>
+<li><span class="name">Emergency scanner audio — Broadcastify</span> <span class="desc">— a directory inside Canopy; listening opens the outside site.</span><span class="tags"><span class="tag t-link">Link-out only</span></span><span class="note">There is no connector for Ottawa police and fire radio text: the radio is encrypted and no public text feed exists. The scanner spot honestly shows real City incident counts instead.</span></li>
+<li><span class="name">Ottawa airport (YOW)</span> <span class="desc">— a door to the airport's own site.</span><span class="tags"><span class="tag t-link">Link-out only</span></span><span class="note">Grant's ruling: no paid flight data, ever. The boards never invent flights.</span></li>
+</ul>
+</details>
+
+<details>
+<summary>Markets</summary>
+<ul class="entries">
+<li><span class="name">Bitcoin price and 24-hour chart</span> <span class="desc">— CoinGecko first, Coinbase and Binance as fallbacks.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-state">Working now</span></span></li>
+<li><span class="name">Dollar exchange rate (United States dollar / Canadian dollar)</span> <span class="desc">— Bank of Canada, with the European Central Bank as fallback.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-state">Working now</span></span></li>
+<li><span class="name">Markets snapshot</span> <span class="desc">— the previous day's closing picture for the tracked markets, labelled with its source and date. Never labelled "live," because no honest free live route exists.</span><span class="tags"><span class="tag t-part">Daily snapshot</span><span class="tag t-state">Working now, one exception below</span></span></li>
+<li><span class="name">Canada 10-year bond yield tile</span> <span class="desc">— the route is settled (Bank of Canada, daily) and the snapshot data exists, but the tile does not pick the snapshot up.</span><span class="tags"><span class="tag t-none">Not working</span></span><span class="note">A named fix, parked while Canopy is paused. See the honest notes at the end of this page.</span></li>
+<li><span class="name">TradingView charts and Stooq quotes</span><span class="tags"><span class="tag t-live">Live feed / plays inside Canopy</span><span class="tag t-state">Working now</span></span></li>
+</ul>
+</details>
+
+<details>
+<summary>Home's own boxes</summary>
+<ul class="entries">
+<li><span class="name">Team usage and briefing counts</span> <span class="desc">— the AI team's state, and the "needs attention" counts that ride on Home's doors.</span><span class="tags"><span class="tag t-live">Live feed (team service)</span><span class="tag t-state">Wired by design</span></span></li>
+<li><span class="name">Calendar box</span> <span class="desc">— the day's events, from the hub's calendar link.</span><span class="tags"><span class="tag t-live">Live feed (team service)</span><span class="tag t-state">Wired by design</span></span></li>
+<li><span class="name">Home security box</span> <span class="desc">— zones, doors, locks, smoke, water, temperature, and alarm state.</span><span class="tags"><span class="tag t-live">Live feed (team service)</span><span class="tag t-state">Wired by design</span></span></li>
+<li><span class="name">Home camera snapshots</span> <span class="desc">— Driveway, Front Door, Garage, Backyard, from the home's own camera system.</span><span class="tags"><span class="tag t-wait">Waiting on Grant</span></span><span class="note">Needs one snapshot address per zone, from his records. No passwords ever go in an address.</span></li>
+</ul>
+</details>
+</section>
+
+<section id="daybook">
+<div class="sec-head"><div class="chipdot" style="background:var(--red)"></div><h2>2 · Daybook — the personal side</h2></div>
+<p class="sec-note">The day stream, money, home, truck, health, and social. Daybook's own records work today; every outside feed joins when Canopy is packaged into one app. There is deliberately no weather in Daybook — weather lives on the Home and SITREP path. Daybook now carries a Health and Fitness layer (Grant's ruling, 22 November 2026) — that is where the fitness monitors live.</p>
+
+<details open>
+<summary>The day itself</summary>
+<ul class="entries">
+<li><span class="name">Day-to-day capture and day stream</span> <span class="desc">— quick captures and the day's record, stored on the device.</span><span class="tags"><span class="tag t-state">Working now</span></span></li>
+<li><span class="name">Calendar — all calendars in one view</span> <span class="desc">— the personal calendar plus every linked business calendar.</span><span class="tags"><span class="tag t-live">Live feed (signed-in Google account)</span><span class="tag t-state">Wired by design</span></span></li>
+<li><span class="name">Commute</span> <span class="desc">— drawn from today's calendar, never typed twice. Grant's Daybook redo also puts roads and traffic cameras inside Daybook's Commute — the same 432-camera City and highway supply as Home and SITREP.</span><span class="tags"><span class="tag t-state">Wired by design · roads and cameras: direction set</span></span></li>
+<li><span class="name">Notes collections</span> <span class="desc">— collections point back to their day pages.</span><span class="tags"><span class="tag t-state">Working now</span></span></li>
+<li><span class="name">Talk to Assistant bar</span> <span class="desc">— on every Daybook page.</span><span class="tags"><span class="tag t-state">Wired by design</span></span><span class="note">Today it honestly answers that talk is not connected in the standalone build.</span></li>
+</ul>
+</details>
+
+<details>
+<summary>Money</summary>
+<ul class="entries">
+<li><span class="name">The money book (budgeting)</span> <span class="desc">— the real figures come from the team's finance record; the workbook in Google Drive is the record of truth. The view moves no money — records only. Hand-typed entries always win.</span><span class="tags"><span class="tag t-state">Wired by design</span></span><span class="note">Today the view shows sample figures, labelled as samples.</span></li>
+<li><span class="name">TD bank through Plaid</span> <span class="desc">— the researched bank-feed route for the money book. Plaid covers TD in Canada, its free trial plan suffices, and Plaid holds a direct data-access agreement with TD (2023), so for TD the bank itself authorises the connection — no login details are shared with the middleman. Balances and transactions only, read-only, refreshing a few times a day — never to be called live.</span><span class="tags"><span class="tag t-part">Partly — refreshes a few times a day</span><span class="tag t-wait">Waiting on Grant — his go and his sign-in</span></span><span class="note">Researched 4–7 November 2026. Not connected.</span></li>
+<li><span class="name">Investments</span> <span class="desc">— holdings and prices appear when an account is linked. Review notes work today.</span><span class="tags"><span class="tag t-wait">Waiting on Grant</span></span><span class="note">The standing position is paper accounts only, no brokerage opened. Linking anything real is his call.</span></li>
+<li><span class="name">Team Pot card ledger</span> <span class="desc">— the shared pot's card record, stored on the device.</span><span class="tags"><span class="tag t-state">Working now</span></span></li>
+<li><span class="name">Shopping flows into the money book</span> <span class="desc">— spending recorded in Shopping lands in budgeting.</span><span class="tags"><span class="tag t-state">Working now as a flow</span></span></li>
+<li><span class="name">Ford Credit account number</span> <span class="desc">— Grant asked for it on 28 October 2026. It is not in any email or in the finance workbook — that was checked exhaustively. Routes still open: the TD bill-payee record, Ford Credit's online account manager, a paper statement, or Ford Credit by phone.</span><span class="tags"><span class="tag t-none">Not found yet</span><span class="tag t-wait">Waiting on Grant</span></span></li>
+</ul>
+</details>
+
+<details>
+<summary>Home, security, and monitoring</summary>
+<ul class="entries">
+<li><span class="name">Home Assistant — the bridge</span> <span class="desc">— Canopy does not talk to seventeen different company clouds. It talks to one Home Assistant hub in the home, and the hub talks to the devices — locally where possible. This is the platform Daybook's monitoring, automation, security, and truck feeds all wait on.</span><span class="tags"><span class="tag t-cand">Candidate — not connected</span><span class="tag t-wait">Waiting on Grant</span></span><span class="note">Free and open-source. Whether Grant already holds an account on it is not in the record.</span></li>
+<li><span class="name">Security camera frames</span> <span class="desc">— Front, Garage, Back, Basement, from the home's own cameras.</span><span class="tags"><span class="tag t-live">Live feed (snapshots)</span><span class="tag t-wait">Waiting on Grant</span></span></li>
+<li><span class="name">Home monitoring</span> <span class="desc">— door, motion, and environment sensors, through the bridge above.</span><span class="tags"><span class="tag t-state">Wired by design</span></span></li>
+<li><span class="name">Home automation</span> <span class="desc">— lights, thermostat, locks, and plugs, through the same bridge.</span><span class="tags"><span class="tag t-state">Wired by design</span></span></li>
+</ul>
+</details>
+
+<details>
+<summary>Health and fitness layer</summary>
+<ul class="entries">
+<li><span class="name">Oura ring</span> <span class="desc">— sleep, readiness, and activity through Oura's own sign-in connection.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span><span class="note">Watch the free-tier limit on how many users it covers.</span></li>
+<li><span class="name">WHOOP</span> <span class="desc">— strain, recovery, and sleep.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span><span class="note">Needs WHOOP's partner approval first.</span></li>
+<li><span class="name">Apple Health and Samsung Health</span> <span class="desc">— the health data already on the phone.</span><span class="tags"><span class="tag t-none">Nothing on the web</span><span class="tag t-part">Partly inside a phone app shell, through a health-data middleman</span></span></li>
+<li><span class="name">Fitbit</span> <span class="desc">— Fitbit's old web connection was turned off in October/November 2026. The Google Health connection is its replacement.</span><span class="tags"><span class="tag t-part">Partly — until partner checks pass</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Garmin</span> <span class="desc">— watches and activity.</span><span class="tags"><span class="tag t-part">Partly — sync is delayed, partner friction</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+</ul>
+<div class="warn">Safety rule for this whole layer: Canopy is never a medical alert system, never a baby monitor, never an emergency service. Where a device calls for help itself, Canopy says so and never pretends to relay it. Health is the most sensitive kind of data there is — every item needs its own explicit approval, phone-first.</div>
+</details>
+
+<details>
+<summary>The truck</summary>
+<ul class="entries">
+<li><span class="name">FordPass — the 2026 Ford Ranger, through Home Assistant</span> <span class="desc">— lock and unlock, remote start, and location genuinely work through Home Assistant's FordPass connection. FordPass on the web cannot do any of that and offers no web feed — this route works precisely because it is not a web route.</span><span class="tags"><span class="tag t-live">Live feed (through the home hub)</span><span class="tag t-wait">Waiting on Grant</span></span><span class="note">Researched 18 November 2026, verdict: go, with guardrails — a dedicated second Ford account only (Ford has disabled accounts over this connection), and a one-time setup taking about 25 to 40 minutes of Grant. Setup has not started.</span></li>
+</ul>
+</details>
+
+<details>
+<summary>Social — being worked in, not linked out</summary>
+<ul class="entries">
+<li><span class="name">Messenger, Instagram, Facebook, Threads</span> <span class="desc">— today these are four links. Grant ruled on 22 November 2026 that links are not the end state: real social belongs inside Daybook — feeds you can read in place, plus one writing box that posts across the networks.</span><span class="tags"><span class="tag t-link">Link-out only today</span><span class="tag t-state">Direction set — worked-in social is the plan</span></span><span class="note">The accounts are already connected behind the scenes, so no new sign-in is needed. The writing-box pattern uses each network's own posting rules — Instagram, Threads, TikTok, YouTube, and LinkedIn all have real posting connections with daily limits; X (Twitter) is paid and the worst value, so it is held. Open networks like Bluesky and Mastodon can feed in place. Photo memories would be built only from photos the person picks — Google removed whole-library access in March 2025, and Apple Photos has no web connection at all.</span></li>
+<li><span class="name">WhatsApp and Telegram</span> <span class="desc">— a messaging channel in Daybook beside the four above, and a lead-intake channel in the Command Deck. Messages stay references — never a merged inbox inside a client file.</span><span class="tags"><span class="tag t-cand">Candidate — not connected</span></span><span class="note">Adopted by Grant on 22 November 2026 ("all of it"). WhatsApp's business connection is real but gated: charged per delivered message, free-form replies only within 24 hours of the person's last message, approved templates outside that window, and Meta business verification required.</span></li>
+</ul>
+</details>
+</section>
+
+<section id="deck">
+<div class="sec-head"><div class="chipdot" style="background:var(--green)"></div><h2>3 · Command Deck — the team's room</h2></div>
+<p class="sec-note">Every team member's state, work, and conversation. The Deck holds no records of its own — everything arrives by feed. The Engineering and Media portals live inside the Deck (Grant's ruling: they link to the Deck, not to Canopy's centre).</p>
+
+<details open>
+<summary>The Deck floor</summary>
+<ul class="entries">
+<li><span class="name">Station lamps</span> <span class="desc">— each team member's state: working, idle, parked, flagged, or needs Grant.</span><span class="tags"><span class="tag t-live">Live feed (team service)</span><span class="tag t-state">Wired by design</span></span></li>
+<li><span class="name">Team usage, open tasks, and flags panels</span><span class="tags"><span class="tag t-live">Live feed (team service)</span><span class="tag t-state">Wired by design</span></span></li>
+<li><span class="name">Member rooms — five chats and five work panes</span> <span class="desc">— Claude, ChatGPT, Perplexity, Gemini, and Oakley: what each is saying and what each is working on.</span><span class="tags"><span class="tag t-live">Live feed (team service)</span><span class="tag t-state">Wired by design</span></span></li>
+<li><span class="name">Talk — seven endpoints</span> <span class="desc">— the Oakley dock, the five member rooms, and the Engineering and Media rooms, all on one talk service.</span><span class="tags"><span class="tag t-state">Wired by design</span></span><span class="note">Today every send honestly answers "not sent — talk address not set."</span></li>
+<li><span class="name">Doors to the Workbench apps</span> <span class="desc">— from the Deck to BluePrint, the Northbirch app, KÜL, Lions Gate, Brand My Aqua, CMS, purEnzyme, StructureIQ, 8Twelve, and Atra Lend. A door is a reference, never a copy — and every app opened from the Deck offers its door back.</span><span class="tags"><span class="tag t-state">Wired by design</span></span></li>
+<li><span class="name">Facebook Lead Ads — into Sales</span> <span class="desc">— one ad set per business (Cityscape, KÜL, Lions Gate), each with its own door into that business's client files. The ad itself never lives inside the business apps.</span><span class="tags"><span class="tag t-cand">Candidate — not connected</span></span><span class="note">Adopted by Grant on 22 November 2026. The route is real but gated: Meta's review is mandatory and takes days to weeks, and Meta keeps leads for 90 days only — miss the window and the lead is gone.</span></li>
+<li><span class="name">UptimeRobot — service health board</span> <span class="desc">— watches the services and sites the team depends on; free tier covers 50 monitors. Also feeds the Engineering portal's status view.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+</ul>
+</details>
+
+<details>
+<summary>Engineering portal — designing and making things</summary>
+<ul class="entries">
+<li><span class="name">Projects feed and tool-chain states</span> <span class="desc">— the project list, with each step's state: Engineering, then FreeCAD, then Blender, then the in-app 3D preview. FreeCAD and Blender are desktop programs; the chain hands real work to them and brings the result back.</span><span class="tags"><span class="tag t-live">Live feed (team service)</span><span class="tag t-state">Wired by design</span></span></li>
+<li><span class="name">Computer-aided design (CAD) working screen</span> <span class="desc">— an interactive screen built into the portal: turn, pan, and zoom a model; straight-on views from any side. It works today — and honestly draws nothing until a real model is loaded.</span><span class="tags"><span class="tag t-state">Working now (the screen)</span></span></li>
+<li><span class="name">GitHub</span> <span class="desc">— code repositories, issues, pull requests, and build status for the team's own code, with a build-status summary on the Deck floor.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected (as a Deck feed)</span></span><span class="note">The team's GitHub account itself is connected behind the scenes — see section 6.</span></li>
+<li><span class="name">Autodesk Viewer</span> <span class="desc">— view, mark up, and measure real CAD drawings inside the app — the answer for an AutoCAD-built camper. Drawing itself stays on the desktop.</span><span class="tags"><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Matterport</span> <span class="desc">— walkthroughs of real, already-built spaces — the answer for showing a condominium. Needs a scan of the space first.</span><span class="tags"><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Babylon.js, Three.js, and model-viewer</span> <span class="desc">— free, lightweight 3D viewers that run inside the app in Canopy's own style. Model-viewer also does augmented reality that works today: a camper at true full scale in a client's driveway, patio stones on a patio with colours swapped live, on a phone.</span><span class="tags"><span class="tag t-cand">Candidate — not connected</span></span><span class="note">Honest limits: life-size condominium augmented reality is not real yet — dollhouse scale or a headset is. And Blender itself cannot live inside a web page; browser experiments failed to start in the team's live test. The working route is Blender on the desktop, then the model comes into the app.</span></li>
+<li><span class="name">Engineering spine and team chat</span> <span class="desc">— six project folder slots (the team names them at packaging; today they honestly read "name not set"), and the portal's own room on the talk service.</span><span class="tags"><span class="tag t-state">Wired by design</span></span></li>
+</ul>
+</details>
+
+<details>
+<summary>Media portal — videos, pictures, advertising</summary>
+<ul class="entries">
+<li><span class="name">Videos, pictures, and advertising project feeds</span><span class="tags"><span class="tag t-live">Live feed (team service)</span><span class="tag t-state">Wired by design</span></span></li>
+<li><span class="name">Working and editing screen</span> <span class="desc">— a viewer and collection switcher today. Honest limit: no editing connection exists yet — the editors below are the named fix.</span><span class="tags"><span class="tag t-state">Working now as a viewer · editing not yet built</span></span></li>
+<li><span class="name">IMG.LY Creative Editor (CE.SDK)</span> <span class="desc">— the one candidate that covers photo editing, video editing, and design in a single editor that genuinely runs inside the app, in Canopy's own look. Full browser video editor: many tracks, captions, finished-video export, all on the device.</span><span class="tags"><span class="tag t-cand">Candidate — not connected · paid licence, by quote</span></span><span class="note">The honest frame: in-app for everyday media work; a desktop program for finishing. No in-app tool replaces professional desktop editing.</span></li>
+<li><span class="name">Other editors the team checked</span> <span class="desc">— Adobe Express (a real in-app editor, but tied to an Adobe account) · Shotstack (best video-only option; the editor is free, finished videos cost credits) · Pintura (photo editor) · Polotno (templates and advertising creative) · Photopea (the deepest free photo editor, but it runs as a framed page with ads — a fallback only).</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Ruled out as in-app editors</span> <span class="desc">— Canva (its connection sends work out and back; there is no editor that runs inside another app — this corrects any earlier framing of Canva as an in-app editor) · Figma (view only) · Kapwing, VEED, Descript, Clipchamp, Flixier (no true in-app editor).</span><span class="tags"><span class="tag t-link">Link-out / hand-off only</span></span></li>
+<li><span class="name">YouTube channel numbers</span> <span class="desc">— views, subscribers, and watch time: the numbers behind the media, inside the Media portal.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Google Analytics</span> <span class="desc">— audience and traffic for the sites and media the portal publishes, with headline numbers on the Deck floor.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Voice and production tools</span> <span class="desc">— ElevenLabs (voice) is already connected to the team for Oakley's voice · Deepgram (transcription) · one back end for generated pictures and video (fal.ai, with Replicate as backup and Runway at the high end) · Photoroom (background removal, about two cents a picture) · live broadcast and video-room tools (Mux Live, Daily.co).</span><span class="tags"><span class="tag t-cand">Candidates — not connected, except ElevenLabs</span></span><span class="note">Warning from the hunt: the standalone remove.bg connection shuts down 1 December 2026 — do not adopt it. Photoroom is the stable pick.</span></li>
+<li><span class="name">Media spine and team chat</span> <span class="desc">— six slots, same pattern as Engineering, and the portal's own room.</span><span class="tags"><span class="tag t-state">Wired by design</span></span></li>
+</ul>
+</details>
+
+<details>
+<summary>Ideas other teams and creators might want in the Deck</summary>
+<ul class="entries">
+<li><span class="name">Figma</span> <span class="desc">— design files, for design teams and solo creators.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Asana</span> <span class="desc">— projects, tasks, owners, and due dates, for freelancers and community organisers.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Airtable</span> <span class="desc">— a shared database for jobs, clients, and stock, for owners who outgrew a spreadsheet.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Descript</span> <span class="desc">— edit podcasts and video by editing the words. Passes as a back end only.</span><span class="tags"><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Toggl Track</span> <span class="desc">— billable hours, for freelancers. (Crew time for landscape crews is different — that lives in the business tools.)</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Patreon</span> <span class="desc">— paying members, for creators.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Freshdesk</span> <span class="desc">— a support inbox: customer tickets in one queue, for a small-business owner.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Eventbrite</span> <span class="desc">— ticketed events, for a community organiser. (One-to-one booking is Calendly's job — a different thing.)</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">CanadaHelps</span> <span class="desc">— donations and fundraising pages for any registered Canadian charity. CanadaHelps states it offers no connection for outside software at all.</span><span class="tags"><span class="tag t-link">Link-out only</span></span></li>
+<li><span class="name">Made by Canopy itself, no outside company</span> <span class="desc">— a ship-it wind-down ("today you closed two loops — here is tomorrow's top three, now go home") · a win bell that rings when a deal closes · an on-air light for recording · a voice idea inbox · a shout-out wall · a focus room with a 25-minute timer.</span><span class="tags"><span class="tag t-cand">Ideas — not built</span></span></li>
+</ul>
+</details>
+</section>
+
+<section id="workbench">
+<div class="sec-head"><div class="chipdot" style="background:var(--blue)"></div><h2>4 · Workbench — our own apps</h2></div>
+<p class="sec-note">The sandbox where a main app plugs in — Trellis, KÜL, and the rest — and everything that app carries then works across Canopy. Nothing floats loose at this level: a service worked into a specific app sits under that app. Own-account services (a customer-relationship system, an accounts program) appear under every app that uses them, as that app's own copy. Only truly shared sources are drawn once.</p>
+
+<details open>
+<summary>Grant's apps — Northbirch and Cityscape</summary>
+<ul class="entries">
+<li><span class="name">Trellis</span> <span class="desc">— the green-trades umbrella: the products Northbirch sells. Its door goes nowhere until it is built.</span><span class="tags"><span class="tag t-state">Direction set — not yet built</span></span></li>
+<li><span class="name">SiteVision</span> <span class="desc">— a brand-new product, built from the ground up, sitting by itself under Northbirch.</span><span class="tags"><span class="tag t-state">Direction set — not yet built</span></span></li>
+<li><span class="name">The Northbirch app</span> <span class="desc">— the team-projects home. A placeholder today.</span><span class="tags"><span class="tag t-state">Direction set — not yet built</span></span></li>
+<li><span class="name">BluePrint</span> <span class="desc">— Grant's own Cityscape app (office sales work). No address for it exists anywhere in the record — only Grant can say where it lives. Its door can only ever be a labelled exit to his outside app, so keeping or removing it is also his call.</span><span class="tags"><span class="tag t-wait">Waiting on Grant</span></span></li>
+<li><span class="name">Talk button</span> <span class="desc">— Oakley on Grant's bench. Opens an honest shell today; joins the talk service at packaging.</span><span class="tags"><span class="tag t-state">Wired by design</span></span></li>
+<li><span class="name">Add Yours slots</span> <span class="desc">— add your own app, enter its address, the door opens it. Saved on the device.</span><span class="tags"><span class="tag t-state">Working now</span></span></li>
+</ul>
+</details>
+
+<details>
+<summary>Trellis — the seven trades</summary>
+<ul class="entries">
+<li><span class="name">Mainline</span> <span class="desc">— irrigation. Its sections: Service, Install, Office, Routes, Crews, Equipment, Hardware.</span><span class="tags"><span class="tag t-state">Direction set — not yet built</span></span></li>
+<li><span class="name">Lumen</span> <span class="desc">— lighting.</span><span class="tags"><span class="tag t-state">Direction set — not yet built</span></span></li>
+<li><span class="name">Flurry</span> <span class="desc">— snow. Its sections: Dispatch, Residential, Commercial — and Snow SITREP, its storm-operations mode (see Flurry's own kit below).</span><span class="tags"><span class="tag t-state">Direction set — not yet built</span></span></li>
+<li><span class="name">Course</span> <span class="desc">— hardscaping and masonry.</span><span class="tags"><span class="tag t-state">Direction set — not yet built</span></span></li>
+<li><span class="name">Bole</span> <span class="desc">— arborist work (tree care).</span><span class="tags"><span class="tag t-state">Direction set — not yet built</span></span></li>
+<li><span class="name">Tend</span> <span class="desc">— grass cutting and maintenance.</span><span class="tags"><span class="tag t-state">Direction set — not yet built</span></span></li>
+<li><span class="name">Glimmer</span> <span class="desc">— holiday and event decorating. Its checklist and estimator exist as a standalone tool; the app itself is not built.</span><span class="tags"><span class="tag t-state">Direction set — not yet built</span></span></li>
+</ul>
+<p class="sec-note">Departments link to each other, not just to Canopy: BluePrint's plans flow to Course, Mainline, and Lumen; Flurry and Tend share routing and crews; the Deck sends Course a lead and a site, and proposals come back; SITREP sends freeze alerts into Mainline.</p>
+</details>
+
+<details>
+<summary>Tools that sit under Trellis</summary>
+<ul class="entries">
+<li><span class="name">Jobber</span> <span class="desc">— landscaping operations: quotes, jobs, scheduling, invoicing, clients. The only candidate two research lanes both put at number one.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected · paid, from 29 dollars a month, 14-day trial</span></span></li>
+<li><span class="name">QuickBooks</span> <span class="desc">— the books and payroll, under Trellis. Its paycheque flows through to Daybook's finances — the link back is drawn as a visible tether in the diagram. (BluePrint and the Deck carry their own copies — see below.)</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">HubSpot — customer relationships</span> <span class="desc">— one sales pipeline. Canopy has no customer-relationship system today; this is the candidate. A business's own account appears under every app that business uses — Trellis carries Cityscape's own copy; KÜL and Lions Gate carry Johnny's (section 5).</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Stripe, and the other payment routes</span> <span class="desc">— Stripe first, then Square, Moneris, PayPal.</span><span class="tags"><span class="tag t-cand">Candidates — not connected · transaction-fee pricing</span></span></li>
+<li><span class="name">Aspire</span> <span class="desc">— estimating and operations depth for Cityscape, with a real connection.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">LMN</span> <span class="desc">— landscaping business software with no public connection at all.</span><span class="tags"><span class="tag t-link">Link-out only (or through an automation service)</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">More operations depth</span> <span class="desc">— Housecall Pro · Go iLawn and ExaYard (measuring and take-offs) · Routific (route planning, Canadian) · SnowPlowTracker.ca · plant data with real routes (Perenual, Trefle) · accounting alternatives (Xero, FreshBooks, Wave) · signing (PandaDoc — quotes and signing together; DocuSign; Dropbox Sign; Adobe Sign) · Homebase (crew scheduling and payroll, free basic tier).</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+</ul>
+</details>
+
+<details>
+<summary>Each trade's own tools</summary>
+<ul class="entries">
+<li><span class="name">Mainline (irrigation)</span> <span class="desc">— Hunter Hydrawise (a real connection) and Rain Bird IQ4, for watering controllers.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Lumen (lighting)</span> <span class="desc">— FX Luminaire and Kichler catalogues.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Course (hardscaping)</span> <span class="desc">— Unilock, Techo-Bloc, and Permacon design tools. Permacon Studio is a free picture-maker that shows a finished design.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Bole (trees)</span> <span class="desc">— ArborNote and TreePlotter, both with real connections.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Tend (maintenance)</span> <span class="desc">— Service Autopilot against RealGreen.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Glimmer (decorating)</span> <span class="desc">— LumiOps, Strandr, LightHawk, and Dekra-Lite Canada wholesale.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+</ul>
+</details>
+
+<details>
+<summary>Flurry's kit — weather, tracking, sensors</summary>
+<p class="sec-note">Flurry is the snow product: Dispatch for the office and home, Operations for out plowing, Northbirch-only for now. Its storm mode is <strong>Snow SITREP</strong> — Grant's name for it, carrying the snow-fighter identity: "kind of like a firefighter but snow fighters. We fight Mother Nature." Flurry is fully ruled and entirely unbuilt — and it is the most time-sensitive item on this page, because it is a this-winter test program.</p>
+<ul class="entries">
+<li><span class="name">Weather data</span> <span class="desc">— Environment Canada's map and data services (city forecasts, measured precipitation analysis, radar, emergency alerts) · OpenWeather (snow amounts) · Tomorrow.io (snow build-up and depth) · Visual Crossing (history) · home weather stations (Weather Underground personal stations, Tempest, Davis) · Ontario 511 road conditions and cameras.</span><span class="tags"><span class="tag t-live">Live feeds</span><span class="tag t-state">Already carried in the plan</span></span></li>
+<li><span class="name">Tracking and location (GPS)</span> <span class="desc">— Geotab telematics built for winter work (including how much salt each spreader used), plus Flurry's own truck readers, plus Ontario 511 for the highways.</span><span class="tags"><span class="tag t-live">Live feeds</span><span class="tag t-state">Already carried in the plan</span></span></li>
+<li><span class="name">Sensors</span> <span class="desc">— Tempest and Davis weather stations, PurpleAir air sensors, Ontario 511 road conditions. Two known gaps: Ontario's road-weather stations are not public, and snow-depth sensors are not standard on home weather stations.</span><span class="tags"><span class="tag t-state">Already carried, with the gaps named</span></span></li>
+<li><span class="name">CoCoRaHS — measured snow on the ground</span> <span class="desc">— a volunteer network reporting daily rain, snowfall, and snow depth, including in Canada. The only free, verified source of measured snow depth — ground truth to check plowing and billing against, instead of a forecast.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — verified, not connected</span></span></li>
+<li><span class="name">Vaisala Xweather — road weather</span> <span class="desc">— forecast road-surface conditions: dry or wet, water, snow and ice thickness, and the risk of skimming on water. Fills the road-sensor gap without needing the province's locked network.</span><span class="tags"><span class="tag t-live">Live feed, free tier</span><span class="tag t-cand">Candidate — verified, not connected</span></span></li>
+<li><span class="name">Samsara — a second tracking route</span> <span class="desc">— vehicle location and engine data for every vehicle, plus driver inspection reports. An alternative and a companion to Geotab; commercial hardware and subscription.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — verified, not connected</span></span></li>
+</ul>
+</details>
+
+<details>
+<summary>BluePrint's tools — Cityscape's own kit</summary>
+<ul class="entries">
+<li><span class="name">QuickBooks — BluePrint's own copy</span> <span class="desc">— BluePrint's finances. QuickBooks also sits under Trellis and on the Deck floor; each is that place's own account, drawn separately on purpose.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">HindSite and FieldCentral — one company, not two tools</span> <span class="desc">— FieldCentral is HindSite Software's product ("FieldCentral, powered by HindSite Software"): scheduling and routing, a field app for time, materials, and photos, assessments, billing, and customer messages — built for irrigation and lawn-care companies, including spring start-ups and fall blowouts. Verified 22 November 2026.</span><span class="tags"><span class="tag t-none">No public connection, and no automation-service app either</span></span><span class="note">The only data route is its built-in two-way sync with QuickBooks — so the chain is BluePrint to QuickBooks to FieldCentral. Anything BluePrint shows from FieldCentral jobs, customers, or invoices comes through QuickBooks, unless the team asks HindSite Software for a partner route. HindSite also has a partner connection with Azuga for fleet tracking.</span></li>
+<li><span class="name">Workforce — which one?</span> <span class="desc">— the name alone does not settle it. Three different products share it: Workforce.com (scheduling, time, and pay for hourly teams — the closest match for a crew business, with a public connection) · the ADP WorkForce Suite (big-company workforce management) · WorkForceFSM (a field-service scheduling assistant; its connection was not verified).</span><span class="tags"><span class="tag t-wait">Waiting on Grant — which Workforce did he mean?</span></span></li>
+<li><span class="name">BluePrint's working services</span> <span class="desc">— Aspire and LMN (above), Google Maps, and the Cityscape workflow.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+</ul>
+</details>
+
+<details>
+<summary>The dog park business</summary>
+<ul class="entries">
+<li><span class="name">Gingr</span> <span class="desc">— the operating core candidate for Grant's indoor dog park idea: reservations, daycare and boarding, report cards, vaccination records, packages, billing. Public connection; from 99 dollars a month. Alternatives checked: PetExec, DaySmart Pet, MoeGo.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+</ul>
+</details>
+</section>
+
+<section id="johnny">
+<div class="sec-head"><div class="chipdot" style="background:var(--blue)"></div><h2>5 · Johnny's apps</h2></div>
+<p class="sec-note">Johnny Kulwartian's businesses, in their own box on his bench — with Tucker as his assistant. KÜL and Lions Gate show their insides: Today, Listings or Fleet, Clients, Calendar, Email, Social, Toolkit, Assistant. On the phone there is no top-bar menu — the phone goes straight to the wheel, for everything, all apps, Canopy included.</p>
+
+<details open>
+<summary>His shelf</summary>
+<ul class="entries">
+<li><span class="name">KÜL Real Estate</span> <span class="desc">— Johnny's real-estate app. The one Workbench card with a live address: it opens the shipped app.</span><span class="tags"><span class="tag t-state">Working now</span></span></li>
+<li><span class="name">Lions Gate Yachts</span> <span class="desc">— Johnny's yacht brokerage app. Its door address is filled in at packaging from the preview shelf.</span><span class="tags"><span class="tag t-state">Wired by design</span></span></li>
+<li><span class="name">CMS Construction · StructureIQ · 8Twelve Mortgages</span> <span class="desc">— also in Johnny's box (Grant's ruling, 22 November 2026), with the same insides-showing treatment. One pre-ship note: Johnny's email needs a live check before 8Twelve ships.</span><span class="tags"><span class="tag t-state">Wired by design</span></span></li>
+<li><span class="name">Brand My Aqua · purEnzyme · Atra Lend</span> <span class="desc">— preview doors on the shelf, filled the same way.</span><span class="tags"><span class="tag t-state">Wired by design</span></span><span class="note">Honest flag from the team's connection map: for these thinner apps, the record names no app-specific outside services — family pattern only (a door out and a door back, Google Maps, and the Social, Email, Calendar, and Assistant pattern every business app carries).</span></li>
+<li><span class="name">Talk button</span> <span class="desc">— Tucker on Johnny's bench.</span><span class="tags"><span class="tag t-state">Wired by design</span></span></li>
+</ul>
+</details>
+
+<details>
+<summary>What flows into his apps automatically</summary>
+<ul class="entries">
+<li><span class="name">Listings from the businesses' own websites</span> <span class="desc">— Grant's ruling: listings feeding in automatically from the business's own website — photos and all — is in Canopy's DNA, for all the apps. KÜL's own site carries its active listings with photos and a page per listing.</span><span class="tags"><span class="tag t-state">Direction set — not yet built</span></span><span class="note">Honest gap: Lions Gate's yacht-sales page carries no named for-sale boats or listing photos, so an automatic feed cannot carry what the site does not publish. That gap stands until the site does.</span></li>
+<li><span class="name">Google Maps and shared weather, worked in</span> <span class="desc">— Maps on addresses, listings, and marinas; weather on Canopy's shared pattern (labelled, with its source and date) — so when Johnny plugs his apps into Canopy, everything links up and data flows between them.</span><span class="tags"><span class="tag t-state">Direction set — not yet built</span></span></li>
+<li><span class="name">Client and phone sync</span> <span class="desc">— if a client saved in one of the apps calls or texts and is not saved in the phone, the app offers to add that client to the phone's contacts.</span><span class="tags"><span class="tag t-state">Direction set — not yet built</span></span></li>
+<li><span class="name">HubSpot — Johnny's own copy</span> <span class="desc">— his customer relationships, under his apps — separate from Cityscape's copy under Trellis.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+</ul>
+</details>
+
+<details>
+<summary>KÜL's deal flow</summary>
+<ul class="entries">
+<li><span class="name">CREA listings feed (the REALTOR.ca data distribution feed)</span> <span class="desc">— live Canadian listings for KÜL. Permission-based: members and brokers only, so it needs Johnny's own access. A different source from KÜL's own website feed above.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">ShowingTime and BrokerBay</span> <span class="desc">— booking and managing showings.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">SentriLock and Supra eKEY</span> <span class="desc">— lockboxes and showing access.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">SkySlope and Dotloop</span> <span class="desc">— deal paperwork. SkySlope has a real connection; it also links back to Daybook's finances.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">8Twelve, deepened — plus Ratehub and nesto</span> <span class="desc">— mortgage routes beside Johnny's own 8Twelve.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Spectora</span> <span class="desc">— home inspections.</span><span class="tags"><span class="tag t-cand">Candidate — not connected</span></span><span class="note">Warning from the hunt: Carson Dunlop's Horizon inspection system retires 15 December 2026 — do not build on it.</span></li>
+<li><span class="name">BoxBrownie</span> <span class="desc">— virtual staging, about 30 dollars a photo. Works with the Media portal.</span><span class="tags"><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Follow Up Boss</span> <span class="desc">— the realtor's customer-relationship system.</span><span class="tags"><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Calendly</span> <span class="desc">— clients book showings, sea trials, and estimates straight into the calendar.</span><span class="tags"><span class="tag t-cand">Candidate — not connected</span></span></li>
+</ul>
+</details>
+
+<details>
+<summary>Lions Gate's marine depth</summary>
+<ul class="entries">
+<li><span class="name">MarineTraffic — vessel tracking</span> <span class="desc">— live boat positions, worked into Lions Gate. Sits under Lions Gate, never loose at Workbench level.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Canadian Hydrographic Service tides and water levels</span> <span class="desc">— free.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Marine weather — Windy and Open-Meteo</span> <span class="desc">— sea state beside the vessel positions.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Ocean buoys — the national weather service (NOAA)</span> <span class="desc">— wave height, the marine companion to the world feeds.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Ship-tracking data (the automatic identification system ships broadcast) — the honest picture</span> <span class="desc">— AISHub is the one genuinely free route, and it is earned by running a receiver that feeds their network — for example, at the marina. Otherwise vessel data is paid (MarineTraffic, VesselFinder).</span><span class="tags"><span class="tag t-wait">Waiting on Grant — the receiver idea is his call</span></span></li>
+<li><span class="name">Dockwa and MarinaOffice</span> <span class="desc">— marina bookings and management.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Vessel Vanguard</span> <span class="desc">— boat maintenance tracking.</span><span class="tags"><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Boat-supply shops (chandleries)</span> <span class="desc">— Binnacle Canada, West Marine, Western Marine wholesale.</span><span class="tags"><span class="tag t-link">Link-out only</span></span></li>
+<li><span class="name">YachtWorld and Boat Trader</span> <span class="desc">— link-out first; their listing data is partner-gated, with no verified open connection.</span><span class="tags"><span class="tag t-link">Link-out only</span><span class="tag t-cand">Candidates — not connected</span></span></li>
+</ul>
+<p class="sec-note">The charter line is held: Lions Gate is a sales brokerage. LogYacht is excluded — its own description includes charter — and charter marketplaces are deliberately not listed anywhere on this page.</p>
+</details>
+</section>
+
+<section id="behind">
+<div class="sec-head"><div class="chipdot" style="background:var(--faint)"></div><h2>6 · Behind the scenes — the team's own accounts</h2></div>
+<p class="sec-note">The connections the team itself runs on. These are connected at the hub; the in-app surfaces join at packaging.</p>
+<ul class="entries">
+<li><span class="name">Todoist</span> <span class="desc">— the team's system of record for tasks. Oakley's tasks, the team's boards, and the Deck's open-tasks picture all trace back to it.</span><span class="tags"><span class="tag t-live">Connected</span><span class="tag t-state">Working now</span></span></li>
+<li><span class="name">Gmail</span> <span class="desc">— email across Grant's accounts. Reading, drafting, and sending run through the connection; sends to people wait for Grant's approval where the rules require it.</span><span class="tags"><span class="tag t-live">Connected</span><span class="tag t-state">Working now</span></span></li>
+<li><span class="name">Google Calendar</span> <span class="desc">— the calendar behind Daybook's combined view and Home's calendar box.</span><span class="tags"><span class="tag t-live">Connected</span><span class="tag t-state">Working now</span></span></li>
+<li><span class="name">Google Drive</span> <span class="desc">— the archive home and the team's document store: the finance workbook (the money record of truth), the team documents of record, and the personal archive's one safe copy.</span><span class="tags"><span class="tag t-live">Connected</span><span class="tag t-state">Working now</span></span></li>
+<li><span class="name">Google Contacts</span> <span class="desc">— the people record behind the apps' client and contact work.</span><span class="tags"><span class="tag t-live">Connected</span><span class="tag t-state">Working now</span></span></li>
+<li><span class="name">Google Sheets</span> <span class="desc">— the team state board and the team's spreadsheets. Sheets is also a data source for the business apps — a source, never a page pasted inside a client file.</span><span class="tags"><span class="tag t-live">Connected</span><span class="tag t-state">Working now</span></span></li>
+<li><span class="name">Google Docs</span> <span class="desc">— the main team record and the Johnny package list. Google documents are the team's memory and never go stale.</span><span class="tags"><span class="tag t-live">Connected</span><span class="tag t-state">Working now</span></span></li>
+<li><span class="name">GitHub</span> <span class="desc">— where Canopy's and the apps' preview builds live. Every preview link Grant and Johnny open is served from there.</span><span class="tags"><span class="tag t-live">Connected</span><span class="tag t-state">Working now</span></span></li>
+<li><span class="name">Vercel — the relay host</span> <span class="desc">— hosts the hub proxy: the small relay that fetches the camera, weather, news, markets, TV, and world feeds on the server side, keeps the City's camera certificate and the video key secret, and serves every user from one shared fetch. Free tier; if it ever pauses, the app honestly shows OFFLINE.</span><span class="tags"><span class="tag t-state">Wired by design</span></span><span class="note">The relay itself was built and live-tested on 18 November 2026 — all six hard-to-reach feeds returned live data through it. What is pending is only putting it on Vercel.</span></li>
+<li><span class="name">ElevenLabs</span> <span class="desc">— already connected to the team: it is Oakley's voice. Its in-app form (voice conversation) is in the hunt section.</span><span class="tags"><span class="tag t-live">Connected</span><span class="tag t-state">Working now</span></span></li>
+</ul>
+</section>
+
+<section id="picklists">
+<div class="sec-head"><div class="chipdot" style="background:var(--gold)"></div><h2>7 · Setup pick-lists — every category, every option found</h2></div>
+<p class="sec-note">Canopy is for anybody, so setup never assumes one brand. At each category the app asks what the person uses, they pick theirs, and the team sets it up. These are the full pick-lists setup draws from. Setup itself is a conversation, not a form: one plain question per screen, pictures before words, "I'm not sure" is always a proper answer, passwords and codes stay the person's own, easy wins come first (music and TV before money and security), and every connection is proven on screen before the step closes. Twelve steps, about 30 to 40 minutes in total, across as many sittings as it takes.</p>
+
+<details open>
+<summary>Home security — cameras, doorbells, alarms</summary>
+<p class="sec-note">One bridge: Canopy talks to a Home Assistant hub in the home, and the hub talks to the devices. Where the hub has no route, the honest fallback is a link out. Plain warning: the Matter standard does not cover cameras or doorbells yet — nobody should promise it will bring cameras in.</p>
+<ul class="entries">
+<li><span class="name">Ring</span> <span class="desc">— events, snapshots, and alarm arm and disarm. No guaranteed continuous live wall.</span><span class="tags"><span class="tag t-part">Partly</span></span></li>
+<li><span class="name">Nest (Google)</span> <span class="desc">— a real public connection, but event-based, not continuous video.</span><span class="tags"><span class="tag t-part">Partly</span></span></li>
+<li><span class="name">Arlo · Blink · Eufy</span><span class="tags"><span class="tag t-part">Partly</span></span></li>
+<li><span class="name">Wyze</span> <span class="desc">— fragile; its direct-video firmware was discontinued. Never promise live video from it.</span><span class="tags"><span class="tag t-part">Partly</span></span></li>
+<li><span class="name">Reolink · UniFi Protect · wired cameras (ONVIF and RTSP standards)</span> <span class="desc">— the local-first cameras the bridge reaches best.</span><span class="tags"><span class="tag t-live">Live (through the bridge)</span></span></li>
+<li><span class="name">Also on the full list</span> <span class="desc">— alarm systems, door and window sensors, motion sensors, water and leak sensors, smoke and carbon-monoxide sensors, glass-break sensors, locks, doorbells, and garage doors — each rated the same honest way, and each written the way a non-technical person recognises their own system.</span><span class="tags"><span class="tag t-state">Full table in the team's security catalogue</span></span></li>
+</ul>
+<div class="warn">Safety line, in every case: Canopy is not a monitored alarm and never replaces professional monitoring or emergency dispatch. It shows state and history; arming, alerts, and dispatch stay with the monitoring company.</div>
+</details>
+
+<details>
+<summary>Monitoring — health, vehicle, energy, family, pets</summary>
+<ul class="entries">
+<li><span class="name">Health and wearables</span> <span class="desc">— Oura: live · WHOOP: live, with partner approval · Fitbit: its old connection is dead; the Google Health replacement is partly there · Garmin: partly · Apple Health and Samsung Health: nothing on the web. Health-data middlemen (the Terra and Thryve kind) are the practical route for the rest. Full detail in section 2's health layer.</span><span class="tags"><span class="tag t-state">Rated brand by brand in the team's monitoring catalogue</span></span></li>
+<li><span class="name">Vehicle</span> <span class="desc">— car-maker apps, plug-in diagnostic readers, and fleet tracking systems, each rated honestly.</span><span class="tags"><span class="tag t-state">Full table in the catalogue</span></span></li>
+<li><span class="name">Home energy and water</span> <span class="desc">— utility company pages, Sense and Emporia energy monitors, Flo and Phyn water monitors.</span><span class="tags"><span class="tag t-state">Full table in the catalogue</span></span></li>
+<li><span class="name">Kids and family location · pet trackers · baby and senior monitoring</span> <span class="desc">— every brand rated on the same scale, each ending in its setup pick.</span><span class="tags"><span class="tag t-state">Full table in the catalogue</span></span></li>
+</ul>
+</details>
+
+<details>
+<summary>Banking and money</summary>
+<p class="sec-note">The honest shape: no bank offers a public connection to a personal hub. Every live route runs through a middleman (an "aggregator") or a statement file. Canadian open banking is not live yet — the Bank of Canada oversees it and draft rules are expected in June 2026 — so Canopy builds on middlemen now and designs for the framework later. Nobody should ever be told open banking is live.</p>
+<ul class="entries">
+<li><span class="name">Plaid</span> <span class="desc">— the middleman. It holds direct data-access agreements with RBC (2022) and TD (2023): for those banks, no login details are shared at all — the bank authorises the connection itself. No published prices: the trial is free, then pay-as-you-go or a quote. Plaid's 2022 settlement (58 million United States dollars, no admission of wrongdoing) is disclosed, not hidden — Canopy links to it.</span><span class="tags"><span class="tag t-live">Live feed (through the middleman)</span><span class="tag t-cand">Candidate — TD route researched, waiting on Grant</span></span></li>
+<li><span class="name">Flinks</span> <span class="desc">— the Canadian middleman. Its own published price list: 500 dollars a month for the starter tier (200 connections), 1,250 dollars a month for the next. That price is why the team's November research ruled it out for Grant, whatever its other merits.</span><span class="tags"><span class="tag t-live">Live feed (through the middleman)</span><span class="tag t-cand">Candidate — not connected, real price attached</span></span></li>
+<li><span class="name">Statement import</span> <span class="desc">— for any bank the middlemen do not cover: the person brings a statement file. There is no scraping fallback, ever.</span><span class="tags"><span class="tag t-part">Partly — file-based</span></span></li>
+<li><span class="name">Canadian money depth the hunt also found</span> <span class="desc">— Inverite · Borrowell (free credit score) · Equifax and TransUnion Canada · Plooto, Rotessa, Payment Evolution (payments) · Interac · tax pages (link-out).</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+</ul>
+<div class="warn">The safety shape belongs on the setup screen itself: read-only always — a Canopy bank connection can see balances and transactions; it cannot move money. Sign-in happens in the person's own hands, in the middleman's window or the bank's own page; Canopy never stores the password. Only balances and transactions — nothing more. And it can be cut off any time, with Canopy's own one-tap disconnect.</div>
+</details>
+
+<details>
+<summary>Music and podcasts</summary>
+<ul class="entries">
+<li><span class="name">Spotify</span> <span class="desc">— the music player lives in the top bar on big screens and in the wheel on the phone (Grant's layout law). Playback needs the person's own account, and full playback needs Premium — stated honestly on screen.</span><span class="tags"><span class="tag t-live">Live feed / plays inside Canopy</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Apple Music</span> <span class="desc">— the second player, behind the same one player bar.</span><span class="tags"><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">YouTube · Pocket Casts · SoundCloud</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Audible</span><span class="tags"><span class="tag t-link">Link-out only</span></span></li>
+<li><span class="name">Sonos and Music Assistant</span> <span class="desc">— music zones around the home. A showing in KÜL or a boat in Lions Gate can reference the music — the controls themselves never live inside a listing.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Internet radio — Radio Browser</span> <span class="desc">— a free station directory. Honest catch: it is a one-person volunteer project with no uptime promise, so station lists are cached and it is never the only sound source.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+</ul>
+</details>
+
+<details>
+<summary>TV and streaming</summary>
+<ul class="entries">
+<li><span class="name">Netflix, Prime Video, Disney+, Crave, Apple TV+, Paramount+</span> <span class="desc">— none of them offers a public connection. Never promise live sync. What Canopy honestly offers: deep links, plus its own shared watchlist.</span><span class="tags"><span class="tag t-link">Link-out only</span></span></li>
+<li><span class="name">The watchlist itself</span> <span class="desc">— "what to watch, and where": the movie database (TMDB, free) plus Trakt for syncing, with deep links out to watch.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Free streaming</span> <span class="desc">— Tubi and Pluto TV and the Roku Channel lead the free-with-ads world; Plex is for households with their own film and TV library on a home computer (it has a real local connection).</span><span class="tags"><span class="tag t-link">Link-out only</span><span class="tag t-part">Plex: partly — local connection</span></span></li>
+<li><span class="name">Casting — Google Cast, and TVs as screens</span> <span class="desc">— any Canopy view can be sent to a TV. It is a way of showing, not a place: no "TV" door exists. Honest catch: casting sends media, not the whole app — a true Canopy TV screen is a separate build.</span><span class="tags"><span class="tag t-cand">Candidate — not connected · free</span></span></li>
+<li><span class="name">TV control — LG and Samsung sets</span> <span class="desc">— control on the home network where the model supports it; otherwise a link to the TV's own remote app.</span><span class="tags"><span class="tag t-part">Partly</span></span></li>
+</ul>
+</details>
+
+<details>
+<summary>Rewards — the honest shelf</summary>
+<p class="sec-note">The headline, verified: <strong>no major Canadian loyalty programme offers a public connection that returns a live points balance. None.</strong> Not PC Optimum, not Triangle, not Scene+, not Aeroplan. Anybody promising a live balance is scraping or guessing. (Triangle's only "connection" anyone found is private and reverse-engineered — the team will not build on it.)</p>
+<ul class="entries">
+<li><span class="name">What can honestly be built — the Canopy Rewards Shelf</span> <span class="desc">— one shelf holding: a deep link per programme · the person's own phone-wallet pass where one exists (PC Optimum, Scene+, and Aeroplan have real wallet passes — a card and barcode, not a balance feed) · current offers by link-out · and a balance the person types in themselves, labelled "entered by you, not live."</span><span class="tags"><span class="tag t-state">Design — buildable today, honestly</span></span></li>
+<li><span class="name">The pick-list, ranked by everyday breadth</span> <span class="desc">— PC Optimum · Triangle · Tim's Rewards · Scene+ · Aeroplan · Starbucks · AIR MILES (it is changing to "Blue Rewards" — verify before building) · Rakuten · Journie · and 1Password, a daily driver with a real connection for family and business password vaults.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span><span class="note">Live balances would need commercial partner deals with the programmes themselves.</span></li>
+</ul>
+</details>
+
+<details>
+<summary>Smart home, beyond security</summary>
+<ul class="entries">
+<li><span class="name">Google Home, Apple HomeKit, Hue lights, Ecobee thermostats</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">SmartThings — excluded</span> <span class="desc">— its free connection is ending: a fee from October 2026, and the connection itself ends in December 2026. Do not build on it.</span><span class="tags"><span class="tag t-none">Nothing — ruled out</span></span></li>
+<li><span class="name">Tuya and Smart Life devices, and Shelly</span> <span class="desc">— adopted by Grant. The developer reality: Tuya's free trial forbids commercial use; the commercial tier is a one-year contract, charged per million calls. Local-first standards (Matter, Zigbee) are the alternative — a question parked for Grant.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Mainstream devices with real connections</span> <span class="desc">— Kasa and Tapo plugs and lights · robot vacuums and mowers (Roborock, iRobot, Automower) — the mowers also link to Trellis's Tend, as a reference, never with the controls inside a client file.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Matter</span> <span class="desc">— one standard that unlocks both the Apple and Google accessory worlds. Cameras and doorbells are not covered yet (see security, above).</span><span class="tags"><span class="tag t-part">Standard — partly here</span></span></li>
+</ul>
+</details>
+
+<details>
+<summary>Work and business pick-list</summary>
+<ul class="entries">
+<li><span class="name">For the next hundred owners</span> <span class="desc">— Google Business Profile (the front door: listing and reviews; approval-gated) · Shopify (store and orders) · Square Appointments and Square Online · FreshBooks (one-person invoicing) · Mailchimp (email marketing) · Pipedrive (a customer system for one) · PandaDoc (quote to signature to payment) · Yelp (review excerpts only) · Acuity (booking) · HomeStars (Canadian trades leads, about 200 Canadian dollars a month, shared leads — eyes open) · Stan Store and Gumroad (link-out class).</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Storage beyond Drive</span> <span class="desc">— Dropbox first, then OneDrive, Box, pCloud. iCloud is a link out only.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Talking and meeting</span> <span class="desc">— Slack and Discord (teams), WhatsApp Business (clients), Telegram, Zoom, Teams.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Automation glue</span> <span class="desc">— Zapier and Make: the layer that lets the connectors talk to each other.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Fleet, beyond the truck</span> <span class="desc">— Geotab, Samsara, Fleetio, the Tesla connection, OnStar, and plug-in diagnostic readers.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Maps beyond Google</span> <span class="desc">— Mapbox first (clearly better for custom maps), OpenStreetMap with Leaflet as the free fallback, then Apple Maps, HERE, TomTom.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Picture and video generation</span> <span class="desc">— Leonardo, OpenAI Images, Runway, Luma, Pika, Canva. Midjourney has no public connection at all.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span><span class="tag t-link">Midjourney: link-out only</span></span></li>
+</ul>
+</details>
+</section>
+
+<section id="ideas">
+<div class="sec-head"><div class="chipdot" style="background:var(--red)"></div><h2>8 · Ideas for other people</h2></div>
+<p class="sec-note">Grant asked: what should we add that some other user might want? All four research lanes answered. Nothing here is connected or built — these are the team's additions, folded into one list.</p>
+
+<details open>
+<summary>Things Canopy can simply do itself</summary>
+<ul class="entries">
+<li><span class="name">From a person's own day</span> <span class="desc">— a morning briefing (calendar plus weather) · what's for dinner, from what is already in the kitchen · gentle medication reminders, with a missed-dose nudge to a family member the person chooses (never a medical claim) · plant care that remembers · shared chores with fair rotation · birthdays and anniversaries, with a gift nudge a week early · a packing list that knows the trip and the destination's weather · a one-line-a-day private journal that resurfaces "on this day" a year later · what to wear today, in one line · bin day the night before.</span><span class="tags"><span class="tag t-cand">Ideas — not built · no outside company needed</span></span></li>
+</ul>
+</details>
+
+<details>
+<summary>City services and life admin</summary>
+<ul class="entries">
+<li><span class="name">Ottawa Public Library and Libby (OverDrive)</span> <span class="desc">— ebooks, audiobooks, holds, and due dates.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Canada Post parcel tracking</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Ottawa waste day by address</span> <span class="desc">— which bin, which day, from the City's open data. (Also a Canopy-native version: garbage, recycling, and green-bin day from the City of Ottawa collection calendar, with a typed-in fallback.)</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Flipp flyers</span> <span class="desc">— weekly grocery flyers, through Flipp's own connection; otherwise a link out.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Honest doors (no live feed exists)</span> <span class="desc">— school-bus delays and closures (the Ottawa Student Transportation Authority) · the child-care waitlist · Health811 and emergency-room wait times · 211 Ontario (food banks, housing help, seniors' services) · Para Transpo booking · government benefits (the Canada Revenue Agency and Service Canada) · pharmacy refills (Shoppers Drug Mart, Rexall) · student loans (the provincial student aid and national loan services).</span><span class="tags"><span class="tag t-link">Link-out only</span></span><span class="note">These are login-gated pages with no public feed for personal details. A door is the honest offer.</span></li>
+</ul>
+</details>
+
+<details>
+<summary>Mainstream household</summary>
+<ul class="entries">
+<li><span class="name">Flipp</span> <span class="desc">— plan the week around the flyer (also in city services above).</span><span class="tags"><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Flashfood</span> <span class="desc">— near-expiry groceries at a discount; a Canadian app.</span><span class="tags"><span class="tag t-link">Link-out only</span></span></li>
+<li><span class="name">Shop</span> <span class="desc">— parcels from many stores in one place.</span><span class="tags"><span class="tag t-link">Link-out only</span></span></li>
+<li><span class="name">Bobby</span> <span class="desc">— tracking subscriptions by hand, on purpose: no bank access, no live sync. Honest by design.</span><span class="tags"><span class="tag t-link">Link-out only</span></span></li>
+<li><span class="name">Rocket Money</span> <span class="desc">— automatic subscription detection and cancellation help. United-States-first: check Canadian bank coverage before promising anything live.</span><span class="tags"><span class="tag t-link">Link-out only</span></span></li>
+<li><span class="name">Airbnb</span> <span class="desc">— travellers and spare-room hosts.</span><span class="tags"><span class="tag t-link">Link-out only</span><span class="tag t-cand">Partner connection exists (commercial)</span></span></li>
+<li><span class="name">eBay</span> <span class="desc">— buy-and-sell households.</span><span class="tags"><span class="tag t-live">Live feed (public connection)</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Ancestry</span> <span class="desc">— family-history hobbyists.</span><span class="tags"><span class="tag t-link">Link-out only</span></span></li>
+<li><span class="name">TheScore</span> <span class="desc">— sports fans.</span><span class="tags"><span class="tag t-link">Link-out only</span></span></li>
+</ul>
+</details>
+
+<details>
+<summary>Interests and hobbies — verified live</summary>
+<ul class="entries">
+<li><span class="name">Astronomy Picture of the Day (the space agency, NASA)</span> <span class="desc">— plus Mars rover photos and near-Earth objects. Free key.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Open Library</span> <span class="desc">— books, authors, and editions, from the Internet Archive. Free, no key.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Podcast Index</span> <span class="desc">— a free, open index of podcasts.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Spoonacular</span> <span class="desc">— recipes, nutrition, and meal planning; also the engine behind "what's for dinner." Its free tier is points-based and the exact free allowance was not verified.</span><span class="tags"><span class="tag t-live">Live feed, free tier</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Ticketmaster Discovery</span> <span class="desc">— events near you, by place and date. Free key.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Petfinder</span> <span class="desc">— adoptable pets, shelters, and breeds near you. Free key.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Lichess</span> <span class="desc">— chess puzzles, games, and leaders. Free, no key.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">BoardGameGeek</span> <span class="desc">— board-game rankings and ratings. Its connection answers slowly, so it suits a nightly update, not a live widget.</span><span class="tags"><span class="tag t-live">Live feed (nightly sync)</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Bible verses by reference</span> <span class="desc">— a free, keyless verse service.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">TheSportsDB</span> <span class="desc">— sports scores. Honest catch: the free tier is a shared test key; live scores with two-minute updates need the nine-dollar-a-month supporter plan.</span><span class="tags"><span class="tag t-part">Partly</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">OpenFarm</span> <span class="desc">— crop-growing guides and companion planting. Kept only with its warning: the project's own documents say its connection "is not done," and the project is quiet — check the live address answers before building on it.</span><span class="tags"><span class="tag t-part">Partly — verify first</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Killed on the evidence</span> <span class="desc">— Duolingo, GasBuddy fuel prices, and VIA Rail were considered and dropped: no public connection exists for any of them.</span><span class="tags"><span class="tag t-none">Nothing</span></span></li>
+</ul>
+</details>
+
+<details>
+<summary>Home and world, for other places and other households</summary>
+<ul class="entries">
+<li><span class="name">A SITREP for every kind of home</span> <span class="desc">— Coastal storm (tides, surge, and "move the car off the low road by six") · Wildfire smoke (the national smoke forecast and the air-quality health index) · Well and septic (the household's own log) · Condo (building notices typed in — most buildings offer no connection at all, and Canopy never pretends to read the building's system) · Farm (frost tonight, livestock checked, rain coming) · Power-out (a link to the utility's outage map, plus the household's own generator-fuel log).</span><span class="tags"><span class="tag t-cand">Ideas — not built</span></span></li>
+<li><span class="name">Hurricane tracking (the National Hurricane Center)</span> <span class="desc">— storm tracks and cones that plot straight onto the map, for a Gulf or Atlantic coast.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Earthquakes for Europe and the Mediterranean</span> <span class="desc">— the European-Mediterranean Seismological Centre: faster and denser there than the worldwide feed. Free, no key.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Active fires (the space agency's fire system, FIRMS)</span> <span class="desc">— near-real-time fire detections from satellites. Different from a smoke forecast — this is where fires actually are. Free key.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">River levels for the United States</span> <span class="desc">— the geological survey's water services: the American counterpart to Canada's river data.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Northern lights forecast</span> <span class="desc">— a 30-to-90-minute forecast of where the aurora will be and how strong, from the national space-weather centre. Free, no key.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Tides for United States coasts</span> <span class="desc">— water levels every six minutes; the American counterpart to the Canadian tide service.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Mountain snowpack (SNOTEL)</span> <span class="desc">— measured snow water, depth, and temperature from mountain stations in the Rockies, Sierra, and Cascades. Measured snow, not a forecast.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Tsunami alerts</span> <span class="desc">— the official source takes subscriptions by email and text message; no official feed exists to pull. The only feed-shaped route found is an unofficial paid wrapper — not used.</span><span class="tags"><span class="tag t-link">Link-out / subscription only</span></span></li>
+<li><span class="name">Home awareness for Ontario homes</span> <span class="desc">— Enbridge Gas (link-out only; bills and use live in its own app) · Flo by Moen (a leak shut off before it becomes a flood; partner connection — verify) · PurpleAir (street-level smoke and dust) · Airthings (radon, carbon dioxide, indoor air) · Enphase (what the rooftop solar panels earned today) · HouseSigma (what the home is worth, from sold prices on the street) · IQAir (air quality, free tier).</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+</ul>
+</details>
+</section>
+
+<section id="hunt">
+<div class="sec-head"><div class="chipdot" style="background:var(--cand,#b48be0)"></div><h2>9 · More the hunt found</h2></div>
+<p class="sec-note">Five rounds of research, all four lanes. Everything here is a candidate — not connected — and prices get checked again before anything is proposed for real.</p>
+
+<details open>
+<summary>Ottawa and everyday data</summary>
+<ul class="entries">
+<li><span class="name">OC Transpo bus times</span> <span class="desc">— live bus times and alerts from the transit agency's own free data.</span><span class="tags"><span class="tag t-live">Live feed · free, official</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Hydro Ottawa outages</span> <span class="desc">— the outage map has no public connection; showing it means embedding or polling the map, which is fragile.</span><span class="tags"><span class="tag t-part">Partly — no real connection</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Hydro Ottawa Green Button</span> <span class="desc">— real electricity use, with the account holder's consent. For anyone else's use, Hydro Ottawa's own onboarding and an industry certification are required — it is not an open connection.</span><span class="tags"><span class="tag t-live">Live feed (per-customer consent)</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Alert Ready</span> <span class="desc">— the full all-hazard alert feed needs registration with the alert system's operator. Weather alerts already arrive through Environment Canada. Whether to pursue registration is Grant's call.</span><span class="tags"><span class="tag t-wait">Waiting on Grant</span></span></li>
+<li><span class="name">Air quality, smoke, and pollen</span> <span class="desc">— the air-quality health index through Environment Canada (free) · FireSmoke.ca smoke forecasts (its feed is unverified) · Ambee pollen (commercial, down to the plant species), with a Canadian research group as ground truth on pages only.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Open data, free</span> <span class="desc">— Ontario GeoHub · Statistics Canada · national mapping and geography data · the City of Ottawa's plow tracker (in development — watch it, do not build on it yet).</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">National Capital Commission feeds</span> <span class="desc">— Rideau Canal Skateway status, and Gatineau Park ski and snowshoe conditions. Free and official.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Solar and grid data</span> <span class="desc">— Forecast.Solar and Electricity Maps. Missed entirely in the early rounds; the electricity bill connection covers billing only, these cover the live side.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">River levels for Ottawa (Water Survey of Canada)</span> <span class="desc">— river height and flow every five minutes, free, no key, through Environment Canada's map-data services. Ottawa stations checked live on 22 November 2026: the Ottawa River at Britannia, and the Rideau River at Ottawa.</span><span class="tags"><span class="tag t-live">Live feed</span><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">More open data</span> <span class="desc">— ocean buoys (wave height) · OpenAQ air quality · the space station's position · eBird bird sightings (free key) · PurpleAir hyperlocal air (paid; free to the sensor's owner).</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Lightning data — a hard limit</span> <span class="desc">— the volunteer lightning network's feeds work, but commercial use is banned. Personal display only, and only with permission — a question parked for Grant.</span><span class="tags"><span class="tag t-none">Not for commercial use</span><span class="tag t-wait">Waiting on Grant</span></span></li>
+</ul>
+</details>
+
+<details>
+<summary>Everyday life the early rounds missed</summary>
+<ul class="entries">
+<li><span class="name">Food and household</span> <span class="desc">— Spoonacular (the only real recipe connection) plus OpenFoodFacts (free) · groceries are mostly link-outs (Voilà, PC Express, Metro, Walmart, Instacart) · meal kits link out.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Outdoors</span> <span class="desc">— AllTrails · Gatineau Park · Ottawa–Gatineau ski conditions · fishing rules (always link out to the regulations, never copied).</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Family</span> <span class="desc">— Ottawa school-board feeds · school-bus delays · package tracking (AfterShip and Canada Post).</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Pets at home</span> <span class="desc">— PetDesk vet records (more than twelve thousand clinics) plus household pet services.</span><span class="tags"><span class="tag t-cand">Candidate — not connected</span></span></li>
+<li><span class="name">Learning and news depth</span> <span class="desc">— feed readers · NewsAPI · newsletters · courses · Libby.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Household coordination</span> <span class="desc">— Cozi and TimeTree family calendars · school apps (ClassDojo, Seesaw, Classroom) · post-Mint budgeting apps with real connections (YNAB, Monarch) · Calm and Headspace · food-delivery deep links (Uber Eats, Skip, DoorDash) · Tim Hortons and Starbucks doors · family location (Life360, Find My — link-out only; never promise live tracking) · shopping lists as a first-class feature of Canopy itself.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Fun and social layer</span> <span class="desc">— sports: the hockey league's free public connection (hockey first) plus TheSportsDB; a paid upgrade exists and an unofficial shortcut was rejected · open social feeds (Bluesky, Mastodon) · Twitch and Steam · short looping pictures (Klipy — the big GIF library is now paid and the other one is dead) · CapCut, the video editor people actually use, which the early rounds missed because they covered professional tools only · casting Canopy to the TV as a photo frame.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Platform worlds</span> <span class="desc">— Microsoft's account umbrella (Microsoft Graph) · Apple services · Samsung · Google Photos and the YouTube data connection (section 3).</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+</ul>
+</details>
+
+<details>
+<summary>Sixteen combinations — what joining things up makes possible</summary>
+<ul class="entries">
+<li><span class="name">The chains</span> <span class="desc">— 1. Storm watch becomes Snow SITREP by itself (the flagship) · 2. Plowing done becomes proof, becomes paid · 3. Freeze and thaw triggers the salt call · 4. A watering-system freeze warning triggers winterising · 5. The 6 a.m. morning SITREP · 6. An outage on a job drafts the reschedule · 7–9. For KÜL: a listing finds its matched buyers; a live listing feeds the media factory; an accepted offer runs the paperwork chain · 10–12. For Lions Gate: a boat's arrival becomes a lead; the sea-trial weather window finds itself; a service coming due gathers its parts, slot, and estimate · 13–14. For money: a finished job becomes reconciled cash; a lead becomes a quote, a signature, a deposit · 15. A plan comes in, a proposal goes out · 16. A finished job becomes the next lead.</span><span class="tags"><span class="tag t-state">Design — what makes them real is named below</span></span><span class="note">What makes them real: thresholds Grant sets (how much snow, how much warning; the freezing point; wind and tide limits for a sea trial) and one automation layer. Standing rule: chains draft, people decide — every message to a client stays a draft until a named person approves it.</span></li>
+</ul>
+</details>
+
+<details>
+<summary>The magic layer — and the delight layer</summary>
+<ul class="entries">
+<li><span class="name">Voice inside the app</span> <span class="desc">— ElevenLabs conversation, already connected to the team: Oakley's voice as the interface. One hard rule: voice proposes, a human tap commits.</span><span class="tags"><span class="tag t-cand">Candidate — not connected in-app</span></span></li>
+<li><span class="name">Home-screen widgets and live activities</span> <span class="desc">— a web app cannot do them; that is a platform limit, not a choice. The only honest route is a phone-app shell around Canopy (an Apple developer account at 99 dollars a year, plus 25 dollars for Google's store).</span><span class="tags"><span class="tag t-part">Partly — shell only</span></span></li>
+<li><span class="name">A live drawing canvas</span> <span class="desc">— a sales-pitch surface (tldraw) fed by Canopy's real data · agents working as connectors, approval-first.</span><span class="tags"><span class="tag t-cand">Candidates — not connected</span></span></li>
+<li><span class="name">Delight, ranked</span> <span class="desc">— the bar: a delight feature must move, respond, or change with real time, real data, or the user; it respects reduced-motion settings and always has an off switch. 1. Snow Mode (under Weather Mode, section 1) · 2. Living wallpapers — quiet picture-shaders driven by sun, weather, and music; free, no company · 3. Soundscapes — one mixer, five sliders, through the same music bar · 4. Trivia and games — the Open Trivia Database (free, no key) and Lichess; daily trivia with a household leaderboard; memory-match from the person's own photos · 5. Karaoke and party mode — time-stamped lyrics with Spotify playback; honest limit: not a true karaoke machine · 6. Photo-frame smarts — face-aware cropping, in the browser · 7. Watch-together — YouTube syncing is real; Netflix syncing is not · 8. Vibration as a system — works on Android web; iPhone web cannot.</span><span class="tags"><span class="tag t-cand">Ideas — not built</span></span></li>
+</ul>
+</details>
+
+<details>
+<summary>Two things with no home — by design</summary>
+<ul class="entries">
+<li><span class="name">AI assistants and their connection standard</span> <span class="desc">— no section, on purpose. They are a layer under every section, not a door and not a page: the assistant points at doors and opens them; it never pastes one app inside another and never merges two apps into one view.</span><span class="tags"><span class="tag t-state">Architecture — recorded</span></span></li>
+<li><span class="name">Casting and TVs as screens</span> <span class="desc">— no section either. A way of showing any view, not a destination — so no "TV" door is ever created.</span><span class="tags"><span class="tag t-state">Architecture — recorded</span></span></li>
+</ul>
+</details>
+</section>
+
+<section id="honest">
+<div class="sec-head"><div class="chipdot" style="background:var(--none)"></div><h2>10 · Honest notes</h2></div>
+<p class="sec-note">What is not working, what is waiting, and what the record itself cannot settle — named plainly, the same way the team keeps its own roadmap.</p>
+<ul class="entries">
+<li><span class="name">The Canada 10-year bond yield tile does not work.</span> <span class="desc">The route is settled and the daily snapshot exists, but the tile never picks the snapshot up — it sat at "pending" through minutes and a reload in the team's own check. It is a named fix, parked while Canopy is paused.</span></li>
+<li><span class="name">The relay is built; putting it online is pending.</span> <span class="desc">The hub proxy was built and live-tested on 18 November 2026 — every hard-to-reach feed returned live data through it. Only its move onto Vercel hosting remains. Anything on this page labelled "wired by design" is waiting on packaging work like this, not on invention.</span></li>
+<li><span class="name">There is no scanner feed, and there cannot be one.</span> <span class="desc">Ottawa police and fire radio is encrypted and no public text feed exists. The scanner spot shows real City incident counts and official doors instead — and it is a remove candidate when Canopy is packaged, under Grant's rule that everything must work inside the app.</span></li>
+<li><span class="name">Two SITREP doors are remove candidates.</span> <span class="desc">A "World Monitor" door whose permission to play inside the app was never verified (its "webcams" are stills, not live video), and an old door labelled "God's Eye" with no destination anywhere in the record. The hub must name a real destination or the doors go. (The world layer itself — God's Eye View, section 1 — is a different, real thing.)</span></li>
+<li><span class="name">Two more doors may never have existed.</span> <span class="desc">"Archive" and "Bulletin" were named in an old delivery summary but appear nowhere in the delivered work. Whether they were ever defined is not determinable from the record.</span></li>
+<li><span class="name">SITREP's "internal" picture was never settled.</span> <span class="desc">Grant's original definition covered the world locally, globally, and internally. The internal picture lives in Home's team box and the Command Deck; SITREP itself has no internal panel, and nobody has ruled one in or out. It is Grant's call when Canopy resumes.</span></li>
+<li><span class="name">Waiting on Grant, in one place:</span> <span class="desc">home camera snapshot addresses · where BluePrint lives · the TD bank sign-in · the FordPass setup (about 25 to 40 minutes of him, one time) · linking any real investment account · the last routes to his Ford Credit account number · which "Workforce" BluePrint means · whether to register for the full Alert Ready feed · whether to run a boat-tracking receiver at the marina to earn the free vessel-data route · three research questions (a paid tier for one smart-home system against local-first standards; permission for a personal lightning display; running air and lightning sensors as Canopy hardware).</span></li>
+<li><span class="name">Things that end, and when:</span> <span class="desc">SmartThings' free connection ends December 2026 (a fee starts October 2026) — excluded · Fitbit's old web connection was turned off in October/November 2026 — replaced by Google's health connection · the standalone remove.bg connection shuts down 1 December 2026 — do not adopt · Carson Dunlop's Horizon home-inspection system retires 15 December 2026 — do not build on it · AIR MILES is changing to Blue Rewards — verify before building · Meta keeps Facebook leads for 90 days only.</span></li>
+<li><span class="name">The record was swept for completeness on 22 November 2026.</span> <span class="desc">The team's full list was checked line by line against everything Grant has ever asked for. The sweep found nine asked-for things missing and six entries overstated or unclear. All nine are on this page now (the truck route, the named bank, the worked-in social, the automatic listings, Daybook's cameras, and the rest), and all six were corrected — including two on this page: the bond-yield tile above, and the relay's true state.</span></li>
+<li><span class="name">Canopy itself is paused.</span> <span class="desc">By Grant's order on 22 November 2026, the team's building work is Johnny's two apps; Canopy's remaining fixes and its packaging into one app are parked until he lifts the pause. The research on this page continued because he commissioned it.</span></li>
+</ul>
+</section>
+
+<footer>
+<p>Put together 22 November 2026 from the team's own records: the connectors and apps roadmap (about 130 entries), the security, banking, and monitoring setup catalogues, the guided-setup design, the other-user additions from all four research lanes, the Command Deck and Home additions, the BluePrint and Flurry verification, and the completeness sweep. Where a catalogue's full brand-by-brand table lives in the team's files, this page says so instead of guessing at it. Nothing on this page was connected, bought, or built by being listed here.</p>
+</footer>
+
+</div>
+</body>
+</html>

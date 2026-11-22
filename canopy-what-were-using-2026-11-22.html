@@ -93,7 +93,6 @@ a{color:var(--link)}
 <p class="connects"><strong>Connects to:</strong> Flurry — storm watch, snow depth, and road conditions flow down into Snow SITREP, and the routes flow back up (chain 1) · Mainline — freeze alerts flow in and become winterise jobs (chain 4) · the job apps — an outage on a job drafts the reschedule (chain 6), and the 6 a.m. morning picture pulls the whole layer together (chain 5) · Daybook — the same 432-camera supply and the calendar are shared with it, never copied twice · Lions Gate — this layer's marine weather, tides, and vessel positions also feed the sea-trial window (chain 11). Inside Home, the sections carry doors to each other — Weather to Cameras to Airport, Live TV to World, World back to Weather — and moving between them carries your context with you.</p>
 <details open>
 <summary>Weather</summary>
-<p class="inuse"><strong>In use here:</strong> Environment Canada — Ottawa and Gatineau — for conditions, forecasts, and alerts; Ontario 511 road conditions, Tomorrow.io snow depth, and home weather-station readings for the snow operator layer.</p>
 <p class="how"><strong>How it works:</strong> Your weather gathers its readings from Environment Canada — one shared reading feeds Home, SITREP, and every app, so the weather can never contradict itself. When a warning fires for your area, the weather spot changes its face — snow, rain, heat, or storm — brings the right SITREP card forward, then settles back when it clears.</p>
 <ul class="entries">
 <li><span class="name">Environment Canada weather — Ottawa</span> <span class="desc">— current conditions, hourly, and forecast.</span></span><span class="tags"><span class="tag t-live">Working</span></span><span class="note">One shared weather reading feeds Home, SITREP, and the apps, so the weather can never contradict itself. It reaches the page through a small team-run relay (the hub proxy).</span></li>
@@ -101,10 +100,10 @@ a{color:var(--link)}
 <li><span class="name">Weather alerts and emergency alerts (the common alerting protocol)</span> <span class="desc">— warnings for the Ottawa area.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 <li><span class="name">Operator layer for snow work</span> <span class="desc">— snowfall rate, road conditions, visibility, and wind chill.</span></span><span class="tags"><span class="tag t-live">Working</span></span><span class="note">The source stack is settled: Environment Canada's measured precipitation analysis (what actually fell — a checking source, not a live trigger), Ontario 511 road conditions, Tomorrow.io snow depth, and home weather-station ground truth. Ontario's road-weather station network is not public — the province keeps it on a secured site.</span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> Environment Canada — Ottawa and Gatineau — for conditions, forecasts, and alerts; Ontario 511 road conditions, Tomorrow.io snow depth, and home weather-station readings for the snow operator layer.</p>
 </details>
 <details>
 <summary>Traffic and cameras</summary>
-<p class="inuse"><strong>In use here:</strong> The City of Ottawa's traffic camera list — 403 City of Ottawa cameras and 29 Ontario highway cameras — plus City of Ottawa road events and Ontario 511.</p>
 <p class="how"><strong>How it works:</strong> Your traffic picture gathers the City of Ottawa's camera list and road events, plus Ontario 511 for the highways. You search the cameras and look at the actual pictures — snapshots refreshed about once a minute, never labelled live, because that is the honest truth of them.</p>
 <ul class="entries">
 <li><span class="name">City of Ottawa traffic cameras — the full list</span> <span class="desc">— 432 live traffic camera views across Ottawa: 403 City of Ottawa cameras and 29 Ontario highway (Ministry of Transportation) cameras, from the City's traffic camera list. Searchable.</span></span><span class="tags"><span class="tag t-live">Working</span></span><span class="note">Honest note: the City says about 275 physical cameras are installed — 432 is the number of entries in its published list, because one location can carry several entries.</span></li>
@@ -112,10 +111,10 @@ a{color:var(--link)}
 <li><span class="name">City of Ottawa road events</span> <span class="desc">— closures, construction, and incidents.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 <li><span class="name">Ontario 511 road conditions</span> <span class="desc">— the operator layer for snow work.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> The City of Ottawa's traffic camera list — 403 City of Ottawa cameras and 29 Ontario highway cameras — plus City of Ottawa road events and Ontario 511.</p>
 </details>
 <details>
 <summary>News and live TV</summary>
-<p class="inuse"><strong>In use here:</strong> CBC Ottawa, CityNews Ottawa, BBC World, DW, and Al Jazeera for headlines; DW live TV, plus TRT World, CNA, NHK World, and Arirang streaming in the app. CBC Gem, CTV, and Global open by link-out — Grant's ruling.</p>
 <p class="how"><strong>How it works:</strong> Your news gathers headlines from CBC Ottawa, CityNews, the BBC, DW, and Al Jazeera — each card shows its source and its time, and tapping it opens the full story at the source. The world channels play right inside the app; the Canadian channels open their own pages, by Grant's ruling.</p>
 <ul class="entries">
 <li><span class="name">News headlines — CBC Ottawa, CityNews Ottawa, BBC World, DW (Deutsche Welle), Al Jazeera world</span> <span class="desc">— local and world headlines; cards carry their source and time, and link out to the full article.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
@@ -123,10 +122,10 @@ a{color:var(--link)}
 <li><span class="name">Live world TV — TRT World, CNA, NHK World, Arirang</span> <span class="desc">— the SITREP TV wall, with an honest "checking live stream / stream unavailable" state instead of a frozen picture.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 <li><span class="name">CBC Gem, CTV, Global live pages</span> <span class="desc">— Canadian channels.</span></span><span class="tags"><span class="tag t-live">Working</span></span><span class="note">Grant's ruling: Canadian channels link out. That is the honest end state for these three.</span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> CBC Ottawa, CityNews Ottawa, BBC World, DW, and Al Jazeera for headlines; DW live TV, plus TRT World, CNA, NHK World, and Arirang streaming in the app. CBC Gem, CTV, and Global open by link-out — Grant's ruling.</p>
 </details>
 <details>
 <summary>TV and streaming — add the ones you have</summary>
-<p class="inuse"><strong>In use here:</strong> Google Cast — worked in for casting to a TV. No single streaming service is picked as ours; the services below are the options.</p>
 <p class="how"><strong>How it works:</strong> Your streaming works by deep links: Canopy points you at the service that has the show, because none of the big streamers offers a real connection — it never promises a live sync it cannot do. Casting is worked in: from inside the app, you put a view on your Google Cast TV.</p>
 <ul class="entries">
 <li><span class="name">Netflix, Prime Video, Disney+, Crave, Apple TV+, Paramount+</span> <span class="desc">— none of them offers a public connection. Never promise live sync. What Canopy honestly offers: deep links, plus its own shared watchlist.</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
@@ -135,10 +134,10 @@ a{color:var(--link)}
 <li><span class="name">Casting — Google Cast, and TVs as screens</span> <span class="desc">— worked into Canopy (Grant's ruling, 22 November 2026): from inside the app, cast to a Google Cast TV — the morning SITREP on the wall, a listing and its tour on the TV at a showing, a vessel and its route at a sea trial, a proposal on the big screen. It is a way of showing, not a place: no "TV" door exists, and it is not a link out. Honest catch: casting sends media, not the whole app — a true Canopy TV screen is a separate build.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 <li><span class="name">TV control — LG and Samsung sets</span> <span class="desc">— control on the home network where the model supports it; otherwise a link to the TV's own remote app.</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> Google Cast — worked in for casting to a TV. No single streaming service is picked as ours; the services below are the options.</p>
 </details>
 <details>
 <summary>The world — Osiris — God's Eye View</summary>
-<p class="inuse"><strong>In use here:</strong> USGS earthquakes, GDACS disaster alerts, and NASA EONET natural events, on an OpenStreetMap world map with Environment Canada's map layer and RainViewer rain radar. Ottawa airport (YOW) opens by door.</p>
 <p class="how"><strong>How it works:</strong> Your world layer gathers earthquakes from the USGS, disaster alerts from GDACS, and natural events from NASA, and plots them on the world map with rain radar over it, refreshing on a short rhythm through the team's relay. When you travel, it watches the places you are going, not just home.</p>
 <ul class="entries">
 <li><span class="name">Earthquakes — United States Geological Survey (USGS)</span> <span class="desc">— earthquakes worldwide (magnitude 4.5 and up) and any quake within 250 kilometres.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
@@ -148,10 +147,10 @@ a{color:var(--link)}
 <li><span class="name">Osiris — God's Eye View</span> <span class="desc">— the world-data layer: flights, satellites, earthquakes, fires, and weather, as its own section inside SITREP. Its feeds were verified live on 21 November 2026, on a 60-second rhythm, through the team relay.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 <li><span class="name">Ottawa airport (YOW)</span> <span class="desc">— a door to the airport's own site.</span></span><span class="tags"><span class="tag t-live">Working</span></span><span class="note">Grant's ruling: no paid flight data, ever. The boards never invent flights.</span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> USGS earthquakes, GDACS disaster alerts, and NASA EONET natural events, on an OpenStreetMap world map with Environment Canada's map layer and RainViewer rain radar. Ottawa airport (YOW) opens by door.</p>
 </details>
 <details>
 <summary>Markets</summary>
-<p class="inuse"><strong>In use here:</strong> CoinGecko for the Bitcoin price (Coinbase and Binance as fallbacks), the Bank of Canada for the dollar exchange rate (the European Central Bank as fallback), TradingView charts, and Stooq quotes.</p>
 <p class="how"><strong>How it works:</strong> Your markets box gathers the Bitcoin price, the dollar exchange rate, and the charts — and once a day it takes a snapshot of the tracked markets at the previous close, labelled with its source and its date. It never calls itself live, because no honest free live feed exists.</p>
 <ul class="entries">
 <li><span class="name">Bitcoin price and 24-hour chart</span> <span class="desc">— CoinGecko first, Coinbase and Binance as fallbacks.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
@@ -159,10 +158,10 @@ a{color:var(--link)}
 <li><span class="name">Markets snapshot</span> <span class="desc">— the previous day's closing picture for the tracked markets, labelled with its source and date. Never labelled "live," because no honest free live route exists.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 <li><span class="name">TradingView charts and Stooq quotes</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> CoinGecko for the Bitcoin price (Coinbase and Binance as fallbacks), the Bank of Canada for the dollar exchange rate (the European Central Bank as fallback), TradingView charts, and Stooq quotes.</p>
 </details>
 <details>
 <summary>Home's own boxes</summary>
-<p class="inuse"><strong>In use here:</strong> Google Calendar — it fills Home's calendar box. The home security box and camera snapshots come from the home's own system, through the Home Assistant bridge (section 2); the camera snapshots still need one address per zone, from Grant's records.</p>
 <p class="how"><strong>How it works:</strong> Your Home wall gathers the day at a glance: your calendar fills the calendar box, your home's security state fills the security box, and the camera snapshots rotate through — all fed by the same connections you set up in Daybook, never copied twice.</p>
 <ul class="entries">
 <li><span class="name">Team usage and briefing counts</span> <span class="desc">— the AI team's state, and the "needs attention" counts that ride on Home's doors.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
@@ -170,10 +169,10 @@ a{color:var(--link)}
 <li><span class="name">Home security box</span> <span class="desc">— zones, doors, locks, smoke, water, temperature, and alarm state.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 <li><span class="name">Home camera snapshots</span> <span class="desc">— Driveway, Front Door, Garage, Backyard, from the home's own camera system.</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span><span class="note">Needs one snapshot address per zone, from his records. No passwords ever go in an address.</span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> Google Calendar — it fills Home's calendar box. The home security box and camera snapshots come from the home's own system, through the Home Assistant bridge (section 2); the camera snapshots still need one address per zone, from Grant's records.</p>
 </details>
 <details>
 <summary>Ottawa layer — confirmed in by Grant</summary>
-<p class="inuse"><strong>In use here:</strong> Hydro Ottawa — the outage map and the Green Button — Alert Ready, Environment Canada's air-quality health index, Water Survey of Canada river levels, and free open data: Ontario GeoHub, Statistics Canada, and the City of Ottawa.</p>
 <p class="how"><strong>How it works:</strong> Your Ottawa layer gathers your power outages and your real electricity use from Hydro Ottawa, emergency alerts through Alert Ready, the air you breathe from Environment Canada's index, and the river levels from the Water Survey of Canada — the city's own facts, sitting beside your weather.</p>
 <ul class="entries">
 <li><span class="name">Hydro Ottawa outages</span> <span class="desc">— the outage map has no public connection; showing it means embedding or polling the map, which is fragile.</span></span><span class="tags"><span class="tag t-live">Working</span></span><span class="note">Confirmed in by Grant, 22 November 2026 — free. The honest limit above stands: there is no public connection, so the map is embedded or polled.</span></li>
@@ -183,10 +182,10 @@ a{color:var(--link)}
 <li><span class="name">Open data, free</span> <span class="desc">— Ontario GeoHub · Statistics Canada · national mapping and geography data · the City of Ottawa's plow tracker (in development — watch it, do not build on it yet).</span></span><span class="tags"><span class="tag t-live">Working</span></span><span class="note">Confirmed in by Grant, 22 November 2026 — free, as the name says.</span></li>
 <li><span class="name">River levels for Ottawa (Water Survey of Canada)</span> <span class="desc">— river height and flow every five minutes, free, no key, through Environment Canada's map-data services. Ottawa stations checked live on 22 November 2026: the Ottawa River at Britannia, and the Rideau River at Ottawa.</span><span class="tag t-cand">Watch list</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> Hydro Ottawa — the outage map and the Green Button — Alert Ready, Environment Canada's air-quality health index, Water Survey of Canada river levels, and free open data: Ontario GeoHub, Statistics Canada, and the City of Ottawa.</p>
 </details>
 <details>
 <summary>Home and world — confirmed in by Grant</summary>
-<p class="inuse"><strong>In use here:</strong> The National Hurricane Center, the European-Mediterranean Seismological Centre, NASA's FIRMS fire detections, the US Geological Survey's water services, the US space-weather centre's northern-lights forecast, US coastal tides, and SNOTEL mountain snowpack — with a SITREP pattern for every kind of home.</p>
 <p class="how"><strong>How it works:</strong> Wherever you live — or wherever you are headed — this layer gathers the hazards that fit the place: hurricane tracks on a coast, fire detections from satellites, river levels, tides, snowpack, even the northern lights. Tell Canopy where you are travelling and it watches that place, and taps you if something is coming.</p>
 <ul class="entries">
 <li><span class="name">Travel-aware alerts</span> <span class="desc">— the world layer follows where the person is, and where they are traveling to, and notifies them about alerts, tides, and storms for that place — not just for home. (Grant, 22 November 2026.)</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
@@ -199,6 +198,7 @@ a{color:var(--link)}
 <li><span class="name">Tides for United States coasts</span> <span class="desc">— water levels every six minutes; the American counterpart to the Canadian tide service.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 <li><span class="name">Mountain snowpack (SNOTEL)</span> <span class="desc">— measured snow water, depth, and temperature from mountain stations in the Rockies, Sierra, and Cascades. Measured snow, not a forecast.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> The National Hurricane Center, the European-Mediterranean Seismological Centre, NASA's FIRMS fire detections, the US Geological Survey's water services, the US space-weather centre's northern-lights forecast, US coastal tides, and SNOTEL mountain snowpack — with a SITREP pattern for every kind of home.</p>
 </details>
 </section>
 
@@ -208,7 +208,6 @@ a{color:var(--link)}
 <p class="connects"><strong>Connects to:</strong> Home — the calendar behind Daybook's combined view also fills Home's calendar box, and Commute shares Home and SITREP's camera supply · the business apps — paycheques arrive from QuickBooks under Trellis, payments and deposits arrive through Stripe (chains 13–14), showings and sea trials booked in the apps land in this calendar, signed deals and commissions land in these finances, and a personal video after a showing arrives in Gmail · the truck — FordPass arrives through the Home Assistant bridge, the same bridge that carries this section's security, monitoring, and automation · Google Sheets behind the scenes — a shared data layer the apps draw on through doors, never a page pasted inside a client file.</p>
 <details open>
 <summary>The day itself</summary>
-<p class="inuse"><strong>In use here:</strong> Google Calendar — behind the combined calendar view — and three doors confirmed in by Grant: Canada Post parcel tracking, the City of Ottawa's waste-day calendar, and pharmacy refills (Shoppers Drug Mart, Rexall).</p>
 <p class="how"><strong>How it works:</strong> Your day gathers itself in one stream. Your commute is drawn from today's calendar — never typed twice — it gathers traffic information, looks at the traffic cameras and the weather, and your car app can start the truck before you leave, if you want. The doors work simply: tap Canada Post and you are on Canada Post's own tracking page — nothing is copied into Daybook.</p>
 <ul class="entries">
 <li><span class="name">Day-to-day capture and day stream</span> <span class="desc">— quick captures and the day's record, stored on the device.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
@@ -220,10 +219,10 @@ a{color:var(--link)}
 <li><span class="name">Ottawa waste day</span> <span class="desc">— a door in Daybook (Grant's word, 22 November 2026): the door opens the City of Ottawa's collection calendar — which bin, which day — with a typed-in fallback for anything the calendar does not cover. Free.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 <li><span class="name">Pharmacy refills</span> <span class="desc">— a door in Daybook (Grant's word, 22 November 2026): the door opens the pharmacy's own refill page (Shoppers Drug Mart, Rexall). Refills stay in the pharmacy's hands — the door just takes you there. Free.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> Google Calendar — behind the combined calendar view — and three doors confirmed in by Grant: Canada Post parcel tracking, the City of Ottawa's waste-day calendar, and pharmacy refills (Shoppers Drug Mart, Rexall).</p>
 </details>
 <details>
 <summary>Money</summary>
-<p class="inuse"><strong>In use here:</strong> The money book itself, with the finance workbook in Google Drive as the record of truth. TD through Plaid is the chosen bank route — it waits on Grant's go and his sign-in. Bobby tracks subscriptions, by hand on purpose. The Canopy Rewards Shelf holds the loyalty cards.</p>
 <p class="how"><strong>How it works:</strong> Your money book gathers the real figures from the team's finance record — the workbook in Google Drive is the record of truth, and anything you type in by hand always wins. When you give the go, your TD account feeds in through Plaid: read-only, a few times a day, never called live. Bobby keeps your subscriptions counted by hand, on purpose.</p>
 <ul class="entries">
 <li><span class="name">The money book (budgeting)</span> <span class="desc">— the real figures come from the team's finance record; the workbook in Google Drive is the record of truth. The view moves no money — records only. Hand-typed entries always win.</span></span><span class="tags"><span class="tag t-live">Working</span></span><span class="note">Today the view shows sample figures, labelled as samples.</span></li>
@@ -238,10 +237,10 @@ a{color:var(--link)}
 <li><span class="name">What can honestly be built — the Canopy Rewards Shelf</span> <span class="desc">— one shelf holding: a deep link per programme · the person's own phone-wallet pass where one exists (PC Optimum, Scene+, and Aeroplan have real wallet passes — a card and barcode, not a balance feed) · current offers by link-out · and a balance the person types in themselves, labelled "entered by you, not live."</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 <li><span class="name">The pick-list, ranked by everyday breadth</span> <span class="desc">— PC Optimum · Triangle · Tim's Rewards · Scene+ · Aeroplan · Starbucks · AIR MILES (it is changing to "Blue Rewards" — verify before building) · Rakuten · Journie · and 1Password, a daily driver with a real connection for family and business password vaults.</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span><span class="note">Live balances would need commercial partner deals with the programmes themselves.</span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> The money book itself, with the finance workbook in Google Drive as the record of truth. TD through Plaid is the chosen bank route — it waits on Grant's go and his sign-in. Bobby tracks subscriptions, by hand on purpose. The Canopy Rewards Shelf holds the loyalty cards.</p>
 </details>
 <details>
 <summary>Home, security, and monitoring</summary>
-<p class="inuse"><strong>In use here:</strong> Home Assistant — the one bridge Canopy talks to. It carries the home's own camera frames (Front, Garage, Back, Basement), the monitoring sensors, and the automation. No single camera or alarm brand is picked as ours — the brands below are the options the bridge can reach.</p>
 <p class="how"><strong>How it works:</strong> Your home talks to Canopy through one bridge — Home Assistant, sitting in your home. The bridge gathers your camera frames, your door and motion sensors, and your lights, locks, and thermostat, so Canopy talks to one hub instead of seventeen company clouds. Whichever camera brand you actually have plugs into the bridge the same way.</p>
 <ul class="entries">
 <li><span class="name">Home Assistant — the bridge</span> <span class="desc">— Canopy does not talk to seventeen different company clouds. It talks to one Home Assistant hub in the home, and the hub talks to the devices — locally where possible. This is the platform Daybook's monitoring, automation, security, and truck feeds all wait on.</span></span><span class="tags"><span class="tag t-live">Working</span></span><span class="note">Free and open-source. Whether Grant already holds an account on it is not in the record.</span></li>
@@ -259,10 +258,10 @@ a{color:var(--link)}
 <li><span class="name">Mainstream devices with real connections</span> <span class="desc">— Kasa and Tapo plugs and lights · robot vacuums and mowers (Roborock, iRobot, Automower) — the mowers also link to Trellis's Tend, as a reference, never with the controls inside a client file.</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 <li><span class="name">Matter</span> <span class="desc">— one standard that unlocks both the Apple and Google accessory worlds. Cameras and doorbells are not covered yet (see security, above).</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> Home Assistant — the one bridge Canopy talks to. It carries the home's own camera frames (Front, Garage, Back, Basement), the monitoring sensors, and the automation. No single camera or alarm brand is picked as ours — the brands below are the options the bridge can reach.</p>
 </details>
 <details>
 <summary>Health and fitness layer</summary>
-<p class="inuse"><strong>In use here:</strong> Oura and WHOOP — the two fitness monitors rated live, approved to wire in. The rest below are options, or on the watch list.</p>
 <p class="how"><strong>How it works:</strong> Your health layer gathers sleep, readiness, and strain from the monitors you wear — Oura and WHOOP connect through their own sign-ins. It is a picture of your days, never a medical alert system.</p>
 <ul class="entries">
 <li><span class="name">Oura ring</span> <span class="desc">— sleep, readiness, and activity through Oura's own sign-in connection.</span><span class="tag t-cand">Watch list</span></span><span class="tags"><span class="tag t-live">Working</span></span><span class="note">Watch the free-tier limit on how many users it covers.</span></li>
@@ -275,27 +274,27 @@ a{color:var(--link)}
 <li><span class="name">Home energy and water</span> <span class="desc">— utility company pages, Sense and Emporia energy monitors, Flo and Phyn water monitors.</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 <li><span class="name">Kids and family location · pet trackers · baby and senior monitoring</span> <span class="desc">— every brand rated on the same scale, each ending in its setup pick.</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> Oura and WHOOP — the two fitness monitors rated live, approved to wire in. The rest below are options, or on the watch list.</p>
 </details>
 <details>
 <summary>The truck</summary>
-<p class="inuse"><strong>In use here:</strong> FordPass on the 2026 Ford Ranger, through Home Assistant. Setup has not started — it takes one sitting of about 25 to 40 minutes of Grant, with a second Ford account for safety.</p>
 <p class="how"><strong>How it works:</strong> Your truck connects through the same Home Assistant bridge as your home: through the bridge, FordPass can lock and unlock, remote-start, and locate your Ranger. FordPass on the web can do none of that — this route works precisely because it is not a web route. It takes one short setup sitting with you, and a second Ford account kept just for this, for safety.</p>
 <ul class="entries">
 <li><span class="name">FordPass — the 2026 Ford Ranger, through Home Assistant</span> <span class="desc">— lock and unlock, remote start, and location genuinely work through Home Assistant's FordPass connection. FordPass on the web cannot do any of that and offers no web feed — this route works precisely because it is not a web route.</span></span><span class="tags"><span class="tag t-live">Working</span></span><span class="note">Researched 18 November 2026, verdict: go, with guardrails — a dedicated second Ford account only (Ford has disabled accounts over this connection), and a one-time setup taking about 25 to 40 minutes of Grant. Setup has not started.</span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> FordPass on the 2026 Ford Ranger, through Home Assistant. Setup has not started — it takes one sitting of about 25 to 40 minutes of Grant, with a second Ford account for safety.</p>
 </details>
 <details>
 <summary>Social — being worked in, not linked out</summary>
-<p class="inuse"><strong>In use here:</strong> Facebook, Instagram, Messenger, and Threads — connected now, and being worked into Daybook in place. WhatsApp and Telegram are adopted to join them.</p>
 <p class="how"><strong>How it works:</strong> Your social gathers your Facebook, Instagram, Messenger, and Threads into Daybook — feeds you read in place, and one writing box that posts across them — instead of four links out. The accounts are already connected behind the scenes, so there is no new sign-in.</p>
 <ul class="entries">
 <li><span class="name">Messenger, Instagram, Facebook, Threads</span> <span class="desc">— today these are four links. Grant ruled on 22 November 2026 that links are not the end state: real social belongs inside Daybook — feeds you can read in place, plus one writing box that posts across the networks.</span></span><span class="tags"><span class="tag t-live">Working</span></span><span class="note">The accounts are already connected behind the scenes, so no new sign-in is needed. The writing-box pattern uses each network's own posting rules — Instagram, Threads, TikTok, YouTube, and LinkedIn all have real posting connections with daily limits; X (Twitter) is paid and the worst value, so it is held. Open networks like Bluesky and Mastodon can feed in place. Photo memories would be built only from photos the person picks — Google removed whole-library access in March 2025, and Apple Photos has no web connection at all.</span></li>
 <li><span class="name">WhatsApp and Telegram</span> <span class="desc">— a messaging channel in Daybook beside the four above, and a lead-intake channel in the Command Deck. Messages stay references — never a merged inbox inside a client file.</span></span><span class="tags"><span class="tag t-live">Working</span></span><span class="note">Adopted by Grant on 22 November 2026 ("all of it"). WhatsApp's business connection is real but gated: charged per delivered message, free-form replies only within 24 hours of the person's last message, approved templates outside that window, and Meta business verification required.</span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> Facebook, Instagram, Messenger, and Threads — connected now, and being worked into Daybook in place. WhatsApp and Telegram are adopted to join them.</p>
 </details>
 <details>
 <summary>Music and podcasts</summary>
-<p class="inuse"><strong>In use here:</strong> Spotify — connected now, and the one player in the bar. Apple Music, YouTube, Pocket Casts, SoundCloud, and Audible below are options.</p>
 <p class="how"><strong>How it works:</strong> Your music gathers into one player bar: on a big screen it sits in the top bar, on the phone it is in the wheel. Spotify is the player connected today; the others below plug into the same bar, if you have them.</p>
 <ul class="entries">
 <li><span class="name">Spotify</span> <span class="desc">— the music player lives in the top bar on big screens and in the wheel on the phone (Grant's layout law). Playback needs the person's own account, and full playback needs Premium — stated honestly on screen.</span><span class="tag t-cand">Watch list</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
@@ -305,6 +304,7 @@ a{color:var(--link)}
 <li><span class="name">Sonos and Music Assistant</span> <span class="desc">— music zones around the home. A showing in KÜL or a boat in Lions Gate can reference the music — the controls themselves never live inside a listing.</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 <li><span class="name">Internet radio — Radio Browser</span> <span class="desc">— a free station directory. Honest catch: it is a one-person volunteer project with no uptime promise, so station lists are cached and it is never the only sound source.</span><span class="tag t-cand">Watch list</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> Spotify — connected now, and the one player in the bar. Apple Music, YouTube, Pocket Casts, SoundCloud, and Audible below are options.</p>
 </details>
 </section>
 
@@ -314,7 +314,6 @@ a{color:var(--link)}
 <p class="connects"><strong>Connects to:</strong> the Workbench apps — a door out to each app and a door back from each: references only, never copies · Daybook — Sales leads land in client files, and signed documents and commissions land in Daybook's finances (chain 9) · the Media portal inside the Deck — listing and vessel photos flow in from KÜL, Lions Gate, and the Trellis apps, get edited, and flow back (chain 8) · the Engineering portal inside the Deck — its CAD viewer carries a door to BluePrint's plans · Home — the team's state and needs-attention counts ride on Home's doors · service health — UptimeRobot also feeds the Engineering portal's status view.</p>
 <details open>
 <summary>The Deck floor</summary>
-<p class="inuse"><strong>In use here:</strong> Canopy's own Deck panels — station lamps, usage, tasks, flags, and the member rooms — with Facebook Lead Ads adopted into Sales. UptimeRobot below is an add-on option.</p>
 <p class="how"><strong>How it works:</strong> Your Deck gathers the team's state in one room: who is working, what is open, what needs you. Leads that arrive through Facebook Lead Ads land in Sales, each with its own door into the right business's client files — the ad itself never lives inside the apps.</p>
 <ul class="entries">
 <li><span class="name">Station lamps</span> <span class="desc">— each team member's state: working, idle, parked, flagged, or needs Grant.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
@@ -325,10 +324,10 @@ a{color:var(--link)}
 <li><span class="name">Facebook Lead Ads — into Sales</span> <span class="desc">— one ad set per business (Cityscape, KÜL, Lions Gate), each with its own door into that business's client files. The ad itself never lives inside the business apps.</span></span><span class="tags"><span class="tag t-live">Working</span></span><span class="note">Adopted by Grant on 22 November 2026. The route is real but gated: Meta's review is mandatory and takes days to weeks, and Meta keeps leads for 90 days only — miss the window and the lead is gone.</span></li>
 <li><span class="name">UptimeRobot — service health board</span> <span class="desc">— watches the services and sites the team depends on; free tier covers 50 monitors. Also feeds the Engineering portal's status view.</span><span class="tag t-cand">Watch list</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> Canopy's own Deck panels — station lamps, usage, tasks, flags, and the member rooms — with Facebook Lead Ads adopted into Sales. UptimeRobot below is an add-on option.</p>
 </details>
 <details>
 <summary>Engineering portal — designing and making things</summary>
-<p class="inuse"><strong>In use here:</strong> The portal's own CAD screen and its project chain (FreeCAD and Blender on the desktop), GitHub — connected — Autodesk Viewer, and the free in-app 3D viewers approved to wire in: Babylon.js, Three.js, and model-viewer.</p>
 <p class="how"><strong>How it works:</strong> Your engineering gathers a project and walks it down the chain: designed in FreeCAD, finished in Blender on the desktop, then the model comes back into the app, where you turn it, pan it, and measure it — and stand a camper at true full scale in a client's driveway with the phone's augmented reality.</p>
 <ul class="entries">
 <li><span class="name">Projects feed and tool-chain states</span> <span class="desc">— the project list, with each step's state: Engineering, then FreeCAD, then Blender, then the in-app 3D preview. FreeCAD and Blender are desktop programs; the chain hands real work to them and brings the result back.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
@@ -338,10 +337,10 @@ a{color:var(--link)}
 <li><span class="name">Babylon.js, Three.js, and model-viewer</span> <span class="desc">— free, lightweight 3D viewers that run inside the app in Canopy's own style. Model-viewer also does augmented reality that works today: a camper at true full scale in a client's driveway, patio stones on a patio with colours swapped live, on a phone.</span></span><span class="tags"><span class="tag t-live">Working</span></span><span class="note">Honest limits: life-size condominium augmented reality is not real yet — dollhouse scale or a headset is. And Blender itself cannot live inside a web page; browser experiments failed to start in the team's live test. The working route is Blender on the desktop, then the model comes into the app.</span></li>
 <li><span class="name">Engineering spine and team chat</span> <span class="desc">— six project folder slots (the team names them at packaging; today they honestly read "name not set"), and the portal's own room on the talk service.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> The portal's own CAD screen and its project chain (FreeCAD and Blender on the desktop), GitHub — connected — Autodesk Viewer, and the free in-app 3D viewers approved to wire in: Babylon.js, Three.js, and model-viewer.</p>
 </details>
 <details>
 <summary>Media portal — videos, pictures, advertising</summary>
-<p class="inuse"><strong>In use here:</strong> The portal's own editing screen — a real editor built in, not a viewer — and ElevenLabs for voice, already connected. Photopea is the free editor route; the paid production back ends are out under Grant's no-paid rule.</p>
 <p class="how"><strong>How it works:</strong> Your media gathers every project's photos and videos in one portal. Listing and vessel photos flow in from the apps, you edit them right on the built-in editing screen — a viewer does not count — and the finished media flows back to the listing it belongs to.</p>
 <ul class="entries">
 <li><span class="name">Videos, pictures, and advertising project feeds</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
@@ -352,18 +351,18 @@ a{color:var(--link)}
 <li><span class="name">Voice and production tools</span> <span class="desc">— ElevenLabs (voice) is already connected to the team for Oakley's voice · Deepgram (transcription) · one back end for generated pictures and video (fal.ai, with Replicate as backup and Runway at the high end) · Photoroom (background removal, about two cents a picture) · live broadcast and video-room tools (Mux Live, Daily.co).</span></span><span class="tags"><span class="tag t-live">Working</span></span><span class="note">Warning from the hunt: the standalone remove.bg connection shuts down 1 December 2026 — do not adopt it. Photoroom is the stable pick.</span><span class="note">Grant's no-paid rule (22 November 2026): the paid production tools in this list are out — fal.ai, Replicate, and Runway (the generated-picture and video back ends), Deepgram (transcription), and Photoroom (priced on this page at about two cents a picture). ElevenLabs is already connected to the team and stays — it is not a new paid add.</span></li>
 <li><span class="name">Media spine and team chat</span> <span class="desc">— six slots, same pattern as Engineering, and the portal's own room.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> The portal's own editing screen — a real editor built in, not a viewer — and ElevenLabs for voice, already connected. Photopea is the free editor route; the paid production back ends are out under Grant's no-paid rule.</p>
 </details>
 <details>
 <summary>The chains — what joining things up makes possible</summary>
-<p class="inuse"><strong>In use here:</strong> The sixteen chains themselves — they run across the areas above. The thresholds are Grant's to set, and the standing rule holds: chains draft, people decide.</p>
 <p class="how"><strong>How it works:</strong> Your chains are what happens when the connections fire together: a storm watch writes Snow SITREP by itself; a finished plow becomes proof, then an invoice, then paid. You set the thresholds — how much snow, how much warning — and every message to a client stays a draft until a person approves it.</p>
 <ul class="entries">
 <li><span class="name">The chains</span> <span class="desc">— 1. Storm watch becomes Snow SITREP by itself (the flagship) · 2. Plowing done becomes proof, becomes paid · 3. Freeze and thaw triggers the salt call · 4. A watering-system freeze warning triggers winterising · 5. The 6 a.m. morning SITREP · 6. An outage on a job drafts the reschedule · 7–9. For KÜL: a listing finds its matched buyers; a live listing feeds the media factory; an accepted offer runs the paperwork chain · 10–12. For Lions Gate: a boat's arrival becomes a lead; the sea-trial weather window finds itself; a service coming due gathers its parts, slot, and estimate · 13–14. For money: a finished job becomes reconciled cash; a lead becomes a quote, a signature, a deposit · 15. A plan comes in, a proposal goes out · 16. A finished job becomes the next lead.</span></span><span class="tags"><span class="tag t-live">Working</span></span><span class="note">What makes them real: thresholds Grant sets (how much snow, how much warning; the freezing point; wind and tide limits for a sea trial) and one automation layer. Standing rule: chains draft, people decide — every message to a client stays a draft until a named person approves it.</span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> The sixteen chains themselves — they run across the areas above. The thresholds are Grant's to set, and the standing rule holds: chains draft, people decide.</p>
 </details>
 <details>
 <summary>The magic layer</summary>
-<p class="inuse"><strong>In use here:</strong> ElevenLabs voice inside the app — already connected to the team — and a live drawing canvas (tldraw), both approved to wire in. The delight list below is options.</p>
 <p class="how"><strong>How it works:</strong> Your voice works like this: you talk, Oakley listens through ElevenLabs, and proposes — a human tap commits. Voice alone never sends, buys, or changes anything. The drawing canvas works the same way: a live surface, fed by Canopy's real data, while you pitch.</p>
 <ul class="entries">
 <li><span class="name">Voice inside the app</span> <span class="desc">— ElevenLabs conversation, already connected to the team: Oakley's voice as the interface. One hard rule: voice proposes, a human tap commits.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
@@ -371,19 +370,19 @@ a{color:var(--link)}
 <li><span class="name">A live drawing canvas</span> <span class="desc">— a sales-pitch surface (tldraw) fed by Canopy's real data · agents working as connectors, approval-first.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 <li><span class="name">Delight, ranked</span> <span class="desc">— the bar: a delight feature must move, respond, or change with real time, real data, or the user; it respects reduced-motion settings and always has an off switch. 1. Snow Mode (under Weather Mode, section 1) · 2. Living wallpapers — quiet picture-shaders driven by sun, weather, and music; free, no company · 3. Soundscapes — one mixer, five sliders, through the same music bar · 4. Trivia and games — the Open Trivia Database (free, no key) and Lichess; daily trivia with a household leaderboard; memory-match from the person's own photos · 5. Karaoke and party mode — time-stamped lyrics with Spotify playback; honest limit: not a true karaoke machine · 6. Photo-frame smarts — face-aware cropping, in the browser · 7. Watch-together — YouTube syncing is real; Netflix syncing is not · 8. Vibration as a system — works on Android web; iPhone web cannot.</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> ElevenLabs voice inside the app — already connected to the team — and a live drawing canvas (tldraw), both approved to wire in. The delight list below is options.</p>
 </details>
 <details>
 <summary>How Canopy is put together</summary>
-<p class="inuse"><strong>In use here:</strong> No single app to pick in this box — it is the pattern itself: the Assistant layer under every section, and Google Cast worked in for TVs.</p>
 <p class="how"><strong>How it works:</strong> Your assistant works under every section, not as a page of its own: it points at doors and opens them, and it never pastes one app inside another, or merges two apps into one view. Casting works the same way — a way of showing Canopy on a TV, never a destination.</p>
 <ul class="entries">
 <li><span class="name">AI assistants and their connection standard</span> <span class="desc">— no section, on purpose. They are a layer under every section, not a door and not a page: the assistant points at doors and opens them; it never pastes one app inside another and never merges two apps into one view.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 <li><span class="name">Casting and TVs as screens</span> <span class="desc">— no section either. Worked into Canopy: cast any view to a Google Cast TV from inside the app. A way of showing, not a destination — so no "TV" door is ever created.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> No single app to pick in this box — it is the pattern itself: the Assistant layer under every section, and Google Cast worked in for TVs.</p>
 </details>
 <details>
 <summary>More for the Deck — add the ones your team uses</summary>
-<p class="inuse"><strong>In use here:</strong> No single app picked yet — the options for this box are in the list below.</p>
 <p class="how"><strong>How it works:</strong> If your team uses one of these, it joins the Deck the same way the rest did — its work gathers into the same tasks, sales, and status picture. Nothing here is picked yet; this is the shelf to pick from.</p>
 <ul class="entries">
 <li><span class="name">Figma</span> <span class="desc">— design files, for design teams and solo creators.</span><span class="tag t-cand">Watch list</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
@@ -397,6 +396,7 @@ a{color:var(--link)}
 <li><span class="name">CanadaHelps</span> <span class="desc">— donations and fundraising pages for any registered Canadian charity. CanadaHelps states it offers no connection for outside software at all.</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 <li><span class="name">Made by Canopy itself, no outside company</span> <span class="desc">— a ship-it wind-down ("today you closed two loops — here is tomorrow's top three, now go home") · a win bell that rings when a deal closes · an on-air light for recording · a voice idea inbox · a shout-out wall · a focus room with a 25-minute timer.</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> No single app picked yet — the options for this box are in the list below.</p>
 </details>
 </section>
 
@@ -406,7 +406,6 @@ a{color:var(--link)}
 <p class="connects"><strong>Connects to:</strong> Canopy's centre — an app plugged in here has everything it carries working across Canopy · the Command Deck — doors both ways between the Deck and every app · Daybook — every app's money lands in Daybook's finances and its bookings in Daybook's calendar · Google Maps — in every app, everywhere · Google Sheets behind the scenes — client lists, price tables, and take-off sheets are a shared data layer the apps draw on through doors (chains 7, 13, 14, 15).</p>
 <details open>
 <summary>Grant's apps — Northbirch and Cityscape</summary>
-<p class="inuse"><strong>In use here:</strong> Our own apps: Trellis, SiteVision, the Northbirch app, and BluePrint. BluePrint's working services are Aspire, LMN, QuickBooks, and Google Maps — detailed in BluePrint's own box below.</p>
 <p class="how"><strong>How it works:</strong> Your apps plug into the Workbench, and everything they carry then works across Canopy: their money lands in Daybook's finances, their bookings in Daybook's calendar, their jobs on the Deck. BluePrint gathers your Cityscape sales work, with Aspire and LMN feeding schedules and costs in, and billing back out.</p>
 <ul class="entries">
 <li><span class="name">Trellis</span> <span class="desc">— the green-trades umbrella: the products Northbirch sells. Its door goes nowhere until it is built.</span></span><span class="tags"><span class="tag t-live">Working</span></span><span class="connects"><strong>Connects to:</strong> the Command Deck — its trades' jobs surface in Deck Tasks and their leads and proposals in Deck Sales · Daybook — QuickBooks paycheques, invoices, and job costing land in Daybook's finances · BluePrint — plans flow between them (chain 15).</span></li>
@@ -416,11 +415,11 @@ a{color:var(--link)}
 <li><span class="name">Talk button</span> <span class="desc">— Oakley on Grant's bench. Opens an honest shell today; joins the talk service at packaging.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 <li><span class="name">Add Yours slots</span> <span class="desc">— add your own app, enter its address, the door opens it. Saved on the device.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> Our own apps: Trellis, SiteVision, the Northbirch app, and BluePrint. BluePrint's working services are Aspire, LMN, QuickBooks, and Google Maps — detailed in BluePrint's own box below.</p>
 </details>
 <details>
 <summary>Trellis — the seven trades</summary>
 <p class="sec-note">Departments link to each other, not just to Canopy: BluePrint's plans flow to Course, Mainline, and Lumen; Flurry and Tend share routing and crews; the Deck sends Course a lead and a site, and proposals come back; SITREP sends freeze alerts into Mainline.</p>
-<p class="inuse"><strong>In use here:</strong> Our own seven trades: Mainline, Lumen, Flurry, Course, Bole, Tend, and Glimmer. The outside tools they use sit in the two boxes below.</p>
 <p class="how"><strong>How it works:</strong> Your seven trades link to each other, not just to Canopy: BluePrint's plans flow to Course, Mainline, and Lumen; Flurry and Tend share routes and crews; a freeze alert in SITREP becomes a winterise job in Mainline. Each trade's jobs gather into the Deck, and its money into Daybook.</p>
 <ul class="entries">
 <li><span class="name">Mainline</span> <span class="desc">— irrigation. Its sections: Service, Install, Office, Routes, Crews, Equipment, Hardware.</span></span><span class="tags"><span class="tag t-live">Working</span></span><span class="connects"><strong>Connects to:</strong> Home and SITREP — freeze alerts flow in and become winterise jobs (chain 4) · the Command Deck — jobs in Tasks, quotes and proposals in Sales (chains 14–15) · BluePrint — plans flow in for materials and specs · its controllers — Hunter Hydrawise and Rain Bird IQ4 carry the watering data · Daybook's home layer — a home's irrigation devices are referenced through the home bridge, never controlled from the app.</span></li>
@@ -431,10 +430,10 @@ a{color:var(--link)}
 <li><span class="name">Tend</span> <span class="desc">— grass cutting and maintenance.</span></span><span class="tags"><span class="tag t-live">Working</span></span><span class="connects"><strong>Connects to:</strong> the Command Deck — recurring schedules from Service Autopilot sync into Deck Tasks · Daybook — completed visits bill through Daybook's finances (chain 13) · Flurry — route planning (Routific) is shared between them · Daybook's home layer — robot mowers at a client's home are a reference door back to Daybook's home section, never controls inside a client file.</span></li>
 <li><span class="name">Glimmer</span> <span class="desc">— holiday and event decorating. Its checklist and estimator exist as a standalone tool; the app itself is not built.</span></span><span class="tags"><span class="tag t-live">Working</span></span><span class="connects"><strong>Connects to:</strong> the Command Deck — designs and schedules from its decor tools sync into Sales proposals · Daybook — install dates land in the calendar, and wholesale suppliers feed products and pricing in.</span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> Our own seven trades: Mainline, Lumen, Flurry, Course, Bole, Tend, and Glimmer. The outside tools they use sit in the two boxes below.</p>
 </details>
 <details>
 <summary>Tools that sit under Trellis — add the ones your business uses</summary>
-<p class="inuse"><strong>In use here:</strong> No single app picked yet as the one we use — the options for this box are in the list below.</p>
 <p class="how"><strong>How it works:</strong> Whichever of these your business actually uses plugs in under Trellis as your own copy: your books in QuickBooks flow a paycheque through to Daybook's finances; your pipeline in HubSpot gathers your customers in one place. Every business's copy is its own account, drawn separately on purpose.</p>
 <ul class="entries">
 <li><span class="name">QuickBooks</span> <span class="desc">— the books and payroll, under Trellis. Its paycheque flows through to Daybook's finances — the link back is drawn as a visible tether in the diagram. (BluePrint and the Deck carry their own copies — see below.)</span><span class="tag t-cand">Watch list</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
@@ -444,10 +443,10 @@ a{color:var(--link)}
 <li><span class="name">LMN</span> <span class="desc">— landscaping business software with no public connection at all.</span><span class="tag t-cand">Watch list</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 <li><span class="name">More operations depth</span> <span class="desc">— Housecall Pro · Go iLawn and ExaYard (measuring and take-offs) · Routific (route planning, Canadian) · SnowPlowTracker.ca · plant data with real routes (Perenual, Trefle) · accounting alternatives (Xero, FreshBooks, Wave) · signing (PandaDoc — quotes and signing together; DocuSign; Dropbox Sign; Adobe Sign) · Homebase (crew scheduling and payroll, free basic tier).</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> No single app picked yet as the one we use — the options for this box are in the list below.</p>
 </details>
 <details>
 <summary>Each trade's own tools</summary>
-<p class="inuse"><strong>In use here:</strong> No single app picked yet — each trade's controller and catalogue options are in the list below.</p>
 <p class="how"><strong>How it works:</strong> Each trade gathers its own kit the same way: Mainline's watering controllers report through Hydrawise, Bole's tree work through ArborNote. The tool plugs in under its trade, and what it measures flows up into that trade's jobs and proposals.</p>
 <ul class="entries">
 <li><span class="name">Mainline (irrigation)</span> <span class="desc">— Hunter Hydrawise (a real connection) and Rain Bird IQ4, for watering controllers.</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
@@ -457,11 +456,11 @@ a{color:var(--link)}
 <li><span class="name">Tend (maintenance)</span> <span class="desc">— Service Autopilot against RealGreen.</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 <li><span class="name">Glimmer (decorating)</span> <span class="desc">— LumiOps, Strandr, LightHawk, and Dekra-Lite Canada wholesale.</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> No single app picked yet — each trade's controller and catalogue options are in the list below.</p>
 </details>
 <details>
 <summary>Flurry's kit — weather, tracking, sensors</summary>
 <p class="sec-note">Flurry is the snow product: Dispatch for the office and home, Operations for out plowing, Northbirch-only for now. Its storm mode is <strong>Snow SITREP</strong> — Grant's name for it, carrying the snow-fighter identity: "kind of like a firefighter but snow fighters. We fight Mother Nature."</p>
-<p class="inuse"><strong>In use here:</strong> Environment Canada's data services, OpenWeather, Tomorrow.io, Visual Crossing, and Ontario 511; Geotab tracking plus Flurry's own truck readers; Tempest and Davis weather stations. Confirmed in by Grant today: CoCoRaHS, Vaisala Xweather, and Samsara — on Cityscape's existing account.</p>
 <p class="how"><strong>How it works:</strong> Your snow work gathers the storm from every side: Environment Canada and the other weather sources for what is coming, CoCoRaHS for the snow actually measured on the ground, Vaisala for the road surface itself, and Geotab and Samsara for where your trucks are and how much salt they have spread. When the storm watch fires, Snow SITREP writes itself.</p>
 <ul class="entries">
 <li><span class="name">Weather data</span> <span class="desc">— Environment Canada's map and data services (city forecasts, measured precipitation analysis, radar, emergency alerts) · OpenWeather (snow amounts) · Tomorrow.io (snow build-up and depth) · Visual Crossing (history) · home weather stations (Weather Underground personal stations, Tempest, Davis) · Ontario 511 road conditions and cameras.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
@@ -471,10 +470,10 @@ a{color:var(--link)}
 <li><span class="name">Vaisala Xweather — road weather</span> <span class="desc">— forecast road-surface conditions: dry or wet, water, snow and ice thickness, and the risk of skimming on water. Fills the road-sensor gap without needing the province's locked network.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 <li><span class="name">Samsara — a second tracking route</span> <span class="desc">— vehicle location and engine data for every vehicle, plus driver inspection reports. An alternative and a companion to Geotab; commercial hardware and subscription. Grant confirmed it in on 22 November 2026: Cityscape already uses Samsara, so it comes in on Cityscape's existing account — not a new paid add.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> Environment Canada's data services, OpenWeather, Tomorrow.io, Visual Crossing, and Ontario 511; Geotab tracking plus Flurry's own truck readers; Tempest and Davis weather stations. Confirmed in by Grant today: CoCoRaHS, Vaisala Xweather, and Samsara — on Cityscape's existing account.</p>
 </details>
 <details>
 <summary>BluePrint's tools — Cityscape's own kit</summary>
-<p class="inuse"><strong>In use here:</strong> QuickBooks — BluePrint's own copy — HindSite and FieldCentral (through their QuickBooks sync), Aspire, LMN, and Google Maps. Workforce is still an open question: three products share the name, and Grant has not said which one.</p>
 <p class="how"><strong>How it works:</strong> Your BluePrint gathers Cityscape's kit like this: QuickBooks holds its finances, and FieldCentral — the scheduling and field app — talks to BluePrint only through QuickBooks' two-way sync, never a direct link. Aspire and LMN feed schedules and costs in; Google Maps carries the job sites.</p>
 <ul class="entries">
 <li><span class="name">QuickBooks — BluePrint's own copy</span> <span class="desc">— BluePrint's finances. QuickBooks also sits under Trellis and on the Deck floor; each is that place's own account, drawn separately on purpose.</span><span class="tag t-cand">Watch list</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
@@ -482,10 +481,10 @@ a{color:var(--link)}
 <li><span class="name">Workforce — which one?</span> <span class="desc">— the name alone does not settle it. Three different products share it: Workforce.com (scheduling, time, and pay for hourly teams — the closest match for a crew business, with a public connection) · the ADP WorkForce Suite (big-company workforce management) · WorkForceFSM (a field-service scheduling assistant; its connection was not verified).</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 <li><span class="name">BluePrint's working services</span> <span class="desc">— Aspire and LMN (above), Google Maps, and the Cityscape workflow.</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> QuickBooks — BluePrint's own copy — HindSite and FieldCentral (through their QuickBooks sync), Aspire, LMN, and Google Maps. Workforce is still an open question: three products share the name, and Grant has not said which one.</p>
 </details>
 <details>
 <summary>Work and business pick-list</summary>
-<p class="inuse"><strong>In use here:</strong> No single app picked yet — the options for the next owners are in the list below.</p>
 <p class="how"><strong>How it works:</strong> For the next owner, setup works like this: Canopy asks what you already use — your store, your invoicing, your reviews — you pick it, and it plugs in under your app the same way Grant's did. These are the shelves it picks from.</p>
 <ul class="entries">
 <li><span class="name">For the next hundred owners</span> <span class="desc">— Google Business Profile (the front door: listing and reviews; approval-gated) · Shopify (store and orders) · Square Appointments and Square Online · FreshBooks (one-person invoicing) · Mailchimp (email marketing) · Pipedrive (a customer system for one) · PandaDoc (quote to signature to payment) · Yelp (review excerpts only) · Acuity (booking) · HomeStars (Canadian trades leads, about 200 Canadian dollars a month, shared leads — eyes open) · Stan Store and Gumroad (link-out class).</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
@@ -496,6 +495,7 @@ a{color:var(--link)}
 <li><span class="name">Maps beyond Google</span> <span class="desc">— Mapbox first (clearly better for custom maps), OpenStreetMap with Leaflet as the free fallback, then Apple Maps, HERE, TomTom.</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 <li><span class="name">Picture and video generation</span> <span class="desc">— Leonardo, OpenAI Images, Runway, Luma, Pika, Canva. Midjourney has no public connection at all.</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> No single app picked yet — the options for the next owners are in the list below.</p>
 </details>
 </section>
 
@@ -505,7 +505,6 @@ a{color:var(--link)}
 <p class="connects"><strong>Connects to:</strong> the Command Deck — one shared HubSpot pipeline carries KÜL, Lions Gate, and Cityscape leads into Deck Sales · Daybook — bookings land in the calendar, signed deals and commissions land in finances, and client messages arrive through WhatsApp and Telegram · Home and SITREP — the marine layer (vessel positions, marine weather, tides) is shared with Lions Gate · each other — KÜL and Lions Gate share one deal-flow kit: signatures, scheduling, personal video, and voice.</p>
 <details open>
 <summary>His shelf</summary>
-<p class="inuse"><strong>In use here:</strong> KÜL Real Estate and Lions Gate Yachts — the two live apps — plus CMS Construction, StructureIQ, 8Twelve Mortgages, Brand My Aqua, purEnzyme, and Atra Lend on the same shelf.</p>
 <p class="how"><strong>How it works:</strong> Johnny's apps work the way Grant's do: they plug into his Workbench, they show their insides — Today, Listings, Clients, Calendar, Email, Social — and everything they carry links across Canopy, with Tucker as his assistant.</p>
 <ul class="entries">
 <li><span class="name">KÜL Real Estate</span> <span class="desc">— Johnny's real-estate app. The one Workbench card with a live address: it opens the shipped app.</span></span><span class="tags"><span class="tag t-live">Working</span></span><span class="connects"><strong>Connects to:</strong> CREA's listings feed — live listings flow in, and a new listing is matched to waiting buyers (chain 7) · the businesses' own websites — listings and photos feed in automatically · the Command Deck — leads and the shared HubSpot pipeline land in Sales, and listing photos flow to the Media portal for staging, tours, and floor plans, with the finished media flowing back (chain 8) · Daybook — showings booked through ShowingTime and Calendly land in the calendar, and an accepted offer runs the paperwork chain: signatures out, then deal status and commission into finances (chain 9) · 8Twelve — its mortgage door sits inside KÜL: deal details out, mortgage options in · clients — WhatsApp and Telegram messages, and a personal video after a showing, sent through Gmail.</span></li>
@@ -514,10 +513,10 @@ a{color:var(--link)}
 <li><span class="name">Brand My Aqua · purEnzyme · Atra Lend</span> <span class="desc">— preview doors on the shelf, filled the same way.</span></span><span class="tags"><span class="tag t-live">Working</span></span><span class="note">Honest flag from the team's connection map: for these thinner apps, the record names no app-specific outside services — family pattern only (a door out and a door back, Google Maps, and the Social, Email, Calendar, and Assistant pattern every business app carries).</span><span class="connects"><strong>Connects to:</strong> The Workbench by a door out and a door back, Google Maps everywhere, and Canopy's shared layers — the family pattern every business app carries. The record names no app-specific outside services for these three.</span></li>
 <li><span class="name">Talk button</span> <span class="desc">— Tucker on Johnny's bench.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> KÜL Real Estate and Lions Gate Yachts — the two live apps — plus CMS Construction, StructureIQ, 8Twelve Mortgages, Brand My Aqua, purEnzyme, and Atra Lend on the same shelf.</p>
 </details>
 <details>
 <summary>What flows into his apps automatically</summary>
-<p class="inuse"><strong>In use here:</strong> The listings feeds from the businesses' own websites — photos and all — Google Maps worked in, and Canopy's shared weather. HubSpot below is the customer-system option, as Johnny's own copy.</p>
 <p class="how"><strong>How it works:</strong> Johnny's listings gather themselves: his own websites feed new listings, and their photos, in automatically; Maps pins every address; Canopy's shared weather rides along, labelled with its source and date. And if a client saved in an app is not in his phone, the app offers to add them.</p>
 <ul class="entries">
 <li><span class="name">Listings from the businesses' own websites</span> <span class="desc">— Grant's ruling: listings feeding in automatically from the business's own website — photos and all — is in Canopy's DNA, for all the apps. KÜL's own site carries its active listings with photos and a page per listing.</span></span><span class="tags"><span class="tag t-live">Working</span></span><span class="note">Honest gap: Lions Gate's yacht-sales page carries no named for-sale boats or listing photos, so an automatic feed cannot carry what the site does not publish. That gap stands until the site does.</span></li>
@@ -525,10 +524,10 @@ a{color:var(--link)}
 <li><span class="name">Client and phone sync</span> <span class="desc">— if a client saved in one of the apps calls or texts and is not saved in the phone, the app offers to add that client to the phone's contacts.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 <li><span class="name">HubSpot — Johnny's own copy</span> <span class="desc">— his customer relationships, under his apps — separate from Cityscape's copy under Trellis.</span><span class="tag t-cand">Watch list</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> The listings feeds from the businesses' own websites — photos and all — Google Maps worked in, and Canopy's shared weather. HubSpot below is the customer-system option, as Johnny's own copy.</p>
 </details>
 <details>
 <summary>KÜL's deal flow</summary>
-<p class="inuse"><strong>In use here:</strong> No single app picked yet — CREA's listings feed runs through Johnny's own member access, and the showing, lockbox, paperwork, and booking options are in the list below.</p>
 <p class="how"><strong>How it works:</strong> A KÜL deal gathers like this: CREA's feed brings the live listings in through Johnny's own member access; a new listing is matched to waiting buyers; showings book into the calendar; and an accepted offer runs the paperwork chain — signatures out, then the deal's status and commission into finances.</p>
 <ul class="entries">
 <li><span class="name">CREA listings feed (the REALTOR.ca data distribution feed)</span> <span class="desc">— live Canadian listings for KÜL. Permission-based: members and brokers only, so it needs Johnny's own access. A different source from KÜL's own website feed above.</span><span class="tag t-cand">Watch list</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
@@ -540,11 +539,11 @@ a{color:var(--link)}
 <li><span class="name">Follow Up Boss</span> <span class="desc">— the realtor's customer-relationship system.</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 <li><span class="name">Calendly</span> <span class="desc">— clients book showings, sea trials, and estimates straight into the calendar.</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> No single app picked yet — CREA's listings feed runs through Johnny's own member access, and the showing, lockbox, paperwork, and booking options are in the list below.</p>
 </details>
 <details>
 <summary>Lions Gate's marine depth</summary>
 <p class="sec-note">The charter line is held: Lions Gate is a sales brokerage. LogYacht is excluded — its own description includes charter — and charter marketplaces are deliberately not listed anywhere on this page.</p>
-<p class="inuse"><strong>In use here:</strong> No single app picked yet — the options for this box are in the list below.</p>
 <p class="how"><strong>How it works:</strong> A Lions Gate boat gathers its world around it: MarineTraffic brings its position in; marine weather and the official tides sit beside it; the sea-trial window finds itself from the weather and the tides. Listings flow out to the marketplaces, and inquiries flow back in.</p>
 <ul class="entries">
 <li><span class="name">MarineTraffic — vessel tracking</span> <span class="desc">— live boat positions, worked into Lions Gate. Sits under Lions Gate, never loose at Workbench level.</span><span class="tag t-cand">Watch list</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
@@ -557,6 +556,7 @@ a{color:var(--link)}
 <li><span class="name">Boat-supply shops (chandleries)</span> <span class="desc">— Binnacle Canada, West Marine, Western Marine wholesale.</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 <li><span class="name">YachtWorld and Boat Trader</span> <span class="desc">— link-out first; their listing data is partner-gated, with no verified open connection.</span><span class="tag t-cand">Watch list</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> No single app picked yet — the options for this box are in the list below.</p>
 </details>
 </section>
 
@@ -564,7 +564,6 @@ a{color:var(--link)}
 <div class="sec-head"><div class="chipdot" style="background:var(--faint)"></div><h2>6 · Behind the scenes — the team's own accounts</h2></div>
 <p class="sec-note">The connections the team itself runs on. These are connected at the hub; the in-app surfaces join at packaging.</p>
 <p class="connects"><strong>Connects to:</strong> everything above — these hub accounts are the rails the in-app surfaces ride on: the calendar feeds Daybook and Home's calendar box, Drive holds the finance workbook and the team's documents of record, Sheets is the apps' shared data layer, Todoist feeds the Deck's open-tasks picture, and GitHub serves every preview build Grant and Johnny open.</p>
-<p class="inuse"><strong>In use here:</strong> Todoist, Gmail, Google Calendar, Google Drive, Google Contacts, Google Sheets, Google Docs, GitHub, and ElevenLabs — all connected now — plus Vercel, approved to host the team relay.</p>
 <p class="how"><strong>How it works:</strong> These accounts are the rails everything above rides on: your calendar fills Daybook and Home's calendar box; Drive holds the finance workbook and the team's documents of record; Sheets is the shared data layer the apps draw on through doors — never a page pasted inside a client file; Todoist feeds the Deck's open-tasks picture; GitHub serves every preview you open.</p>
 <ul class="entries">
 <li><span class="name">Todoist</span> <span class="desc">— the team's system of record for tasks. Oakley's tasks, the team's boards, and the Deck's open-tasks picture all trace back to it.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
@@ -578,6 +577,7 @@ a{color:var(--link)}
 <li><span class="name">Vercel — the relay host</span> <span class="desc">— hosts the hub proxy: the small relay that fetches the camera, weather, news, markets, TV, and world feeds on the server side, keeps the City's camera certificate and the video key secret, and serves every user from one shared fetch. Free tier; if it ever pauses, the app honestly shows OFFLINE.</span></span><span class="tags"><span class="tag t-live">Working</span></span><span class="note">The relay itself was built and live-tested on 18 November 2026 — all six hard-to-reach feeds returned live data through it. What is pending is only putting it on Vercel.</span></li>
 <li><span class="name">ElevenLabs</span> <span class="desc">— already connected to the team: it is Oakley's voice. Its in-app form (voice conversation) is in the hunt section.</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> Todoist, Gmail, Google Calendar, Google Drive, Google Contacts, Google Sheets, Google Docs, GitHub, and ElevenLabs — all connected now — plus Vercel, approved to host the team relay.</p>
 </section>
 
 <section id="ideas">
@@ -586,25 +586,24 @@ a{color:var(--link)}
 <p class="connects"><strong>Connects to:</strong> the areas above, when a person adds them — each one joins the area it belongs to (the day, the home, money, interests) as a door: a reference that opens the outside service, never content pasted inside Canopy. That is the same rule everything else on this page follows.</p>
 <details open>
 <summary>Things Canopy can simply do itself</summary>
-<p class="inuse"><strong>In use here:</strong> No app to pick in this box — these are things Canopy itself can do, offered as options a person can turn on.</p>
 <p class="how"><strong>How it works:</strong> These work from what is already in Canopy: your calendar plus the weather writes your morning briefing; what is in your kitchen suggests dinner; your trip builds its own packing list. No outside app — Canopy just joins up what it already knows.</p>
 <ul class="entries">
 <li><span class="name">From a person's own day</span> <span class="desc">— a morning briefing (calendar plus weather) · what's for dinner, from what is already in the kitchen · gentle medication reminders, with a missed-dose nudge to a family member the person chooses (never a medical claim) · plant care that remembers · shared chores with fair rotation · birthdays and anniversaries, with a gift nudge a week early · a packing list that knows the trip and the destination's weather · a one-line-a-day private journal that resurfaces "on this day" a year later · what to wear today, in one line · bin day the night before.</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> No app to pick in this box — these are things Canopy itself can do, offered as options a person can turn on.</p>
 </details>
 <details>
 <summary>City services and life admin</summary>
-<p class="inuse"><strong>In use here:</strong> No single app picked yet — the options for this box are in the list below.</p>
 <p class="how"><strong>How it works:</strong> These work as doors: tap the library and you are in Libby, with your holds and due dates; tap a life-admin door and you are on that service's own page — those services keep your details behind their own sign-in and offer no feed. A door is the honest offer.</p>
 <ul class="entries">
 <li><span class="name">Ottawa Public Library and Libby (OverDrive)</span> <span class="desc">— ebooks, audiobooks, holds, and due dates.</span><span class="tag t-cand">Watch list</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 <li><span class="name">Flipp flyers</span> <span class="desc">— weekly grocery flyers, through Flipp's own connection; otherwise a link out.</span><span class="tag t-cand">Watch list</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 <li><span class="name">Honest doors (no live feed exists)</span> <span class="desc">— school-bus delays and closures (the Ottawa Student Transportation Authority) · the child-care waitlist · Health811 and emergency-room wait times · 211 Ontario (food banks, housing help, seniors' services) · Para Transpo booking · government benefits (the Canada Revenue Agency and Service Canada) · pharmacy refills (Shoppers Drug Mart, Rexall) · student loans (the provincial student aid and national loan services).</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span><span class="note">These are login-gated pages with no public feed for personal details. A door is the honest offer.</span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> No single app picked yet — the options for this box are in the list below.</p>
 </details>
 <details>
 <summary>Mainstream household</summary>
-<p class="inuse"><strong>In use here:</strong> No single app picked yet — the options for this box are in the list below.</p>
 <p class="how"><strong>How it works:</strong> These join your household the same way: the flyers plan your week, your parcels gather in one place, and each service you actually have plugs in as itself. Canopy never promises a live sync that a service does not offer.</p>
 <ul class="entries">
 <li><span class="name">Flipp</span> <span class="desc">— plan the week around the flyer (also in city services above).</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
@@ -616,10 +615,10 @@ a{color:var(--link)}
 <li><span class="name">Ancestry</span> <span class="desc">— family-history hobbyists.</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 <li><span class="name">TheScore</span> <span class="desc">— sports fans.</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> No single app picked yet — the options for this box are in the list below.</p>
 </details>
 <details>
 <summary>Interests and hobbies — verified live</summary>
-<p class="inuse"><strong>In use here:</strong> No single app picked yet — the options for this box, each one verified live by the team, are in the list below.</p>
 <p class="how"><strong>How it works:</strong> Your hobbies gather the same way: a free key or a sign-in, and the feed lands in your day — the sky picture each morning, your chess puzzles, the events near you. Each one below was checked live by the team before it earned its place here.</p>
 <ul class="entries">
 <li><span class="name">Astronomy Picture of the Day (the space agency, NASA)</span> <span class="desc">— plus Mars rover photos and near-Earth objects. Free key.</span><span class="tag t-cand">Watch list</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
@@ -634,15 +633,16 @@ a{color:var(--link)}
 <li><span class="name">TheSportsDB</span> <span class="desc">— sports scores. Honest catch: the free tier is a shared test key; live scores with two-minute updates need the nine-dollar-a-month supporter plan.</span><span class="tag t-cand">Watch list</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 <li><span class="name">OpenFarm</span> <span class="desc">— crop-growing guides and companion planting. Kept only with its warning: the project's own documents say its connection "is not done," and the project is quiet — check the live address answers before building on it.</span><span class="tag t-cand">Watch list</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> No single app picked yet — the options for this box, each one verified live by the team, are in the list below.</p>
 </details>
 <details>
 <summary>Home and world, for other places and other households</summary>
-<p class="inuse"><strong>In use here:</strong> No single app picked yet — the options for other places and other households are in the list below.</p>
 <p class="how"><strong>How it works:</strong> For a different kind of home, the layer swaps its sources: a coastal home gathers tides and surge, a farm gathers frost and rain, any home can watch its air and its water. Same layer, different weather — it fits the place you actually live.</p>
 <ul class="entries">
 <li><span class="name">Tsunami alerts</span> <span class="desc">— the official source takes subscriptions by email and text message; no official feed exists to pull. The only feed-shaped route found is an unofficial paid wrapper — not used.</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 <li><span class="name">Home awareness for Ontario homes</span> <span class="desc">— Enbridge Gas (link-out only; bills and use live in its own app) · Flo by Moen (a leak shut off before it becomes a flood; partner connection — verify) · PurpleAir (street-level smoke and dust) · Airthings (radon, carbon dioxide, indoor air) · Enphase (what the rooftop solar panels earned today) · HouseSigma (what the home is worth, from sold prices on the street) · IQAir (air quality, free tier).</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> No single app picked yet — the options for other places and other households are in the list below.</p>
 </details>
 </section>
 
@@ -652,7 +652,6 @@ a{color:var(--link)}
 <p class="connects"><strong>Connects to:</strong> the areas they belong to, when adopted — transit times join Home and SITREP's traffic picture, solar and grid data join Daybook's home layer, and each new find is placed by the same rule as everything else: under the area or app it serves, with its link back into Canopy drawn.</p>
 <details open>
 <summary>Ottawa and everyday data</summary>
-<p class="inuse"><strong>In use here:</strong> OC Transpo's own free bus-time data — the named route for transit. The rest below are options the hunt found.</p>
 <p class="how"><strong>How it works:</strong> Your bus times gather from OC Transpo's own free data feed, straight into your commute picture; the canal and the park conditions come from the National Capital Commission's own feeds. The rest are data sources waiting for the day they would earn a place.</p>
 <ul class="entries">
 <li><span class="name">OC Transpo bus times</span> <span class="desc">— live bus times and alerts from the transit agency's own free data.</span><span class="tag t-cand">Watch list</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
@@ -661,10 +660,10 @@ a{color:var(--link)}
 <li><span class="name">More open data</span> <span class="desc">— ocean buoys (wave height) · OpenAQ air quality · the space station's position · eBird bird sightings (free key) · PurpleAir hyperlocal air (paid; free to the sensor's owner).</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 <li><span class="name">Lightning data — a hard limit</span> <span class="desc">— the volunteer lightning network's feeds work, but commercial use is banned. Personal display only, and only with permission — a question parked for Grant.</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> OC Transpo's own free bus-time data — the named route for transit. The rest below are options the hunt found.</p>
 </details>
 <details>
 <summary>Everyday life the early rounds missed</summary>
-<p class="inuse"><strong>In use here:</strong> Pets at home and platform worlds — confirmed in by Grant today. The rest below are options the hunt found.</p>
 <p class="how"><strong>How it works:</strong> These gather the everyday things the first hunts walked past — the pets, the family calendars, the food — each one joining the area it belongs to when it is adopted, the same as everything else on this page.</p>
 <ul class="entries">
 <li><span class="name">Food and household</span> <span class="desc">— Spoonacular (the only real recipe connection) plus OpenFoodFacts (free) · groceries are mostly link-outs (Voilà, PC Express, Metro, Walmart, Instacart) · meal kits link out.</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
@@ -676,6 +675,7 @@ a{color:var(--link)}
 <li><span class="name">Fun and social layer</span> <span class="desc">— sports: the hockey league's free public connection (hockey first) plus TheSportsDB; a paid upgrade exists and an unofficial shortcut was rejected · open social feeds (Bluesky, Mastodon) · Twitch and Steam · short looping pictures (Klipy — the big GIF library is now paid and the other one is dead) · CapCut, the video editor people actually use, which the early rounds missed because they covered professional tools only · casting Canopy to the TV as a photo frame.</span></span><span class="tags"><span class="tag t-cand">Optional — add if you have it</span></span></li>
 <li><span class="name">Platform worlds</span> <span class="desc">— Microsoft's account umbrella (Microsoft Graph) · Apple services · Samsung · Google Photos and the YouTube data connection (section 3).</span></span><span class="tags"><span class="tag t-live">Working</span></span></li>
 </ul>
+<p class="inuse"><strong>In use here:</strong> Pets at home and platform worlds — confirmed in by Grant today. The rest below are options the hunt found.</p>
 </details>
 </section>
 

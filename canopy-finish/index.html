@@ -481,12 +481,12 @@ body{animation:pgin 200ms ease-out}
 </style>
 </head><body>
 <div class="bridge" id="bridge">
- <header class="top"><a class="hlogo" href="./index.html" aria-label="Canopy — Home" title="Home"><img class="nblogo" src="./assets/northbirch-head-only-v10.svg" alt="Canopy — Oakley"><span class="hword" aria-hidden="true">CANOPY</span></a><a class="chrono" href="./sitrep.html#tab=1" aria-label="SITREP — Ottawa time and weather. Opens the SITREP tab" title="SITREP — time and weather, Ottawa"><span class="ckrow"><b id="ck" class="num">--:--:--</b><i id="dt">---</i><i id="ut">---</i></span><span class="wxrow"><span class="wx" aria-hidden="true"><svg viewBox="0 0 48 30"><g class="rays" stroke="#FACC15" stroke-width="2.4" stroke-linecap="round" fill="none"><path d="M14 2v4M5 6l3 3M23 6l-3 3M2 15h4"/></g><circle cx="14" cy="15" r="5.4" fill="#FACC15"/><path class="cld" d="M20 24.6h17.4a4.9 4.9 0 0 0 .8-9.7 8.2 8.2 0 0 0-15.7-1.6A5.4 5.4 0 0 0 20 24.6Z" fill="#dfe9f5"/></svg></span><span class="wxt num" id="ckwx-t">--°</span><span class="wxc" id="ckwx-c">OTTAWA</span></span></a><nav class="doors" id="doors" aria-label="Sections"></nav></header>
+ <header class="top"><a class="hlogo" href="./index.html" aria-label="Canopy — Home" title="Home"><img class="nblogo" src="./assets/northbirch-head-only-v10.svg" alt="Canopy — Oakley"><span class="hword" aria-hidden="true">CANOPY</span></a><a class="chrono" href="./sitrep.html#tab=1" aria-label="SITREP — Ottawa time and weather. Opens the SITREP tab" title="SITREP — time and weather, Ottawa"><span class="ckrow"><b id="ck" class="num">--:--:--</b><i id="dt">---</i><i id="ut">---</i></span><span class="wxrow"><span class="wx" aria-hidden="true"><svg viewBox="0 0 48 30"><g class="rays" stroke="#FACC15" stroke-width="2.4" stroke-linecap="round" fill="none"><path d="M14 2v4M5 6l3 3M23 6l-3 3M2 15h4"/></g><circle cx="14" cy="15" r="5.4" fill="#FACC15"/><path class="cld" d="M20 24.6h17.4a4.9 4.9 0 0 0 .8-9.7 8.2 8.2 0 0 0-15.7-1.6A5.4 5.4 0 0 0 20 24.6Z" fill="#dfe9f5"/></svg></span><span class="wxt num" id="ckwx-t">--°</span><span class="wxc" id="ckwx-c">OTTAWA</span></span></a><nav class="doors" id="doors" aria-label="Sections"><a class="cnd" href="./deck.html">COMMAND DECK</a><a class="cnd" href="./sitrep.html">SITREP</a><a class="cnd" href="./daybook.html">DAYBOOK</a><a class="cnd" href="./workbench.html">WORKBENCH</a></nav></header>
  
  <main class="deck" id="deck">
-  <div class="col" id="c1"><section class="card" id="wx"></section><section class="card" id="cc"></section><section class="card" id="yw"></section></div>
-  <div class="col" id="c2"><section class="card" id="nw"></section><section class="card" id="wm"></section></div>
-  <div class="col" id="c3"><section class="card" id="mk"></section><section class="card" id="sc"></section><section class="card" id="cl"></section><section class="card" id="tm"></section></div>
+  <div class="col" id="c1"><section class="card" id="wx"><div class="skl">LOADING — panels fill in as their feeds arrive</div></section><section class="card" id="cc"><div class="skl">LOADING — panels fill in as their feeds arrive</div></section><section class="card" id="yw"><div class="skl">LOADING — panels fill in as their feeds arrive</div></section></div>
+  <div class="col" id="c2"><section class="card" id="nw"><div class="skl">LOADING — panels fill in as their feeds arrive</div></section><section class="card" id="wm"><div class="skl">LOADING — panels fill in as their feeds arrive</div></section></div>
+  <div class="col" id="c3"><section class="card" id="mk"><div class="skl">LOADING — panels fill in as their feeds arrive</div></section><section class="card" id="sc"><div class="skl">LOADING — panels fill in as their feeds arrive</div></section><section class="card" id="cl"><div class="skl">LOADING — panels fill in as their feeds arrive</div></section><section class="card" id="tm"><div class="skl">LOADING — panels fill in as their feeds arrive</div></section></div>
  </main>
  <div class="memwm" aria-label="In memory of Oakley"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="currentColor"><ellipse cx="12" cy="15.5" rx="4.6" ry="3.8"/><ellipse cx="4.6" cy="10.6" rx="1.9" ry="2.5" transform="rotate(-18 4.6 10.6)"/><ellipse cx="8.6" cy="7.6" rx="2" ry="2.7" transform="rotate(-6 8.6 7.6)"/><ellipse cx="13.4" cy="7.6" rx="2" ry="2.7" transform="rotate(6 13.4 7.6)"/><ellipse cx="17.4" cy="10.6" rx="1.9" ry="2.5" transform="rotate(18 17.4 10.6)"/></g></svg><span>In memory of Oakley</span></div>
 <div id="tkh" hidden role="dialog" aria-modal="true" aria-labelledby="tkt"><div class="tks"><div class="tkh1"><b id="tkt">TALK TO OAKLEY</b><span class="tk-nc">SHELL-BOUND</span><button class="btn" data-a="tk:close" aria-label="Close">✕</button></div><p>Voice and chat run in the Canopy shell. This standalone Home file has <b>no talk channel</b> and does not pretend to have one — nothing you type here is sent anywhere.</p><div class="tkf"><button class="btn" data-a="tk:close">CLOSE</button></div></div></div>
@@ -572,7 +572,7 @@ async function getWx(){
     const hr=((p.hourlyForecastGroup||{}).hourlyForecasts||[]).map(h=>({ts:Date.parse(h.timestamp),t:EN(g(h,'temperature.value')),lop:EN(g(h,'lop.value')),cond:EN(h.condition),ws:EN(g(h,'wind.speed.value')),wd:EN(g(h,'wind.direction.value'))}));
     const warn=(p.warnings||[]).map(w=>EN(w.description)||EN(w.type)||JSON.stringify(w).slice(0,60));
     D.wx={o,fc,hr,warn,upd:Date.parse(p.lastUpdated),sr:Date.parse(EN(g(p,'riseSet.sunrise'))||''),ss:Date.parse(EN(g(p,'riseSet.sunset'))||''),at:Date.now()};
-    H.wx={st:'live',at:Date.now()};log('WX OK · ECCC on-118 · obs '+(o.ts?hm(o.ts):'--'));
+    H.wx={st:'live',at:Date.now()};try{localStorage.setItem('canopy.wx.lastgood',JSON.stringify(D.wx))}catch(e){}log('WX OK · ECCC on-118 · obs '+(o.ts?hm(o.ts):'--'));
   }catch(e){H.wx={st:H.wx.at?'stale':'err',at:H.wx.at||0,msg:String(e.message||e)};log('WX FAIL · '+(e.message||e),1)}
   paint('wx');paint('ge');healthRender()}
 /* ============================ WORLD MONITOR sources: USGS · GDACS · ECCC CAP (+citypage alerts) · NASA EONET ============================ */
@@ -732,16 +732,17 @@ function camFetch(c){
   if(!u)return;D.camReq++;
   const im=new Image();
   im.onload=()=>{const done=()=>{D.frames[c.id]={src:im.src,ts:Date.now(),real:'fetched'};if(D.camErr)delete D.camErr[c.id];H.cams={st:'live',at:Date.now()};log('CAM OK · '+c.s+' (id '+c.id+')');D.events.unshift({t:Date.now(),id:c.id});D.events.length=20;paintCam(c.id);paint('ge');healthRender()};(im.decode?im.decode().then(done,done):done())};
-  im.onerror=()=>{D.camErr=D.camErr||{};D.camErr[c.id]=Date.now();log('CAM FAIL · '+c.s+' (id '+c.id+')',1);H.cams={st:H.cams.at?'stale':'err',at:H.cams.at||0};healthRender();paint('trf')};
+  im.onerror=()=>{D.camErr=D.camErr||{};D.camErr[c.id]=Date.now();CAMDUE[c.id]=Date.now()+15000;log('CAM FAIL · '+c.s+' (id '+c.id+')',1);H.cams={st:H.cams.at?'stale':'err',at:H.cams.at||0};healthRender();paint('trf')};
   im.src=u}
+let CAMFIRST=true;
 function camTick(){
   if(!CFG.cam.live)return;
   if(!camRouteReady()){D.camNext=0;if(!camRouteLogged){camRouteLogged=true;log('CAM · NO ROUTE — camera stills need the hub proxy route (City certificate server-side) or a certificate in CFG.cam; no camera requests made')}return}
   if(document.hidden)return;   // proxy route spec: pause stills while the tab is hidden
   const vis=visibleCams();if(!vis.length)return;const now=Date.now(),step=CFG.cam.intervalMs/Math.max(1,vis.length);
-  vis.forEach((c,i)=>{if(CAMDUE[c.id]==null)CAMDUE[c.id]=now+i*step;
+  vis.forEach((c,i)=>{if(CAMDUE[c.id]==null)CAMDUE[c.id]=CAMFIRST?now:now+i*step;
     if(now>=CAMDUE[c.id]){CAMDUE[c.id]=now+CFG.cam.intervalMs;camFetch(c)}});
-  D.camNext=Math.min.apply(null,vis.map(c=>CAMDUE[c.id]||now))}
+  CAMFIRST=false;D.camNext=Math.min.apply(null,vis.map(c=>CAMDUE[c.id]||now))}
 function frameOf(id){const hub=CFG.cam.frames[id];const f=D.frames[id];if(f&&(!hub||f.ts>=Date.parse(hub.ts)))return{src:f.src,ts:f.ts,how:'fetched'};if(hub)return{src:hub.src,ts:Date.parse(hub.ts),how:'hub'};return null}
 function camStale(f){return f&&Date.now()-f.ts>CFG.cam.staleMs}
 /* ============================ v4.3 DATA ADDITIONS: Canada alerts (GeoMet) · tsunami · Stooq · radar rate · team snapshot · door briefs · home cameras ============================ */
@@ -881,7 +882,7 @@ function setStation(){const pv=$('#plv');if(!pv)return;const s=stnNow();if(s.yt)
 window.addEventListener('message',e=>{if(typeof e.data!=='string'||!/youtube/.test(e.origin))return;let j;try{j=JSON.parse(e.data)}catch(x){return}
   let s=null;if(j.event==='onStateChange')s=j.info;else if(j.event==='infoDelivery'&&j.info&&typeof j.info.playerState==='number')s=j.info.playerState;
   if(j.event==='onError')UI.yt='offline';else if(s===1)UI.yt='playing';else if(s===2)UI.yt='paused';else if(s===3||s===-1||s===5)UI.yt='loading';else if(s===0)UI.yt='offline';else return;rNews()});
-setInterval(()=>{const s=stnNow();if(s.yt&&UI.yt==='loading'&&UI.ytAt&&Date.now()-UI.ytAt>8000&&$('#nw iframe')){UI.yt='offline';rNews()}},1000);
+setInterval(()=>{const s=stnNow();if(s.yt&&UI.yt==='loading'&&UI.ytAt&&Date.now()-UI.ytAt>210000&&$('#nw iframe')){UI.yt='offline';rNews()}},1000);
 /* ---------- news bars: scroll while fresh (no pause control) · stale = freeze + unmissable STALE · no data = unmissable OFFLINE · reduced-motion = static headlines ---------- */
 const BARS=new Set();
 function barOff(k){const srcs=CFG.news[k],tried=srcs.filter(s=>D.nsrc[s.id]);if(!tried.length)return['PENDING','waiting for the first RSS fetch…'];
@@ -1148,7 +1149,7 @@ const HOMEM=[['DOOR/WIN','DOORS / WINDOWS','doors','needs contact sensors'],['LO
 function zoneCam(z,i){const hub=D.sec&&D.sec.cams&&D.sec.cams.find(c=>String(c.name||'').toUpperCase()===z.n),loc=D.hcam[i];
   if(hub&&hub.src){const ts=Date.parse(hub.ts)||D.sec.at,st=Date.now()-ts>CFG.homecams.staleMs;return{img:hub.src,s:st?'STALE '+hm(ts):'SNAP '+hm(ts),c:st?'am':'em',why:'hub-supplied frame'}}
   if(z.url){if(loc&&loc.src&&!(loc.err>loc.ts)){const st=Date.now()-loc.ts>CFG.homecams.staleMs;return{img:loc.src,s:st?'STALE '+hm(loc.ts):'SNAP '+hm(loc.ts),c:st?'am':'em',why:'camera URL configured'}}return{s:loc&&loc.err?'NO SIGNAL':'CONNECTING',c:loc&&loc.err?'cr':'am',why:'camera URL configured'}}
-  return{s:'NO CAMERA',c:'dm',why:'no camera configured for this zone'}}
+  return{s:'SAMPLE',c:'am',why:'example frame — no camera configured for this zone yet'}}
 function rSc(){const x=X('sc'),cam=UI.fl==='cam',hs=D.sec&&D.sec.home;
   setH($('#sc .hdw'),'<div class="hd slim"><span class="ttl"><i class="led"></i><span class="tt">SECURITY</span></span><span class="hr flip"><button class="btn" data-a="sf:cam" aria-pressed="'+cam+'">CAMERAS</button><button class="btn" data-a="sf:home" aria-pressed="'+!cam+'">HOME MONITORING</button>'+xbtns('sc')+'</span></div>');
   let t;
@@ -1159,12 +1160,12 @@ function rSc(){const x=X('sc'),cam=UI.fl==='cam',hs=D.sec&&D.sec.home;
 const DOW=['SUN','MON','TUE','WED','THU','FRI','SAT'],MON=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
 const sameDay=(a,b)=>a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();
 function rCl(){const c=D.cal,x=X('cl'),now=new Date(),evs=c&&c.events?c.events:[];
-  hdw('cl','CALENDAR',bdg(c?(Date.now()-c.at>CFG.cal.everyMs*5?['STALE '+hm(c.at),'stale']:['CONNECTED','live']):['NOT CONNECTED','pend']));
+  hdw('cl','CALENDAR',bdg(c?(Date.now()-c.at>CFG.cal.everyMs*5?['STALE '+hm(c.at),'stale']:['CONNECTED','live']):['SAMPLE · EXAMPLES','stale']));
   const cell=(d,i,big)=>{const n=evs.filter(e=>{const t=new Date(Date.parse(e.start));return sameDay(t,d)}).length,we=d.getDay()===0||d.getDay()===6;return '<div class="dy'+(i===0?' td':'')+(we?' we':'')+'"><span>'+(i===0?'TODAY':DOW[d.getDay()])+'</span><b>'+d.getDate()+'</b>'+(big?'<i>'+(c?(n?n+' ev':'—'):MON[d.getMonth()])+'</i>':c&&n?'<i class="ec" title="'+n+' event'+(n>1?'s':'')+' on the calendar">'+n+'</i>':'')+'</div>'};
   const days=[...Array(x?14:7)].map((_,i)=>{const d=new Date(now);d.setDate(now.getDate()+i);return d});
   const nxt=evs.filter(e=>Date.parse(e.end||e.start)>Date.now()).sort((a,b)=>Date.parse(a.start)-Date.parse(b.start))[0];
-  const nx=c?(Date.now()-c.at>CFG.cal.everyMs*5?'<b class="am">STALE since '+hm(c.at)+'</b> · no event shown as current':nxt?(nxt.allDay?'all day':hm(Date.parse(nxt.start)))+' · '+(CFG.cal.private&&nxt.title?esc(nxt.title):'title hidden (private)'):'nothing further this week'):'not connected · privacy-gated';
-  setH($('#cl .bd'),'<div class="wk'+(x?' big':'')+'">'+days.map((d,i)=>cell(d,i,x)).join('')+'</div><div class="rows">'+'<div class="rw '+(c?'on':'wa')+'"><b>NEXT</b><span>'+nx+'</span></div>'+(x?'<div class="rw"><b>TODAY</b><span>'+(c?evs.filter(e=>sameDay(new Date(Date.parse(e.start)),now)).length+' events today':'no events shown · nothing invented')+'</span></div><div class="rw"><b>GATE</b><span>titles show only when the private presentation is on (CFG.cal.private)</span></div><div class="rw"><b>SOURCE</b><span>hub-supplied calendar JSON at app integration (CFG.cal.url)</span></div>':'')+'</div>')}
+  const nx=c?(Date.now()-c.at>CFG.cal.everyMs*5?'<b class="am">STALE since '+hm(c.at)+'</b> · no event shown as current':nxt?(nxt.allDay?'all day':hm(Date.parse(nxt.start)))+' · '+(CFG.cal.private&&nxt.title?esc(nxt.title):'title hidden (private)'):'nothing further this week'):'SAMPLE · example events below — nothing here is a real event until the feed is linked';
+  setH($('#cl .bd'),'<div class="wk'+(x?' big':'')+'">'+days.map((d,i)=>cell(d,i,x)).join('')+'</div><div class="rows">'+'<div class="rw '+(c?'on':'wa')+'"><b>NEXT</b><span>'+nx+'</span></div>'+(c?'':'<div class="rw wa"><b>SAMPLE</b><span>09:00 · team check-in (example) · 13:00 · site visit (example)</span></div>')+(x?'<div class="rw"><b>TODAY</b><span>'+(c?evs.filter(e=>sameDay(new Date(Date.parse(e.start)),now)).length+' events today':'no events shown · nothing invented')+'</span></div><div class="rw"><b>GATE</b><span>titles show only when the private presentation is on (CFG.cal.private)</span></div><div class="rw"><b>SOURCE</b><span>hub-supplied calendar JSON at app integration (CFG.cal.url)</span></div>':'')+'</div>')}
 /* ---------- YOW: the airport's own FREE FIDS board (direct → hub proxy → snapshot) + city weather (explicitly not an airport feed) ---------- */
 async function getYow(){
   try{let j=null,via='',asOf=null;
@@ -1232,6 +1233,7 @@ $$('[data-bar]').forEach(el=>{const hold=v=>{el._hold=v;clearTimeout(el._ht);if(
 if(window.ResizeObserver)new ResizeObserver(()=>{const l=$('#evl');if(l&&l.clientHeight!==l._h){l._h=l.clientHeight;rEv()}}).observe($('#evl'));
 if(geInit()){scopeView()}scopeUpd();setInterval(geWatch,3000);setInterval(geRefresh,CFG.ge.refreshMs);
 window.__home={ui:UI,data:D,health:H,cfg:CFG,paint,xpSet,XP,GE,desig,plot,runBar,allEv,teamRows,openSuite,fit};
+try{const _c=localStorage.getItem('canopy.wx.lastgood');if(_c&&!D.wx){D.wx=JSON.parse(_c);H.wx={st:'stale',at:(D.wx&&D.wx.at)||0,msg:'last good reading (cached)'}}}catch(e){}
 getWx();getTev();getYow();getNews();getQuakes();getGdacs();getEonet();getAlerts();getTsu();getRate();getBtc();getBoc();['spx','tsx','cad'].forEach(getStq);getCamList();['hubfeed','security','cal','scn','brief'].forEach(getHub);hcamTick();
 setInterval(getWx,CFG.wx.everyMs);setInterval(getTev,CFG.ev.everyMs);setInterval(getYow,CFG.yow.everyMs);setInterval(getNews,CFG.news.everyMs);setInterval(getQuakes,CFG.quakes.everyMs);setInterval(getGdacs,CFG.wm.everyMs);setInterval(getEonet,CFG.wm.everyMs);setInterval(getAlerts,CFG.alerts.everyMs);setInterval(getTsu,CFG.tsu.everyMs);setInterval(getRate,CFG.rate.everyMs);setInterval(getBtc,CFG.markets.btcEveryMs);setInterval(getBoc,CFG.markets.bocEveryMs);setInterval(()=>['spx','tsx','cad'].forEach(getStq),CFG.stooq.everyMs);setInterval(hcamTick,CFG.homecams.everyMs);
 if(CFG.hubfeed.url)setInterval(()=>getHub('hubfeed'),CFG.hubfeed.everyMs);if(CFG.security.url)setInterval(()=>getHub('security'),15000);if(CFG.cal.url)setInterval(()=>getHub('cal'),CFG.cal.everyMs);if(CFG.scn.url)setInterval(()=>getHub('scn'),CFG.scn.everyMs);if(CFG.brief.url)setInterval(()=>getHub('brief'),CFG.brief.everyMs);
@@ -1810,7 +1812,7 @@ function boot(){
     var reveal=function(){if(prev&&prev!==fr)prev.classList.remove('cnd-cur');fr.classList.add('cnd-cur');cur=fr;curKey=key;document.title=TITLES[key];
       if(extra&&extra.hash&&extra.hash.indexOf('#/')!==0){try{fr.contentWindow.postMessage({canopy:'hash',hash:extra.hash},'*')}catch(_){}}
       if(push!==false){try{history.pushState({cnd:key},'','#/'+key)}catch(_){}}};
-    if(fresh){fr.addEventListener('load',function(){myT(reveal,30)});myT(function(){if(cur!==fr)reveal()},2500)}
+    if(fresh){var rvDone=false;var rv=function(){if(rvDone)return;rvDone=true;reveal()};fr.addEventListener('load',function(){myT(rv,30)});myT(rv,1500);try{if(fr.contentDocument&&fr.contentDocument.readyState==='complete')myT(rv,30)}catch(_){}}
     else reveal();
   }
   window.addEventListener('message',function(e){var d=e.data||{};
@@ -1824,7 +1826,7 @@ function boot(){
   var start=myKey,hm=/^#\/([a-z]+)/.exec(location.hash||'');
   if(hm&&FILES[hm[1]])start=hm[1];
   show(start,{search:location.search,hash:(location.hash&&location.hash.indexOf('#/')!==0)?location.hash:''},false);
-  try{history.replaceState({cnd:start},'','/'+location.pathname.split('/').pop()+'#/'+start)}catch(_){}
+  try{history.replaceState({cnd:start},'','#/'+start)}catch(_){}
   function sweepTo(limit){for(var i=1;i<=limit;i++){if(!MYIDS[i]){clearInterval(i);clearTimeout(i)}}}
   myT(function(){sweepTo(snap)},350);
   myT(function(){var snap2=myT(function(){},0);myT(function(){sweepTo(snap2)},60)},1400);
@@ -1865,4 +1867,4 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
 
 
-</body></html>
+<style>/* ===== ROUND 3 · GEMINI TOKENS + ITEM 4/7/8 FIXES (final cascade) ===== */.cnd,.card,.mbox,.portal{transition:transform 150ms ease,box-shadow 150ms ease,border-color 150ms ease,background-color 150ms ease}.card:hover,.mbox:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.45);border-color:rgba(245,242,234,.45)}.card.xp:hover{transform:none}.cnd:hover{transform:translateY(-4px);box-shadow:0 0 0 1px rgba(245,242,234,.70),0 0 16px rgba(245,242,234,.50),0 12px 28px rgba(0,0,0,.55)!important;border-color:rgba(245,242,234,.55)}.cnd.linked{box-shadow:0 0 0 1px rgba(245,242,234,.55),0 0 16px rgba(245,242,234,.40)!important}.card:active,.mbox:active,.portal:active{transform:scale(.98)!important;box-shadow:0 1px 2px rgba(0,0,0,.35)!important;transition-duration:100ms}.cnd:active{transform:scale(.98)!important;box-shadow:0 0 0 1px rgba(245,242,234,.55),0 0 16px rgba(245,242,234,.40)!important;transition-duration:100ms}button:active,.btn:active{transform:translateY(1px);filter:brightness(.92);box-shadow:none!important;transition-duration:100ms}.lkbadge:active{filter:brightness(.92)}:focus-visible{outline:2px solid rgba(245,242,234,.8);outline-offset:2px}.rw:hover,.tag:hover,.chip:hover{transform:none}@media (prefers-reduced-motion:reduce){*{transition-duration:120ms!important;animation-duration:120ms!important;animation-iteration-count:1!important}}.skl{padding:.6rem;font-size:.62rem;letter-spacing:.08em;color:var(--ts)}#yw .rw{grid-template-columns:6.4rem minmax(0,1fr)}.card.linked{padding-bottom:2.6rem}.card .lkbadge{bottom:1.1rem!important;right:1.1rem!important;animation:none!important;box-shadow:0 0 0 1px rgba(245,242,234,.55),0 0 16px rgba(245,242,234,.40)}#tm .tg{gap:.12rem;padding:.02rem .08rem}#tm .gn{font-size:.5rem;letter-spacing:0}#tm .gm{min-width:0}#mk .mt4 .a{flex-wrap:wrap;row-gap:.1rem}#mk .mt4 .tag{flex:none;font-size:.52rem}#mk .a b{min-width:0;overflow:hidden;text-overflow:ellipsis}#sc .cb b{font-size:.64rem;letter-spacing:.03em}#wm .ev .h{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}#c1 #yw{flex:0 1 auto!important;min-height:0!important}#c1 #wx{flex:0 1 auto!important}.abub{right:1.4rem;bottom:1.4rem}</style></body></html>

@@ -811,7 +811,7 @@ function boot(){
     var reveal=function(){if(prev&&prev!==fr)prev.classList.remove('cnd-cur');fr.classList.add('cnd-cur');cur=fr;curKey=key;document.title=TITLES[key];
       if(extra&&extra.hash&&extra.hash.indexOf('#/')!==0){try{fr.contentWindow.postMessage({canopy:'hash',hash:extra.hash},'*')}catch(_){}}
       if(push!==false){try{history.pushState({cnd:key},'','#/'+key)}catch(_){}}};
-    if(fresh){fr.addEventListener('load',function(){myT(reveal,30)});myT(function(){if(cur!==fr)reveal()},2500)}
+    if(fresh){var rvDone=false;var rv=function(){if(rvDone)return;rvDone=true;reveal()};fr.addEventListener('load',function(){myT(rv,30)});myT(rv,1500);try{if(fr.contentDocument&&fr.contentDocument.readyState==='complete')myT(rv,30)}catch(_){}}
     else reveal();
   }
   window.addEventListener('message',function(e){var d=e.data||{};
@@ -825,7 +825,7 @@ function boot(){
   var start=myKey,hm=/^#\/([a-z]+)/.exec(location.hash||'');
   if(hm&&FILES[hm[1]])start=hm[1];
   show(start,{search:location.search,hash:(location.hash&&location.hash.indexOf('#/')!==0)?location.hash:''},false);
-  try{history.replaceState({cnd:start},'','/'+location.pathname.split('/').pop()+'#/'+start)}catch(_){}
+  try{history.replaceState({cnd:start},'','#/'+start)}catch(_){}
   function sweepTo(limit){for(var i=1;i<=limit;i++){if(!MYIDS[i]){clearInterval(i);clearTimeout(i)}}}
   myT(function(){sweepTo(snap)},350);
   myT(function(){var snap2=myT(function(){},0);myT(function(){sweepTo(snap2)},60)},1400);
@@ -845,4 +845,4 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 .sysbar .wxdoor .wxc{white-space:nowrap!important}
 </style>
 
-</body></html>
+<style>/* ===== ROUND 3 · GEMINI TOKENS (final cascade) ===== */.cnd,.card,.mbox,.portal{transition:transform 150ms ease,box-shadow 150ms ease,border-color 150ms ease,background-color 150ms ease}.card:hover,.mbox:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.45);border-color:rgba(62,143,224,.45)}.cnd:hover{transform:translateY(-4px);box-shadow:0 0 0 1px rgba(62,143,224,.70),0 0 16px rgba(62,143,224,.50),0 12px 28px rgba(0,0,0,.55)!important;border-color:rgba(62,143,224,.55)}.cnd.linked{box-shadow:0 0 0 1px rgba(62,143,224,.55),0 0 16px rgba(62,143,224,.40)!important}.card:active,.mbox:active,.portal:active{transform:scale(.98)!important;box-shadow:0 1px 2px rgba(0,0,0,.35)!important;transition-duration:100ms}.cnd:active{transform:scale(.98)!important;box-shadow:0 0 0 1px rgba(62,143,224,.55),0 0 16px rgba(62,143,224,.40)!important;transition-duration:100ms}button:active,.btn:active{transform:translateY(1px);filter:brightness(.92);box-shadow:none!important;transition-duration:100ms}.lkbadge:active{filter:brightness(.92)}:focus-visible{outline:2px solid rgba(62,143,224,.8);outline-offset:2px}.rw:hover,.tag:hover,.chip:hover{transform:none}@media (prefers-reduced-motion:reduce){*{transition-duration:120ms!important;animation-duration:120ms!important;animation-iteration-count:1!important}}</style></body></html>

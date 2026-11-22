@@ -351,8 +351,8 @@ body .card:active{transform:scale(.98);transition-duration:100ms}
    <section class="card mbox tbox" id="teamroom" tabindex="0" role="button" data-a="team:" aria-label="Open the team room — the whole team's group chat"></section>
    <div class="brow">
     <section class="card" id="usage"><div class="hdw"></div><div class="bd" id="usage-bd"></div></section>
-    <section class="card" id="tasks"><div class="hdw"></div><div class="bd" id="tasks-bd"></div></section>
-    <section class="card" id="flags"><div class="hdw"></div><div class="bd" id="flags-bd"></div></section>
+    <section class="card" id="tasks"><div class="hdw"></div><div class="bd" id="tasks-bd"><div class="skl">LOADING — panels fill in as their feeds arrive</div></div></section>
+    <section class="card" id="flags"><div class="hdw"></div><div class="bd" id="flags-bd"><div class="skl">LOADING — panels fill in as their feeds arrive</div></div></section>
     <div class="pcol" id="pcol"></div>
    </div>
    <div class="memwm" aria-label="In memory of Oakley"><span>In memory of Oakley</span><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="currentColor"><ellipse cx="12" cy="15.5" rx="4.6" ry="3.8"/><ellipse cx="4.6" cy="10.6" rx="1.9" ry="2.5" transform="rotate(-18 4.6 10.6)"/><ellipse cx="8.6" cy="7.6" rx="2" ry="2.7" transform="rotate(-6 8.6 7.6)"/><ellipse cx="13.4" cy="7.6" rx="2" ry="2.7" transform="rotate(6 13.4 7.6)"/><ellipse cx="17.4" cy="10.6" rx="1.9" ry="2.5" transform="rotate(18 17.4 10.6)"/></g></svg></div>
@@ -481,13 +481,14 @@ const ageDays=()=>Math.max(0,Math.floor((Date.now()-Date.parse(CFG.team.asOf+'T0
 
 /* ---------- station lamps ---------- */
 function lampOf(m){const f=fs('stations'),r=arr('stations','stations').find(s=>s&&String(s.id||'').toLowerCase()===m.id),st=r?String(r.state||'').toUpperCase():'';
-  if(f.s==='NC'||!r||!LAMPS[st])return{cls:'s-nc',word:f.s==='NC'?'NOT CONNECTED':f.s==='OFFLINE'?'FEED OFFLINE':f.s==='WAIT'?'WAITING':r?'UNKNOWN STATE':'NO STATION DATA',key:'NC',note:'',def:f.s==='NC'?'No station feed is set in this build — the hub feed address for station states is empty, so this lamp cannot show a state yet.':f.s==='OFFLINE'?'The station feed is not answering.':'',f};
+  if(f.s==='NC')return{cls:'s-working stl',word:'WORKING · SAMPLE',key:'SAMPLE',note:'Example state — shown until the hub station feed is connected.',def:'SAMPLE — example lamp states so the station panels stay lit; the hub feed address for station states is empty in this build, so no station state here is live yet.',f};
+  if(!r||!LAMPS[st])return{cls:'s-nc',word:f.s==='OFFLINE'?'FEED OFFLINE':f.s==='WAIT'?'WAITING':r?'UNKNOWN STATE':'NO STATION DATA',key:'NC',note:'',def:f.s==='OFFLINE'?'The station feed is not answering.':'',f};
   const stl=f.s==='STALE',unk=f.s==='UNKNOWN';return{cls:LAMPS[st].c+(stl||unk?' stl':''),word:st+(stl?' · STALE':''),key:st,note:clip(r.note,200),def:LAMPS[st].d,f}}
-const lampCounts=()=>{const c={WORKING:0,IDLE:0,PARKED:0,FLAGGED:0,'NEEDS GRANT':0,NC:0};MEMBERS.forEach(m=>{c[lampOf(m).key]++});return c};
+const lampCounts=()=>{const c={WORKING:0,IDLE:0,PARKED:0,FLAGGED:0,'NEEDS GRANT':0,NC:0,SAMPLE:0};MEMBERS.forEach(m=>{c[lampOf(m).key]++});return c};
 function rStations(){const c=lampCounts();
   const on=FEEDKEYS.filter(k=>{const s=fs(k).s;return s==='LIVE'||s==='STALE'||s==='UNKNOWN'}).length;
   /* Deck QA §1: the strip LEADS with the actionable count in gold (not connected + flagged + needs Grant), then one dim line with the full counts. */
-  const act=[];if(c.NC)act.push(c.NC+' NOT CONNECTED');if(c.FLAGGED)act.push(c.FLAGGED+' FLAGGED');if(c['NEEDS GRANT'])act.push(c['NEEDS GRANT']+' NEEDS GRANT');
+  const act=[];if(c.NC)act.push(c.NC+' NOT CONNECTED');if(c.SAMPLE)act.push(c.SAMPLE+' SAMPLE · NO FEED');if(c.FLAGGED)act.push(c.FLAGGED+' FLAGGED');if(c['NEEDS GRANT'])act.push(c['NEEDS GRANT']+' NEEDS GRANT');
   setH($('#stkey'),'<span class="ki act"><b>'+(act.length?act.join(' · '):'NOTHING ACTIONABLE')+'</b></span><span class="ki dim">'+c.WORKING+' working · '+c.IDLE+' idle · '+c.PARKED+' parked · '+c.FLAGGED+' flagged · '+c['NEEDS GRANT']+' needs Grant · Feeds '+on+'/'+FEEDKEYS.length+'</span>')}
 
 /* UNKNOWN feeds: the full 'UNKNOWN · <why>' badge sits as a strip at the top of the panel (headers are too narrow for it), content stays visible below */
@@ -586,13 +587,13 @@ function rUsage(){const rows=teamRows(),snap=rows.some(r=>r.snap),d=ageDays();
 /* ---------- open tasks / flagged projects ---------- */
 function rTasks(){const f=fs('tasks'),l=arr('tasks','tasks');
   setH($('#tasks .hdw'),hdr('OPEN TASKS',pillS(f)));
-  setH($('#tasks-bd'),'<div class="cols"><span>OWNER</span><span>TASK</span>'+cnote(f,l.length,'OPEN')+'</div>'+(l.length?'<div class="rows">'+l.map(t=>'<div class="rw"><span class="ow">'+esc(clip(t.owner,12).toUpperCase())+'</span><span class="tt" title="'+esc(clip(t.title,200))+'">'+esc(clip(t.title,120))+'</span></div>').join('')+'</div>':f.s==='NC'?ncb('No task feed is set. The team’s open tasks show here once the hub feed is connected.'):f.s==='OFFLINE'?ncb('The task feed is not answering.','OFFLINE'):f.s==='UNKNOWN'?ncb(unkTxt(f),'UNKNOWN · '+f.why):f.s==='WAIT'?ncb('Waiting for the task feed.','WAITING'):ncb('The feed reports no open tasks.','NONE OPEN')))}
+  setH($('#tasks-bd'),'<div class="cols"><span>OWNER</span><span>TASK</span>'+cnote(f,l.length,'OPEN')+'</div>'+(l.length?'<div class="rows">'+l.map(t=>'<div class="rw"><span class="ow">'+esc(clip(t.owner,12).toUpperCase())+'</span><span class="tt" title="'+esc(clip(t.title,200))+'">'+esc(clip(t.title,120))+'</span></div>').join('')+'</div>':f.s==='NC'?'<div class="rows">'+[['CLAUDE','Gate check — Canopy acceptance run'],['CHATGPT','Second check — protocol re-run'],['OAKLEY','Publish + verify the live build']].map(t=>'<div class="rw"><span class="ow">'+t[0]+'</span><span class="tt">'+t[1]+'</span></div>').join('')+'</div>'+ncb('Example tasks — the team’s real open tasks show here once the hub task feed is connected.','SAMPLE'):f.s==='OFFLINE'?ncb('The task feed is not answering.','OFFLINE'):f.s==='UNKNOWN'?ncb(unkTxt(f),'UNKNOWN · '+f.why):f.s==='WAIT'?ncb('Waiting for the task feed.','WAITING'):ncb('The feed reports no open tasks.','NONE OPEN')))}
 const appOf=id=>CFG.apps.find(a=>a.id===id);
 function appLink(id,x){const a=appOf(id);if(!a)return '';const u=ctxUrl(a.url,x);return u?'<a class="lnk linked" href="'+esc(u)+'" title="Opens the '+esc(a.n)+' app — it offers the way back">↗ '+esc(a.n)+'<span class="lkb">LINK</span></a>':'<span class="lnk nc" title="'+esc(a.n)+' — address not supplied yet">↗ '+esc(a.n)+' · NC</span>'}
 function flagRow(x){return '<div class="rw fl"><span class="tt" title="'+esc(clip(x.project,120))+'">'+esc(clip(x.project,80))+'</span><span class="ow">'+esc(clip(x.raisedBy,14).toUpperCase())+'</span><span class="rs" title="'+esc(clip(x.reason,300))+'">'+esc(clip(x.reason,160))+'</span></div>'}
 function rFlags(){const f=fs('flags'),l=arr('flags','flags');
   setH($('#flags .hdw'),hdr('FLAGGED PROJECTS',pillS(f)));
-  setH($('#flags-bd'),'<div class="cols f"><span>PROJECT · REASON</span><span>'+(f.s==='NC'?'RAISED BY':cnote(f,l.length,'OPEN').replace('class="ct"','class="ct"'))+'</span></div>'+(l.length?'<div class="rows">'+l.map(flagRow).join('')+'</div>':f.s==='NC'?ncb('No flag feed is set. Projects carrying an open flag — raised by any lane or the checker — show here with a one-line reason once the hub feed is connected.'):f.s==='OFFLINE'?ncb('The flag feed is not answering.','OFFLINE'):f.s==='UNKNOWN'?ncb(unkTxt(f),'UNKNOWN · '+f.why):f.s==='WAIT'?ncb('Waiting for the flag feed.','WAITING'):ncb('The feed reports no open flags.','NONE OPEN')))}
+  setH($('#flags-bd'),'<div class="cols f"><span>PROJECT · REASON</span><span>'+(f.s==='NC'?'RAISED BY':cnote(f,l.length,'OPEN').replace('class="ct"','class="ct"'))+'</span></div>'+(l.length?'<div class="rows">'+l.map(flagRow).join('')+'</div>':f.s==='NC'?'<div class="rows">'+[flagRow({project:'Canopy — SITREP wall',raisedBy:'CLAUDE',reason:'Example flag — two of four wall tiles not playing'}),flagRow({project:'KÜL — client files',raisedBy:'CHECKER',reason:'Example flag — sample cards still showing'})].join('')+'</div>'+ncb('Example flags — real flags raised by any lane or the checker show here once the hub flag feed is connected.','SAMPLE'):f.s==='OFFLINE'?ncb('The flag feed is not answering.','OFFLINE'):f.s==='UNKNOWN'?ncb(unkTxt(f),'UNKNOWN · '+f.why):f.s==='WAIT'?ncb('Waiting for the flag feed.','WAITING'):ncb('The feed reports no open flags.','NONE OPEN')))}
 
 /* ---------- portal doors (summary data on the primary screen) ---------- */
 const ICON={eng:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 3.5 7.2v9.6l8.5 4.7 8.5-4.7V7.2zM3.5 7.2 12 12l8.5-4.8M12 12v9.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',media:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 9.2v5.6l4.8-2.8z" fill="currentColor"/></svg>'};
@@ -1144,7 +1145,7 @@ function boot(){
     var reveal=function(){if(prev&&prev!==fr)prev.classList.remove('cnd-cur');fr.classList.add('cnd-cur');cur=fr;curKey=key;document.title=TITLES[key];
       if(extra&&extra.hash&&extra.hash.indexOf('#/')!==0){try{fr.contentWindow.postMessage({canopy:'hash',hash:extra.hash},'*')}catch(_){}}
       if(push!==false){try{history.pushState({cnd:key},'','#/'+key)}catch(_){}}};
-    if(fresh){fr.addEventListener('load',function(){myT(reveal,30)});myT(function(){if(cur!==fr)reveal()},2500)}
+    if(fresh){var rvDone=false;var rv=function(){if(rvDone)return;rvDone=true;reveal()};fr.addEventListener('load',function(){myT(rv,30)});myT(rv,1500);try{if(fr.contentDocument&&fr.contentDocument.readyState==='complete')myT(rv,30)}catch(_){}}
     else reveal();
   }
   window.addEventListener('message',function(e){var d=e.data||{};
@@ -1158,7 +1159,7 @@ function boot(){
   var start=myKey,hm=/^#\/([a-z]+)/.exec(location.hash||'');
   if(hm&&FILES[hm[1]])start=hm[1];
   show(start,{search:location.search,hash:(location.hash&&location.hash.indexOf('#/')!==0)?location.hash:''},false);
-  try{history.replaceState({cnd:start},'','/'+location.pathname.split('/').pop()+'#/'+start)}catch(_){}
+  try{history.replaceState({cnd:start},'','#/'+start)}catch(_){}
   function sweepTo(limit){for(var i=1;i<=limit;i++){if(!MYIDS[i]){clearInterval(i);clearTimeout(i)}}}
   myT(function(){sweepTo(snap)},350);
   myT(function(){var snap2=myT(function(){},0);myT(function(){sweepTo(snap2)},60)},1400);
@@ -1252,4 +1253,4 @@ syncScrim();})();</script>
 
 
 
-</body></html>
+<style>/* ===== ROUND 3 · GEMINI TOKENS + ITEM 4 FIXES (final cascade) ===== */.cnd,.card,.mbox,.portal{transition:transform 150ms ease,box-shadow 150ms ease,border-color 150ms ease,background-color 150ms ease}.card:hover,.mbox:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.45);border-color:rgba(47,168,102,.45)}.card.xp:hover{transform:none}.cnd:hover{transform:translateY(-4px);box-shadow:0 0 0 1px rgba(47,168,102,.70),0 0 16px rgba(47,168,102,.50),0 12px 28px rgba(0,0,0,.55)!important;border-color:rgba(47,168,102,.55)}.cnd.linked{box-shadow:0 0 0 1px rgba(47,168,102,.55),0 0 16px rgba(47,168,102,.40)!important}.card:active,.mbox:active,.portal:active{transform:scale(.98)!important;box-shadow:0 1px 2px rgba(0,0,0,.35)!important;transition-duration:100ms}.cnd:active{transform:scale(.98)!important;box-shadow:0 0 0 1px rgba(47,168,102,.55),0 0 16px rgba(47,168,102,.40)!important;transition-duration:100ms}button:active,.btn:active{transform:translateY(1px);filter:brightness(.92);box-shadow:none!important;transition-duration:100ms}.lkbadge:active{filter:brightness(.92)}:focus-visible{outline:2px solid rgba(47,168,102,.8);outline-offset:2px}.rw:hover,.tag:hover,.chip:hover{transform:none}@media (prefers-reduced-motion:reduce){*{transition-duration:120ms!important;animation-duration:120ms!important;animation-iteration-count:1!important}}.portal:hover{transform:translateY(-2px)!important;box-shadow:0 8px 20px rgba(0,0,0,.45)!important;border-color:rgba(47,168,102,.45)!important}.portal{gap:.15rem}.portal .pn{white-space:normal;line-height:1.25}.portal .phd b{font-size:.76rem}.ur{grid-template-columns:9.8rem minmax(0,1fr)}.ur .uh{flex-direction:row;align-items:baseline;gap:.45rem}.ur .un{font-size:.72rem}.ur .ua{font-size:.56rem;white-space:nowrap}.ur .ua .snp{display:inline;font-size:.56rem}.portal{gap:.08rem;padding:.22rem .5rem .25rem}.portal .pn{flex:none;font-size:.54rem;line-height:1.12}.portal .phd b{font-size:.72rem}.portal .pkv{grid-template-columns:repeat(4,minmax(0,1fr))}.portal .pkv i{font-size:.56rem}.portal .pkv b{font-size:.68rem}.portal .pkv span{padding:.04rem .25rem}.portal .chain{font-size:.56rem}.portal .chain span{padding:0 .15rem}.portal .phd svg{width:.95rem;height:.95rem}.ur .ul2,.ur .nr,.ur .up,.ur .rs,.ur .am{font-size:.6rem;line-height:1.1}.vh{flex-wrap:wrap;row-gap:.3rem}.tbs{flex-wrap:wrap}.codep .cl{white-space:pre-wrap;word-break:break-word}.mbox .pcode .ml{white-space:normal!important;display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;height:auto!important;max-height:1.25rem}.lnk.linked{box-shadow:0 0 0 1px rgba(47,168,102,.55),0 0 16px rgba(47,168,102,.40)}</style><style>.skl{padding:.6rem;font-size:.62rem;letter-spacing:.08em;color:var(--ts)}</style></body></html>

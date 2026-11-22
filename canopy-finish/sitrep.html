@@ -332,8 +332,9 @@ const OTT=[45.4215,-75.6972];
 async function jget(url,type,ms){const c=new AbortController();const to=setTimeout(()=>c.abort(),ms||15000);try{const r=await fetch(url,{cache:'no-store',signal:c.signal});if(!r.ok)throw new Error('HTTP '+r.status);return type==='text'?await r.text():await r.json()}finally{clearTimeout(to)}}
 const offMsg=()=>'OFFLINE — direct blocked (no CORS)'+(CFG.PROXY?' and hub proxy failed':'; hub proxy not configured');
 let snapMetaP=null;
+let PRIME=true;
 async function snapGet(url,type){const file=CFG.snapshot[url];if(!file)throw new Error('no snapshot for this URL');if(!snapMetaP)snapMetaP=jget('./data/meta.json','json');const meta=await snapMetaP;const info=(meta&&meta.feeds&&meta.feeds[file])||{};const asOf=Date.parse(info.fetched_at||(meta&&meta.generated_at)||'')||null;const t=await jget('./data/'+file,'text');return type==='json'?{j:JSON.parse(t),via:'snapshot',asOf}:{t,via:'snapshot',asOf}}
-async function pubGet(url,ms){try{return{t:await jget(url,'text',ms),via:'direct'}}catch(e1){if(/HTTP 404/.test(String(e1.message)))throw e1;if(CFG.PROXY){try{return{t:await jget(CFG.PROXY+encodeURIComponent(url),'text',ms),via:'hub proxy'}}catch(e2){}}if(CFG.snapshot[url]){try{return await snapGet(url,'text')}catch(e3){}}throw e1}}
+async function pubGet(url,ms){if(PRIME&&CFG.snapshot[url]){try{return await snapGet(url,'text')}catch(e){}}try{return{t:await jget(url,'text',ms),via:'direct'}}catch(e1){if(/HTTP 404/.test(String(e1.message)))throw e1;if(CFG.PROXY){try{return{t:await jget(CFG.PROXY+encodeURIComponent(url),'text',ms),via:'hub proxy'}}catch(e2){}}if(CFG.snapshot[url]){try{return await snapGet(url,'text')}catch(e3){}}throw e1}}
 /* ===== storage (sitrep.entries.v1 / sitrep.theme.v1) ===== */
 const SK='sitrep.entries.v1',TK='sitrep.theme.v1';let saveErr=false;
 let store={v:1,doors:{},ui:{sample:false,sec:'weather'},flt:{}};
@@ -409,7 +410,7 @@ const pgBox=id=>'<span class="pg" data-for="'+id+'" hidden></span>';
 /* ===== panel shell ===== */
 const PN={};  // id -> fn returning {t,chip,body,src,pgid}
 function panelShell(id,area,cls){return'<section class="pn '+(cls||'')+'" id="pn-'+id+'" style="grid-area:'+area+'"></section>'}
-function panelFill(id){const f=PN[id],el=$('#pn-'+id);if(!f||!el)return;if(id==='wall'&&el.querySelector('.wtile.playing')){const o=f(),ph=el.querySelector('.ph');if(ph&&o.t)ph.innerHTML='<span class="t cap">'+esc(o.t)+'</span><span class="sp"></span>'+(o.pgid?pgBox(o.pgid):'')+(o.hdr||'')+(o.chip||'');return}const o=f();el.innerHTML=(o.t?'<div class="ph"><span class="t cap">'+esc(o.t)+'</span><span class="sp"></span>'+(o.pgid?pgBox(o.pgid):'')+(o.hdr||'')+(o.chip||'')+'</div>':'')+'<div class="pb">'+o.body+'</div>'+(o.src?'<div class="src">'+o.src+'</div>':'');if(id==='wmap')mapKey='';if(id==='wall'&&!window.__WALL_KEEP)wallStart()}
+function panelFill(id){const f=PN[id],el=$('#pn-'+id);if(!f||!el)return;if(id==='wall'&&el.querySelector('.wtile:not(.dead)')){const o=f(),ph=el.querySelector('.ph');if(ph&&o.t)ph.innerHTML='<span class="t cap">'+esc(o.t)+'</span><span class="sp"></span>'+(o.pgid?pgBox(o.pgid):'')+(o.hdr||'')+(o.chip||'');return}const o=f();el.innerHTML=(o.t?'<div class="ph"><span class="t cap">'+esc(o.t)+'</span><span class="sp"></span>'+(o.pgid?pgBox(o.pgid):'')+(o.hdr||'')+(o.chip||'')+'</div>':'')+'<div class="pb">'+o.body+'</div>'+(o.src?'<div class="src">'+o.src+'</div>':'');if(id==='wmap')mapKey='';if(id==='wall'&&!window.__WALL_KEEP)wallStart()}
 let layTimer=0;function relayout(){clearTimeout(layTimer);layTimer=setTimeout(()=>{flLayout();mapPaint();tapeFit()},30)}
 function paint(ids){(Array.isArray(ids)?ids:[ids]).forEach(panelFill);relayout();foot();tabs()}
 /* ===== FEEDS (nothing is dropped; a missing time is shown as UNKNOWN · NO TIMESTAMP — never replaced by "now") ===== */
@@ -420,7 +421,7 @@ async function getWx(){try{const j=await jget(CFG.wx.url);const p=j.properties,c
  const hr=((p.hourlyForecastGroup||{}).hourlyForecasts||[]).map(x=>({ts:Date.parse(x.timestamp)||0,t:num(EN(g(x,'temperature.value'))),lop:num(EN(g(x,'lop.value'))),cond:EN(x.condition),ws:num(EN(g(x,'wind.speed.value'))),wd:EN(g(x,'wind.direction.value'))}));
  const warn=(p.warnings||[]).map(w=>EN(w.description)||EN(w.type)||'ALERT');
  const upd=Date.parse(EN(p.lastUpdated))||Date.parse(p.lastUpdated)||0;
- D.wx={o,fc,hr,warn,upd,sr:Date.parse(EN(g(p,'riseSet.sunrise'))||'')||0,ss:Date.parse(EN(g(p,'riseSet.sunset'))||'')||0};
+ D.wx={o,fc,hr,warn,upd,sr:Date.parse(EN(g(p,'riseSet.sunrise'))||'')||0,ss:Date.parse(EN(g(p,'riseSet.sunset'))||'')||0};try{localStorage.setItem('sitrep.wx.lastgood',JSON.stringify(D.wx))}catch(e){}
  H.wx={st:'live',at:Date.now(),asOf:o.ts||upd||null,via:'direct'}}catch(e){H.wx=H.wx.st==='live'||H.wx.have?kept(H.wx,{msg:String(e.message||e)}):{st:'err',msg:/HTTP/.test(String(e.message))?String(e.message):offMsg()}}paint(['now','hourly','alerts','oper','outlook','wxdata','sh-ov']);glyphPaint()}
 async function getEv(){try{const rj=await pubGetJ(CFG.ev.url);const j=rj.j;const rows=(j.features||[]).map(f=>{const p=f.properties||{};return{id:p.id,t:p.eventType,ln:p.lanes||'',c:p.closureType,st:p.status,h:p.headline||p.mainStreet||'',u:Date.parse(String(p.updated||'').replace(' ','T'))||0}}).filter(r=>r.h&&(!r.st||r.st==='ACTIVE')).sort((a,b)=>b.u-a.u);
  D.tev={rows};const mx=rows.reduce((m,r)=>Math.max(m,r.u),0);H.tev={st:'live',at:Date.now(),asOf:mx||null,via:rj.via}}catch(e){H.tev=D.tev?kept(H.tev,{msg:String(e.message||e)}):{st:'err',msg:/HTTP/.test(String(e.message))?String(e.message):offMsg()}}paint(['events','sh-ov'])}
@@ -428,7 +429,7 @@ async function getCamList(){try{const rj=await pubGetJ(CFG.cam.list);const j=rj.
 const camNo=id=>{const L=D.camList&&D.camList.find(x=>x.id===id);return L?L.camera_number:null};
 function frameOf(id){const hub=CFG.cam.frames[id];return hub&&hub.src?{src:hub.src,ts:Date.parse(hub.ts)||0,how:'hub-supplied'}:null}
 /* CORRECTION ROUND (B2): every camera in the set refreshes on its OWN 60 s cadence, staggered across the grid — no longer one request per minute shared by the whole set. Route: when CFG.PROXY is set, stills ride the proxy route ({PROXY}/ottawa/camera?c=<number>) and the City certificate is injected server-side, never in a client URL; otherwise the direct City route. Stills are labelled with their capture time, never "playing". */
-const CAMDUE={};
+const CAMDUE={};let CAMFIRST=true;
 async function camFetch1(c){const n=camNo(c.id);if(n==null)return;
  const cu=CFG.PROXY?String(CFG.PROXY).replace(/\/$/,'')+'/ottawa/camera?c='+encodeURIComponent(n):CFG.cam.base+'?c='+encodeURIComponent(n)+'&certificate='+encodeURIComponent(CFG.cam.certificate)+(CFG.cam.userId?'&id='+encodeURIComponent(CFG.cam.userId):'');
  try{const r=await fetch(cu,{cache:'no-store'});if(!r.ok)throw 0;const lm=Date.parse(r.headers.get('last-modified')||'')||0;const b=await r.blob();const u=await new Promise(res=>{const fr=new FileReader();fr.onload=()=>res(fr.result);fr.readAsDataURL(b)});D.frames[c.id]={src:u,ts:lm};H.cams={st:'live',at:Date.now(),asOf:lm||null,via:CFG.PROXY?'hub proxy':'City certificate route'}}
@@ -436,7 +437,7 @@ async function camFetch1(c){const n=camNo(c.id);if(n==null)return;
   const ok=await new Promise(res=>{const im=new Image();im.onload=()=>res(true);im.onerror=()=>res(false);im.src=cu});
   if(ok){D.frames[c.id]={src:cu,ts:Date.now()};H.cams={st:'live',at:Date.now(),asOf:Date.now(),via:CFG.PROXY?'hub proxy':'City certificate route · direct image'}}else{H.cams={st:'err',msg:'frame request failed'}}}
  paint(['camtiles','camwall'])}
-async function camTick(){if(!CFG.PROXY&&!CFG.cam.certificate)return;const set=CFG.cam.set,now=Date.now(),N=set.length;set.forEach((c,i)=>{if(CAMDUE[c.id]==null)CAMDUE[c.id]=now+i*(CFG.cam.intervalMs/N)});if(document.hidden)return;for(const c of set){if(now>=CAMDUE[c.id]){CAMDUE[c.id]=now+CFG.cam.intervalMs;camFetch1(c)}}}
+async function camTick(){if(!CFG.PROXY&&!CFG.cam.certificate)return;const set=CFG.cam.set,now=Date.now(),N=set.length;set.forEach((c,i)=>{if(CAMDUE[c.id]==null)CAMDUE[c.id]=CAMFIRST?now:now+i*(CFG.cam.intervalMs/N)});CAMFIRST=false;if(document.hidden)return;for(const c of set){if(now>=CAMDUE[c.id]){CAMDUE[c.id]=now+CFG.cam.intervalMs;camFetch1(c)}}}
 const parseRSS=(xml,o,max)=>{const d=new DOMParser().parseFromString(xml,'text/xml');if(d.querySelector('parsererror'))throw new Error('bad XML');return[...d.querySelectorAll('item')].slice(0,max).map(it=>{const q=n=>{const e=it.querySelector(n);return e?e.textContent.trim():''};return{o,t:q('title'),l:q('link'),ts:Date.parse(q('pubDate'))||0}}).filter(x=>x.t)};
 async function getSrc(s){const mk=(via,xml,asOf)=>{const items=parseRSS(xml,s.o,14);D.nsrc[s.id]={ok:true,n:items.length,at:asOf||Date.now(),via,items};return items};
  try{if(s.pub){const r=await pubGet(s.url);return mk(r.via,r.t,r.asOf)}return mk('direct',await jget(s.url,'text'))}catch(e1){
@@ -448,7 +449,7 @@ async function getNews(){for(const k of['local','world']){await Promise.all(CFG.
  const vias=[...new Set(Object.values(D.nsrc).filter(n=>n.ok).map(n=>n.via).filter(Boolean))];H.news=ok?{st:'live',at:Date.now(),asOf:mx||null,via:vias.join(' + ')||'direct/proxy'}:{st:'err',msg:'all news sources unreachable'};paint(['hl-local','hl-world','tapes','sh-news'])}
 /* ===== OSIRIS world layer — data feeds only. NEVER called: /api/cctv*, /api/proxy-tiles, /api/sentinel, /api/arcgis, /api/live-news (imagery/streams guardrail).
    The hosted API sends no CORS headers, so every read rides direct → hub proxy (CFG.PROXY, set in Phase 3) → honest OFFLINE via offMsg(); last-good rows stay, badged STALE/OFFLINE. ===== */
-async function pubGetJ(url,ms){try{return{j:await jget(url,'json',ms),via:'direct'}}catch(e1){if(CFG.PROXY){try{return{j:await jget(CFG.PROXY+encodeURIComponent(url),'json',ms),via:'hub proxy'}}catch(e2){}}if(CFG.snapshot[url]&&!/\/api\/flights(\?|$)/.test(url)){try{return await snapGet(url,'json')}catch(e3){}}throw e1 instanceof TypeError?new Error(offMsg()):e1}}
+async function pubGetJ(url,ms){if(PRIME&&CFG.snapshot[url]&&!/\/api\/flights(\?|$)/.test(url)){try{return await snapGet(url,'json')}catch(e){}}try{return{j:await jget(url,'json',ms),via:'direct'}}catch(e1){if(CFG.PROXY){try{return{j:await jget(CFG.PROXY+encodeURIComponent(url),'json',ms),via:'hub proxy'}}catch(e2){}}if(CFG.snapshot[url]&&!/\/api\/flights(\?|$)/.test(url)){try{return await snapGet(url,'json')}catch(e3){}}throw e1 instanceof TypeError?new Error(offMsg()):e1}}
 const osiFail=(h,rows,e)=>rows.length?kept(h,{msg:String(e.message||e)}):{st:'err',msg:/HTTP/.test(String(e.message||e))?String(e.message||e):offMsg()};
 const distC=c=>c?Math.round(km(OTT[0],OTT[1],c[1],c[0])):null;
 async function getOsirisQuakes(){try{const r=await pubGetJ(CFG.osiris.base+'/api/earthquakes',20000);const j=r.j;
@@ -572,7 +573,7 @@ PN.ap_dep=()=>bd('dep');PN.ap_arr=()=>bd('arr');
 PN.ap_facts=()=>{const w=dwx(),o=w&&w.o,h=H.wx;const items=[['AIRPORT','Ottawa Macdonald–Cartier International'],['CODES','IATA YOW · ICAO CYOW'],['WEATHER (CITY)',o?(T(o.t,'°')+' · '+(o.cond||'--')+' · wind '+(o.wd||'')+' '+T(o.ws,' km/h')):'--'],['VISIBILITY (CITY)',o?T(o.vis,' km'):'--'],['NOTE','City observation, not an airport METAR.']];
  FL.ap_facts={items,rowFn:r=>'<div class="row" style="grid-template-columns:8.5rem 1fr;cursor:default">'+nw(esc(r[0]),'k')+cw(esc(r[1]),'a')+'</div>',opt:{}};if(!('ap_facts' in UI.pg))UI.pg.ap_facts=0;
  return{t:'AIRPORT FACTS',pgid:'ap_facts',chip:chipH(h,CFG.wx.staleMs),body:'<div class="fl" data-fl="ap_facts"></div>',src:srcLine(CFG.wx.name,h)}};
-PN['ap-doors']=()=>doorsPn('DOORS',[extDoor('Ottawa Airport · official site',CFG.official.yow,'ottawa-airport.ca'),goDoor('◂ Commute + Cameras','cams','Road to YOW'),goDoor('◂ Weather','weather','Conditions')]);
+PN['ap-doors']=()=>doorsPn('DOORS',[extDoor('yow.ca',CFG.official.yow,'ottawa-airport.ca'),goDoor('◂ Commute + Cameras','cams','Road to YOW'),goDoor('◂ Weather','weather','Conditions')]);
 /* ===== LIVE TV ===== */
 const BRK=/^\s*(breaking|just in|developing)\b/i;
 function newsRows(k){return SM()?SD.news[k]:D.news[k]}
@@ -588,7 +589,10 @@ const WALL={aud:null,tiles:{}};
 PN.wall=()=>{const tiles=CFG.wall.map(s=>'<div class="wtile" id="wt-'+s.id+'"><div class="wyt" id="ytp-'+s.id+'"></div><video muted playsinline preload="none" hidden></video><span class="wlive">● LIVE</span><div class="wstate">CONNECTING — trying '+esc(s.name)+' live stream…</div><div class="wfb" hidden></div><div class="wbar"><span class="wname">'+esc(s.name)+'</span><span class="wsub">'+esc(s.sub)+'</span><button class="waud" data-a="aud:'+s.id+'" aria-pressed="false">🔇 MUTED</button></div></div>').join('');
  return{t:'LIVE TV WALL',chip:chip('pend','CONNECTING'),body:'<div class="wall">'+tiles+'</div><div class="note">Four channels play at once, all muted. Tap <b>LISTEN</b> on a channel to hear it — only one channel has sound at a time; tap it again to mute.</div>',src:'<b>Official YouTube live embeds first</b> (video-ID embeds, playback-confirmed), with each broadcaster’s direct HLS stream as the fallback · played in place, never recorded here · a channel whose feed fails says why on its own tile, with a Watch on YouTube link'}};
 function wallStop(){Object.values(WALL.tiles).forEach(x=>{try{x.hls&&x.hls.destroy()}catch(e){}try{x.yt&&x.yt.destroy()}catch(e){}try{x.video.pause()}catch(e){}});WALL.tiles={};WALL.aud=null}
-function wallChip(){const el=$('#pn-wall .ph .chip');if(el&&Object.values(WALL.tiles).some(x=>x.playing))el.outerHTML=chip('live','LIVE')}
+function wallChip(){const el=$('#pn-wall .ph .chip');if(!el)return;const ts=Object.values(WALL.tiles);if(ts.some(x=>x.playing))el.outerHTML=chip('live','LIVE');else if(ts.some(x=>!x.tile.classList.contains('dead')))el.outerHTML=chip('pend','CONNECTING')}
+/* ROUND 3: playing state also arrives via the postMessage handshake (same pattern as Home's player) — the YT API events alone left a stale CONNECTING overlay over a playing TRT tile in the first-open audit. */
+setInterval(()=>{Object.entries(WALL.tiles).forEach(([id,T])=>{const fr=T.tile&&T.tile.querySelector('iframe');if(fr&&!fr.dataset.ls){fr.dataset.ls='1';const send=()=>{try{fr.contentWindow.postMessage(JSON.stringify({event:'listening',id:'ytp-'+id,channel:'widget'}),'*')}catch(e){}};fr.addEventListener('load',send);send()}})},1500);
+window.addEventListener('message',e=>{if(typeof e.data!=='string'||!/youtube/.test(e.origin))return;let d;try{d=JSON.parse(e.data)}catch(x){return}if(!d||d.event!=='onStateChange'||typeof d.id!=='string'||d.id.indexOf('ytp-')!==0)return;const T=WALL.tiles[d.id.slice(4)];if(!T)return;if(d.info===1){T.playing=true;T.tile.classList.add('playing');wallChip()}});
 function wallDead(id,msg){const x=WALL.tiles[id];if(!x)return;x.tile.classList.add('dead');x.tile.classList.remove('playing');x.playing=false;const st=$('.wstate',x.tile);if(st)st.textContent=msg;const fb=$('.wfb',x.tile),s=CFG.wall.find(z=>z.id===id);if(fb&&s){fb.innerHTML='<a class="btn sm" href="https://www.youtube.com/channel/'+s.ch+'/live" target="_blank" rel="noopener">Watch on YouTube ↗</a><button class="btn sm" data-tvfb="retry" data-id="'+id+'">↻ TRY AGAIN</button>';fb.hidden=false}}
 /* TV playback route (amendment 2026-11-21): official YouTube VIDEO-ID embeds FIRST; hls.js direct HLS as fallback per tile. Player state is derived from player events, never hard-coded — streams restart. Failure is never bare: named reason + Watch on YouTube + Try again. */
 let _ytApiP=null;function ytApi(){if(window.YT&&YT.Player)return Promise.resolve(true);if(_ytApiP)return _ytApiP;_ytApiP=new Promise(res=>{const t=document.createElement('script');t.src='https://www.youtube.com/iframe_api';t.onerror=()=>res(false);document.head.appendChild(t);const prev=window.onYouTubeIframeAPIReady;window.onYouTubeIframeAPIReady=()=>{if(prev)try{prev()}catch(e){}res(!!(window.YT&&YT.Player))};setTimeout(()=>res(!!(window.YT&&YT.Player)),6000)});return _ytApiP}
@@ -602,14 +606,14 @@ function wallHls(id){const T=WALL.tiles[id];if(!T)return;const s=CFG.wall.find(z
  setTimeout(()=>{if(WALL.tiles[id]===T&&!T.playing&&!T.tile.classList.contains('dead'))wallDead(id,'STREAM UNAVAILABLE — Network unreachable — the stream host did not answer in 9 s.')},9000)}
 function wallStart(){wallStop();$$('#pn-wall .wtile').forEach(t=>{const id=t.id.slice(3),s=CFG.wall.find(x=>x.id===id),v=$('video',t);if(!s||!v)return;const T={tile:t,video:v,hls:null,playing:false,route:'yt',yt:null};WALL.tiles[id]=T;
  ytApi().then(ok=>{if(WALL.tiles[id]!==T)return;if(!ok||!s.yt){wallHls(id);return}
-  try{T.yt=new YT.Player('ytp-'+id,{videoId:s.yt,playerVars:{autoplay:1,mute:1,playsinline:1,rel:0},events:{onReady:e=>{try{e.target.mute();e.target.playVideo()}catch(_){}},onStateChange:e=>{if(e.data===1){T.playing=true;t.classList.add('playing');wallChip()}},onError:()=>{if(!T.playing)wallHls(id)}}})}catch(_){wallHls(id)}
-  setTimeout(()=>{if(WALL.tiles[id]===T&&!T.playing&&T.route==='yt')wallHls(id)},8000)})})}
+  try{T.yt=new YT.Player('ytp-'+id,{videoId:s.yt,playerVars:{autoplay:1,mute:1,playsinline:1,rel:0,enablejsapi:1},events:{onReady:e=>{try{e.target.mute();e.target.playVideo()}catch(_){}},onStateChange:e=>{if(e.data===1){T.playing=true;t.classList.add('playing');wallChip()}},onError:()=>{if(!T.playing)wallHls(id)}}})}catch(_){wallHls(id)}
+  setTimeout(()=>{if(WALL.tiles[id]===T&&!T.playing&&T.route==='yt'&&!T.tile.classList.contains('dead')){const st=$('.wstate',T.tile);if(st)st.textContent='Checking live stream… (a channel ad break or a slow start can take a couple of minutes)'}},30000)})})}
 /* ROUND 2: TRY AGAIN restarts ONLY its own tile (the old handler restarted the whole wall,
    and the copy in the wheel script could not even see these functions). */
 function wallRetry(id){const s=CFG.wall.find(z=>z.id===id);if(!s)return;const old=WALL.tiles[id],t=old?old.tile:document.querySelector('#wt-'+id);if(!t)return;if(old){try{old.hls&&old.hls.destroy()}catch(e){}try{old.yt&&old.yt.destroy()}catch(e){}try{old.video.pause()}catch(e){}}t.classList.remove('dead','playing');const fb=$('.wfb',t);if(fb){fb.hidden=true;fb.innerHTML=''}const st=$('.wstate',t);if(st)st.textContent='CONNECTING…';const v=$('video',t);const T={tile:t,video:v,hls:null,playing:false,route:'yt',yt:null};WALL.tiles[id]=T;
  ytApi().then(ok=>{if(WALL.tiles[id]!==T)return;if(!ok||!s.yt){wallHls(id);return}
-  try{T.yt=new YT.Player('ytp-'+id,{videoId:s.yt,playerVars:{autoplay:1,mute:1,playsinline:1,rel:0},events:{onReady:e=>{try{e.target.mute();e.target.playVideo()}catch(_){}},onStateChange:e=>{if(e.data===1){T.playing=true;t.classList.add('playing');wallChip()}},onError:()=>{if(!T.playing)wallHls(id)}}})}catch(_){wallHls(id)}
-  setTimeout(()=>{if(WALL.tiles[id]===T&&!T.playing&&T.route==='yt')wallHls(id)},8000)})}
+  try{T.yt=new YT.Player('ytp-'+id,{videoId:s.yt,playerVars:{autoplay:1,mute:1,playsinline:1,rel:0,enablejsapi:1},events:{onReady:e=>{try{e.target.mute();e.target.playVideo()}catch(_){}},onStateChange:e=>{if(e.data===1){T.playing=true;t.classList.add('playing');wallChip()}},onError:()=>{if(!T.playing)wallHls(id)}}})}catch(_){wallHls(id)}
+  setTimeout(()=>{if(WALL.tiles[id]===T&&!T.playing&&T.route==='yt'&&!T.tile.classList.contains('dead')){const st=$('.wstate',T.tile);if(st)st.textContent='Checking live stream… (a channel ad break or a slow start can take a couple of minutes)'}},30000)})}
 document.addEventListener('click',function(e){var b=e.target.closest?e.target.closest('[data-tvfb="retry"]'):null;if(!b)return;e.preventDefault();e.stopPropagation();var id=b.getAttribute('data-id');if(id)wallRetry(id)},true);
 function wallAudio(id){const T=WALL.tiles[id];if(!T)return;WALL.aud=WALL.aud===id?null:id;Object.entries(WALL.tiles).forEach(([k,x])=>{const hear=k===WALL.aud;
  if(x.yt&&x.yt.mute){try{if(hear){x.yt.unMute();x.yt.setVolume(100)}else x.yt.mute()}catch(_){}}
@@ -688,8 +692,8 @@ const LAY={
  tv:{c:'minmax(0,1.7fr) minmax(0,1fr) minmax(0,1fr)',r:'auto minmax(0,1fr) auto',a:'"tapes tapes tapes" "player hl1 hl2" "doors doors doors"',p:[['tapes','tapes'],['wall','player'],['hl-local','hl1'],['hl-world','hl2'],['tv-doors','doors']]},
  world:{c:'minmax(0,1.4fr) minmax(0,1fr)',r:'minmax(0,1fr) minmax(0,1fr) auto',a:'"map ev" "map health" "doors doors"',p:[['wmap','map'],['wevents','ev'],['whealth','health'],['w-doors','doors']]}};
 const RO=new ResizeObserver(()=>relayout());
-function render(){const oldPb=document.querySelector('#pn-wall .pb'),keepWall=!!(oldPb&&oldPb.querySelector('.wtile.playing'));if(keepWall)window.__WALL_KEEP=true;else wallStop();const L=LAY[UI.sec],s=$('#stage');s.style.gridTemplateColumns=L.c;s.style.gridTemplateRows=L.r;s.style.gridTemplateAreas=L.a;s.innerHTML=L.p.map(p=>panelShell(p[0],p[1])).join('');mapKey='';
- L.p.forEach(p=>panelFill(p[0]));if(keepWall){const nw2=document.querySelector('#pn-wall .pb');if(nw2&&nw2!==oldPb)nw2.replaceWith(oldPb);window.__WALL_KEEP=false}RO.disconnect();$$('.pn',s).forEach(n=>RO.observe(n));crumb();tabs();glyphPaint();foot();relayout()}
+function render(){const oldPb=document.querySelector('#pn-wall .pb'),keepWall=!!(oldPb&&oldPb.querySelector('.wtile:not(.dead)'));if(keepWall)window.__WALL_KEEP=true;else wallStop();const L=LAY[UI.sec],s=$('#stage');s.style.gridTemplateColumns=L.c;s.style.gridTemplateRows=L.r;s.style.gridTemplateAreas=L.a;s.innerHTML=L.p.map(p=>panelShell(p[0],p[1])).join('');mapKey='';
+ L.p.forEach(p=>panelFill(p[0]));if(keepWall){const nw2=document.querySelector('#pn-wall .pb');if(nw2&&nw2!==oldPb)nw2.replaceWith(oldPb);window.__WALL_KEEP=false}wallChip();RO.disconnect();$$('.pn',s).forEach(n=>RO.observe(n));crumb();tabs();glyphPaint();foot();relayout()}
 const _rl=relayout;relayout=function(){clearTimeout(layTimer);layTimer=setTimeout(()=>{$$('.fl,.hr-s,#mapbox').forEach(n=>RO.observe(n));flLayout();hourlyLayout();mapPaint();tapeFit()},30)};
 function crumb(){const s=SECI[UI.sec];$('#cr').textContent='HOME › SITREP › '+s.n;const f=fromSec();$('#b-back').textContent='◂ BACK TO '+f.box}
 function fromSec(){const f=UI.from;return SEC.find(s=>s.id===f||s.bx===f)||SECI[UI.sec]}
@@ -744,9 +748,10 @@ function clock(){const d=new Date();$('#ck').textContent=hms(d);$('#dt').textCon
 function boot(){let th='dark';try{th=localStorage.getItem(TK)||'dark'}catch(e){saveErr=true}
  const o=parseHash();UI.sec=(o&&o.secId)||(window.__TAB?'home':(SECI[store.ui.sec]?store.ui.sec:'home'));UI.from=(o&&o.from)||null;
  setTheme(th==='light'?'light':'dark');save();/* persists on BOOT; catch path sets saveErr and the footer says NOT SAVED */
+ try{const _c=localStorage.getItem('sitrep.wx.lastgood');if(_c&&!D.wx){D.wx=JSON.parse(_c);H.wx={st:'live',at:D.wx.upd||Date.now(),asOf:D.wx.upd||null,via:'snapshot',have:true}}}catch(e){}
  render();clock();setInterval(clock,1000);
  const run=(f,ms)=>{f();setInterval(f,ms)};
- run(getWx,CFG.wx.everyMs);run(getEv,CFG.ev.everyMs);getCamList();run(getNews,CFG.news.everyMs);run(getOsirisQuakes,CFG.quakes.everyMs);run(getOsirisConf,CFG.osiris.everyMs);run(getOsirisFires,CFG.osiris.everyMs);run(getOsirisGdelt,CFG.osiris.everyMs);run(getOsirisApi,CFG.osiris.everyMs);run(getOsirisFlights,CFG.osiris.everyMs);run(getYow,CFG.yow.everyMs);run(getGdacs,CFG.wm.everyMs);run(getEonet,CFG.wm.everyMs);run(getCap,CFG.wm.everyMs);run(getRadar,CFG.ge.refreshMs);setInterval(camTick,5000);
+ run(getWx,CFG.wx.everyMs);run(getEv,CFG.ev.everyMs);getCamList();run(getNews,CFG.news.everyMs);run(getOsirisQuakes,CFG.quakes.everyMs);run(getOsirisConf,CFG.osiris.everyMs);run(getOsirisFires,CFG.osiris.everyMs);run(getOsirisGdelt,CFG.osiris.everyMs);run(getOsirisApi,CFG.osiris.everyMs);run(getOsirisFlights,CFG.osiris.everyMs);run(getYow,CFG.yow.everyMs);run(getGdacs,CFG.wm.everyMs);run(getEonet,CFG.wm.everyMs);run(getCap,CFG.wm.everyMs);run(getRadar,CFG.ge.refreshMs);setInterval(camTick,5000);setTimeout(()=>{PRIME=false;[getWx,getEv,getNews,getOsirisQuakes,getOsirisConf,getOsirisFires,getOsirisGdelt,getOsirisApi,getOsirisFlights,getYow,getGdacs,getEonet,getCap,getRadar].forEach(f=>{try{f()}catch(e){}})},2500);
  setInterval(()=>{paint(['tapes'].filter(()=>false));glyphPaint()},60000);
  if(o&&o.cam&&o.secId==='cams')setTimeout(()=>sheetRow('cam',o.cam),200)}
 boot();
@@ -1111,7 +1116,7 @@ function boot(){
     var reveal=function(){if(prev&&prev!==fr)prev.classList.remove('cnd-cur');fr.classList.add('cnd-cur');cur=fr;curKey=key;document.title=TITLES[key];
       if(extra&&extra.hash&&extra.hash.indexOf('#/')!==0){try{fr.contentWindow.postMessage({canopy:'hash',hash:extra.hash},'*')}catch(_){}}
       if(push!==false){try{history.pushState({cnd:key},'','#/'+key)}catch(_){}}};
-    if(fresh){fr.addEventListener('load',function(){myT(reveal,30)});myT(function(){if(cur!==fr)reveal()},2500)}
+    if(fresh){var rvDone=false;var rv=function(){if(rvDone)return;rvDone=true;reveal()};fr.addEventListener('load',function(){myT(rv,30)});myT(rv,1500);try{if(fr.contentDocument&&fr.contentDocument.readyState==='complete')myT(rv,30)}catch(_){}}
     else reveal();
   }
   window.addEventListener('message',function(e){var d=e.data||{};
@@ -1125,7 +1130,7 @@ function boot(){
   var start=myKey,hm=/^#\/([a-z]+)/.exec(location.hash||'');
   if(hm&&FILES[hm[1]])start=hm[1];
   show(start,{search:location.search,hash:(location.hash&&location.hash.indexOf('#/')!==0)?location.hash:''},false);
-  try{history.replaceState({cnd:start},'','/'+location.pathname.split('/').pop()+'#/'+start)}catch(_){}
+  try{history.replaceState({cnd:start},'','#/'+start)}catch(_){}
   function sweepTo(limit){for(var i=1;i<=limit;i++){if(!MYIDS[i]){clearInterval(i);clearTimeout(i)}}}
   myT(function(){sweepTo(snap)},350);
   myT(function(){var snap2=myT(function(){},0);myT(function(){sweepTo(snap2)},60)},1400);
@@ -1155,4 +1160,4 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 @media (prefers-reduced-motion:reduce){#stage>.pn{animation:none}}
 </style>
 
-</body></html>
+<style>/* ===== ROUND 3 · GEMINI TOKENS + ITEM 4/5 FIXES (final cascade) ===== */.cnd,.card,.mbox,.portal{transition:transform 150ms ease,box-shadow 150ms ease,border-color 150ms ease,background-color 150ms ease}.card:hover,.mbox:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.45);border-color:rgba(201,162,39,.45)}.cnd:hover{transform:translateY(-4px);box-shadow:0 0 0 1px rgba(201,162,39,.70),0 0 16px rgba(201,162,39,.50),0 12px 28px rgba(0,0,0,.55)!important;border-color:rgba(201,162,39,.55)}.cnd.linked{box-shadow:0 0 0 1px rgba(201,162,39,.55),0 0 16px rgba(201,162,39,.40)!important}.card:active,.mbox:active,.portal:active{transform:scale(.98)!important;box-shadow:0 1px 2px rgba(0,0,0,.35)!important;transition-duration:100ms}.cnd:active{transform:scale(.98)!important;box-shadow:0 0 0 1px rgba(201,162,39,.55),0 0 16px rgba(201,162,39,.40)!important;transition-duration:100ms}button:active,.btn:active{transform:translateY(1px);filter:brightness(.92);box-shadow:none!important;transition-duration:100ms}.lkbadge:active{filter:brightness(.92)}:focus-visible{outline:2px solid rgba(201,162,39,.8);outline-offset:2px}.rw:hover,.tag:hover,.chip:hover{transform:none}@media (prefers-reduced-motion:reduce){*{transition-duration:120ms!important;animation-duration:120ms!important;animation-iteration-count:1!important}}.pn{transition:transform 150ms ease,box-shadow 150ms ease,border-color 150ms ease,background-color 150ms ease}.pn:hover{box-shadow:0 8px 20px rgba(0,0,0,.45);border-color:rgba(201,162,39,.45)}.bd-r,.bd-h{grid-template-columns:4.8rem 5.5rem 1fr 3.5rem 7rem}.fl>*{flex:none!important}.bd-r>span:first-child{line-height:1.3}#pn-ap_more .l2{display:block;-webkit-line-clamp:unset}.foot{padding-right:1.6rem}</style></body></html>

@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Canopy — Connectors Diagram</title>
+<style>
+:root{
+  --home:#EDE6C8; --home-glow:#FFF3C4;
+  --deck:#2FA866; --deck-glow:#46E08D;
+  --day:#D64541;  --day-glow:#FF7A72;
+  --wb:#3E8FE0;   --wb-glow:#6FB6FF;
+  --sit:#C9A227;  --sit-glow:#FFD94D;
+  --amber:#FFB02E; --grey:#9AA3AD; --ink:#F4F6F8;
+  --violet:#D9D2FF; --qb:#43D17C;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%;overflow:hidden}
+body{
+  background-color:#000;
+  background-image:radial-gradient(1200px 700px at 50% -8%, #16202b 0%, rgba(0,0,0,0) 55%);
+  background-repeat:no-repeat;
+  color:var(--ink);
+  font-family:"Avenir Next","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  display:flex;flex-direction:column;height:100dvh;
+}
+/* ---------- top bar ---------- */
+.topbar{
+  flex:none;display:flex;align-items:center;gap:16px;padding:8px 16px 6px;
+  border-bottom:1px solid rgba(255,255,255,.10);
+}
+.brand{display:flex;align-items:center;gap:12px;flex:none}
+.brand .disc{width:46px;height:46px;border-radius:50%;background:radial-gradient(circle at 38% 30%, #FFFDF2, #F2EDDB 70%);display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 0 14px rgba(255,246,216,.7)}
+.brand .disc img{width:44px;height:44px;display:block}
+.brand h1{margin:0;font-size:29px;letter-spacing:.3em;font-weight:800;color:#FFF8DC;text-shadow:0 0 12px rgba(255,243,196,.85),0 0 40px rgba(255,217,77,.4)}
+.brand .brand-sub{font-size:14.5px;color:#93A7BA;letter-spacing:.22em}
+.top-mid{flex:1;min-width:0;text-align:center}
+.top-mid .tag{font-size:16.5px;color:#D8E2EC;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top-mid .hint{font-size:14.5px;color:#8fa3b5;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#readout{flex:none;max-width:430px;display:flex;gap:10px;align-items:center;background:rgba(8,12,16,.92);border:1.5px solid rgba(255,243,196,.55);border-radius:12px;padding:7px 12px;box-shadow:0 0 16px rgba(255,217,77,.22)}
+#readout .ro-name{font-weight:800;font-size:15.5px;color:#FFF3C4;white-space:nowrap}
+#readout .ro-body{font-size:14.5px;line-height:1.35;color:#E6EDF3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#readout button{font:inherit;font-size:14.5px;font-weight:700;color:#0A0F14;background:linear-gradient(180deg,#FFEFA8,#FFD94D);border:0;border-radius:9px;padding:7px 12px;cursor:pointer;box-shadow:0 0 12px rgba(255,217,77,.5);flex:none}
+#readout button:focus-visible{outline:3px solid #6FB6FF;outline-offset:2px}
+/* ---------- legend ---------- */
+.legend{
+  flex:none;display:flex;gap:5px 13px;justify-content:center;align-items:center;flex-wrap:nowrap;
+  padding:5px 12px;font-size:14px;color:#C7D3DE;border-bottom:1px solid rgba(255,255,255,.08);
+  white-space:nowrap;overflow:hidden;
+}
+.legend b{letter-spacing:.08em;font-size:14px;color:#BFD0DE}
+.legend .sep{width:1px;height:16px;background:rgba(255,255,255,.22);flex:none}
+.sw{display:inline-block;width:24px;height:13px;border-radius:4px;vertical-align:-2px;margin-right:6px}
+.sw.block{background:linear-gradient(180deg,#3a4a56,#141c22);border:2px solid #E8F2FF;box-shadow:0 0 8px rgba(232,242,255,.8)}
+.sw.kin-app{background:transparent;border:2.5px solid var(--wb-glow);border-radius:3px;box-shadow:inset 0 0 0 2px #000, inset 0 0 0 4px rgba(111,182,255,.55)}
+.sw.kin-out{background:transparent;border:2px solid #A9BAC9;border-radius:999px}
+.sw.ring{width:26px;height:14px;border-radius:50%;border:3px solid var(--violet);box-shadow:0 0 8px rgba(217,210,255,.85);background:transparent}
+.lpill{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.04em;border-radius:6px;padding:1px 7px;margin-right:6px;vertical-align:1px}
+.lpill.work{background:#E8F2FF;color:#0A0F14}
+.lpill.opt{background:transparent;border:1.5px solid #A9BAC9;color:#D8E2EC}
+.lpill.watch{background:rgba(255,176,46,.16);border:1.5px solid var(--amber);color:#FFD9A0}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:-1px;margin-right:5px;box-shadow:0 0 8px currentColor}
+.dot.d-sit{background:#FFF6D8;color:#FFD94D;border:2px solid var(--sit)}
+.dot.d-deck{background:var(--deck-glow);color:var(--deck-glow)}
+.dot.d-day{background:var(--day-glow);color:var(--day-glow)}
+.dot.d-wb{background:var(--wb-glow);color:var(--wb-glow)}
+/* ---------- stage / grid : hub-and-spoke ---------- */
+.stage{position:relative;flex:1;min-height:0;padding:10px 12px 8px}
+#wires,#wires2,#labels{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+#wires{z-index:1}#wires2{z-index:3}#labels{z-index:4}
+#wires path,#wires2 path{fill:none;stroke-linecap:round;transition:opacity .35s ease}
+#wires .spoke,#wires2 .spoke{stroke-width:5;opacity:.85}
+#wires .tie,#wires2 .tie{stroke-width:4;opacity:.75}
+#wires .thin,#wires2 .thin{stroke-width:3;opacity:.55}
+#wires .hero,#wires2 .hero{stroke-width:6.5;opacity:.95}
+#wires2 .tether{stroke-width:3.5;opacity:.8}
+#labels text{font-size:15.5px;font-weight:700;fill:#fff;paint-order:stroke;stroke:#000;stroke-width:6px;stroke-linejoin:round;transition:opacity .35s ease}
+#wires .dim,#wires2 .dim{opacity:.05 !important}
+#labels text.dim{opacity:0 !important}
+#wires path.xoff,#wires2 path.xoff{opacity:0 !important}
+#labels text.xoff{opacity:0 !important}
+#wires g.xlayer,#wires2 g.xlayer{opacity:0 !important}
+#labels text.xlayer{opacity:0 !important}
+#wires g.xoff,#wires2 g.xoff{opacity:0 !important}
+#wires g.hot .wwire,#wires2 g.hot .wwire{stroke-width:4.6}
+#wires g.hot .wglow,#wires2 g.hot .wglow{opacity:.45}
+#labels text.hot{opacity:1}
+.dimmed{opacity:.32 !important}
+.flow{stroke-dasharray:14 10;animation:dashmove 1.6s linear infinite}
+.tetherflow{animation:dashmove 1.6s linear infinite}
+@keyframes dashmove{to{stroke-dashoffset:-24}}
+.grid{
+  position:relative;z-index:2;height:100%;display:grid;gap:10px;pointer-events:none;
+  grid-template-columns:1.04fr .92fr 1.04fr;
+  grid-template-rows:minmax(0,1.68fr) minmax(0,1fr);
+  grid-template-areas:
+    "left hub right"
+    "wb wb wb";
+}
+.panel{
+  pointer-events:auto;position:relative;border-radius:20px;padding:10px 14px 9px;min-height:0;overflow:hidden;
+  background:linear-gradient(165deg, rgba(255,255,255,.075), rgba(0,0,0,.62) 55%);
+  border:2.5px solid var(--c);
+  box-shadow:0 0 20px var(--glowsoft), inset 0 0 26px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.28), 0 16px 30px rgba(0,0,0,.8);
+  cursor:pointer;transition:opacity .35s ease, filter .35s ease, box-shadow .35s ease;
+  display:flex;flex-direction:column;
+}
+.panel:focus-visible,.appchip:focus-visible,.catchip:focus-visible,.srcchip:focus-visible,.deptchip:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.panel h2{margin:0;font-size:26px;letter-spacing:.09em;font-weight:800;color:var(--ctext,#fff);text-shadow:0 0 12px var(--glow),0 0 30px var(--glowsoft);flex:none;line-height:1.15}
+.panel .tagline{margin:2px 0 8px;font-size:15px;color:#C7D3DE;flex:none}
+.p-sit{--c:var(--home);--glow:var(--home-glow);--glowsoft:rgba(255,243,196,.26);--ctext:#FFFFFF}
+.p-deck{--c:var(--deck);--glow:var(--deck-glow);--glowsoft:rgba(70,224,141,.30);--ctext:#C9F5DC}
+.p-day{--c:var(--day);--glow:var(--day-glow);--glowsoft:rgba(255,122,114,.30);--ctext:#FFD9D6}
+.p-wb{--c:var(--wb);--glow:var(--wb-glow);--glowsoft:rgba(111,182,255,.30);--ctext:#D9ECFF;grid-area:wb}
+.leftcol{grid-area:left;display:flex;flex-direction:column;gap:10px;min-height:0;min-width:0}
+.hubcol{grid-area:hub;display:flex;flex-direction:column;gap:6px;min-height:0;min-width:0}
+.rightcol{grid-area:right;display:flex;flex-direction:column;gap:10px;min-height:0;min-width:0}
+.leftcol .p-sit{flex:1.42;min-height:0}
+.leftcol .geye{flex:1;min-height:0}
+.rightcol .p-deck{flex:1.14;min-height:0}
+.rightcol .p-day{flex:1;min-height:0}
+/* chips — kind is carried by SHAPE: plain block = built in · square marker = our app · round pill = outside service */
+.chips{display:flex;flex-direction:column;gap:4px;min-height:0}
+.chip{
+  position:relative;font-size:15.5px;line-height:1.28;color:#EDF3F8;border-radius:11px;padding:5px 11px;
+  background:linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.03));
+  border:1.5px solid rgba(230,240,250,.75);
+  box-shadow:0 4px 10px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.3), 0 0 7px rgba(255,255,255,.10);
+}
+.chip small{display:block;font-size:14.5px;color:#A9BAC9}
+.chip.k-out{border-radius:999px;padding-left:29px}
+.chip.k-out::before{content:"";position:absolute;left:11px;top:50%;transform:translateY(-50%);width:8px;height:8px;border-radius:50%;border:2px solid #A9BAC9}
+.own{display:inline-block;font-size:11.5px;font-weight:800;letter-spacing:.07em;border-radius:5px;padding:0 6px;margin-right:7px;vertical-align:2px;color:#0A0F14;box-shadow:0 0 8px rgba(255,255,255,.35)}
+.own-day{background:var(--day-glow)}
+.own-wb{background:var(--wb-glow)}
+.own-sit{background:var(--sit-glow)}
+.own-deck{background:var(--deck-glow)}
+.more{font-size:14.5px;color:#9FB4C6;margin-top:auto;padding-top:6px;flex:none}
+.more b{color:#EAF4FF}
+/* SITREP gold zone — SITREP's own things inside the black-and-white area */
+.sitzone{
+  margin-top:7px;border:2.5px solid var(--sit);border-radius:16px;padding:7px 12px;flex:none;
+  background:linear-gradient(165deg, rgba(255,217,77,.10), rgba(0,0,0,.5));
+  box-shadow:0 0 16px rgba(255,217,77,.32), inset 0 1px 0 rgba(255,255,255,.22);
+}
+.sitzone h3{margin:0;font-size:17.5px;letter-spacing:.04em;color:#FFEDB0;text-shadow:0 0 11px var(--sit-glow)}
+.sitzone .chips{gap:5px;margin-top:6px}
+.sitzone .chip{font-size:15px;padding:6px 10px;border-color:rgba(255,217,77,.65)}
+/* God's Eye — part of SITREP, drawn in the diagram's own glass style */
+.geye{
+  pointer-events:auto;cursor:pointer;text-align:center;
+  border:3px solid var(--violet);border-radius:26px;
+  background:radial-gradient(ellipse at 50% 42%, rgba(230,225,255,.10), rgba(24,20,48,.28) 58%, rgba(0,0,0,.15));
+  box-shadow:0 0 26px rgba(210,200,255,.45), inset 0 0 44px rgba(180,170,255,.16), 0 14px 26px rgba(0,0,0,.7);
+  padding:10px 14px 9px;transition:opacity .35s ease, filter .35s ease, box-shadow .35s ease;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.geye h3{margin:0;font-size:21px;letter-spacing:.11em;font-weight:800;color:#F4F1FF;text-shadow:0 0 13px rgba(220,210,255,.9),0 0 36px rgba(170,160,255,.5)}
+.geye .ge-sub{font-size:14.5px;color:#CFC8EE;margin-top:2px}
+.ge-shelf{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:8px}
+.ge-chip{padding:3px 7px;border-radius:999px;border:2px solid rgba(230,225,255,.75);background:linear-gradient(180deg, rgba(255,255,255,.13), rgba(0,0,0,.35));font-size:14.5px;font-weight:650;color:#F2EFFF;line-height:1.25;box-shadow:0 0 10px rgba(200,190,255,.3)}
+/* centre hub — logo in the middle */
+.orbzone{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
+.orb{
+  pointer-events:auto;cursor:pointer;width:250px;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:2px 4px;border-radius:18px;flex:none;
+}
+.orb .disc{width:76px;height:76px;border-radius:50%;background:radial-gradient(circle at 50% 38%,#FFFDF4,#F3E9D2 78%);border:2px solid rgba(244,197,66,.85);display:flex;align-items:center;justify-content:center;box-shadow:0 0 34px rgba(244,197,66,.4),0 0 90px rgba(244,197,66,.16);overflow:hidden}
+.orb .disc img{width:70px;height:70px;object-fit:contain;display:block}
+.orb .orb-name{margin-top:3px;font-size:26px;font-weight:800;letter-spacing:.24em;color:#FFE9A8;text-shadow:0 0 16px rgba(244,197,66,.75);line-height:1.1}
+.orb .orb-sub{font-size:14.5px;color:#C9D6E2;white-space:nowrap}
+.orb .orb-brand{font-size:14.5px;letter-spacing:.34em;color:#8FA6BB}
+.srccluster{pointer-events:auto;width:100%;text-align:center;flex:none}
+.src-h{font-size:14.5px;font-weight:800;letter-spacing:.05em;color:#FFEDB0;text-shadow:0 0 10px rgba(255,217,77,.55);margin-bottom:4px;white-space:nowrap}
+.srcgrid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:6px}
+.srcchip{
+  font-size:15.5px;font-weight:650;color:#FFF6D8;padding:6px 9px;border-radius:12px;cursor:pointer;pointer-events:auto;
+  border:2px solid var(--sit-glow);background:linear-gradient(180deg, rgba(255,217,77,.16), rgba(0,0,0,.5));
+  box-shadow:0 0 14px rgba(255,217,77,.35), 0 6px 14px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.25);
+  transition:opacity .35s ease, filter .35s ease, box-shadow .35s ease;
+}
+.srcchip small{display:block;font-size:14.5px;font-weight:500;color:#D8CCA0;margin-top:2px;line-height:1.3}
+.srcchip small.smh{display:none}
+.setupshelf{
+  pointer-events:auto;cursor:pointer;flex:none;width:100%;text-align:left;
+  border:2px solid rgba(255,243,196,.5);border-radius:16px;padding:8px 12px;
+  background:linear-gradient(165deg, rgba(255,243,196,.06), rgba(0,0,0,.55));
+  box-shadow:0 0 16px rgba(255,243,196,.18), inset 0 1px 0 rgba(255,255,255,.18);
+  transition:opacity .35s ease, filter .35s ease, box-shadow .35s ease;
+}
+.setupshelf .src-h{margin-bottom:3px}
+.catgrid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.catchip{
+  display:flex;align-items:center;font-size:15.5px;font-weight:650;color:#FFF6D8;line-height:1.15;
+  padding:2px 9px;border-radius:10px;cursor:pointer;pointer-events:auto;min-height:26px;
+  border:1.5px solid rgba(255,237,176,.65);background:linear-gradient(180deg, rgba(255,217,77,.13), rgba(0,0,0,.45));
+  box-shadow:0 3px 8px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.22);
+  transition:opacity .35s ease, filter .35s ease, box-shadow .35s ease;
+}
+/* portals inside the Deck */
+.portal{
+  margin-top:9px;border:2px solid rgba(70,224,141,.55);border-radius:14px;padding:9px 11px;cursor:pointer;pointer-events:auto;flex:none;
+  background:linear-gradient(165deg, rgba(70,224,141,.08), rgba(0,0,0,.5));
+  box-shadow:0 0 14px rgba(70,224,141,.25), inset 0 1px 0 rgba(255,255,255,.2);
+  transition:opacity .35s ease, filter .35s ease, box-shadow .35s ease;
+}
+.portal h3{margin:0;font-size:19px;letter-spacing:.07em;color:#C9F5DC;text-shadow:0 0 10px var(--deck-glow)}
+.portal .p-sub{font-size:14.5px;color:#A9C6B4;margin:1px 0 6px}
+.portal .chips{gap:5px}
+.portal .chip{font-size:15px;padding:5px 10px}
+/* workbench */
+.wb-caption{
+  margin:0 0 6px;padding:6px 12px;flex:none;text-align:center;font-size:16.5px;color:#D9ECFF;
+  border:1.5px dashed rgba(111,182,255,.5);border-radius:12px;background:rgba(62,143,224,.07);
+}
+.wb-caption b{letter-spacing:.08em}
+.wb-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px;flex:1;min-height:0}
+.ownerbox{border:2px solid rgba(111,182,255,.45);border-radius:16px;padding:9px 12px;background:rgba(0,0,0,.3);display:flex;flex-direction:column;min-height:0;overflow:hidden;transition:opacity .35s ease, filter .35s ease}
+.ownerbox > h3{margin:0 0 2px;font-size:21px;letter-spacing:.09em;color:#D9ECFF;text-shadow:0 0 10px rgba(111,182,255,.55);flex:none}
+.ownerbox > .ob-sub{font-size:14.5px;color:#A9C6E4;margin:1px 0 8px;flex:none}
+.granthead{display:flex;align-items:center;gap:6px;margin-bottom:6px;flex:none}
+.granthead h3{margin:0;font-size:18px;letter-spacing:.06em;color:#D9ECFF;text-shadow:0 0 10px rgba(111,182,255,.55);flex:none}
+.granthead .topapps-row{flex:1}
+.ownerrow{display:grid;grid-template-columns:1.72fr .78fr;gap:10px;flex:1;min-height:0}
+.companybox{border:1.5px solid rgba(111,182,255,.4);border-radius:13px;padding:7px 11px;background:rgba(62,143,224,.06);display:flex;flex-direction:column;min-height:0;min-width:0;overflow:hidden}
+.companybox > h4{margin:0 0 3px;font-size:16.5px;letter-spacing:.1em;color:#BFE0FF;flex:none}
+.companybox > .cb-sub{font-size:14.5px;color:#93B4D4;margin:0 0 6px;flex:none}
+.appgrid{display:flex;gap:6px;flex-wrap:wrap}
+.appchip{
+  display:inline-flex;align-items:center;gap:7px;font-size:15.5px;font-weight:650;color:#EAF4FF;
+  border:2px solid rgba(111,182,255,.7);border-radius:10px;padding:6px 10px;cursor:pointer;pointer-events:auto;
+  background:linear-gradient(180deg, rgba(111,182,255,.16), rgba(0,0,0,.4));
+  box-shadow:0 3px 9px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.25);
+  transition:opacity .35s ease, filter .35s ease, box-shadow .35s ease;
+}
+.appchip::before{content:"";width:9px;height:9px;border-radius:3px;background:var(--wb-glow);box-shadow:0 0 8px rgba(111,182,255,.85);flex:none}
+.appchip small{display:block;font-size:14.5px;font-weight:500;color:#A9C6E4}
+.appchip.big{font-size:16.5px;padding:6px 12px;border-radius:12px}
+.topapps-row{flex-wrap:nowrap;gap:4px}
+.topapps-row .appchip{font-size:13.5px;padding:3px 5px;flex:none}
+.topapps-row .appchip::before{display:none}
+.deptrow{display:flex;gap:3px;flex-wrap:nowrap;margin-top:4px;flex:none}
+.deptchip{
+  font-size:14px;font-weight:650;color:#D9ECFF;padding:3px 5px;border-radius:999px;cursor:pointer;pointer-events:auto;
+  border:1.5px solid rgba(111,182,255,.55);background:rgba(62,143,224,.12);
+  transition:opacity .35s ease, filter .35s ease, box-shadow .35s ease;
+}
+.deptchip.gold{border-color:var(--sit-glow);color:#FFEDB0;background:rgba(201,162,39,.14)}
+.toolline{font-size:14.5px;color:#B9CCE0;margin:7px 0 0;line-height:1.4;flex:none}
+.toolline b{color:#EAF4FF}
+/* team strip */
+.teamstrip{
+  flex:none;display:flex;flex-direction:column;gap:2px;align-items:flex-start;cursor:pointer;pointer-events:auto;
+  border:2px solid #7d8ea0;border-radius:14px;padding:8px 12px;
+  background:linear-gradient(165deg, rgba(255,255,255,.06), rgba(0,0,0,.55));
+  box-shadow:0 0 14px rgba(191,208,222,.18), inset 0 1px 0 rgba(255,255,255,.2);
+  transition:opacity .35s ease, filter .35s ease, box-shadow .35s ease;
+}
+.teamstrip .t-h{font-size:16.5px;font-weight:800;letter-spacing:.09em;color:#EAF1F7}
+.teamstrip .t-b{font-size:14.5px;color:#A9BAC9}
+.footbar{flex:none;text-align:center;font-size:14.5px;color:#93A7BA;padding:3px 14px 4px;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* selection + detail */
+body.has-sel .panel,body.has-sel .geye,body.has-sel .portal,body.has-sel .setupshelf,body.has-sel .srcchip,body.has-sel .catchip,body.has-sel .appchip,body.has-sel .deptchip,body.has-sel .teamstrip,body.has-sel .orb{opacity:.32;filter:saturate(.35)}
+body.has-sel .sel{opacity:1 !important;filter:none !important;box-shadow:0 0 0 3px #fff, 0 0 26px rgba(255,255,255,.55), inset 0 1px 0 rgba(255,255,255,.3) !important}
+#detailWrap{position:absolute;inset:0;z-index:6;display:none;align-items:center;justify-content:center;background:rgba(2,5,8,.45)}
+#detailWrap.open{display:flex}
+#detail{
+  width:min(680px,94%);max-height:94%;overflow:auto;border-radius:20px;padding:18px 22px;
+  background:linear-gradient(170deg, rgba(20,28,36,.97), rgba(4,7,10,.98));
+  border:2.5px solid rgba(255,243,196,.65);box-shadow:0 0 34px rgba(255,217,77,.3), 0 30px 60px rgba(0,0,0,.9);
+}
+#detail h2{margin:0;font-size:26px;letter-spacing:.05em;color:#FFF6D8;text-shadow:0 0 12px rgba(255,217,77,.5)}
+#detail .d-sub{font-size:15.5px;color:#C7D3DE;margin:4px 0 10px;line-height:1.45}
+#detail .d-sec{font-size:14.5px;font-weight:800;letter-spacing:.12em;color:#FFEDB0;margin:13px 0 6px}
+#detail .d-item{display:flex;gap:10px;align-items:baseline;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:15.5px;line-height:1.4;color:#EDF3F8}
+#detail .d-item:last-child{border-bottom:0}
+#detail .d-item.note{color:#9FB4C6}
+.pill{flex:none;font-size:12.5px;font-weight:800;letter-spacing:.05em;border-radius:6px;padding:1px 7px;min-width:96px;text-align:center}
+.pill.work{background:#E8F2FF;color:#0A0F14}
+.pill.opt{background:transparent;border:1.5px solid #A9BAC9;color:#D8E2EC}
+.pill.watch{background:rgba(255,176,46,.16);border:1.5px solid var(--amber);color:#FFD9A0}
+.pill.spacer{background:transparent;border:1.5px solid transparent;color:transparent}
+.owntag{flex:none;font-size:11.5px;font-weight:800;letter-spacing:.06em;border-radius:5px;padding:1px 6px;color:#0A0F14}
+.owntag.sit{background:var(--sit-glow)}
+.owntag.deck{background:var(--deck-glow)}
+.owntag.day{background:var(--day-glow)}
+.owntag.wb{background:var(--wb-glow)}
+#dClose{font:inherit;font-size:15.5px;font-weight:700;color:#0A0F14;background:linear-gradient(180deg,#FFEFA8,#FFD94D);border:0;border-radius:10px;padding:9px 18px;cursor:pointer;box-shadow:0 0 14px rgba(255,217,77,.5);margin-top:14px}
+#dClose:focus-visible{outline:3px solid #6FB6FF;outline-offset:2px}
+/* flex-shrink discipline: children never shrink into each other */
+.panel>*,.ownerbox>*,.companybox>*,.leftcol>*,.rightcol>*,.hubcol>*{flex-shrink:0}
+.leftcol .p-sit{flex-shrink:1}
+@media (min-width:701px){
+  .p-sit .tagline,.p-deck .tagline,.p-day .tagline{display:none}
+  .geye .ge-sub{display:none}
+  .portal .p-sub{display:none}
+  .appchip small{display:none}
+  .companybox > .cb-sub{display:none}
+  .ownerbox > .ob-sub{display:none}
+}
+@media (max-height:1100px){
+  .portal .chip.xchip{display:none}
+}
+@media (max-width:1600px){
+  .legend{font-size:12px;gap:5px 8px}
+  .legend b{display:none}
+  .legend .lpill{font-size:11px;padding:1px 7px}
+  .legend .sep{margin:0 1px}
+}
+@media (max-width:1180px) and (min-width:701px){
+  #readout{display:none}
+  .grid{grid-template-columns:1fr 1fr;grid-template-rows:minmax(0,1.5fr) minmax(0,.95fr) minmax(0,1.05fr);grid-template-areas:"left hub" "right right" "wb wb"}
+  .rightcol{flex-direction:row}
+  .rightcol .p-deck,.rightcol .p-day{flex:1;min-height:0}
+  .teamstrip{display:none}
+  .top-mid .tag{white-space:normal}
+  .legend .lg-areas{display:none}
+}
+@media (max-width:700px){
+  .topbar{gap:8px;padding:6px 10px 5px}
+  .brand{gap:8px}
+  .brand .disc{width:34px;height:34px}
+  .brand .disc img{width:32px;height:32px}
+  .brand h1{font-size:19px;letter-spacing:.18em}
+  .brand .brand-sub{display:none}
+  .top-mid{display:none}
+  #readout{display:none}
+  .legend{flex-wrap:wrap;white-space:normal;justify-content:center;row-gap:2px;padding:4px 8px;font-size:13.5px;gap:4px 10px}
+  .legend b{display:none}
+  .legend .sep,.legend .lg-areas,.legend .lg-geye{display:none}
+  .stage{padding:6px}
+  .leftcol,.hubcol,.rightcol,.orbzone{display:contents}
+  .grid{grid-template-columns:1fr 1fr;gap:5px;
+    grid-template-rows:minmax(0,.8fr) minmax(0,1.02fr) minmax(0,.82fr) minmax(0,1.02fr) minmax(0,.5fr) minmax(0,.74fr) minmax(0,1.85fr);
+    grid-template-areas:"orb orb" "sit sit" "geye geye" "deck day" "src src" "setup setup" "wb wb"}
+  #node-sitrep{grid-area:sit}
+  .geye{grid-area:geye;padding:8px 10px}
+  .geye h3{font-size:15.5px;margin:0}
+  .ge-shelf{gap:3px;margin-top:5px}
+  .ge-chip{padding:2px 3px;line-height:1.1;font-size:13.5px}
+  .orb{grid-area:orb;justify-self:center;align-self:center;width:180px}
+  .orb .disc{width:54px;height:54px}
+  .orb .disc img{width:50px;height:50px}
+  .orb .orb-name{font-size:19px}
+  .orb .orb-sub{display:none}
+  .orb .orb-brand{font-size:12.5px}
+  .srccluster{grid-area:src;align-self:center}
+  .srccluster .src-h{display:none}
+  .srcgrid{grid-template-columns:1fr 1fr;margin-top:0}
+  .srcgrid .srcchip:nth-child(n+3){display:none}
+  .srcchip{font-size:14px;padding:4px 7px}
+  .srcchip small{display:none}
+  .setupshelf{grid-area:setup;padding:5px 7px}
+  .setupshelf .src-h{display:none}
+  .catgrid{grid-template-columns:repeat(5,1fr);gap:4px}
+  .catchip{padding:2px 4px;line-height:1.05;min-width:0;min-height:0;font-size:12.5px}
+  #node-deck{grid-area:deck}
+  #node-daybook{grid-area:day}
+  .teamstrip{display:none}
+  .p-wb{grid-area:wb}
+  .panel{padding:7px 9px;border-radius:14px}
+  .panel h2{font-size:17px;letter-spacing:.03em}
+  .tagline,.ge-sub,.more,.footbar{display:none}
+  .chips .chip{font-size:14.5px;padding:5px 8px}
+  #node-sitrep > .chips{display:none}
+  #node-deck > .chips{display:none}
+  #node-daybook .chips{display:none}
+  .sitzone{padding:4px 8px;margin-top:5px}
+  .sitzone h3{font-size:13.5px;letter-spacing:.02em}
+  .sitzone .chips{display:none}
+  .portal{margin-top:6px;padding:5px 5px;border-radius:12px}
+  .portal h3{font-size:12.5px;letter-spacing:0}
+  .portal .p-sub{display:none}
+  .portal .chips{display:none}
+  .wb-caption{display:none}
+  .wb-cols{gap:6px}
+  .ownerbox{padding:5px 8px;border-radius:12px}
+  .ownerbox > h3{font-size:16.5px}
+  .ownerbox > .ob-sub{display:none}
+  .granthead{margin-bottom:2px}
+  .granthead h3{font-size:15px}
+  .topapps-row{display:none}
+  .deptrow{display:none}
+  .toolline{display:none}
+  .ownerrow{grid-template-columns:1fr;gap:6px;flex:none}
+  .companybox{padding:6px 8px;border-radius:11px}
+  .companybox > h4{display:none}
+  .companybox > .cb-sub{display:none}
+  .appchip{font-size:14.5px;padding:5px 8px;border-width:2px}
+  .appchip.big{font-size:14px;padding:5px 6px;line-height:1.05}
+  .appchip small{display:none}
+  .ownerbox:nth-child(2) .appgrid{display:none}
+  #labels{display:none}
+  #wires path,#wires2 path{opacity:.45}
+  #detail{width:96%;padding:13px 14px}
+  #detail h2{font-size:21px}
+  #detail .d-sub{font-size:14.5px}
+  #detail .d-item{font-size:14.5px}
+  .pill{min-width:0}
+}
+</style></head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="disc"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMTIzIDIxMjMiIHdpZHRoPSIyMTIzIiBoZWlnaHQ9IjIxMjMiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iTk9SVEhCSVJDSCDigJQgaHVza3kgaGVhZCBvbmx5LCBjb3JyZWN0aW9uIDEyIGNhbmRpZGF0ZSAob24gY3JlYW0pIj4KPHRpdGxlPk5PUlRIQklSQ0gg4oCUIGh1c2t5IGhlYWQgb25seSwgY29ycmVjdGlvbiAxMiBjYW5kaWRhdGUgKG9uIGNyZWFtKTwvdGl0bGU+Cgo8ZyBpZD0iaHVza3kiPjxwYXRoIGlkPSJodXNreS1vdXRsaW5lIiBmaWxsPSIjMUI0QTNGIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xMDQ3LjUgMTM3My4zQzEwNDMuNCAxMzY1LjggMTA0NC40IDEzNTEuNiAxMDQ0LjMgMTM0Mi45QzEwNDQuMiAxMzE3LjIgMTA0Ny44IDEyOTEuNyAxMDQ4LjIgMTI2Ni4xQzEwNDguNCAxMjUyLjggMTA0OC4xIDEyMzkuNSAxMDQ4LjQgMTIyNi4xQzEwNDguNCAxMjIyLjkgMTA0OS45IDEyMTkuNiAxMDUwLjEgMTIxNi4zQzEwNTAuOCAxMjA1LjMgMTA1MS4xIDExOTMuNCAxMDUxLjEgMTE4Mi40QzEwNTEgMTE1Ni41IDEwNTAuOSAxMTMwLjUgMTA1Mi4xIDExMDQuN0MxMDUzLjIgMTA4MC43IDEwNTQuNCAxMDU2LjcgMTA1NS40IDEwMzIuN0MxMDU1LjUgMTAyOS40IDEwNTcgMTAyNi4yIDEwNTcuMSAxMDIyLjlDMTA1Ny43IDEwMDkuMiAxMDU3LjUgOTk1LjcgMTA1OC41IDk4Mi4xQzEwNjEuMSA5NDguNyAxMDYzLjUgOTE0LjYgMTA2MC43IDg4MS4yQzEwNjAuMSA4NzMuMyAxMDYwLjEgODUyLjYgMTA1My4xIDg0OC41QzEwNDYuOSA4NTUgMTAzNy4yIDg5OS44IDEwMzYgOTEwLjVDMTAzNS4xIDkxOCAxMDM1LjcgOTI1LjggMTAzNS4zIDkzMy40QzEwMzEuMyAxMDA0LjYgMTA0MS45IDEwODEuMiAxMDI3LjIgMTE1MC40QzEwMjYuMyAxMTU0LjMgMTAyNi42IDExNTguNCAxMDI1LjggMTE2Mi4zQzEwMjEuNyAxMTgyLjggMTAxMSAxMjA4LjkgOTk2IDEyMjMuM0M5ODkuOSAxMjI5LjIgOTg4LjUgMTI0MCA5NzguMSAxMjQwQzk3Ni40IDEyMzAuMyA5ODMuOSAxMjIzLjEgOTg2LjYgMTIxNC4zQzk5Mi4zIDExOTUuNyA5OTcuNyAxMTc2LjcgMTAwMS44IDExNTcuNkMxMDAzLjggMTE0OC42IDEwMDQuNCAxMDk3LjMgMTAwMi45IDEwODcuOEMxMDAxLjUgMTA3OC44IDk5Ny4zIDEwNzAgOTk1LjYgMTA2MC45Qzk5My45IDEwNTEuOCA5OTcuMyAxMDQxLjQgOTk1LjkgMTAzMkM5OTQuMyAxMDIxLjEgOTg2LjkgMTAxNi40IDk4MS43IDEwMDcuNUM5NzkuNyAxMDA0IDk3OC44IDk5OS45IDk3Ni41IDk5Ni43Qzk2OS41IDk4Ni44IDk2MiA5ODguMyA5NTYuMyA5ODIuOUM5NDcuNCA5NzQuNCA5MzkuMiA5NjQuOSA5MjkgOTU4QzkxMC4yIDk0NS40IDg5My42IDkzOS41IDg3MSA5NDEuM0M4NjguMSA5NDEuNSA4NjUgOTQwLjggODYyLjEgOTQxLjlDODU2IDk0NC4yIDg0OS42IDk0OS4yIDg0NC42IDk1My4zQzg0Mi4yIDk1NS4zIDgzOC43IDk1NyA4MzYuNyA5NTkuNEM4MzMuMyA5NjMuNiA4MzAuNSA5NzAuMiA4MjguMSA5NzUuMUM4MjMuMyA5ODUuMSA4MjQuMyA5OTcuMSA4MjguNSAxMDA3LjJDODI5LjcgMTAxMC4xIDgzMi4xIDEwMTMuMiA4MzIuNiAxMDE2LjNDODMyLjkgMTAxOC4yIDgyMy45IDEwNDUuMiA4MjIuNSAxMDQ2LjJDODE3LjUgMTA0OS43IDgxMS43IDEwNDggODA2IDEwNDguNkM4MDEuNSAxMDQ5IDc4Ni4zIDEwNTMuOCA3ODEuMSAxMDU1LjRDNzczLjMgMTA1Ny45IDc2My43IDEwNTkuNCA3NTYuMyAxMDYyLjlDNzQyLjUgMTA2OS40IDcyOC44IDEwNzYuMyA3MTUuNyAxMDg0LjJDNzEzLjkgMTA4NS4yIDcxMS44IDEwODUuMiA3MTAuMSAxMDg2LjJDNzA3LjUgMTA4Ny43IDcwNS44IDEwOTAuNCA3MDMuMiAxMDkyQzY5NS43IDEwOTcgNjc3LjEgMTEwNy4yIDY3NC44IDExMTZDNjcyLjEgMTEyNi43IDY4My43IDExNDYuMyA2ODYuNCAxMTU3QzY4Ny41IDExNjEuNyA2ODcuMSAxMTY3LjIgNjg2LjggMTE3MkM2ODUuNiAxMTcyLjggNjg0LjQgMTE3NC4xIDY4My4yIDExNzVDNjgyLjggMTE4MiA2ODQuMSAxMTkwLjEgNjgyLjIgMTE5Ni43QzY3Ny4xIDExOTcgNjc2LjUgMTE5My42IDY3Mi43IDExOTFDNjcyLjEgMTE5MC42IDY1Mi45IDExODIuNyA2NTEuNSAxMTgyLjNDNjQyLjcgMTE3OS42IDYzMy4zIDExNzcuNiA2MjQuMSAxMTc3QzYxOS41IDExNzYuNyA2MTMuNSAxMTc4LjUgNjA5LjMgMTE3Ni4zQzU5Mi44IDExNjcuNyA1NzUuNiAxMTI5LjkgNTY5LjcgMTExMy4xQzU2Ny45IDExMDcuOSA1NjQuNSAxMTA0LjMgNTYzLjggMTA5OC41QzU2MiAxMDg0LjEgNTgwLjQgMTA2OS41IDU4Ni44IDEwNTguOEM2MDcuNiAxMDIzLjcgNjUyIDk4My41IDY2MC44IDk0My42QzY2My44IDkyOS45IDY1MSA5MjEuOCA2NDIuNyA5MTIuOEM2MzIuMyA5MDEuNSA2MjEuNCA4OTAuOSA2MTIuNiA4NzguNEM2MTEuMyA4NzYuNCA2MTEgODc0IDYwOS43IDg3Mi4xQzYwOC4zIDg2OS45IDYwNS44IDg2OC40IDYwNC41IDg2NkM2MDMuMSA4NjMuMyA2MDMuMSA4NjAuMiA2MDEuNyA4NTcuNUM2MDAuNSA4NTUuMSA1OTguOSA4NTMuMSA1OTguMyA4NTAuM0M1OTIuNiA4MjIuNiA2MjIuMSA4MDguNSA2MzAuNiA3ODUuNUM2NDcuOSA3MzkgNjQwLjQgNjg4LjYgNjQ3IDY0MC4yQzY0OC42IDYyOC43IDY0OC4xIDU5NS42IDY1Ni4zIDU4OEM2NzIuMSA1ODguNiA2OTQuNCA2MjYuNCA3MDEuNSA2MzkuN0M3MDQuOCA2NDUuOCA3MDkuMiA2NTEuMyA3MTIuMiA2NTcuN0M3MTMuOCA2NjEgNzEzLjkgNjY1LjEgNzE1LjUgNjY4LjFDNzE2LjggNjcwLjcgNzIwLjIgNjcxLjkgNzIxLjcgNjc0LjVDNzIzLjIgNjc3LjEgNzIzLjQgNjgwLjMgNzI0LjcgNjgzQzcyNi4zIDY4Ni4yIDcyOC45IDY4OSA3MzAuNSA2OTIuM0M3MzYgNzA0LjIgNzQxLjkgNzE2LjUgNzQ2LjMgNzI4LjlDNzQ3LjQgNzMyIDc0Ny4yIDczNS43IDc0OC42IDczOC42Qzc1NC43IDc1MS43IDc2MC44IDc2Ni4zIDc2Mi44IDc4MUM3NjMuNyA3ODcuMiA3NjIuOCA3OTMuNyA3NjMgNzk5LjlDNzYzLjIgODAzLjYgNzY1LjIgODA2LjkgNzY1LjEgODEwLjdDNzY0LjkgODI2LjEgNzUyLjIgODQ2LjQgNzQ3LjcgODYxLjRDNzQ2IDg2Ny4xIDc0MS4xIDg3My4zIDc0My4zIDg3OS4xQzc0OS40IDg3OS43IDc1Ni44IDg3Mi4yIDc2MS42IDg2OC40Qzc3My41IDg1OS4yIDc4My45IDg0OC41IDc5NS42IDgzOUM3OTcuMiA4MzcuOCA3OTkuMyA4MzcuNiA4MDAuOCA4MzYuMUM4MDIuNSA4MzQuNCA4MDIuOCA4MzEuOSA4MDQuNCA4MzAuMkM4MTAuMSA4MjQuMiA4MjkuMyA4MDggODMwLjEgODAwLjVDODMxLjEgNzkwLjcgODExLjggNzQxLjggODA3LjIgNzI5LjVDODA1IDcyMy42IDgwNC4xIDcxNy4xIDgwMS44IDcxMS40QzgwMS4xIDcwOS44IDc5OS41IDcwOS4xIDc5OC44IDcwNy41Qzc5NC4xIDY5Ny42IDc5MC42IDY4Ny4xIDc4NS45IDY3Ny4yQzc3MS45IDY0OC40IDc1Ny4zIDYyMC4yIDc0MS4zIDU5Mi40QzczOS43IDU4OS44IDc0MCA1ODYuNiA3MzguNSA1ODMuOUM3MzcuMyA1ODEuNyA3MzQuNCA1ODAuNCA3MzIuOCA1NzguNEM3MjguNSA1NzMgNzI0LjkgNTY2LjkgNzIwLjYgNTYxLjRDNzE1IDU1NC40IDcxMC42IDU0Ni4zIDcwNS4yIDUzOS40QzY5Ni4yIDUyNy45IDY4NC41IDUxOC40IDY3NC42IDUwNy44QzY2OC43IDUwMS40IDY1NiA0OTIuMiA2NDYuNiA0OTUuOEM2NDEgNDk4IDYzMy41IDUxMS42IDYzMC4yIDUxNi45QzYyNC4yIDUyNi41IDYyMC40IDUzNy4yIDYxNS42IDU0Ny41QzYxNC44IDU0OS4zIDYxMyA1NTAuNSA2MTIuMiA1NTIuM0M2MTAuNiA1NTYgNjExIDU2MC4yIDYwOS41IDU2NEM2MDcuOCA1NjcuOSA2MDQuNCA1NzEuMSA2MDMuMiA1NzUuM0M2MDIuMyA1NzguOSA2MDMgNTgyLjYgNjAxLjggNTg2LjJDNTk5LjkgNTkyIDU5Ny42IDU5Ny4zIDU5NS40IDYwMi45QzU5NC4xIDYwNi4xIDU5NC4zIDYwOS41IDU5My42IDYxMi43QzU5MC45IDYyNS4zIDU4Ny4xIDYzNy45IDU4My44IDY1MC4zQzU4Mi4zIDY1NS45IDU3OS41IDY2MC44IDU3OC4yIDY2Ni40QzU3Ny40IDY3MC4yIDU3OCA2NzMuNSA1NzcuNiA2NzcuMkM1NzYuOSA2ODQuNCA1NzMuNSA2OTEuNCA1NzIgNjk4LjRDNTcwLjkgNzAzLjkgNTcwLjggNzA5LjYgNTY5LjUgNzE1LjFDNTY3LjIgNzI1LjMgNTYzLjYgNzM1LjkgNTYyLjEgNzQ2LjJDNTYxLjMgNzUxLjcgNTYyLjEgNzU3LjUgNTYxLjMgNzYzLjFDNTU4LjggNzc4LjkgNTU1LjYgNzk1LjcgNTU1LjQgODExLjZDNTU1LjMgODIxLjUgNTU2LjEgODMxLjYgNTU2IDg0MS41QzU1NS45IDg0OC43IDU1NC42IDg1Ny40IDU1Ni4yIDg2NC41QzU1Ny42IDg3MC43IDU2MC4xIDg3Ny40IDU2Mi4yIDg4My41QzU3MC4xIDkwNy4yIDU3OS4xIDkzMC4zIDU4OC4zIDk1My4yQzU5MyA5NjQuNyA1OTkuOCA5NzYuMSA1OTkuNCA5ODkuMkM1OTkgMTAwMC44IDU5My4yIDEwMTEuOCA1ODguNCAxMDIxLjlDNTg0LjcgMTAyOS42IDU4MiAxMDQxLjkgNTc0LjEgMTA0Ni4zQzU2Ni4xIDEwNDMuNCA1NjYuNCAxMDEyLjkgNTY2LjIgMTAwNC4yQzU2NS44IDk4OS45IDU1NC4zIDk3Ny44IDU0Ny45IDk2NS44QzU0MS45IDk1NC40IDUzNi4yIDk0MS40IDUzMi41IDkyOUM1MzEuNiA5MjYuMiA1MzEuNiA5MjMuMSA1MzAuNSA5MjAuM0M1MjIgODk3LjYgNTE0LjUgODY3LjYgNTIwLjQgODQzLjRDNTIzLjcgODI5LjcgNTM2LjcgODI0LjggNTM4IDgwNS4xQzUzOS45IDc3Ni44IDUzNi43IDc0OC41IDUzOS44IDcyMC4yQzU0MS4yIDcwNy42IDU0NC4zIDY5NS4zIDU0Ni4xIDY4Mi44QzU1MC4xIDY1My45IDU1Ni4xIDYyNS4yIDU2My45IDU5Ni45QzU2NS40IDU5MS44IDU2Ny44IDU4Ny4xIDU2OS43IDU4Mi4xQzU3MS4xIDU3OC42IDU3MC44IDU3NC45IDU3MS45IDU3MS40QzU3NC44IDU2Mi4yIDU3OC45IDU1My4zIDU4MiA1NDQuMkM1OTEuOSA1MTQuMSA2MTUgNDYzLjIgNjQwIDQ0My44QzY0Mi44IDQ0MS43IDY0NC4yIDQzOC45IDY0Ny42IDQzNy40QzY1My40IDQzNC44IDY2NS42IDQzNS44IDY3MSA0MzguOUM2NzMuNyA0NDAuNCA2NzUuNSA0NDMgNjc4IDQ0NC41QzY5NS44IDQ1NC45IDcxNy4yIDQ3OC4zIDcyOS45IDQ5NUM3MzEuMyA0OTYuOSA3MzEuMyA0OTkuNCA3MzIuNiA1MDEuNEM3MzYuNSA1MDcuMyA3NDIgNTA5LjQgNzQ2LjUgNTE1Qzc2My4zIDUzNi40IDc4MC43IDU1Ny4xIDc5Ny4zIDU3OC45QzgwMy4yIDU4Ni42IDgwNy4yIDU5NS42IDgxMi42IDYwMy40QzgxNS41IDYwNy40IDgxOSA2MTAuOSA4MjEuOSA2MTUuMUM4MjcuNiA2MjMuNiA4MzEuMSA2MzMuNiA4MzUuMyA2NDIuN0M4MzYuNCA2NDUuMSA4MzkuMiA2NDYuMyA4NDAuNiA2NDguNkM4NDYuNyA2NTggODUxLjEgNjY4LjYgODU3IDY3OC4yQzg2My45IDY4OS41IDg5Mi44IDczNC4yIDkwNS4zIDczNC43QzkxNi4zIDczNS4yIDkyOC42IDcyOS4xIDkzOSA3MjYuMUM5NTEgNzIyLjcgOTYzLjggNzE5LjggOTc2LjEgNzE4LjFDOTgwLjggNzE3LjUgOTg1LjQgNzE3LjggOTkwLjEgNzE3LjVDOTk1IDcxNy4yIDk5OS43IDcxNC45IDEwMDQuNyA3MTQuNUMxMDMwLjUgNzEyLjMgMTA1Ni45IDcxMi43IDEwODIuNCA3MTQuNUMxMDg2LjggNzE0LjggMTA5MC43IDcxNy4xIDEwOTUgNzE3LjVDMTEwMC42IDcxNy45IDExMDYuNCA3MTcuMiAxMTEyIDcxNy43QzExMjAuMSA3MTguMyAxMTMwIDcxOS4yIDExMzcuNyA3MjEuNkMxMTQxLjUgNzIyLjggMTE0NSA3MjQuNiAxMTQ5IDcyNS40QzExNTIuOSA3MjYuMSAxMTU3IDcyNS4zIDExNjEgNzI2LjFDMTE2Ni44IDcyNy4zIDExNzEuMSA3MzAuNSAxMTc2LjcgNzMyLjNDMTE4NC4zIDczNC43IDExOTIgNzM2IDExOTkuNiA3MzkuMUMxMjA1LjEgNzQxLjMgMTIyOC4zIDc1MS4xIDEyMzIuNSA3NDguMUMxMjM2LjYgNzQ1LjMgMTI1Mi43IDcyNS4xIDEyNTUuNCA3MjAuNkMxMjU4LjggNzE0LjggMTI2MC42IDcwOC42IDEyNjQuNiA3MDNDMTI3MC42IDY5NC41IDEyNzcuNyA2ODcuMSAxMjg0LjMgNjc5LjFDMTMwMiA2NTcuMyAxMzIxLjUgNjM2LjMgMTM0MC4yIDYxNS4yQzEzNDEuNyA2MTMuNSAxMzQzLjkgNjEyLjQgMTM0NS4zIDYxMC41QzEzNjQuNyA1ODYgMTM4My45IDU2MS4zIDE0MDMuOSA1MzcuMkMxNDA4LjMgNTMxLjkgMTQxNiA1MjYuNyAxNDE5IDUyMi45QzE0MjAuNiA1MjAuOSAxNDIwLjggNTE4IDE0MjIuNCA1MTUuOEMxNDM2LjcgNDk3LjMgMTQ2Mi42IDQ3Mi4zIDE0ODIuNyA0NjFDMTQ5MC4yIDQ1Ni44IDE0OTMuMyA0NDcuNyAxNTAzIDQ0NS44QzE1MDUuNyA0NDcuOCAxNTA2LjcgNDUxLjQgMTUwOS41IDQ1My4yQzE1MTIuNCA0NTUuMSAxNTE2LjEgNDUzLjggMTUxOC43IDQ1Ni40QzE1MzAuNCA0NjcuOCAxNTQwIDQ4NS4xIDE1NDUuNCA1MDAuNUMxNTQ2LjQgNTAzLjQgMTU0Ni40IDUwNi40IDE1NDcuNCA1MDkuMkMxNTQ4LjIgNTExLjUgMTU0OS45IDUxMy4xIDE1NTAuOCA1MTUuM0MxNTUzLjQgNTIyLjUgMTU1NS44IDUyOS44IDE1NTcuOCA1MzcuMUMxNTU5LjkgNTQ0LjcgMTU2MSA1NTMuMSAxNTYzLjQgNTYwLjRDMTU2NS40IDU2Ni42IDE1NjguNCA1NzIuOCAxNTY5LjUgNTc5LjNDMTU3MC4zIDU4NCAxNTcwLjEgNTg4LjYgMTU3MS4zIDU5My4yQzE1NzIuMiA1OTYuMiAxNTc0IDU5OC40IDE1NzQuOSA2MDEuM0MxNTc3LjEgNjA4LjcgMTU3Ny42IDYxNi40IDE1NzkuMiA2MjMuOEMxNTgxLjMgNjMzLjggMTU4NS43IDY0My42IDE1ODYuOSA2NTMuOEMxNTg3LjYgNjU5LjcgMTU4Ni4zIDY2NS44IDE1ODcuMSA2NzEuN0MxNTg3LjUgNjc0LjkgMTU4OS43IDY3NiAxNTkwLjkgNjc4LjZDMTU5Mi42IDY4Mi4yIDE1OTIuOSA2ODguMiAxNTkzLjYgNjkyLjNDMTU5NC41IDY5Ny4xIDE1OTMuMiA3MDIuMyAxNTk0LjEgNzA3LjJDMTU5Ny43IDcyNy4xIDE2MDAuOSA3NDcuMSAxNjAyLjIgNzY3LjRDMTYwMy44IDc5Mi40IDE2MDEuNCA4MTcuNSAxNjAyLjggODQyLjRDMTYwMy42IDg1Ny4yIDE2MDIuNCA4NzguOCAxNTk4LjggODkzLjFDMTU5Ny45IDg5Ni44IDE1OTUuNCA5MDAuNyAxNTk1LjEgOTA0LjVDMTU5NC41IDkwOS40IDE1OTUuMyA5MTQuNSAxNTk0LjggOTE5LjVDMTU5My44IDkyOS42IDE1OTEuMiA5NDAuMSAxNTg4LjMgOTQ5LjZDMTU4Ni4yIDk1Ni41IDE1ODYuMyA5NzkuNyAxNTc3LjcgOTgxLjRDMTU3Mi41IDk4Mi40IDE1NzEuNCA5NzYuNCAxNTY3LjcgOTc0LjRDMTU2NS40IDk3My4yIDE1NjIuMyA5NzIuOCAxNTYwLjQgOTcxLjJDMTU0NC4zIDk1OCAxNTUxLjQgOTM3LjEgMTU1NSA5MTkuOUMxNTU3IDkxMC45IDE1NjAuNiA4OTkuOSAxNTY0IDg5MS40QzE1NjcuNSA4ODIuOCAxNTc0IDg3NC4xIDE1NzUuMSA4NjQuOEMxNTc3LjQgODQ0LjkgMTU3My4yIDgyMy43IDE1NzEuMSA4MDRDMTU3MC40IDc5Ny44IDE1NzEgNzkxLjQgMTU2OS45IDc4NS4yQzE1NjYuOSA3NjguMSAxNTY0LjYgNzUxIDE1NjIgNzMzLjlDMTU2MC43IDcyNSAxNTU3LjcgNzE1LjcgMTU1Ni4xIDcwNi43QzE1NTMuNSA2OTIuMyAxNTUwLjEgNjc4LjEgMTU0Ny40IDY2My43QzE1NDYuNiA2NTkuMSAxNTQ3LjggNjU0LjMgMTU0Ni44IDY0OS43QzE1NDYuMyA2NDcuMyAxNTQ0IDY0Ni4xIDE1NDMuMyA2NDMuOEMxNTQxLjggNjM5LjIgMTU0MC45IDYzNCAxNTM5LjYgNjI5LjNDMTUzOC40IDYyNC45IDE1NDAuMiA2MTkuNyAxNTM4LjQgNjE1LjRDMTUzNy42IDYxMy41IDE1MzYuMSA2MTIuMiAxNTM1LjIgNjEwLjRDMTUzMS43IDYwMy4xIDE1MzEuMiA1OTQgMTUyOC45IDU4Ni4zQzE1MjQuNyA1NzEuNiAxNTE5LjcgNTU2IDE1MTMuMSA1NDIuMUMxNTEwLjkgNTM3LjYgMTUwNy41IDUyMy43IDE1MDEuMiA1MjMuM0MxNDkzLjcgNTIyLjcgMTQ3NS44IDUzNS44IDE0NzAuMyA1NDAuOEMxNDQ3LjIgNTYxLjUgMTQyNy44IDU4Ny4yIDE0MTAgNjEyLjRDMTQwMi44IDYyMi44IDEzOTUgNjMyLjggMTM4Ny4xIDY0Mi43QzEzODUuNCA2NDQuOCAxMzgyLjYgNjQ1LjYgMTM4MSA2NDcuN0MxMzc5LjEgNjUwLjQgMTM3OC4yIDY1My44IDEzNzYuMiA2NTYuNEMxMzY5LjggNjY0LjcgMTM2My4yIDY3Mi40IDEzNTYuNSA2ODAuMkMxMzU1LjEgNjgxLjcgMTM1NC44IDY4My44IDEzNTMuNiA2ODUuNEMxMzQwLjggNzAxLjkgMTMyOS4zIDcxOC4zIDEzMTcuOSA3MzUuN0MxMzA0LjIgNzU2LjYgMTI4OS45IDc4My40IDEyOTYuMSA4MDkuMkMxMjk2LjkgODEyLjcgMTI5OS44IDgxNS42IDEzMDEuOCA4MTguNUMxMzA0LjggODIyLjkgMTMwNy4xIDgyNy44IDEzMTAuMyA4MzIuMUMxMzIwLjcgODQ2LjIgMTMzNCA4NTguNCAxMzQ2LjMgODcwLjlDMTM1NS4zIDg4MC4xIDEzOTIuNCA5MTUuNCAxNDAzLjMgOTE2LjJDMTQwNy4xIDkxMS4xIDE0MDMuOCA4OTUuNCAxNDAxLjggODg5LjJDMTM5OS4xIDg4MC42IDEzODEuMSA4NTIuNiAxMzc0LjUgODQ2LjVDMTM3MS43IDg0NCAxMzU2LjQgODI4LjMgMTM1Ni40IDgyNS43QzEzNTYuNSA4MTkuNCAxMzYxIDgxMy42IDEzNjIuNyA4MDhDMTM2My42IDgwNS4xIDEzNjMgODAyIDEzNjMuOSA3OTkuMUMxMzY1LjUgNzkzLjkgMTM2OC42IDc4OS41IDEzNzAuNSA3ODQuNkMxMzc5LjUgNzYyIDEzODkuNSA3MzIuMiAxNDAzLjUgNzEyLjJDMTQwNS4xIDcxMCAxNDA4IDcwOS41IDE0MDkuNiA3MDcuMkMxNDExLjggNzAzLjggMTQxMS4xIDY5OS4zIDE0MTMgNjk1LjhDMTQyMS42IDY3OS43IDE0MzIuMyA2NjQuNyAxNDQyLjQgNjQ5LjVDMTQ0Ni43IDY0My4xIDE0NTEuOSA2MzguOCAxNDU2LjggNjMzLjFDMTQ1OC4zIDYzMS4zIDE0NTguOCA2MjguOSAxNDYwLjIgNjI3QzE0NjQuNyA2MjAuNSAxNDgwLjEgNjAzIDE0ODcgNjAwLjlDMTQ5NC4yIDYwNi43IDE0OTQuNyA2MTkuOSAxNDk2LjggNjI4LjVDMTUwMi45IDY1Mi4yIDE1MDAuMyA2OTQuNCAxNTAwLjkgNzIwQzE1MDEuNyA3NTEuOSAxNDk5LjQgNzg0LjkgMTUwNy4zIDgxNi4zQzE1MDkgODIzLjEgMTUxMS42IDgyOS42IDE1MTUuNCA4MzUuNUMxNTE5LjYgODQxLjggMTUyNy44IDg0Ny41IDE1MjUuOSA4NTYuMUMxNTIzLjkgODY0LjggMTUwOS4zIDg4MC42IDE1MDMuMiA4ODcuNkMxNDkwLjMgOTAyLjUgMTQ3OS4yIDkyMS4yIDE0NzEuOCA5MzkuNUMxNDU3LjEgOTc1LjcgMTQ3NC4yIDk4Mi44IDE0NzMuOCAxMDE0LjZDMTQ3My43IDEwMjUuOSAxNDY1IDEwNDUuNSAxNDY5LjIgMTA1NC4zQzE0NzcuMiAxMDU2LjYgMTQ5Ny45IDEwNTEuOCAxNTAzLjggMTA1NS4zQzE1MDUuOSAxMDU2LjYgMTUwNi43IDEwNTguOSAxNTA4LjYgMTA2MC4yQzE1MTAuNiAxMDYxLjYgMTUxMy4xIDEwNjEuNCAxNTE1LjEgMTA2Mi44QzE1MjAuMyAxMDY2LjUgMTUyNC4yIDEwNzMgMTUyNy42IDEwNzguM0MxNTMwLjMgMTA4Mi41IDE1MzMuNiAxMDg2LjMgMTUzNC43IDEwOTEuM0MxNTM4LjEgMTEwNi4yIDE1MjIuOCAxMTMwLjQgMTUxNS45IDExNDIuN0MxNTEwLjYgMTE1MS45IDE1MDUuNSAxMTY0LjkgMTQ5Ni4zIDExNzEuMkMxNDkzLjUgMTE3My4xIDE0ODkuOSAxMTczLjUgMTQ4Ni45IDExNzQuN0MxNDc3LjMgMTE3OC44IDE0NjUuOSAxMTgxLjUgMTQ1NSAxMTgxLjRDMTQ1Mi4yIDExODEuMyAxNDUwLjEgMTE4MC44IDE0NDcuMiAxMTgxLjZDMTQzNS40IDExODQuOCAxNDI3LjIgMTE5NC45IDE0MTcuNCAxMjAxLjNDMTQxNS43IDEyMDIuNSAxNDE0LjQgMTIwMS4yIDE0MTIuNiAxMjAxLjdDMTQxMS4yIDEyMDIuMSAxNDA5LjggMTIwNC41IDE0MDguNSAxMjA1LjNDMTQwNi4xIDEyMDEuOSAxNDA0LjYgMTIwMS44IDE0MDAuNiAxMjAwLjhDMTM5Ni41IDExODIuNCAxNDA0LjIgMTE3OC41IDE0MTAuNSAxMTYzLjdDMTQxNC4xIDExNTUuMiAxNDE3LjUgMTE0Ni4zIDE0MTkuOSAxMTM3LjRDMTQyMS40IDExMzEuOCAxNDI2LjkgMTEyMC43IDE0MjMuOSAxMTE1LjJDMTQxOC42IDExMDUuNyAxNDA2IDEwOTguNSAxMzk3LjMgMTA5Mi43QzEzNzIuNyAxMDc2LjEgMTM0MC44IDEwNjEuNyAxMzEwLjkgMTA1OS4xQzEyOTkuMiAxMDU4LjEgMTI3MCAxMDYxIDEyNjEuMSAxMDU2LjRDMTI1NC4yIDEwNTIuOSAxMjU0LjggMTA0MS4zIDEyNTYuOSAxMDM1LjNDMTI2My4zIDEwMTcuMSAxMjcyLjYgMTAwMC45IDEyNjEuOCA5ODIuMkMxMjU3LjggOTc1LjMgMTI1NCA5NjcgMTI0OC4yIDk2MS40QzEyMzMuNCA5NDYuOSAxMjA5LjUgOTQzIDExOTAuMyA5NDkuOUMxMTgxLjQgOTUzIDExNzIuOSA5NTguOSAxMTY1LjMgOTY0LjJDMTE2My4xIDk2NS44IDExNjAuMyA5NjUuNSAxMTU4IDk2Ny4yQzExNTUuNiA5NjkgMTE1NC43IDk3Mi4yIDExNTIuNyA5NzQuM0MxMTUwLjEgOTc3IDExNDYuOSA5NzguNyAxMTQ0LjUgOTgxLjZDMTEzOSA5ODguNSAxMTMzLjcgOTk2LjQgMTEyNy43IDEwMDIuN0MxMTIyLjYgMTAwNy45IDExMTIgMTAwMCAxMTA0LjQgMTAxNC45QzEwOTcuOCAxMDI3LjkgMTEwMy41IDEwNDYuNSAxMTAxLjggMTA2MC41QzExMDAuNyAxMDY5LjggMTA5My4xIDEwNzguMyAxMDkxLjIgMTA4Ny40QzEwOTAuNSAxMDkwLjYgMTA5MS4yIDEwOTQuMSAxMDkwLjggMTA5Ny40QzEwODkuNCAxMTExLjEgMTA4Ny44IDExMjQuNCAxMDg4IDExMzguMkMxMDg4LjEgMTE0OS40IDEwODkuMiAxMTYxIDEwOTEuMSAxMTcyQzEwOTMgMTE4My41IDEwOTkgMTE5NC4xIDEwOTggMTIwNi4xQzEwOTcuMyAxMjE0LjQgMTA5MC43IDEyMjMuMyAxMDg3LjQgMTIzMC44QzEwODEuNSAxMjQ0LjIgMTA3MC4yIDEyNjggMTA2OCAxMjgyQzEwNjYuNCAxMjkyLjEgMTA2NC44IDEzMDIuMiAxMDYyLjkgMTMxMi40QzEwNjIuMiAxMzE2LjEgMTA1OS40IDEzMTguOCAxMDU5IDEzMjIuNkMxMDU3LjYgMTMzOS42IDEwNTguNCAxMzU5LjEgMTA0Ny41IDEzNzMuM1pNOTM0LjUgMTI0OC45QzkyNy41IDEyNDMuNSA5MzAuOCAxMjI5LjQgOTE3LjMgMTIyMy44QzkwNy41IDEyMTkuOCA4ODEuMSAxMjE5LjMgODcwLjggMTIyMS43Qzg2NS44IDEyMjIuOCA4NjEuNyAxMjI0LjkgODU2LjQgMTIyNS40Qzg0NyAxMjI2LjMgODM4LjkgMTIyNC42IDgyOS45IDEyMjIuN0M4MjYuNSAxMjIyIDgyMy40IDEyMjIuMiA4MjAuMSAxMjIwLjlDODEwLjcgMTIxNy4yIDc5Ni43IDEyMDAuNyA3OTEuOCAxMTkxLjhDNzg2LjEgMTE4MS41IDc4Mi42IDExNjguMyA3NzMuOCAxMTU5LjhDNzY5LjcgMTE1NS45IDc1MCAxMTU5LjggNzQzLjQgMTE1Ny41Qzc0My4xIDExNTUgNzQxLjkgMTE1MC4yIDc0Mi43IDExNDcuN0M3NDYuNSAxMTM2LjUgNzU0LjQgMTEyOS44IDc2MS43IDExMjEuM0M3NjMgMTExOS42IDc2Mi44IDExMTcuNSA3NjQgMTExNS45Qzc2OC44IDExMDkuNiA3NzcuMSAxMTAwIDc4NC4xIDEwOTYuOUM3ODguMSAxMTAwLjYgNzkxLjQgMTEwNS43IDc5Ni42IDExMDguMkM4MDAuNiAxMTEwLjEgODA1IDExMDkuNyA4MDkuMiAxMTEwLjdDODE2LjYgMTExMi42IDgyMy45IDExMTUuMiA4MzEuMSAxMTE3LjdDODM3IDExMTkuOCA4NDIuNiAxMTI1LjcgODQ4LjkgMTEyNi40Qzg1Ny4zIDExMjcuNCA4NjguOCAxMTIzLjkgODc2LjggMTEyN0M4OTIuMiAxMTMzLjEgOTEzLjQgMTE1NC4zIDkyMS45IDExNjguNEM5MjUgMTE3My43IDkyNi43IDExODAuMSA5MjkuNiAxMTg1LjdDOTMxLjIgMTE4OC43IDkzNC4yIDExOTAuNSA5MzUuNSAxMTkzLjZDOTQwLjIgMTIwNS41IDk0NS41IDEyNDAuMyA5MzQuNSAxMjQ4LjlaTTExNTkuNSAxMjU0LjFDMTE1MC43IDEyNTQuMiAxMTUyLjMgMTI0MiAxMTUyLjkgMTIzNS44QzExNTMuMiAxMjMzIDExNTIuMSAxMjMwLjYgMTE1Mi4yIDEyMjcuOUMxMTUyLjMgMTIyNC44IDExNTUuMyAxMjA5LjQgMTE1Ni40IDEyMDYuNUMxMTU3LjggMTIwMy4xIDExNjAuNiAxMjAwLjMgMTE2MS43IDExOTYuOUMxMTYyLjYgMTE5NCAxMTYyLjQgMTE5MSAxMTY0IDExODguMkMxMTcxLjQgMTE3NC40IDExODMuNiAxMTU0LjcgMTE5NiAxMTQ1QzExOTkuMiAxMTQyLjUgMTIwNi40IDExNDYuNCAxMjEwLjYgMTE0NS4xQzEyMjQuNSAxMTQwLjggMTIyNC44IDExMzAuMSAxMjI5LjEgMTExOUMxMjM2LjQgMTExNi45IDEyNzkuOCAxMTE2IDEyODguNyAxMTE2LjdDMTI5NS45IDExMTcuMiAxMzAyLjMgMTExOS4yIDEzMDkuMiAxMTIxLjFDMTMxMy4yIDExMjIuMiAxMzE1IDExMjQuNSAxMzE4LjYgMTEyNi4zQzEzMjQuNiAxMTI5LjIgMTMzMy4xIDExMjcuNyAxMzMxLjggMTEzNy41QzEzMzAuNiAxMTQ2LjkgMTMwMy43IDEyMDAuNyAxMjk3LjIgMTIwOEMxMjg5LjIgMTIxNyAxMjgwIDEyMjUgMTI2OCAxMjI4QzEyNTguNyAxMjMwLjQgMTI1MS40IDEyMjguNSAxMjQyLjQgMTIyNy41QzEyMzcuNyAxMjI3IDEyMzMgMTIyNy42IDEyMjguNCAxMjI3LjJDMTIxMS43IDEyMjUuNiAxMTg1LjMgMTIyMSAxMTcwLjggMTIzMi4zQzExNjQuMyAxMjM3LjQgMTE2NC4zIDEyNDcuOSAxMTU5LjUgMTI1NC4xWk04NzEgMTIwMkM4OTAuNSAxMTk5IDkwMS4xIDExNzQuMyA4OTAuMSAxMTcwLjhDODc1LjUgMTE2Ni4yIDg1Ny41IDExODMuNiA4NDIuNSAxMTcyLjRDODMwLjYgMTE2My41IDgzOSAxMTQyIDgzMi41IDExMzcuNEM4MzAgMTEzNS42IDgyNi43IDExMzUuNyA4MjMuOCAxMTM1LjRDODA4LjkgMTEzNC4yIDgwMi45IDExNDkuNCA4MDQuMSAxMTYyLjVDODA2LjggMTE5MS4xIDg0Ni40IDEyMDUuOCA4NzEgMTIwMlpNMTI1My4xIDEyMDVDMTI3Ny40IDExOTkuNiAxMjg3IDExODQuMSAxMjkxLjEgMTE2MC45QzEyOTIuMSAxMTU1LjEgMTI5My4yIDExNDUuNSAxMjkwLjcgMTE0MEMxMjg4LjIgMTEzNC43IDEyNjcgMTEzNS44IDEyNjMuNCAxMTM5LjZDMTI1OC45IDExNDQuMiAxMjYwLjYgMTE1OC44IDEyNTYuOCAxMTY1LjVDMTI1My4yIDExNzIgMTI0MCAxMTgzLjYgMTIzMS44IDExODAuOUMxMjI2LjIgMTE3OSAxMjIyLjEgMTE3My42IDEyMTYuNyAxMTcxLjFDMTIxMS41IDExNjguNiAxMjAwLjQgMTE2OC44IDExOTguOCAxMTc2LjNDMTE5OCAxMTc5LjggMTIwMCAxMTg0LjcgMTIwMS43IDExODcuOEMxMjExIDEyMDUgMTIzNS40IDEyMDguOSAxMjUzLjEgMTIwNVpNMTA2NS41IDE2ODZDMTA1OC45IDE2ODcuNyAxMDMyLjQgMTY4Ny43IDEwMjUuNSAxNjg2LjNDMTAxNS43IDE2ODQuNCA5NzguOSAxNjY0IDk3MS43IDE2NTYuOUM5NjIuNyAxNjQ4LjIgOTY2LjcgMTY0Ny4yIDk2Mi42IDE2NDAuOUM5NjAuOCAxNjM4LjEgOTU3LjUgMTYzNy43IDk1NS42IDE2MzUuNEM5NDkuNiAxNjI3LjkgOTQ1LjMgMTYxNi41IDk0Mi4yIDE2MDcuNkM5MzYuNiAxNTkxLjUgOTMxLjkgMTU2NSA5NDAuNCAxNTQ5LjNDOTQ1LjYgMTUzOS44IDk1MS4xIDE1MzcuOSA5NTkuNSAxNTMyLjdDOTYyIDE1MzEuMSA5NjMuNCAxNTI4LjIgOTY2LjEgMTUyNi43Qzk3OS41IDE1MTkuMiAxMDA5LjUgMTUxMC40IDEwMjUuMSAxNTA5LjVDMTA2NC4xIDE1MDcuNSAxMTEzLjYgMTUwNy4xIDExNDIgMTUzOS4zQzExNjcuMSAxNTY3LjYgMTE1MyAxNjI0LjYgMTEyNi43IDE2NDguMkMxMTE2LjUgMTY1Ny40IDExMDQuOSAxNjY0IDEwOTIuNiAxNjY5LjhDMTA5MC44IDE2NzAuNyAxMDkwIDE2NzIuOCAxMDg4LjIgMTY3My44QzEwODUuNiAxNjc1LjUgMTA2Ny4zIDE2ODUuNiAxMDY1LjUgMTY4NlpNMTAzMC45IDE1NTkuNkMxMDM0LjggMTU2Mi41IDEwNjQuOSAxNTY1LjUgMTA3MS43IDE1NjUuN0MxMDg2LjEgMTU2Ni4xIDEwOTMuNiAxNTgxLjUgMTEwNy4xIDE1ODMuNEMxMTEzLjcgMTU4NC4zIDExMjYuMSAxNTcyIDExMjEuMyAxNTY2LjNDMTExOS40IDE1NjQgMTExNi4xIDE1NjMuNCAxMTEzLjUgMTU2MkMxMTEwIDE1NjAuMiAxMTA3LjEgMTU1NyAxMTAzLjMgMTU1NS44QzEwODguMiAxNTUwLjkgMTA0Mi4xIDE1NDcuMSAxMDMwLjkgMTU1OS42WiIvPjxwYXRoIGlkPSJjaGluLXNub3V0LW91dGxpbmUiIGQ9Ik05MzggMTcwMEM5NzUgMTc1OCAxMTI1IDE3NTggMTE2MiAxNzAwIiBmaWxsPSJub25lIiBzdHJva2U9IiMxQjRBM0YiIHN0cm9rZS13aWR0aD0iMTEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIGlkPSJ1bmRlci1leWUtbWFya3MiIGZpbGw9IiM0RDU1NTIiPjxwYXRoIGQ9Ik01MzUuNSA4MTEuMkM1MzQuOSA4MDYuNyA1MzUuOCA3NzcgNTM3LjUgNzc0LjRDNTM4LjYgNzgzIDUzOS44IDgwNC45IDUzNS41IDgxMS4yWk03NjYuNSA4MDlDNzY2LjMgODA4LjggNzY1LjggODA5LjQgNzY1LjUgODA5LjNDNzYyLjYgODA3LjcgNzYzIDc4OS45IDc2My40IDc4Ni42Qzc2Ny40IDc5MS4yIDc2Ny40IDgwMi42IDc2Ni41IDgwOVpNODc5LjUgMTEyNy4yQzg3Ny4yIDExMjYuOCA4NzQuMSAxMTI3IDg3MS43IDExMjYuM0M4NjggMTEyNS4xIDg2Ny41IDExMjEuNiA4NjQuNSAxMTE5LjdDODYyLjIgMTExOC4yIDg1OS40IDExMTguMyA4NTcuNCAxMTE2LjNDODU2LjIgMTExNS4yIDg1Ni45IDExMTQuOSA4NTYuNiAxMTEzLjlDODY0LjUgMTExNi4zIDg3My4xIDExMjEuOSA4NzkuNSAxMTI3LjJaTTgwMy4yIDEyNzQuN0M4MDcuOCAxMjY5LjkgODIxLjQgMTI3NS4xIDgyNy40IDEyNzcuMkM4NDkuOSAxMjg1LjEgODczLjIgMTI5NCA4OTMuMyAxMzA3LjFDODk5LjMgMTMxMSA5MTQuMiAxMzE1LjcgOTE0LjQgMTMyM0M4OTcuMSAxMzI0LjQgODQ2LjYgMTMwMS40IDgyOS44IDEyOTIuOUM4MjIuOSAxMjg5LjQgODA2LjMgMTI4MSA4MDMuMiAxMjc0LjdaTTExODQuNiAxMzIzQzExODUuMSAxMzE1LjkgMTE5OS40IDEzMTEuOSAxMjA1LjEgMTMwNy44QzEyMTkuOCAxMjk3LjQgMTI1OC4xIDEyNzkuMyAxMjc1LjcgMTI3Ni40QzEyODEuOSAxMjc1LjQgMTI5MC45IDEyNjkuOCAxMjk2LjEgMTI3NC42QzEyOTIuMSAxMjgyLjQgMTI4MC4xIDEyODYuMiAxMjczIDEyOTEuMUMxMjU5LjUgMTMwMC40IDExOTkuNSAxMzI0LjEgMTE4NC42IDEzMjNaTTEwNDkuNiAxMzg0LjNDMTA0Mi4yIDEzNzkuNCAxMDUxLjMgMTM2OC4yIDEwNTMuNyAxMzYyQzEwNTQuMSAxMzY2LjUgMTA1My44IDEzODAuMSAxMDQ5LjYgMTM4NC4zWiIvPjwvZz48L2c+CjxnIGlkPSJhY2NlbnQtZXllcyIgZmlsbD0iIzhCRDNGRiIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNODcyLjUgMTIwMC4yQzg2Ny4xIDEyMDIgODYwLjMgMTIwMC43IDg1NC44IDExOTkuOEM4NDkuNSAxMTk4LjkgODQ0LjMgMTE5OC43IDgzOS4xIDExOTdDODM1LjQgMTE5NS44IDgzMy4xIDExOTMuMyA4MjkuNyAxMTkxLjVDODE3LjUgMTE4NC45IDgwOC43IDExNzcuNiA4MDUuNSAxMTYzLjJDODAyLjQgMTE0OS41IDgxNC4yIDExMzIuNyA4MjkuMSAxMTM3LjhDODM4LjIgMTE0MSA4MjkuMSAxMTY0LjcgODQxLjIgMTE3My4xQzg1NCAxMTgyIDg2Ny4zIDExNzUuMyA4ODEuMyAxMTczLjVDODgzLjMgMTE3My4yIDg4NS4xIDExNzIuNCA4ODcuMiAxMTczQzg5NC4yIDExNzQuNyA4OTEuNSAxMTg2LjQgODg4LjMgMTE5MC4zQzg4NC4yIDExOTUuNCA4NzguNiAxMTk4LjIgODcyLjUgMTIwMC4yWk0xMjUwLjUgMTIwNEMxMjM2LjcgMTIwNS43IDEyMTguNyAxMjA0LjcgMTIwOC4yIDExOTRDMTIwMy45IDExODkuNyAxMTk3LjMgMTE3Ny43IDEyMDQuNSAxMTcyLjlDMTIxMy44IDExNjYuNyAxMjIxLjYgMTE3OCAxMjI5LjIgMTE4MS4zQzEyMzkuOSAxMTg1LjkgMTI1My45IDExNzUgMTI1OC41IDExNjUuOUMxMjYyLjEgMTE1OC44IDEyNjAuMiAxMTQ4LjIgMTI2NC45IDExNDEuOUMxMjY5LjEgMTEzNi41IDEyODUuMiAxMTM2LjEgMTI4OC4zIDExNDIuOEMxMjkzLjUgMTE1NC4yIDEyODguOSAxMTY2LjcgMTI4NC42IDExNzcuNUMxMjgzLjQgMTE4MC42IDEyODIuOCAxMTg1IDEyODAuNyAxMTg3LjdDMTI3NC4xIDExOTUuOSAxMjYwLjggMTIwMi44IDEyNTAuNSAxMjA0WiIvPjwvZz4KPC9zdmc+Cg==" alt="Oakley husky logo"></span>
+    <div>
+      <h1>CANOPY</h1>
+      <div class="brand-sub">NORTHBIRCH</div>
+    </div>
+  </div>
+  <div class="top-mid">
+    <div class="tag">One app. Everything you use — work, home, life — plugged in, linked up, and run with your AI team.</div>
+    <div class="hint">Tap any panel, app or category — it opens in place with everything inside it. Tap a glowing name to see its connections.</div>
+  </div>
+  <div id="readout">
+    <span class="ro-name">EXPLORE</span>
+    <span class="ro-body" id="roBody">Plain blocks are built into Canopy · square markers are our own apps · round markers are outside services. Only the spokes show — tap a name to see its connections.</span>
+    <button id="roAll" type="button">All connections</button>
+  </div>
+</header>
+<div class="legend">
+  <b>HOW TO READ IT</b>
+  <span><i class="sw block"></i>Built into Canopy</span>
+  <span><i class="sw kin-app"></i>Square — our apps</span>
+  <span><i class="sw kin-out"></i>Round — outside services</span>
+  <span class="lg-geye"><i class="sw ring"></i>God's Eye shelf</span>
+  <span class="sep"></span>
+  <span><i class="lpill work">Working</i></span>
+  <span><i class="lpill opt">Optional — add if you have it</i></span>
+  <span><i class="lpill watch">Watch list</i></span>
+  <span class="sep"></span>
+  <span class="lg-areas"><i class="dot d-sit"></i>SITREP <i class="dot d-deck"></i>Command Deck <i class="dot d-day"></i>Daybook <i class="dot d-wb"></i>Workbench</span>
+</div>
+<main class="stage" id="stage">
+  <svg id="wires" aria-hidden="true"></svg>
+  <div class="grid">
+    <div class="leftcol">
+      <section class="panel p-sit" id="node-sitrep" data-key="sitrep" tabindex="0" role="button" aria-label="SITREP — home">
+        <h2>SITREP</h2>
+        <p class="tagline">home — the wall and the situation report in one place</p>
+        <div class="chips">
+          <div class="chip">News + Live TV — CBC · CityNews · BBC · DW · TRT · CNA · NHK · Arirang</div>
+          <div class="chip">Markets · Bitcoin · Bank of Canada rates · one daily snapshot</div>
+          <div class="chip"><span class="own own-day">DAYBOOK</span>Calendar + team feed — the day, and what the team is doing</div>
+        </div>
+        <div class="sitzone">
+          <h3>THE SITUATION REPORT — RIGHT NOW</h3>
+          <div class="chips">
+            <div class="chip">Weather Mode — snow, rain, heat, storm</div>
+            <div class="chip">Weather · cameras · road closures · Ontario 511 — from the shared sources at the centre</div>
+          </div>
+        </div>
+      </section>
+      <div class="geye" id="node-godseye" data-key="godseye" tabindex="0" role="button" aria-label="God's Eye View">
+        <h3>GOD'S EYE VIEW</h3>
+        <div class="ge-sub">Osiris — the world layer · <span class="own own-sit">SITREP</span>part of SITREP</div>
+        <div class="ge-shelf">
+          <span class="ge-chip">Earthquakes</span>
+          <span class="ge-chip">Disaster alerts</span>
+          <span class="ge-chip">Natural events</span>
+          <span class="ge-chip">World map + radar</span>
+          <span class="ge-chip">Airport (YOW) ↗</span>
+        </div>
+      </div>
+    </div>
+    <div class="hubcol">
+      <div class="srccluster">
+        <div class="src-h">SHARED SOURCES — DRAWN ONCE, SHOWN TWICE</div>
+        <div class="srcgrid">
+          <div class="srcchip" data-key="src-weather" tabindex="0" role="button">Environment Canada — weather + alerts<small class="smh">forecasts, warnings, alerts</small></div>
+          <div class="srcchip" data-key="src-cams" tabindex="0" role="button">432 traffic camera views<small>403 City · 29 MTO</small></div>
+          <div class="srcchip" data-key="src-roads" tabindex="0" role="button">Ottawa road closures<small class="smh">city road events feed</small></div>
+          <div class="srcchip" data-key="src-511" tabindex="0" role="button">Ontario 511 — roads<small class="smh">provincial highways</small></div>
+        </div>
+      </div>
+      <div class="orbzone">
+        <div class="orb" id="node-canopy" data-key="canopy" tabindex="0" role="button" aria-label="Canopy centre">
+          <span class="disc"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMTIzIDIxMjMiIHdpZHRoPSIyMTIzIiBoZWlnaHQ9IjIxMjMiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iTk9SVEhCSVJDSCDigJQgaHVza3kgaGVhZCBvbmx5LCBjb3JyZWN0aW9uIDEyIGNhbmRpZGF0ZSAob24gY3JlYW0pIj4KPHRpdGxlPk5PUlRIQklSQ0gg4oCUIGh1c2t5IGhlYWQgb25seSwgY29ycmVjdGlvbiAxMiBjYW5kaWRhdGUgKG9uIGNyZWFtKTwvdGl0bGU+Cgo8ZyBpZD0iaHVza3kiPjxwYXRoIGlkPSJodXNreS1vdXRsaW5lIiBmaWxsPSIjMUI0QTNGIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xMDQ3LjUgMTM3My4zQzEwNDMuNCAxMzY1LjggMTA0NC40IDEzNTEuNiAxMDQ0LjMgMTM0Mi45QzEwNDQuMiAxMzE3LjIgMTA0Ny44IDEyOTEuNyAxMDQ4LjIgMTI2Ni4xQzEwNDguNCAxMjUyLjggMTA0OC4xIDEyMzkuNSAxMDQ4LjQgMTIyNi4xQzEwNDguNCAxMjIyLjkgMTA0OS45IDEyMTkuNiAxMDUwLjEgMTIxNi4zQzEwNTAuOCAxMjA1LjMgMTA1MS4xIDExOTMuNCAxMDUxLjEgMTE4Mi40QzEwNTEgMTE1Ni41IDEwNTAuOSAxMTMwLjUgMTA1Mi4xIDExMDQuN0MxMDUzLjIgMTA4MC43IDEwNTQuNCAxMDU2LjcgMTA1NS40IDEwMzIuN0MxMDU1LjUgMTAyOS40IDEwNTcgMTAyNi4yIDEwNTcuMSAxMDIyLjlDMTA1Ny43IDEwMDkuMiAxMDU3LjUgOTk1LjcgMTA1OC41IDk4Mi4xQzEwNjEuMSA5NDguNyAxMDYzLjUgOTE0LjYgMTA2MC43IDg4MS4yQzEwNjAuMSA4NzMuMyAxMDYwLjEgODUyLjYgMTA1My4xIDg0OC41QzEwNDYuOSA4NTUgMTAzNy4yIDg5OS44IDEwMzYgOTEwLjVDMTAzNS4xIDkxOCAxMDM1LjcgOTI1LjggMTAzNS4zIDkzMy40QzEwMzEuMyAxMDA0LjYgMTA0MS45IDEwODEuMiAxMDI3LjIgMTE1MC40QzEwMjYuMyAxMTU0LjMgMTAyNi42IDExNTguNCAxMDI1LjggMTE2Mi4zQzEwMjEuNyAxMTgyLjggMTAxMSAxMjA4LjkgOTk2IDEyMjMuM0M5ODkuOSAxMjI5LjIgOTg4LjUgMTI0MCA5NzguMSAxMjQwQzk3Ni40IDEyMzAuMyA5ODMuOSAxMjIzLjEgOTg2LjYgMTIxNC4zQzk5Mi4zIDExOTUuNyA5OTcuNyAxMTc2LjcgMTAwMS44IDExNTcuNkMxMDAzLjggMTE0OC42IDEwMDQuNCAxMDk3LjMgMTAwMi45IDEwODcuOEMxMDAxLjUgMTA3OC44IDk5Ny4zIDEwNzAgOTk1LjYgMTA2MC45Qzk5My45IDEwNTEuOCA5OTcuMyAxMDQxLjQgOTk1LjkgMTAzMkM5OTQuMyAxMDIxLjEgOTg2LjkgMTAxNi40IDk4MS43IDEwMDcuNUM5NzkuNyAxMDA0IDk3OC44IDk5OS45IDk3Ni41IDk5Ni43Qzk2OS41IDk4Ni44IDk2MiA5ODguMyA5NTYuMyA5ODIuOUM5NDcuNCA5NzQuNCA5MzkuMiA5NjQuOSA5MjkgOTU4QzkxMC4yIDk0NS40IDg5My42IDkzOS41IDg3MSA5NDEuM0M4NjguMSA5NDEuNSA4NjUgOTQwLjggODYyLjEgOTQxLjlDODU2IDk0NC4yIDg0OS42IDk0OS4yIDg0NC42IDk1My4zQzg0Mi4yIDk1NS4zIDgzOC43IDk1NyA4MzYuNyA5NTkuNEM4MzMuMyA5NjMuNiA4MzAuNSA5NzAuMiA4MjguMSA5NzUuMUM4MjMuMyA5ODUuMSA4MjQuMyA5OTcuMSA4MjguNSAxMDA3LjJDODI5LjcgMTAxMC4xIDgzMi4xIDEwMTMuMiA4MzIuNiAxMDE2LjNDODMyLjkgMTAxOC4yIDgyMy45IDEwNDUuMiA4MjIuNSAxMDQ2LjJDODE3LjUgMTA0OS43IDgxMS43IDEwNDggODA2IDEwNDguNkM4MDEuNSAxMDQ5IDc4Ni4zIDEwNTMuOCA3ODEuMSAxMDU1LjRDNzczLjMgMTA1Ny45IDc2My43IDEwNTkuNCA3NTYuMyAxMDYyLjlDNzQyLjUgMTA2OS40IDcyOC44IDEwNzYuMyA3MTUuNyAxMDg0LjJDNzEzLjkgMTA4NS4yIDcxMS44IDEwODUuMiA3MTAuMSAxMDg2LjJDNzA3LjUgMTA4Ny43IDcwNS44IDEwOTAuNCA3MDMuMiAxMDkyQzY5NS43IDEwOTcgNjc3LjEgMTEwNy4yIDY3NC44IDExMTZDNjcyLjEgMTEyNi43IDY4My43IDExNDYuMyA2ODYuNCAxMTU3QzY4Ny41IDExNjEuNyA2ODcuMSAxMTY3LjIgNjg2LjggMTE3MkM2ODUuNiAxMTcyLjggNjg0LjQgMTE3NC4xIDY4My4yIDExNzVDNjgyLjggMTE4MiA2ODQuMSAxMTkwLjEgNjgyLjIgMTE5Ni43QzY3Ny4xIDExOTcgNjc2LjUgMTE5My42IDY3Mi43IDExOTFDNjcyLjEgMTE5MC42IDY1Mi45IDExODIuNyA2NTEuNSAxMTgyLjNDNjQyLjcgMTE3OS42IDYzMy4zIDExNzcuNiA2MjQuMSAxMTc3QzYxOS41IDExNzYuNyA2MTMuNSAxMTc4LjUgNjA5LjMgMTE3Ni4zQzU5Mi44IDExNjcuNyA1NzUuNiAxMTI5LjkgNTY5LjcgMTExMy4xQzU2Ny45IDExMDcuOSA1NjQuNSAxMTA0LjMgNTYzLjggMTA5OC41QzU2MiAxMDg0LjEgNTgwLjQgMTA2OS41IDU4Ni44IDEwNTguOEM2MDcuNiAxMDIzLjcgNjUyIDk4My41IDY2MC44IDk0My42QzY2My44IDkyOS45IDY1MSA5MjEuOCA2NDIuNyA5MTIuOEM2MzIuMyA5MDEuNSA2MjEuNCA4OTAuOSA2MTIuNiA4NzguNEM2MTEuMyA4NzYuNCA2MTEgODc0IDYwOS43IDg3Mi4xQzYwOC4zIDg2OS45IDYwNS44IDg2OC40IDYwNC41IDg2NkM2MDMuMSA4NjMuMyA2MDMuMSA4NjAuMiA2MDEuNyA4NTcuNUM2MDAuNSA4NTUuMSA1OTguOSA4NTMuMSA1OTguMyA4NTAuM0M1OTIuNiA4MjIuNiA2MjIuMSA4MDguNSA2MzAuNiA3ODUuNUM2NDcuOSA3MzkgNjQwLjQgNjg4LjYgNjQ3IDY0MC4yQzY0OC42IDYyOC43IDY0OC4xIDU5NS42IDY1Ni4zIDU4OEM2NzIuMSA1ODguNiA2OTQuNCA2MjYuNCA3MDEuNSA2MzkuN0M3MDQuOCA2NDUuOCA3MDkuMiA2NTEuMyA3MTIuMiA2NTcuN0M3MTMuOCA2NjEgNzEzLjkgNjY1LjEgNzE1LjUgNjY4LjFDNzE2LjggNjcwLjcgNzIwLjIgNjcxLjkgNzIxLjcgNjc0LjVDNzIzLjIgNjc3LjEgNzIzLjQgNjgwLjMgNzI0LjcgNjgzQzcyNi4zIDY4Ni4yIDcyOC45IDY4OSA3MzAuNSA2OTIuM0M3MzYgNzA0LjIgNzQxLjkgNzE2LjUgNzQ2LjMgNzI4LjlDNzQ3LjQgNzMyIDc0Ny4yIDczNS43IDc0OC42IDczOC42Qzc1NC43IDc1MS43IDc2MC44IDc2Ni4zIDc2Mi44IDc4MUM3NjMuNyA3ODcuMiA3NjIuOCA3OTMuNyA3NjMgNzk5LjlDNzYzLjIgODAzLjYgNzY1LjIgODA2LjkgNzY1LjEgODEwLjdDNzY0LjkgODI2LjEgNzUyLjIgODQ2LjQgNzQ3LjcgODYxLjRDNzQ2IDg2Ny4xIDc0MS4xIDg3My4zIDc0My4zIDg3OS4xQzc0OS40IDg3OS43IDc1Ni44IDg3Mi4yIDc2MS42IDg2OC40Qzc3My41IDg1OS4yIDc4My45IDg0OC41IDc5NS42IDgzOUM3OTcuMiA4MzcuOCA3OTkuMyA4MzcuNiA4MDAuOCA4MzYuMUM4MDIuNSA4MzQuNCA4MDIuOCA4MzEuOSA4MDQuNCA4MzAuMkM4MTAuMSA4MjQuMiA4MjkuMyA4MDggODMwLjEgODAwLjVDODMxLjEgNzkwLjcgODExLjggNzQxLjggODA3LjIgNzI5LjVDODA1IDcyMy42IDgwNC4xIDcxNy4xIDgwMS44IDcxMS40QzgwMS4xIDcwOS44IDc5OS41IDcwOS4xIDc5OC44IDcwNy41Qzc5NC4xIDY5Ny42IDc5MC42IDY4Ny4xIDc4NS45IDY3Ny4yQzc3MS45IDY0OC40IDc1Ny4zIDYyMC4yIDc0MS4zIDU5Mi40QzczOS43IDU4OS44IDc0MCA1ODYuNiA3MzguNSA1ODMuOUM3MzcuMyA1ODEuNyA3MzQuNCA1ODAuNCA3MzIuOCA1NzguNEM3MjguNSA1NzMgNzI0LjkgNTY2LjkgNzIwLjYgNTYxLjRDNzE1IDU1NC40IDcxMC42IDU0Ni4zIDcwNS4yIDUzOS40QzY5Ni4yIDUyNy45IDY4NC41IDUxOC40IDY3NC42IDUwNy44QzY2OC43IDUwMS40IDY1NiA0OTIuMiA2NDYuNiA0OTUuOEM2NDEgNDk4IDYzMy41IDUxMS42IDYzMC4yIDUxNi45QzYyNC4yIDUyNi41IDYyMC40IDUzNy4yIDYxNS42IDU0Ny41QzYxNC44IDU0OS4zIDYxMyA1NTAuNSA2MTIuMiA1NTIuM0M2MTAuNiA1NTYgNjExIDU2MC4yIDYwOS41IDU2NEM2MDcuOCA1NjcuOSA2MDQuNCA1NzEuMSA2MDMuMiA1NzUuM0M2MDIuMyA1NzguOSA2MDMgNTgyLjYgNjAxLjggNTg2LjJDNTk5LjkgNTkyIDU5Ny42IDU5Ny4zIDU5NS40IDYwMi45QzU5NC4xIDYwNi4xIDU5NC4zIDYwOS41IDU5My42IDYxMi43QzU5MC45IDYyNS4zIDU4Ny4xIDYzNy45IDU4My44IDY1MC4zQzU4Mi4zIDY1NS45IDU3OS41IDY2MC44IDU3OC4yIDY2Ni40QzU3Ny40IDY3MC4yIDU3OCA2NzMuNSA1NzcuNiA2NzcuMkM1NzYuOSA2ODQuNCA1NzMuNSA2OTEuNCA1NzIgNjk4LjRDNTcwLjkgNzAzLjkgNTcwLjggNzA5LjYgNTY5LjUgNzE1LjFDNTY3LjIgNzI1LjMgNTYzLjYgNzM1LjkgNTYyLjEgNzQ2LjJDNTYxLjMgNzUxLjcgNTYyLjEgNzU3LjUgNTYxLjMgNzYzLjFDNTU4LjggNzc4LjkgNTU1LjYgNzk1LjcgNTU1LjQgODExLjZDNTU1LjMgODIxLjUgNTU2LjEgODMxLjYgNTU2IDg0MS41QzU1NS45IDg0OC43IDU1NC42IDg1Ny40IDU1Ni4yIDg2NC41QzU1Ny42IDg3MC43IDU2MC4xIDg3Ny40IDU2Mi4yIDg4My41QzU3MC4xIDkwNy4yIDU3OS4xIDkzMC4zIDU4OC4zIDk1My4yQzU5MyA5NjQuNyA1OTkuOCA5NzYuMSA1OTkuNCA5ODkuMkM1OTkgMTAwMC44IDU5My4yIDEwMTEuOCA1ODguNCAxMDIxLjlDNTg0LjcgMTAyOS42IDU4MiAxMDQxLjkgNTc0LjEgMTA0Ni4zQzU2Ni4xIDEwNDMuNCA1NjYuNCAxMDEyLjkgNTY2LjIgMTAwNC4yQzU2NS44IDk4OS45IDU1NC4zIDk3Ny44IDU0Ny45IDk2NS44QzU0MS45IDk1NC40IDUzNi4yIDk0MS40IDUzMi41IDkyOUM1MzEuNiA5MjYuMiA1MzEuNiA5MjMuMSA1MzAuNSA5MjAuM0M1MjIgODk3LjYgNTE0LjUgODY3LjYgNTIwLjQgODQzLjRDNTIzLjcgODI5LjcgNTM2LjcgODI0LjggNTM4IDgwNS4xQzUzOS45IDc3Ni44IDUzNi43IDc0OC41IDUzOS44IDcyMC4yQzU0MS4yIDcwNy42IDU0NC4zIDY5NS4zIDU0Ni4xIDY4Mi44QzU1MC4xIDY1My45IDU1Ni4xIDYyNS4yIDU2My45IDU5Ni45QzU2NS40IDU5MS44IDU2Ny44IDU4Ny4xIDU2OS43IDU4Mi4xQzU3MS4xIDU3OC42IDU3MC44IDU3NC45IDU3MS45IDU3MS40QzU3NC44IDU2Mi4yIDU3OC45IDU1My4zIDU4MiA1NDQuMkM1OTEuOSA1MTQuMSA2MTUgNDYzLjIgNjQwIDQ0My44QzY0Mi44IDQ0MS43IDY0NC4yIDQzOC45IDY0Ny42IDQzNy40QzY1My40IDQzNC44IDY2NS42IDQzNS44IDY3MSA0MzguOUM2NzMuNyA0NDAuNCA2NzUuNSA0NDMgNjc4IDQ0NC41QzY5NS44IDQ1NC45IDcxNy4yIDQ3OC4zIDcyOS45IDQ5NUM3MzEuMyA0OTYuOSA3MzEuMyA0OTkuNCA3MzIuNiA1MDEuNEM3MzYuNSA1MDcuMyA3NDIgNTA5LjQgNzQ2LjUgNTE1Qzc2My4zIDUzNi40IDc4MC43IDU1Ny4xIDc5Ny4zIDU3OC45QzgwMy4yIDU4Ni42IDgwNy4yIDU5NS42IDgxMi42IDYwMy40QzgxNS41IDYwNy40IDgxOSA2MTAuOSA4MjEuOSA2MTUuMUM4MjcuNiA2MjMuNiA4MzEuMSA2MzMuNiA4MzUuMyA2NDIuN0M4MzYuNCA2NDUuMSA4MzkuMiA2NDYuMyA4NDAuNiA2NDguNkM4NDYuNyA2NTggODUxLjEgNjY4LjYgODU3IDY3OC4yQzg2My45IDY4OS41IDg5Mi44IDczNC4yIDkwNS4zIDczNC43QzkxNi4zIDczNS4yIDkyOC42IDcyOS4xIDkzOSA3MjYuMUM5NTEgNzIyLjcgOTYzLjggNzE5LjggOTc2LjEgNzE4LjFDOTgwLjggNzE3LjUgOTg1LjQgNzE3LjggOTkwLjEgNzE3LjVDOTk1IDcxNy4yIDk5OS43IDcxNC45IDEwMDQuNyA3MTQuNUMxMDMwLjUgNzEyLjMgMTA1Ni45IDcxMi43IDEwODIuNCA3MTQuNUMxMDg2LjggNzE0LjggMTA5MC43IDcxNy4xIDEwOTUgNzE3LjVDMTEwMC42IDcxNy45IDExMDYuNCA3MTcuMiAxMTEyIDcxNy43QzExMjAuMSA3MTguMyAxMTMwIDcxOS4yIDExMzcuNyA3MjEuNkMxMTQxLjUgNzIyLjggMTE0NSA3MjQuNiAxMTQ5IDcyNS40QzExNTIuOSA3MjYuMSAxMTU3IDcyNS4zIDExNjEgNzI2LjFDMTE2Ni44IDcyNy4zIDExNzEuMSA3MzAuNSAxMTc2LjcgNzMyLjNDMTE4NC4zIDczNC43IDExOTIgNzM2IDExOTkuNiA3MzkuMUMxMjA1LjEgNzQxLjMgMTIyOC4zIDc1MS4xIDEyMzIuNSA3NDguMUMxMjM2LjYgNzQ1LjMgMTI1Mi43IDcyNS4xIDEyNTUuNCA3MjAuNkMxMjU4LjggNzE0LjggMTI2MC42IDcwOC42IDEyNjQuNiA3MDNDMTI3MC42IDY5NC41IDEyNzcuNyA2ODcuMSAxMjg0LjMgNjc5LjFDMTMwMiA2NTcuMyAxMzIxLjUgNjM2LjMgMTM0MC4yIDYxNS4yQzEzNDEuNyA2MTMuNSAxMzQzLjkgNjEyLjQgMTM0NS4zIDYxMC41QzEzNjQuNyA1ODYgMTM4My45IDU2MS4zIDE0MDMuOSA1MzcuMkMxNDA4LjMgNTMxLjkgMTQxNiA1MjYuNyAxNDE5IDUyMi45QzE0MjAuNiA1MjAuOSAxNDIwLjggNTE4IDE0MjIuNCA1MTUuOEMxNDM2LjcgNDk3LjMgMTQ2Mi42IDQ3Mi4zIDE0ODIuNyA0NjFDMTQ5MC4yIDQ1Ni44IDE0OTMuMyA0NDcuNyAxNTAzIDQ0NS44QzE1MDUuNyA0NDcuOCAxNTA2LjcgNDUxLjQgMTUwOS41IDQ1My4yQzE1MTIuNCA0NTUuMSAxNTE2LjEgNDUzLjggMTUxOC43IDQ1Ni40QzE1MzAuNCA0NjcuOCAxNTQwIDQ4NS4xIDE1NDUuNCA1MDAuNUMxNTQ2LjQgNTAzLjQgMTU0Ni40IDUwNi40IDE1NDcuNCA1MDkuMkMxNTQ4LjIgNTExLjUgMTU0OS45IDUxMy4xIDE1NTAuOCA1MTUuM0MxNTUzLjQgNTIyLjUgMTU1NS44IDUyOS44IDE1NTcuOCA1MzcuMUMxNTU5LjkgNTQ0LjcgMTU2MSA1NTMuMSAxNTYzLjQgNTYwLjRDMTU2NS40IDU2Ni42IDE1NjguNCA1NzIuOCAxNTY5LjUgNTc5LjNDMTU3MC4zIDU4NCAxNTcwLjEgNTg4LjYgMTU3MS4zIDU5My4yQzE1NzIuMiA1OTYuMiAxNTc0IDU5OC40IDE1NzQuOSA2MDEuM0MxNTc3LjEgNjA4LjcgMTU3Ny42IDYxNi40IDE1NzkuMiA2MjMuOEMxNTgxLjMgNjMzLjggMTU4NS43IDY0My42IDE1ODYuOSA2NTMuOEMxNTg3LjYgNjU5LjcgMTU4Ni4zIDY2NS44IDE1ODcuMSA2NzEuN0MxNTg3LjUgNjc0LjkgMTU4OS43IDY3NiAxNTkwLjkgNjc4LjZDMTU5Mi42IDY4Mi4yIDE1OTIuOSA2ODguMiAxNTkzLjYgNjkyLjNDMTU5NC41IDY5Ny4xIDE1OTMuMiA3MDIuMyAxNTk0LjEgNzA3LjJDMTU5Ny43IDcyNy4xIDE2MDAuOSA3NDcuMSAxNjAyLjIgNzY3LjRDMTYwMy44IDc5Mi40IDE2MDEuNCA4MTcuNSAxNjAyLjggODQyLjRDMTYwMy42IDg1Ny4yIDE2MDIuNCA4NzguOCAxNTk4LjggODkzLjFDMTU5Ny45IDg5Ni44IDE1OTUuNCA5MDAuNyAxNTk1LjEgOTA0LjVDMTU5NC41IDkwOS40IDE1OTUuMyA5MTQuNSAxNTk0LjggOTE5LjVDMTU5My44IDkyOS42IDE1OTEuMiA5NDAuMSAxNTg4LjMgOTQ5LjZDMTU4Ni4yIDk1Ni41IDE1ODYuMyA5NzkuNyAxNTc3LjcgOTgxLjRDMTU3Mi41IDk4Mi40IDE1NzEuNCA5NzYuNCAxNTY3LjcgOTc0LjRDMTU2NS40IDk3My4yIDE1NjIuMyA5NzIuOCAxNTYwLjQgOTcxLjJDMTU0NC4zIDk1OCAxNTUxLjQgOTM3LjEgMTU1NSA5MTkuOUMxNTU3IDkxMC45IDE1NjAuNiA4OTkuOSAxNTY0IDg5MS40QzE1NjcuNSA4ODIuOCAxNTc0IDg3NC4xIDE1NzUuMSA4NjQuOEMxNTc3LjQgODQ0LjkgMTU3My4yIDgyMy43IDE1NzEuMSA4MDRDMTU3MC40IDc5Ny44IDE1NzEgNzkxLjQgMTU2OS45IDc4NS4yQzE1NjYuOSA3NjguMSAxNTY0LjYgNzUxIDE1NjIgNzMzLjlDMTU2MC43IDcyNSAxNTU3LjcgNzE1LjcgMTU1Ni4xIDcwNi43QzE1NTMuNSA2OTIuMyAxNTUwLjEgNjc4LjEgMTU0Ny40IDY2My43QzE1NDYuNiA2NTkuMSAxNTQ3LjggNjU0LjMgMTU0Ni44IDY0OS43QzE1NDYuMyA2NDcuMyAxNTQ0IDY0Ni4xIDE1NDMuMyA2NDMuOEMxNTQxLjggNjM5LjIgMTU0MC45IDYzNCAxNTM5LjYgNjI5LjNDMTUzOC40IDYyNC45IDE1NDAuMiA2MTkuNyAxNTM4LjQgNjE1LjRDMTUzNy42IDYxMy41IDE1MzYuMSA2MTIuMiAxNTM1LjIgNjEwLjRDMTUzMS43IDYwMy4xIDE1MzEuMiA1OTQgMTUyOC45IDU4Ni4zQzE1MjQuNyA1NzEuNiAxNTE5LjcgNTU2IDE1MTMuMSA1NDIuMUMxNTEwLjkgNTM3LjYgMTUwNy41IDUyMy43IDE1MDEuMiA1MjMuM0MxNDkzLjcgNTIyLjcgMTQ3NS44IDUzNS44IDE0NzAuMyA1NDAuOEMxNDQ3LjIgNTYxLjUgMTQyNy44IDU4Ny4yIDE0MTAgNjEyLjRDMTQwMi44IDYyMi44IDEzOTUgNjMyLjggMTM4Ny4xIDY0Mi43QzEzODUuNCA2NDQuOCAxMzgyLjYgNjQ1LjYgMTM4MSA2NDcuN0MxMzc5LjEgNjUwLjQgMTM3OC4yIDY1My44IDEzNzYuMiA2NTYuNEMxMzY5LjggNjY0LjcgMTM2My4yIDY3Mi40IDEzNTYuNSA2ODAuMkMxMzU1LjEgNjgxLjcgMTM1NC44IDY4My44IDEzNTMuNiA2ODUuNEMxMzQwLjggNzAxLjkgMTMyOS4zIDcxOC4zIDEzMTcuOSA3MzUuN0MxMzA0LjIgNzU2LjYgMTI4OS45IDc4My40IDEyOTYuMSA4MDkuMkMxMjk2LjkgODEyLjcgMTI5OS44IDgxNS42IDEzMDEuOCA4MTguNUMxMzA0LjggODIyLjkgMTMwNy4xIDgyNy44IDEzMTAuMyA4MzIuMUMxMzIwLjcgODQ2LjIgMTMzNCA4NTguNCAxMzQ2LjMgODcwLjlDMTM1NS4zIDg4MC4xIDEzOTIuNCA5MTUuNCAxNDAzLjMgOTE2LjJDMTQwNy4xIDkxMS4xIDE0MDMuOCA4OTUuNCAxNDAxLjggODg5LjJDMTM5OS4xIDg4MC42IDEzODEuMSA4NTIuNiAxMzc0LjUgODQ2LjVDMTM3MS43IDg0NCAxMzU2LjQgODI4LjMgMTM1Ni40IDgyNS43QzEzNTYuNSA4MTkuNCAxMzYxIDgxMy42IDEzNjIuNyA4MDhDMTM2My42IDgwNS4xIDEzNjMgODAyIDEzNjMuOSA3OTkuMUMxMzY1LjUgNzkzLjkgMTM2OC42IDc4OS41IDEzNzAuNSA3ODQuNkMxMzc5LjUgNzYyIDEzODkuNSA3MzIuMiAxNDAzLjUgNzEyLjJDMTQwNS4xIDcxMCAxNDA4IDcwOS41IDE0MDkuNiA3MDcuMkMxNDExLjggNzAzLjggMTQxMS4xIDY5OS4zIDE0MTMgNjk1LjhDMTQyMS42IDY3OS43IDE0MzIuMyA2NjQuNyAxNDQyLjQgNjQ5LjVDMTQ0Ni43IDY0My4xIDE0NTEuOSA2MzguOCAxNDU2LjggNjMzLjFDMTQ1OC4zIDYzMS4zIDE0NTguOCA2MjguOSAxNDYwLjIgNjI3QzE0NjQuNyA2MjAuNSAxNDgwLjEgNjAzIDE0ODcgNjAwLjlDMTQ5NC4yIDYwNi43IDE0OTQuNyA2MTkuOSAxNDk2LjggNjI4LjVDMTUwMi45IDY1Mi4yIDE1MDAuMyA2OTQuNCAxNTAwLjkgNzIwQzE1MDEuNyA3NTEuOSAxNDk5LjQgNzg0LjkgMTUwNy4zIDgxNi4zQzE1MDkgODIzLjEgMTUxMS42IDgyOS42IDE1MTUuNCA4MzUuNUMxNTE5LjYgODQxLjggMTUyNy44IDg0Ny41IDE1MjUuOSA4NTYuMUMxNTIzLjkgODY0LjggMTUwOS4zIDg4MC42IDE1MDMuMiA4ODcuNkMxNDkwLjMgOTAyLjUgMTQ3OS4yIDkyMS4yIDE0NzEuOCA5MzkuNUMxNDU3LjEgOTc1LjcgMTQ3NC4yIDk4Mi44IDE0NzMuOCAxMDE0LjZDMTQ3My43IDEwMjUuOSAxNDY1IDEwNDUuNSAxNDY5LjIgMTA1NC4zQzE0NzcuMiAxMDU2LjYgMTQ5Ny45IDEwNTEuOCAxNTAzLjggMTA1NS4zQzE1MDUuOSAxMDU2LjYgMTUwNi43IDEwNTguOSAxNTA4LjYgMTA2MC4yQzE1MTAuNiAxMDYxLjYgMTUxMy4xIDEwNjEuNCAxNTE1LjEgMTA2Mi44QzE1MjAuMyAxMDY2LjUgMTUyNC4yIDEwNzMgMTUyNy42IDEwNzguM0MxNTMwLjMgMTA4Mi41IDE1MzMuNiAxMDg2LjMgMTUzNC43IDEwOTEuM0MxNTM4LjEgMTEwNi4yIDE1MjIuOCAxMTMwLjQgMTUxNS45IDExNDIuN0MxNTEwLjYgMTE1MS45IDE1MDUuNSAxMTY0LjkgMTQ5Ni4zIDExNzEuMkMxNDkzLjUgMTE3My4xIDE0ODkuOSAxMTczLjUgMTQ4Ni45IDExNzQuN0MxNDc3LjMgMTE3OC44IDE0NjUuOSAxMTgxLjUgMTQ1NSAxMTgxLjRDMTQ1Mi4yIDExODEuMyAxNDUwLjEgMTE4MC44IDE0NDcuMiAxMTgxLjZDMTQzNS40IDExODQuOCAxNDI3LjIgMTE5NC45IDE0MTcuNCAxMjAxLjNDMTQxNS43IDEyMDIuNSAxNDE0LjQgMTIwMS4yIDE0MTIuNiAxMjAxLjdDMTQxMS4yIDEyMDIuMSAxNDA5LjggMTIwNC41IDE0MDguNSAxMjA1LjNDMTQwNi4xIDEyMDEuOSAxNDA0LjYgMTIwMS44IDE0MDAuNiAxMjAwLjhDMTM5Ni41IDExODIuNCAxNDA0LjIgMTE3OC41IDE0MTAuNSAxMTYzLjdDMTQxNC4xIDExNTUuMiAxNDE3LjUgMTE0Ni4zIDE0MTkuOSAxMTM3LjRDMTQyMS40IDExMzEuOCAxNDI2LjkgMTEyMC43IDE0MjMuOSAxMTE1LjJDMTQxOC42IDExMDUuNyAxNDA2IDEwOTguNSAxMzk3LjMgMTA5Mi43QzEzNzIuNyAxMDc2LjEgMTM0MC44IDEwNjEuNyAxMzEwLjkgMTA1OS4xQzEyOTkuMiAxMDU4LjEgMTI3MCAxMDYxIDEyNjEuMSAxMDU2LjRDMTI1NC4yIDEwNTIuOSAxMjU0LjggMTA0MS4zIDEyNTYuOSAxMDM1LjNDMTI2My4zIDEwMTcuMSAxMjcyLjYgMTAwMC45IDEyNjEuOCA5ODIuMkMxMjU3LjggOTc1LjMgMTI1NCA5NjcgMTI0OC4yIDk2MS40QzEyMzMuNCA5NDYuOSAxMjA5LjUgOTQzIDExOTAuMyA5NDkuOUMxMTgxLjQgOTUzIDExNzIuOSA5NTguOSAxMTY1LjMgOTY0LjJDMTE2My4xIDk2NS44IDExNjAuMyA5NjUuNSAxMTU4IDk2Ny4yQzExNTUuNiA5NjkgMTE1NC43IDk3Mi4yIDExNTIuNyA5NzQuM0MxMTUwLjEgOTc3IDExNDYuOSA5NzguNyAxMTQ0LjUgOTgxLjZDMTEzOSA5ODguNSAxMTMzLjcgOTk2LjQgMTEyNy43IDEwMDIuN0MxMTIyLjYgMTAwNy45IDExMTIgMTAwMCAxMTA0LjQgMTAxNC45QzEwOTcuOCAxMDI3LjkgMTEwMy41IDEwNDYuNSAxMTAxLjggMTA2MC41QzExMDAuNyAxMDY5LjggMTA5My4xIDEwNzguMyAxMDkxLjIgMTA4Ny40QzEwOTAuNSAxMDkwLjYgMTA5MS4yIDEwOTQuMSAxMDkwLjggMTA5Ny40QzEwODkuNCAxMTExLjEgMTA4Ny44IDExMjQuNCAxMDg4IDExMzguMkMxMDg4LjEgMTE0OS40IDEwODkuMiAxMTYxIDEwOTEuMSAxMTcyQzEwOTMgMTE4My41IDEwOTkgMTE5NC4xIDEwOTggMTIwNi4xQzEwOTcuMyAxMjE0LjQgMTA5MC43IDEyMjMuMyAxMDg3LjQgMTIzMC44QzEwODEuNSAxMjQ0LjIgMTA3MC4yIDEyNjggMTA2OCAxMjgyQzEwNjYuNCAxMjkyLjEgMTA2NC44IDEzMDIuMiAxMDYyLjkgMTMxMi40QzEwNjIuMiAxMzE2LjEgMTA1OS40IDEzMTguOCAxMDU5IDEzMjIuNkMxMDU3LjYgMTMzOS42IDEwNTguNCAxMzU5LjEgMTA0Ny41IDEzNzMuM1pNOTM0LjUgMTI0OC45QzkyNy41IDEyNDMuNSA5MzAuOCAxMjI5LjQgOTE3LjMgMTIyMy44QzkwNy41IDEyMTkuOCA4ODEuMSAxMjE5LjMgODcwLjggMTIyMS43Qzg2NS44IDEyMjIuOCA4NjEuNyAxMjI0LjkgODU2LjQgMTIyNS40Qzg0NyAxMjI2LjMgODM4LjkgMTIyNC42IDgyOS45IDEyMjIuN0M4MjYuNSAxMjIyIDgyMy40IDEyMjIuMiA4MjAuMSAxMjIwLjlDODEwLjcgMTIxNy4yIDc5Ni43IDEyMDAuNyA3OTEuOCAxMTkxLjhDNzg2LjEgMTE4MS41IDc4Mi42IDExNjguMyA3NzMuOCAxMTU5LjhDNzY5LjcgMTE1NS45IDc1MCAxMTU5LjggNzQzLjQgMTE1Ny41Qzc0My4xIDExNTUgNzQxLjkgMTE1MC4yIDc0Mi43IDExNDcuN0M3NDYuNSAxMTM2LjUgNzU0LjQgMTEyOS44IDc2MS43IDExMjEuM0M3NjMgMTExOS42IDc2Mi44IDExMTcuNSA3NjQgMTExNS45Qzc2OC44IDExMDkuNiA3NzcuMSAxMTAwIDc4NC4xIDEwOTYuOUM3ODguMSAxMTAwLjYgNzkxLjQgMTEwNS43IDc5Ni42IDExMDguMkM4MDAuNiAxMTEwLjEgODA1IDExMDkuNyA4MDkuMiAxMTEwLjdDODE2LjYgMTExMi42IDgyMy45IDExMTUuMiA4MzEuMSAxMTE3LjdDODM3IDExMTkuOCA4NDIuNiAxMTI1LjcgODQ4LjkgMTEyNi40Qzg1Ny4zIDExMjcuNCA4NjguOCAxMTIzLjkgODc2LjggMTEyN0M4OTIuMiAxMTMzLjEgOTEzLjQgMTE1NC4zIDkyMS45IDExNjguNEM5MjUgMTE3My43IDkyNi43IDExODAuMSA5MjkuNiAxMTg1LjdDOTMxLjIgMTE4OC43IDkzNC4yIDExOTAuNSA5MzUuNSAxMTkzLjZDOTQwLjIgMTIwNS41IDk0NS41IDEyNDAuMyA5MzQuNSAxMjQ4LjlaTTExNTkuNSAxMjU0LjFDMTE1MC43IDEyNTQuMiAxMTUyLjMgMTI0MiAxMTUyLjkgMTIzNS44QzExNTMuMiAxMjMzIDExNTIuMSAxMjMwLjYgMTE1Mi4yIDEyMjcuOUMxMTUyLjMgMTIyNC44IDExNTUuMyAxMjA5LjQgMTE1Ni40IDEyMDYuNUMxMTU3LjggMTIwMy4xIDExNjAuNiAxMjAwLjMgMTE2MS43IDExOTYuOUMxMTYyLjYgMTE5NCAxMTYyLjQgMTE5MSAxMTY0IDExODguMkMxMTcxLjQgMTE3NC40IDExODMuNiAxMTU0LjcgMTE5NiAxMTQ1QzExOTkuMiAxMTQyLjUgMTIwNi40IDExNDYuNCAxMjEwLjYgMTE0NS4xQzEyMjQuNSAxMTQwLjggMTIyNC44IDExMzAuMSAxMjI5LjEgMTExOUMxMjM2LjQgMTExNi45IDEyNzkuOCAxMTE2IDEyODguNyAxMTE2LjdDMTI5NS45IDExMTcuMiAxMzAyLjMgMTExOS4yIDEzMDkuMiAxMTIxLjFDMTMxMy4yIDExMjIuMiAxMzE1IDExMjQuNSAxMzE4LjYgMTEyNi4zQzEzMjQuNiAxMTI5LjIgMTMzMy4xIDExMjcuNyAxMzMxLjggMTEzNy41QzEzMzAuNiAxMTQ2LjkgMTMwMy43IDEyMDAuNyAxMjk3LjIgMTIwOEMxMjg5LjIgMTIxNyAxMjgwIDEyMjUgMTI2OCAxMjI4QzEyNTguNyAxMjMwLjQgMTI1MS40IDEyMjguNSAxMjQyLjQgMTIyNy41QzEyMzcuNyAxMjI3IDEyMzMgMTIyNy42IDEyMjguNCAxMjI3LjJDMTIxMS43IDEyMjUuNiAxMTg1LjMgMTIyMSAxMTcwLjggMTIzMi4zQzExNjQuMyAxMjM3LjQgMTE2NC4zIDEyNDcuOSAxMTU5LjUgMTI1NC4xWk04NzEgMTIwMkM4OTAuNSAxMTk5IDkwMS4xIDExNzQuMyA4OTAuMSAxMTcwLjhDODc1LjUgMTE2Ni4yIDg1Ny41IDExODMuNiA4NDIuNSAxMTcyLjRDODMwLjYgMTE2My41IDgzOSAxMTQyIDgzMi41IDExMzcuNEM4MzAgMTEzNS42IDgyNi43IDExMzUuNyA4MjMuOCAxMTM1LjRDODA4LjkgMTEzNC4yIDgwMi45IDExNDkuNCA4MDQuMSAxMTYyLjVDODA2LjggMTE5MS4xIDg0Ni40IDEyMDUuOCA4NzEgMTIwMlpNMTI1My4xIDEyMDVDMTI3Ny40IDExOTkuNiAxMjg3IDExODQuMSAxMjkxLjEgMTE2MC45QzEyOTIuMSAxMTU1LjEgMTI5My4yIDExNDUuNSAxMjkwLjcgMTE0MEMxMjg4LjIgMTEzNC43IDEyNjcgMTEzNS44IDEyNjMuNCAxMTM5LjZDMTI1OC45IDExNDQuMiAxMjYwLjYgMTE1OC44IDEyNTYuOCAxMTY1LjVDMTI1My4yIDExNzIgMTI0MCAxMTgzLjYgMTIzMS44IDExODAuOUMxMjI2LjIgMTE3OSAxMjIyLjEgMTE3My42IDEyMTYuNyAxMTcxLjFDMTIxMS41IDExNjguNiAxMjAwLjQgMTE2OC44IDExOTguOCAxMTc2LjNDMTE5OCAxMTc5LjggMTIwMCAxMTg0LjcgMTIwMS43IDExODcuOEMxMjExIDEyMDUgMTIzNS40IDEyMDguOSAxMjUzLjEgMTIwNVpNMTA2NS41IDE2ODZDMTA1OC45IDE2ODcuNyAxMDMyLjQgMTY4Ny43IDEwMjUuNSAxNjg2LjNDMTAxNS43IDE2ODQuNCA5NzguOSAxNjY0IDk3MS43IDE2NTYuOUM5NjIuNyAxNjQ4LjIgOTY2LjcgMTY0Ny4yIDk2Mi42IDE2NDAuOUM5NjAuOCAxNjM4LjEgOTU3LjUgMTYzNy43IDk1NS42IDE2MzUuNEM5NDkuNiAxNjI3LjkgOTQ1LjMgMTYxNi41IDk0Mi4yIDE2MDcuNkM5MzYuNiAxNTkxLjUgOTMxLjkgMTU2NSA5NDAuNCAxNTQ5LjNDOTQ1LjYgMTUzOS44IDk1MS4xIDE1MzcuOSA5NTkuNSAxNTMyLjdDOTYyIDE1MzEuMSA5NjMuNCAxNTI4LjIgOTY2LjEgMTUyNi43Qzk3OS41IDE1MTkuMiAxMDA5LjUgMTUxMC40IDEwMjUuMSAxNTA5LjVDMTA2NC4xIDE1MDcuNSAxMTEzLjYgMTUwNy4xIDExNDIgMTUzOS4zQzExNjcuMSAxNTY3LjYgMTE1MyAxNjI0LjYgMTEyNi43IDE2NDguMkMxMTE2LjUgMTY1Ny40IDExMDQuOSAxNjY0IDEwOTIuNiAxNjY5LjhDMTA5MC44IDE2NzAuNyAxMDkwIDE2NzIuOCAxMDg4LjIgMTY3My44QzEwODUuNiAxNjc1LjUgMTA2Ny4zIDE2ODUuNiAxMDY1LjUgMTY4NlpNMTAzMC45IDE1NTkuNkMxMDM0LjggMTU2Mi41IDEwNjQuOSAxNTY1LjUgMTA3MS43IDE1NjUuN0MxMDg2LjEgMTU2Ni4xIDEwOTMuNiAxNTgxLjUgMTEwNy4xIDE1ODMuNEMxMTEzLjcgMTU4NC4zIDExMjYuMSAxNTcyIDExMjEuMyAxNTY2LjNDMTExOS40IDE1NjQgMTExNi4xIDE1NjMuNCAxMTEzLjUgMTU2MkMxMTEwIDE1NjAuMiAxMTA3LjEgMTU1NyAxMTAzLjMgMTU1NS44QzEwODguMiAxNTUwLjkgMTA0Mi4xIDE1NDcuMSAxMDMwLjkgMTU1OS42WiIvPjxwYXRoIGlkPSJjaGluLXNub3V0LW91dGxpbmUiIGQ9Ik05MzggMTcwMEM5NzUgMTc1OCAxMTI1IDE3NTggMTE2MiAxNzAwIiBmaWxsPSJub25lIiBzdHJva2U9IiMxQjRBM0YiIHN0cm9rZS13aWR0aD0iMTEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIGlkPSJ1bmRlci1leWUtbWFya3MiIGZpbGw9IiM0RDU1NTIiPjxwYXRoIGQ9Ik01MzUuNSA4MTEuMkM1MzQuOSA4MDYuNyA1MzUuOCA3NzcgNTM3LjUgNzc0LjRDNTM4LjYgNzgzIDUzOS44IDgwNC45IDUzNS41IDgxMS4yWk03NjYuNSA4MDlDNzY2LjMgODA4LjggNzY1LjggODA5LjQgNzY1LjUgODA5LjNDNzYyLjYgODA3LjcgNzYzIDc4OS45IDc2My40IDc4Ni42Qzc2Ny40IDc5MS4yIDc2Ny40IDgwMi42IDc2Ni41IDgwOVpNODc5LjUgMTEyNy4yQzg3Ny4yIDExMjYuOCA4NzQuMSAxMTI3IDg3MS43IDExMjYuM0M4NjggMTEyNS4xIDg2Ny41IDExMjEuNiA4NjQuNSAxMTE5LjdDODYyLjIgMTExOC4yIDg1OS40IDExMTguMyA4NTcuNCAxMTE2LjNDODU2LjIgMTExNS4yIDg1Ni45IDExMTQuOSA4NTYuNiAxMTEzLjlDODY0LjUgMTExNi4zIDg3My4xIDExMjEuOSA4NzkuNSAxMTI3LjJaTTgwMy4yIDEyNzQuN0M4MDcuOCAxMjY5LjkgODIxLjQgMTI3NS4xIDgyNy40IDEyNzcuMkM4NDkuOSAxMjg1LjEgODczLjIgMTI5NCA4OTMuMyAxMzA3LjFDODk5LjMgMTMxMSA5MTQuMiAxMzE1LjcgOTE0LjQgMTMyM0M4OTcuMSAxMzI0LjQgODQ2LjYgMTMwMS40IDgyOS44IDEyOTIuOUM4MjIuOSAxMjg5LjQgODA2LjMgMTI4MSA4MDMuMiAxMjc0LjdaTTExODQuNiAxMzIzQzExODUuMSAxMzE1LjkgMTE5OS40IDEzMTEuOSAxMjA1LjEgMTMwNy44QzEyMTkuOCAxMjk3LjQgMTI1OC4xIDEyNzkuMyAxMjc1LjcgMTI3Ni40QzEyODEuOSAxMjc1LjQgMTI5MC45IDEyNjkuOCAxMjk2LjEgMTI3NC42QzEyOTIuMSAxMjgyLjQgMTI4MC4xIDEyODYuMiAxMjczIDEyOTEuMUMxMjU5LjUgMTMwMC40IDExOTkuNSAxMzI0LjEgMTE4NC42IDEzMjNaTTEwNDkuNiAxMzg0LjNDMTA0Mi4yIDEzNzkuNCAxMDUxLjMgMTM2OC4yIDEwNTMuNyAxMzYyQzEwNTQuMSAxMzY2LjUgMTA1My44IDEzODAuMSAxMDQ5LjYgMTM4NC4zWiIvPjwvZz48L2c+CjxnIGlkPSJhY2NlbnQtZXllcyIgZmlsbD0iIzhCRDNGRiIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNODcyLjUgMTIwMC4yQzg2Ny4xIDEyMDIgODYwLjMgMTIwMC43IDg1NC44IDExOTkuOEM4NDkuNSAxMTk4LjkgODQ0LjMgMTE5OC43IDgzOS4xIDExOTdDODM1LjQgMTE5NS44IDgzMy4xIDExOTMuMyA4MjkuNyAxMTkxLjVDODE3LjUgMTE4NC45IDgwOC43IDExNzcuNiA4MDUuNSAxMTYzLjJDODAyLjQgMTE0OS41IDgxNC4yIDExMzIuNyA4MjkuMSAxMTM3LjhDODM4LjIgMTE0MSA4MjkuMSAxMTY0LjcgODQxLjIgMTE3My4xQzg1NCAxMTgyIDg2Ny4zIDExNzUuMyA4ODEuMyAxMTczLjVDODgzLjMgMTE3My4yIDg4NS4xIDExNzIuNCA4ODcuMiAxMTczQzg5NC4yIDExNzQuNyA4OTEuNSAxMTg2LjQgODg4LjMgMTE5MC4zQzg4NC4yIDExOTUuNCA4NzguNiAxMTk4LjIgODcyLjUgMTIwMC4yWk0xMjUwLjUgMTIwNEMxMjM2LjcgMTIwNS43IDEyMTguNyAxMjA0LjcgMTIwOC4yIDExOTRDMTIwMy45IDExODkuNyAxMTk3LjMgMTE3Ny43IDEyMDQuNSAxMTcyLjlDMTIxMy44IDExNjYuNyAxMjIxLjYgMTE3OCAxMjI5LjIgMTE4MS4zQzEyMzkuOSAxMTg1LjkgMTI1My45IDExNzUgMTI1OC41IDExNjUuOUMxMjYyLjEgMTE1OC44IDEyNjAuMiAxMTQ4LjIgMTI2NC45IDExNDEuOUMxMjY5LjEgMTEzNi41IDEyODUuMiAxMTM2LjEgMTI4OC4zIDExNDIuOEMxMjkzLjUgMTE1NC4yIDEyODguOSAxMTY2LjcgMTI4NC42IDExNzcuNUMxMjgzLjQgMTE4MC42IDEyODIuOCAxMTg1IDEyODAuNyAxMTg3LjdDMTI3NC4xIDExOTUuOSAxMjYwLjggMTIwMi44IDEyNTAuNSAxMjA0WiIvPjwvZz4KPC9zdmc+Cg==" alt="Oakley husky logo"></span>
+          <div class="orb-name">CANOPY</div>
+          <div class="orb-sub">one app · everything connected</div>
+          <div class="orb-brand">NORTHBIRCH</div>
+        </div>
+      </div>
+      <div class="setupshelf" data-key="setup" tabindex="0" role="button" aria-label="Setup shelf">
+        <div class="src-h">SETUP — PICK WHAT YOU USE</div>
+        <div class="catgrid">
+          <div class="catchip" data-key="cat-security" tabindex="0" role="button">Home security</div>
+          <div class="catchip" data-key="cat-monitoring" tabindex="0" role="button">Home monitoring</div>
+          <div class="catchip" data-key="cat-banking" tabindex="0" role="button">Banking + money</div>
+          <div class="catchip" data-key="cat-health" tabindex="0" role="button">Health + fitness</div>
+          <div class="catchip" data-key="cat-music" tabindex="0" role="button">Music + podcasts</div>
+          <div class="catchip" data-key="cat-tv" tabindex="0" role="button">TV + streaming</div>
+          <div class="catchip" data-key="cat-rewards" tabindex="0" role="button">Rewards shelf</div>
+          <div class="catchip" data-key="cat-social" tabindex="0" role="button">Social</div>
+          <div class="catchip" data-key="cat-energy" tabindex="0" role="button">Home energy + air</div>
+          <div class="catchip" data-key="cat-work" tabindex="0" role="button">Work + business</div>
+        </div>
+      </div>
+    </div>
+    <div class="rightcol">
+      <section class="panel p-deck" id="node-deck" data-key="deck" tabindex="0" role="button" aria-label="Command Deck">
+        <h2>COMMAND DECK</h2>
+        <p class="tagline">the team's room — where the AI team works, talks and keeps score</p>
+        <div class="chips">
+          <div class="chip">Team usage · open tasks · flags · five chats · five work panes</div>
+          <div class="chip">Talk to Assistant — seven talk lines · doors back to the hub</div>
+        </div>
+        <div class="portal" data-key="eng" tabindex="0" role="button" aria-label="Engineering Portal">
+          <h3>ENGINEERING PORTAL</h3>
+          <p class="p-sub">inside the Command Deck — the design shop</p>
+          <div class="chips">
+            <div class="chip">Design screen — CAD · FreeCAD → Blender → 3D preview</div>
+            <div class="chip k-out xchip">Autodesk Viewer · 3D viewer (Babylon / Three) · GitHub</div>
+          </div>
+        </div>
+        <div class="portal" data-key="media" tabindex="0" role="button" aria-label="Media Portal">
+          <h3>MEDIA PORTAL</h3>
+          <p class="p-sub">inside the Command Deck</p>
+          <div class="chips">
+            <div class="chip">Videos · pictures · ad projects + media chat</div>
+            <div class="chip k-out xchip">Photo editor in the app (IMG.LY) · Matterport · Photopea · CapCut · Canva Connect</div>
+          </div>
+        </div>
+        <div class="more">Both portals live <b>inside the Deck</b> — their lines run to the Deck, not the centre. <b>Tap to open.</b></div>
+      </section>
+      <section class="panel p-day" id="node-daybook" data-key="daybook" tabindex="0" role="button" aria-label="Daybook">
+        <h2>DAYBOOK</h2>
+        <p class="tagline">Day to Day — your personal side: money, home, health, life</p>
+        <div class="chips">
+          <div class="chip">Day stream + capture · Calendar — Google Calendar · commute from your calendar</div>
+          <div class="chip">Money book — Drive workbook · investments · <span class="own own-wb">TRELLIS</span>paycheque lands here</div>
+          <div class="chip">Health + Fitness layer — watches, rings and health apps live here</div>
+          <div class="chip">Social — worked in · home monitoring + automation · Talk to Assistant</div>
+        </div>
+        <div class="more">Everyday-life additions live here too — <b>tap to open.</b></div>
+      </section>
+      <div class="teamstrip" data-key="team" tabindex="0" role="button" aria-label="Team and accounts">
+        <span class="t-h">TEAM + ACCOUNTS</span>
+        <span class="t-b">the plumbing — tap to open</span>
+      </div>
+    </div>
+    <section class="panel p-wb" id="node-workbench" data-key="workbench" tabindex="0" role="button" aria-label="Workbench">
+      <p class="wb-caption"><b>WORKBENCH — the sandbox.</b> Apps plug in here — everything they carry works across Canopy. A service worked into an app nests under that app, never loose.</p>
+      <div class="wb-cols">
+        <div class="ownerbox">
+          <div class="granthead"><h3>GRANT'S APPS</h3>
+            <div class="appgrid topapps-row">
+              <span class="appchip" data-key="aqua" tabindex="0" role="button">Brand My Aqua<small>water brand</small></span>
+              <span class="appchip" data-key="purenzyme" tabindex="0" role="button">purEnzyme<small>cleaning products</small></span>
+              <span class="appchip" data-key="atra" tabindex="0" role="button">Atra Lend<small>lending</small></span>
+              <span class="appchip" data-key="northbirchapp" tabindex="0" role="button">Northbirch<small>the team-projects home</small></span>
+              <span class="appchip" data-key="sitevision" tabindex="0" role="button">SiteVision<small>site views · under Northbirch, by itself</small></span>
+            </div>
+          </div>
+          <div class="ownerrow">
+            <div class="companybox">
+              <h4>NORTHBIRCH</h4>
+              <p class="cb-sub">Grant's company — Trellis and SiteVision live here</p>
+              <span class="appchip big" data-key="trellis" tabindex="0" role="button" id="node-trellis">TRELLIS — the green-trades family<small>seven departments · tap to open the whole family</small></span>
+              <p class="toolline"><b>Tools:</b> <span data-key="quickbooks" id="node-quickbooks" style="cursor:pointer;text-decoration:underline dotted">QuickBooks</span> · Jobber · Stripe · HubSpot</p>
+              <div class="deptrow">
+                <span class="deptchip" data-key="mainline" tabindex="0" role="button">Mainline</span>
+                <span class="deptchip" data-key="course" tabindex="0" role="button">Course</span>
+                <span class="deptchip" data-key="tend" tabindex="0" role="button">Tend</span>
+                <span class="deptchip gold" data-key="flurry" tabindex="0" role="button">Flurry</span>
+                <span class="deptchip" data-key="lumen" tabindex="0" role="button">Lumen</span>
+                <span class="deptchip" data-key="bole" tabindex="0" role="button">Bole</span>
+                <span class="deptchip" data-key="glimmer" tabindex="0" role="button">Glimmer</span>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;min-height:0;min-width:0">
+              <div class="companybox" style="flex:1">
+                <h4>CITYSCAPE</h4>
+                <p class="cb-sub">the landscaping company — BluePrint is its app</p>
+                <span class="appchip big" data-key="blueprint" tabindex="0" role="button" id="node-blueprint">BluePrint<small>Grant's sales-workflow app</small></span>
+                <p class="toolline"><b>Its tools:</b> QuickBooks · Workforce · HindSite / FieldCentral</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ownerbox">
+          <h3>JOHNNY'S APPS</h3>
+          <p class="ob-sub">Johnny Kulwartian's businesses — client apps on the shelf</p>
+          <div style="display:flex;flex-direction:column;gap:6px;min-height:0;flex:1">
+            <span class="appchip big" data-key="kul" tabindex="0" role="button" id="node-kul">KÜL REAL ESTATE<small>real estate · Ottawa + Costa Rica · 15 sections inside · CREA listings feed its own</small></span>
+            <span class="appchip big" data-key="lg" tabindex="0" role="button" id="node-lg">LIONS GATE YACHTS<small>yacht brokerage · eight sections inside · MarineTraffic is its own</small></span>
+            <div class="appgrid">
+              <span class="appchip" data-key="cms" tabindex="0" role="button">CMS Construction<small>builder</small></span>
+              <span class="appchip" data-key="structureiq" tabindex="0" role="button">StructureIQ<small>building checks</small></span>
+              <span class="appchip" data-key="eighttwelve" tabindex="0" role="button">8Twelve Mortgages<small>the mortgage door — 65+ lenders</small></span>
+            </div>
+            <p class="toolline" style="margin-top:auto"><b>Johnny's shared toolbox:</b> HeyGen · ElevenLabs · Qwilr · Sendspark + Bonjoro.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <svg id="wires2" aria-hidden="true"></svg>
+  <svg id="labels" aria-hidden="true"></svg>
+  <div id="detailWrap">
+    <div id="detail" role="dialog" aria-modal="false" aria-labelledby="dTitle">
+      <h2 id="dTitle"></h2>
+      <div class="d-sub" id="dSub"></div>
+      <div id="dBody"></div>
+      <button id="dClose" type="button">Close</button>
+    </div>
+  </div>
+</main>
+<footer class="footbar">Every item carries one of three words — Working · Optional — add if you have it · Watch list. Area colours — SITREP (black &amp; white; gold for SITREP's own) · Command Deck (green) · Daybook (red) · Workbench (blue) · God's Eye View (violet). An item wears its own area's colour wherever it appears. Built from the Canopy connectors roadmap · 22 Nov 2026.</footer>
+<script>
+(function(){
+"use strict";
+var PILL = {work:"Working", opt:"Optional — add if you have it", watch:"Watch list"};
+var OWN = {sit:"SITREP", deck:"COMMAND DECK", day:"DAYBOOK", wb:"WORKBENCH"};
+var DETAILS = {
+canopy:{name:"CANOPY — the centre", sub:"Every section plugs into Canopy, and every door runs both ways. One app: everything you use — work, home, life — plugged in, linked up, and run with your AI team. Canopy is for anybody, not just one household.", secs:[
+ {h:"THE SECTIONS", items:[["SITREP — home: the wall and the situation report in one place","work"],["Command Deck — the team's room, with the Engineering + Media portals inside it","work"],["Daybook — Day to Day, the personal side","work"],["Workbench — the sandbox where apps plug in","work"],["Talk to Assistant — the voice door into everything","work"]]}]},
+sitrep:{name:"SITREP — home", sub:"Home is SITREP — the wall and the situation report in one area. The base stays black and white, the neutral; SITREP's own things wear gold. Weather, cameras, road closures and 511 arrive from the shared sources at the centre — drawn once, shown two ways. God's Eye View, the world layer, is part of SITREP.", secs:[
+ {h:"ON THE WALL", items:[["News + Live TV — CBC · CityNews · BBC · DW · TRT · CNA · NHK · Arirang","work"],["Live TV wall — four channels at once","work"],["Markets — Bitcoin + Bank of Canada dollar rate + 10-year bond · one card, a daily snapshot, never shown as live","work"],["Calendar + team feed — the day, and what the team is doing","work","day"]]},
+ {h:"THE SITUATION REPORT", items:[["Weather + alerts — Environment Canada, from the shared source","work"],["432 traffic camera views — 403 City of Ottawa + 29 Ontario highway (MTO), from the shared source","work"],["Ottawa road closures — from the shared source","work"],["Ontario 511 — road conditions, from the shared source","work"],["Weather Mode — a warning fires, the wall shifts and the right SITREP card comes forward; it settles back after","work"],["Live news tapes","work"],["God's Eye View — the world layer sits on its shelf inside SITREP","work"]]},
+ {h:"EVERYDAY-LIFE ADDITIONS — FROM THE OTHER-USER HUNT", items:[["Morning briefing — the day in one card","watch"],["Dinner-from-the-kitchen — Spoonacular","watch"],["Medication reminders","watch"],["Plant care — Perenual","watch"],["Shared chores","watch"],["Birthdays + gift nudge","watch"],["Trip packing list","watch"],["One-line journal","watch"],["What-to-wear — from the weather feed","watch"],["Bin day — Ottawa waste calendar","watch"]]},
+ {h:"DOORS", items:[["CBC Gem · CTV News · Global News · Ottawa Airport (YOW) — doors: they open their own apps or sites","work"],["City services — dial 311","work"]]}]},
+godseye:{name:"GOD'S EYE VIEW — the world layer", sub:"The world layer — part of SITREP, drawn in the diagram's own style, on its shelf of five.", secs:[
+ {h:"ON THE SHELF", items:[["Earthquakes — U.S. Geological Survey, worldwide, in-app","work"],["Disaster alerts — GDACS (United Nations / European Commission), in-app","work"],["Natural events — NASA EONET: wildfires, storms, floods, volcanoes, in-app","work"],["World map + rain radar","work"],["Ottawa Airport (YOW) — a door: opens the airport's own site","work"],["No live flight feed is drawn — the airport is a door, and no paid flight data ever","note"]]}]},
+"src-weather":{name:"SHARED SOURCE — ENVIRONMENT CANADA WEATHER + ALERTS", sub:"One feed, drawn once. SITREP shows it two ways — on the wall and in the situation report — one source, two views.", secs:[
+ {h:"THE FEED", items:[["Forecasts, warnings and public alerts — one shared weather object for the whole app","work"]]}]},
+"src-cams":{name:"SHARED SOURCE — 432 TRAFFIC CAMERA VIEWS", sub:"432 live traffic camera views across Ottawa — 403 City of Ottawa cameras and 29 Ontario highway (MTO) cameras, from the City's traffic camera list. Drawn once; SITREP shows the same views two ways. (The City counts about 275 physical cameras installed — 432 is the camera-list count, and the diagram says so.)", secs:[
+ {h:"THE FEED", items:[["City of Ottawa traffic cameras — 403 views","work"],["Ontario highway (MTO) cameras — 29 views","work"]]}]},
+"src-roads":{name:"SHARED SOURCE — OTTAWA ROAD CLOSURES", sub:"The city's road events feed, drawn once for SITREP — one source, two views.", secs:[
+ {h:"THE FEED", items:[["City of Ottawa road events — closures and disruptions","work"]]}]},
+"src-511":{name:"SHARED SOURCE — ONTARIO 511", sub:"Provincial road conditions, drawn once for SITREP — one source, two views.", secs:[
+ {h:"THE FEED", items:[["Ontario 511 — provincial highway conditions","work"]]}]},
+deck:{name:"COMMAND DECK — the team's room", sub:"Where the AI team works, talks and keeps score. Both portals live inside the Deck — their lines run to the Deck, not to Canopy's centre.", secs:[
+ {h:"ON THE DECK FLOOR", items:[["Team usage · open tasks · flags — five team chats, five work panes","work"],["Talk to Assistant — seven talk lines, doors back to the hub","work"],["Facebook Lead Ads — leads flow into the apps","work"],["Zapier / Make — the automation layer","opt"]]},
+ {h:"DECK WATCH LIST — FROM THE HUNT", items:[["Asana — team tasks","watch"],["Toggl — time tracking","watch"],["Freshdesk — support desk","watch"],["Eventbrite — events","watch"],["Figma · Airtable · Descript · Patreon","watch"],["CanadaHelps — a door: opens its own site","work"],["UptimeRobot — runs to the Deck floor","watch"],["GitHub — runs to the Engineering Portal","watch"],["Google Analytics 4 — runs to the Media Portal","watch"]]}]},
+eng:{name:"ENGINEERING PORTAL", sub:"The design shop — CAD drawings, 3D and project steps. Lives inside the Command Deck. The requirement is a web-native 3D tool usable inside the app — build, edit and walkthroughs (an AutoCAD-built camper, a condo for a buyer). Desktop Blender / FreeCAD / AutoCAD feed it; Blender itself cannot embed live in a web app.", secs:[
+ {h:"IN THE PORTAL", items:[["Design screen — CAD drawings","work"],["FreeCAD → Blender → 3D preview in the app","opt"],["3D viewer in the app — Babylon / Three, model-viewer","opt"],["Autodesk Viewer","opt"],["GitHub — project code","opt"]]}]},
+media:{name:"MEDIA PORTAL", sub:"Video, pictures and ad projects — the viewing screen + media chat. Lives inside the Command Deck.", secs:[
+ {h:"IN THE PORTAL", items:[["Videos · pictures · ad projects","work"],["Photo editor in the app — IMG.LY CE.SDK, the only true in-app editor the hunt found","opt"],["Matterport — 3D tours","opt"],["Photopea","opt"],["CapCut","opt"],["Canva Connect","opt"],["YouTube Data API","opt"]]}]},
+daybook:{name:"DAYBOOK — Day to Day", sub:"The personal side: money, home, health, social and everyday life. Finances live here — the Trellis paycheque lands in Daybook Finances. Finance is separate from Day to Day; hand-typed entries win; Plaid is read-only and never overwrites.", secs:[
+ {h:"DAY TO DAY", items:[["Day stream + capture","work"],["Calendar — Google Calendar","work"],["Commute — from your calendar","work"],["Todoist — the task system of record","work"]]},
+ {h:"MONEY", items:[["Money book — the Drive workbook is the record of truth","work"],["Investments — a real program, no trades yet","work"],["Paycheque lands here — from Trellis's QuickBooks, on the tether","work","wb"],["Plaid — bank data, read-only (TD) — route verified, waiting on Grant's go + his own sign-in","watch"],["Statement import — the baseline route, works today","work"]]},
+ {h:"HEALTH + FITNESS LAYER", items:[["Oura — live API","work"],["WHOOP — live, with partner approval","work"],["Google Health API — Fitbit's old Web API is dead (off Oct/Nov 2026); this is its replacement","opt"],["Apple Health / Health Connect — on-device only","opt"]]},
+ {h:"SOCIAL — WORKED IN", items:[["Messenger · Instagram · Facebook · Threads — feeds in place, with one composer","work"]]},
+ {h:"HOME", items:[["Home monitoring + automation — Home Assistant is the bridge","work"],["FordPass — the Ranger link, through Home Assistant — route verified, waiting on Grant's go","watch"],["Talk to Assistant — the voice bar","work"]]},
+ {h:"EVERYDAY-LIFE ADDITIONS — FROM THE OTHER-USER HUNT", items:[["Ottawa Public Library + Libby / OverDrive","opt"],["Canada Post — parcel tracking","work"],["Ottawa waste day","work"],["211 Ontario · Health811 · pharmacy refills — doors to their own sites","work"]]}]},
+team:{name:"TEAM + ACCOUNTS", sub:"The plumbing behind the scenes — the accounts and services the team itself runs on.", secs:[
+ {h:"THE PLUMBING", items:[["Todoist — tasks","work"],["Gmail — mail","work"],["Google Calendar","work"],["Google Drive — the team's memory lives here","work"],["Google Contacts","work"],["Google Sheets · Docs","work"],["GitHub","work"],["Vercel","work"],["UptimeRobot","watch"]]}]},
+workbench:{name:"WORKBENCH — the sandbox", sub:"Apps plug in here — everything they carry works across Canopy. Two owner boxes: Grant's Apps and Johnny's Apps. A service worked into a specific app nests under that app (MarineTraffic under Lions Gate, live listings under KÜL); only genuinely shared rails are drawn once. A service a business holds its own account for is drawn under every app that uses it — HubSpot and QuickBooks each appear more than once, on purpose.", secs:[
+ {h:"ON THE SHELF", items:[["Grant's Apps — grouped by company: Northbirch + Cityscape","work"],["Johnny's Apps — KÜL, Lions Gate, CMS Construction, StructureIQ, 8Twelve Mortgages","work"],["Empty slots — add your own app","work"]]}]},
+setup:{name:"SETUP — PICK WHAT YOU USE", sub:"Setup is a conversation, not a form: one plain question per screen, recognisable names with pictures, “I'm not sure” as a first-class answer, passwords stay the person's own, and every connection is proven on screen. Each category below carries every option the team found — tap a category chip to see its full list.", secs:[
+ {h:"THE CATEGORIES", items:[["Home security — every system the hunt found","opt"],["Home monitoring — every kind","opt"],["Banking + money — three honest routes","opt"],["Health + fitness — the Daybook layer's pick list","opt"],["Music + podcasts","opt"],["TV + streaming","opt"],["Rewards shelf","opt"],["Social","opt"],["Home energy + air","opt"],["Work + business","opt"]]}]},
+"cat-security":{name:"SETUP — HOME SECURITY", sub:"The honest shape: Canopy does NOT talk to 17 vendor clouds. Home Assistant is the bridge — Canopy talks to one Home Assistant instance in the home; it talks to the devices, locally where possible. Where there is no route, the honest fallback is a door.", secs:[
+ {h:"THE BRIDGE", items:[["Home Assistant — the one bridge","work"]]},
+ {h:"CAMERAS + DOORBELLS — EVERY OPTION FOUND", items:[["Reolink — local route","opt"],["UniFi Protect — local route","opt"],["ONVIF / RTSP cameras","opt"],["Ring — events + snapshots; no guaranteed live wall","opt"],["Nest — real public API (Device Access); event-based, not continuous","opt"],["Arlo","opt"],["Blink","opt"],["Wyze — fragile; RTSP firmware discontinued — never promise live video","opt"],["Eufy","opt"],["Matter — does NOT cover cameras or doorbells yet; never promise it will bring cameras in","note"]]},
+ {h:"ALARMS, SENSORS, LOCKS, GARAGE", items:[["Alarm systems — state + history in Canopy; arm/disarm, alerts and dispatch stay with the monitoring provider","opt"],["Sensors — door/window · motion · water/leak · smoke/CO · glass-break","opt"],["Locks · doorbells · garage","opt"],["Canopy is not a monitored alarm and never replaces professional monitoring or emergency dispatch","note"]]}]},
+"cat-monitoring":{name:"SETUP — HOME MONITORING", sub:"Monitoring, broadly — every class. Standing rule: Canopy is never a medical alert system, never a baby monitor, never an emergency service — where a device calls for help itself, Canopy says so and never pretends to relay it.", secs:[
+ {h:"EVERY KIND", items:[["Home energy + water — see Home energy + air","opt"],["Vehicle — maker apps · OBD2 · telematics","opt"],["Kids + family location","opt"],["Pet trackers","opt"],["Baby + senior monitoring","opt"],["Health + wearables — see Health + fitness","opt"]]}]},
+"cat-banking":{name:"SETUP — BANKING + MONEY", sub:"The honest shape: no bank offers a public API to a personal hub. Every live route runs through an aggregator or a statement file. Read-only always — a Canopy bank connection can see balances and transactions; it cannot move money. Credentials are never stored by Canopy; the person signs in in their own hands. Canadian open banking is NOT live yet.", secs:[
+ {h:"THE THREE ROUTES", items:[["Plaid — the aggregator route; direct data-access agreements with RBC (2022) + TD (2023), so for those banks the bank authorises the connection itself","opt"],["Statement import — works for any bank, today","work"],["Flinks — published price $500/month (Starter); ruled out for this team","note"]]},
+ {h:"THE BANKS PEOPLE PICK", items:[["TD · RBC · BMO · Scotiabank · CIBC · Tangerine · EQ Bank — reached through the routes above, never a direct API","opt"]]}]},
+"cat-health":{name:"SETUP — HEALTH + FITNESS", sub:"The pick list for Daybook's Health + Fitness layer — fitness monitors live there. Almost nobody has a simple web API; the labels say so.", secs:[
+ {h:"EVERY OPTION FOUND", items:[["Oura — OAuth API v2","work"],["WHOOP — live, with partner approval","work"],["Google Health API — the replacement for Fitbit's dead Web API (turned off Oct/Nov 2026)","opt"],["Garmin — sync-delayed, partner friction","opt"],["Apple Health — on-device only; only inside a native shell","opt"],["Samsung Health — on-device only","opt"],["Health Connect (Android)","opt"],["Aggregators — Terra / Thryve class, the pragmatic route","opt"]]}]},
+"cat-music":{name:"SETUP — MUSIC + PODCASTS", sub:"Every music and podcast option the team found. Music proof at setup: ten seconds of your own song, playing in Canopy.", secs:[
+ {h:"EVERY OPTION FOUND", items:[["Spotify","opt"],["Apple Music","opt"],["YouTube Music","opt"],["Tidal","opt"],["Amazon Music","opt"],["Podcast Index — the open podcast directory","opt"],["Radio Browser — free, volunteer-run, no SLA","opt"],["Plex — your own library","opt"]]}]},
+"cat-tv":{name:"SETUP — TV + STREAMING", sub:"Every TV and streaming option the team found. Most big services are doors only — the hunt's rule: the most-wanted services are usually the worst connected, and the diagram says so.", secs:[
+ {h:"EVERY OPTION FOUND", items:[["CBC Gem — a door","opt"],["CTV — a door","opt"],["Global — a door","opt"],["Netflix — a door only","opt"],["Disney+","opt"],["Prime Video","opt"],["Apple TV+","opt"],["Crave","opt"],["Tubi — free","opt"],["YouTube","opt"],["Plex — your own library","opt"],["Casting — Google Cast TVs, worked in; media only, no screen mirroring promise","work"],["LG webOS · Samsung Tizen — the TV's own apps","opt"]]}]},
+"cat-rewards":{name:"SETUP — REWARDS SHELF", sub:"The hunt's verdict: NO Canadian loyalty programme offers a public live-balance API. So the Rewards Shelf is built honestly: doors + Wallet passes + a balance you enter yourself, labelled “entered by you.”", secs:[
+ {h:"EVERY OPTION FOUND", items:[["PC Optimum","opt"],["AIR MILES","opt"],["Aeroplan","opt"],["Scene+","opt"],["Triangle (Canadian Tire)","opt"],["Tim Hortons","opt"],["Starbucks","opt"],["Wallet passes — the pass itself lives in Canopy","work"],["Manual balance — labelled “entered by you”, never shown as live","work"]]}]},
+"cat-social":{name:"SETUP — SOCIAL", sub:"Social is worked into Daybook — feeds in place and one composer — not just doors. These are the sources it draws from.", secs:[
+ {h:"EVERY OPTION FOUND", items:[["Facebook","work"],["Instagram","work"],["Messenger","work"],["Threads","work"],["WhatsApp — per-message pricing, 24-hour window, templates","work"],["Facebook Lead Ads — leads into the apps; Meta keeps leads only 90 days","work"],["YouTube","opt"],["X — a door","opt"],["TikTok — a door","opt"]]}]},
+"cat-energy":{name:"SETUP — HOME ENERGY + AIR", sub:"Every energy, water and air option the team found.", secs:[
+ {h:"EVERY OPTION FOUND", items:[["Hydro Ottawa — Green Button data","work"],["Enbridge Gas — a door","opt"],["Sense — home energy monitor","opt"],["Emporia — home energy monitor","opt"],["Flo by Moen — water shutoff + leak","opt"],["Phyn — water monitoring","opt"],["PurpleAir — outdoor air sensors","opt"],["Airthings — indoor air","opt"],["IQAir — air quality","opt"],["Enphase — solar","opt"],["Thermostats — ecobee / Nest, via Home Assistant","opt"]]}]},
+"cat-work":{name:"SETUP — WORK + BUSINESS", sub:"Every work and business option the team found — the same pick-list the apps' own toolboxes draw from.", secs:[
+ {h:"EVERY OPTION FOUND", items:[["QuickBooks Online","opt"],["Jobber","opt"],["Stripe","opt"],["HubSpot CRM","opt"],["Asana","opt"],["Airtable","opt"],["Figma","opt"],["Descript","opt"],["Toggl","opt"],["Patreon","opt"],["Freshdesk","opt"],["Eventbrite","opt"],["Zapier / Make — automation","opt"],["Google Workspace","work"],["Microsoft 365","opt"]]}]}
+};
+var DETAILS2 = {
+trellis:{name:"TRELLIS — the green-trades family", sub:"Northbirch's products. Seven departments, each a product Grant sells — each with its own sections and its own toolbox, linked to the others and back into Canopy.", secs:[
+ {h:"ITS TOOLS", items:[["QuickBooks Online","work"],["Jobber — the landscaping job-management core","opt"],["Stripe — payments","work"],["HubSpot CRM — Trellis's own copy","work"]]},
+ {h:"INSIDE TRELLIS", items:[["Department links — every department ↔ every other","work"],["Paycheque — QuickBooks pays into Daybook Finances, on the tether","work","day"],["Flurry's kit — weather, tracking + GPS, sensors — under Flurry","work"]]}]},
+mainline:{name:"MAINLINE — landscaping, full-service", sub:"Trellis department. Sections: Service · Install · Office · Routes · Crews · Equipment · Hardware.", secs:[
+ {h:"SECTIONS INSIDE", items:[["Service","work"],["Install","work"],["Office","work"],["Routes","work"],["Crews","work"],["Equipment","work"],["Hardware","work"]]},
+ {h:"ITS TOOLS", items:[["Jobber — core operations","opt"],["Aspire","opt"],["LMN — no public API","note"],["Google Maps","work"]]}]},
+flurry:{name:"FLURRY — snow + ice", sub:"Trellis department. Sections: Dispatch · Residential · Commercial. SNOW SITREP lives inside Flurry — for the snow fighters: “We fight Mother Nature.”", secs:[
+ {h:"SECTIONS INSIDE", items:[["Dispatch","work"],["Residential","work"],["Commercial","work"],["SNOW SITREP — the storm-ops mode","work"]]},
+ {h:"ITS KIT", items:[["Weather data — Environment Canada GeoMet · OpenWeather · Tomorrow.io · Visual Crossing","work"],["Tracking + GPS — Geotab + Flurry's own OBD2 / GPS trackers","work"],["Sensors — personal weather stations (Tempest · Davis)","opt"],["CoCoRaHS — snow on the ground, free API","work"],["Vaisala Xweather — road weather, free tier","work"],["Samsara — Cityscape's existing account","work"],["Ontario 511","work"],["Ontario RWIS — not public","note"],["Snow-depth sensors — not standard on weather-station hardware","note"]]}]},
+course:{name:"COURSE — lawn + turf care", sub:"Trellis department.", secs:[
+ {h:"INSIDE", items:[["Hydrawise — real API","opt"]]}]},
+tend:{name:"TEND — irrigation", sub:"Trellis department.", secs:[
+ {h:"INSIDE", items:[["Hydrawise — irrigation control, real API","opt"]]}]},
+lumen:{name:"LUMEN — outdoor lighting", sub:"Trellis department.", secs:[{h:"INSIDE", items:[["Lighting scenes + schedules","work"]]}]},
+bole:{name:"BOLE — trees + arbor care", sub:"Trellis department.", secs:[{h:"INSIDE", items:[["Tree inventory + care records","work"]]}]},
+glimmer:{name:"GLIMMER — Christmas lighting", sub:"Trellis department.", secs:[{h:"INSIDE", items:[["Seasonal install plans + bookings","work"]]}]},
+blueprint:{name:"BLUEPRINT — Grant's Cityscape workflow app", sub:"Cityscape's app — Grant works in the office in sales. Its tools sit under BluePrint itself, including its own QuickBooks copy.", secs:[
+ {h:"INSIDE BLUEPRINT", items:[["QuickBooks — BluePrint's own copy","work"],["Workforce — scheduling","work"],["HindSite / FieldCentral — ONE vendor: FieldCentral is HindSite Software's product; no public API, no Zapier — the only data route is its two-way QuickBooks sync, so the path is BluePrint ↔ QuickBooks ↔ FieldCentral","watch"],["Azuga GPS — partner route via FieldCentral","watch"],["Cityscape workflow — the sales pipeline","work"]]}]},
+quickbooks:{name:"QUICKBOOKS — drawn twice, on purpose", sub:"QuickBooks appears under Trellis AND under BluePrint — each business holds its own copy of the account. That is the own-account rule, applied everywhere on this page.", secs:[
+ {h:"ITS COPIES", items:[["Under Trellis — pays the paycheque into Daybook Finances","work","wb"],["Under BluePrint — carries the FieldCentral data route","work","wb"]]}]},
+kul:{name:"KÜL REAL ESTATE — Johnny's", sub:"Johnny Kulwartian's real estate app. Fifteen sections inside; its own listings feed and its own tools nest under it.", secs:[
+ {h:"SECTIONS INSIDE", items:[["Today · Listings · Clients · Calendar · Email · Social · Toolkit · Assistant — and the rest of its fifteen sections","work"]]},
+ {h:"ITS OWN", items:[["CREA DDF® — live listings feed, straight into KÜL","work"],["Google Maps — into Johnny's apps","work"],["SkySlope — runs to Daybook Finances","watch"],["Social — Instagram @kulrealestate · Facebook KulListings · Costa Rica @johnny_buysell_costa_rica","work"]]}]},
+lg:{name:"LIONS GATE YACHTS — Johnny's", sub:"Johnny's yacht brokerage app. Eight sections inside; its vessel data nests under it.", secs:[
+ {h:"SECTIONS INSIDE", items:[["Today · Listings/Fleet · Clients · Calendar · Email · Social · Toolkit · Assistant","work"]]},
+ {h:"ITS OWN", items:[["MarineTraffic — vessel tracking, straight into Lions Gate","work"]]}]},
+cms:{name:"CMS CONSTRUCTION — Johnny's", sub:"Johnny's builder app. Family DNA only — no app-specific services are in the record.", secs:[
+ {h:"FAMILY DNA", items:[["Social · Email · Calendar · Assistant — the family pattern","work"]]}]},
+structureiq:{name:"STRUCTUREIQ — Johnny's", sub:"Johnny's building-checks app. Family DNA only — no app-specific services are in the record.", secs:[
+ {h:"FAMILY DNA", items:[["Social · Email · Calendar · Assistant — the family pattern","work"]]}]},
+eighttwelve:{name:"8TWELVE MORTGAGES — Johnny's", sub:"The mortgage door — 65+ lenders behind it.", secs:[
+ {h:"INSIDE", items:[["The mortgage door — 65+ lenders","work"]]}]},
+aqua:{name:"BRAND MY AQUA — Grant's", sub:"Grant's water-brand app. Family DNA only — no app-specific services are in the record.", secs:[
+ {h:"FAMILY DNA", items:[["Social · Email · Calendar · Assistant — the family pattern","work"]]}]},
+purenzyme:{name:"PURENZYME — Grant's", sub:"Grant's cleaning-products app. Family DNA only — no app-specific services are in the record.", secs:[
+ {h:"FAMILY DNA", items:[["Social · Email · Calendar · Assistant — the family pattern","work"]]}]},
+atra:{name:"ATRA LEND — Grant's", sub:"Grant's lending app. Family DNA only — no app-specific services are in the record.", secs:[
+ {h:"FAMILY DNA", items:[["Social · Email · Calendar · Assistant — the family pattern","work"]]}]},
+northbirchapp:{name:"NORTHBIRCH — Grant's", sub:"The team-projects home app, under Northbirch.", secs:[
+ {h:"FAMILY DNA", items:[["Social · Email · Calendar · Assistant — the family pattern","work"]]}]},
+sitevision:{name:"SITEVISION — Grant's", sub:"Site views. Sits under Northbirch, by itself.", secs:[
+ {h:"INSIDE", items:[["Site views + project records","work"]]}]}
+};
+Object.keys(DETAILS2).forEach(function(k){ DETAILS[k]=DETAILS2[k]; });
+var COLORS = {cream:"#FFF3C4", green:"#46E08D", red:"#FF7A72", blue:"#6FB6FF", gold:"#FFD94D", pale:"#C7D6E4", amber:"#FFB02E", violet:"#D9D2FF", qb:"#43D17C"};
+var LINKS = [
+ {a:"src-weather", b:"sitrep", c:"cream", layer:0},
+ {a:"src-cams", b:"sitrep", c:"cream", layer:0},
+ {a:"src-roads", b:"sitrep", c:"cream", layer:0},
+ {a:"src-511", b:"sitrep", c:"cream", layer:0},
+ {a:"canopy", b:"sitrep", c:"cream", layer:0, label:"SITREP ⇄ hub"},
+ {a:"canopy", b:"deck", c:"green", layer:0, label:"Deck ⇄ hub"},
+ {a:"canopy", b:"daybook", c:"red", layer:0, label:"Daybook ⇄ hub"},
+ {a:"canopy", b:"workbench", c:"blue", layer:0, label:"Workbench ⇄ hub"},
+ {a:"sitrep", b:"godseye", c:"violet", layer:0, label:"world layer, in SITREP"},
+ {a:"deck", b:"eng", c:"green", layer:1, label:"Engineering, in the Deck"},
+ {a:"deck", b:"media", c:"green", layer:1, label:"Media, in the Deck"},
+ {a:"deck", b:"team", c:"green", layer:1, label:"team + accounts"},
+ {a:"workbench", b:"trellis", c:"blue", layer:1, label:"Trellis, plugged in"},
+ {a:"workbench", b:"blueprint", c:"blue", layer:1, label:"BluePrint, plugged in"},
+ {a:"workbench", b:"kul", c:"blue", layer:1, label:"KÜL, plugged in"},
+ {a:"workbench", b:"lg", c:"blue", layer:1, label:"Lions Gate, plugged in"},
+ {a:"setup", b:"canopy", c:"pale", layer:1},
+ {a:"trellis", b:"mainline", c:"blue", layer:2, bend:[-0.14,0.16], label:"Mainline"},
+ {a:"trellis", b:"flurry", c:"blue", layer:2, bend:[0.10,-0.10], label:"Flurry"},
+ {a:"trellis", b:"course", c:"blue", layer:2, bend:[0.16,0.06], label:"Course"},
+ {a:"trellis", b:"tend", c:"blue", layer:2, bend:[0.22,-0.04], label:"Tend"},
+ {a:"trellis", b:"lumen", c:"blue", layer:2, bend:[0.28,0.02], label:"Lumen"},
+ {a:"trellis", b:"bole", c:"blue", layer:2, bend:[0.32,-0.06], label:"Bole"},
+ {a:"trellis", b:"glimmer", c:"blue", layer:2, bend:[0.36,0.0], label:"Glimmer"},
+ {a:"trellis", b:"quickbooks", c:"qb", layer:2, bend:[0.06,0.12], label:"QuickBooks"},
+ {a:"quickbooks", b:"daybook", c:"amber", layer:2, bend:[0.22,-0.20], label:"paycheque → Daybook Finances"},
+ {a:"quickbooks", b:"blueprint", c:"qb", layer:2, bend:[0.30,0.10], label:"QuickBooks ↔ BluePrint"},
+ {a:"trellis", b:"mainline", c:"blue", layer:2, dash:true, bend:[-0.10,-0.20], label:"dept links"},
+ {a:"mainline", b:"flurry", c:"blue", layer:2, dash:true, bend:[0.12,0.14], label:"dept links"},
+ {a:"flurry", b:"course", c:"blue", layer:2, dash:true, bend:[0.10,0.10], label:"dept links"},
+ {a:"course", b:"tend", c:"blue", layer:2, dash:true, bend:[0.10,0.08], label:"dept links"},
+ {a:"tend", b:"lumen", c:"blue", layer:2, dash:true, bend:[0.10,0.06], label:"dept links"},
+ {a:"lumen", b:"bole", c:"blue", layer:2, dash:true, bend:[0.08,0.04], label:"dept links"},
+ {a:"bole", b:"glimmer", c:"blue", layer:2, dash:true, bend:[0.06,0.02], label:"dept links"},
+ {a:"trellis", b:"canopy", c:"blue", layer:2, bend:[-0.20,0.30], label:"Trellis ⇄ hub"},
+ {a:"trellis", b:"flurry", c:"blue", layer:2, dash:true, bend:[0.05,-0.05], label:"Flurry kit under Flurry"}
+];
+var stage=document.getElementById("stage"), svg=document.getElementById("wires"), svg2=document.getElementById("wires2"), lsvg=document.getElementById("labels");
+var NS="http://www.w3.org/2000/svg";
+function el(tag,attrs){ var e=document.createElementNS(NS,tag); for(var k in attrs) e.setAttribute(k,attrs[k]); return e; }
+function rectOf(node){ var r=node.getBoundingClientRect(), sr=stage.getBoundingClientRect(); return {x:r.left-sr.left+stage.scrollLeft, y:r.top-sr.top+stage.scrollTop, w:r.width, h:r.height, cx:r.left-sr.left+stage.scrollLeft+r.width/2, cy:r.top-sr.top+stage.scrollTop+r.height/2}; }
+function nodeFor(key){
+  var n=document.querySelector("[data-key='"+key+"']");
+  if(!n) n=document.getElementById("node-"+key);
+  return n;
+}
+function anchor(key, otherKey){
+  var n=nodeFor(key); if(!n) return null;
+  var r=rectOf(n), o=nodeFor(otherKey), or2=o?rectOf(o):null;
+  var x=r.cx, y=r.cy;
+  if(or2){ var dx=or2.cx-r.cx, dy=or2.cy-r.cy;
+    if(Math.abs(dx)>Math.abs(dy)){ x = dx>0 ? r.x+r.w : r.x; y = r.cy; }
+    else { y = dy>0 ? r.y+r.h : r.y; x = r.cx; }
+  }
+  return {x:x,y:y};
+}
+function pathFor(p1,p2,bend){
+  var mx=(p1.x+p2.x)/2, my=(p1.y+p2.y)/2;
+  var dx=p2.x-p1.x, dy=p2.y-p1.y, len=Math.sqrt(dx*dx+dy*dy)||1;
+  var px=-dy/len, py=dx/len;
+  var off = bend ? bend[0]*len : 0;
+  var cx = mx + px*off + (bend? bend[1]*dx : 0);
+  var cy = my + py*off + (bend? bend[1]*dy : 0);
+  return {d:"M "+p1.x.toFixed(1)+" "+p1.y.toFixed(1)+" Q "+cx.toFixed(1)+" "+cy.toFixed(1)+" "+p2.x.toFixed(1)+" "+p2.y.toFixed(1), lx:0.25*p1.x+0.5*cx+0.25*p2.x, ly:0.25*p1.y+0.5*cy+0.25*p2.y};
+}
+var wireEls=[], labelEls=[], shownLayer=0, showAll=false;
+function draw(){
+  while(svg.firstChild) svg.removeChild(svg.firstChild);
+  while(svg2.firstChild) svg2.removeChild(svg2.firstChild);
+  while(lsvg.firstChild) lsvg.removeChild(lsvg.firstChild);
+  wireEls=[]; labelEls=[];
+  var sr=stage.getBoundingClientRect();
+  var W=Math.max(stage.scrollWidth, sr.width), H=Math.max(stage.scrollHeight, sr.height);
+  [svg,svg2,lsvg].forEach(function(s){ s.setAttribute("viewBox","0 0 "+W+" "+H); s.setAttribute("width",W); s.setAttribute("height",H); });
+  LINKS.forEach(function(L,i){
+    var aN=nodeFor(L.a), bN=nodeFor(L.b);
+    var hidden = !aN || !bN || aN.getBoundingClientRect().width===0 || bN.getBoundingClientRect().width===0;
+    var p1=anchor(L.a,L.b), p2=anchor(L.b,L.a);
+    if(!p1||!p2){ return; }
+    var pf=pathFor(p1,p2,L.bend);
+    var on = showAll || L.layer<=shownLayer;
+    var g=el("g",{});
+    var glow=el("path",{d:pf.d, fill:"none", stroke:COLORS[L.c], "stroke-width":7, "stroke-linecap":"round", opacity:0, "class":"wglow"});
+    var path=el("path",{d:pf.d, fill:"none", stroke:COLORS[L.c], "stroke-width": L.layer===0?3.2:2.2, "stroke-linecap":"round", opacity:0.9, "class":"wwire"});
+    if(L.dash) path.setAttribute("stroke-dasharray","7 6");
+    var c1=el("circle",{cx:p1.x, cy:p1.y, r:4.2, fill:COLORS[L.c], "class":"wend"});
+    var c2=el("circle",{cx:p2.x, cy:p2.y, r:4.2, fill:COLORS[L.c], "class":"wend"});
+    g.appendChild(glow); g.appendChild(path); g.appendChild(c1); g.appendChild(c2);
+    (L.layer===0? svg : svg2).appendChild(g);
+    var gc="";
+    if(hidden) gc+=" xoff";
+    if(!on) gc+=" xlayer";
+    if(selectedKey) gc += (L.a===selectedKey||L.b===selectedKey) ? " hot" : " dim";
+    if(gc) g.setAttribute("class",gc.trim());
+    wireEls.push({g:g, glow:glow, path:path, link:L, i:i});
+    if(L.label){
+      var t=el("text",{x:pf.lx, y:pf.ly, "class":"wlabel", fill:COLORS[L.c]});
+      t.textContent=L.label;
+      var tc="wlabel";
+      if(hidden || !on) tc+=" xlayer";
+      if(selectedKey) tc += (L.a===selectedKey||L.b===selectedKey) ? " hot" : " dim";
+      t.setAttribute("class",tc);
+      lsvg.appendChild(t);
+      labelEls.push({t:t, link:L, i:i, hidden:hidden});
+    }
+  });
+}
+var selectedKey=null, selectedName="";
+var roBody=document.getElementById("roBody");
+function clearIsolate(){
+  selectedKey=null; selectedName="";
+  wireEls.forEach(function(w){ w.g.classList.remove("dim","hot"); });
+  labelEls.forEach(function(l){ l.t.classList.remove("dim","hot"); });
+  document.querySelectorAll(".dimmed").forEach(function(n){ n.classList.remove("dimmed"); });
+  roBody.innerHTML="Plain blocks are built into Canopy · square markers are our own apps · round markers are outside services. Only the spokes show — tap a name to see its connections.";
+  document.querySelector("#readout .ro-name").textContent="EXPLORE";
+}
+function isolate(key, name){
+  if(selectedKey===key){ clearIsolate(); draw(); return; }
+  selectedKey=key; selectedName=name||key;
+  var keep=new Set([key]);
+  LINKS.forEach(function(L){ if(L.a===key||L.b===key){ keep.add(L.a); keep.add(L.b); } });
+  document.querySelectorAll("[data-key]").forEach(function(n){
+    var k=n.getAttribute("data-key");
+    n.classList.toggle("dimmed", !keep.has(k));
+  });
+  var count=0; LINKS.forEach(function(L){ if(L.a===key||L.b===key) count++; });
+  document.querySelector("#readout .ro-name").textContent=selectedName.toUpperCase();
+  roBody.textContent = count ? (selectedName+" — "+count+" connection"+(count===1?"":"s")+" lit up. Everything else is dimmed. Tap the name again to clear.") : (selectedName+" — no drawn lines of its own yet; it lives inside its panel above.");
+  draw();
+}
+var detailWrap=document.getElementById("detailWrap"), dTitle=document.getElementById("dTitle"), dSub=document.getElementById("dSub"), dBody=document.getElementById("dBody");
+var openKey=null;
+function pill(code){
+  if(code==="note") return "";
+  return '<span class="pill '+code+'">'+PILL[code]+'</span>';
+}
+function renderDetail(key){
+  var d=DETAILS[key]; if(!d) return;
+  dTitle.textContent=d.name; dSub.textContent=d.sub||"";
+  var html="";
+  d.secs.forEach(function(s){
+    html+='<div class="d-sec"><h3>'+s.h+'</h3>';
+    s.items.forEach(function(it){
+      html+='<div class="d-row"><span class="d-txt">'+it[0]+'</span>'+(it[2]?'<span class="owntag own-'+it[2]+'">'+OWN[it[2]]+'</span>':'')+pill(it[1])+'</div>';
+    });
+    html+='</div>';
+  });
+  dBody.innerHTML=html;
+}
+function openDetail(key){
+  if(!DETAILS[key]) return;
+  if(openKey===key && detailWrap.classList.contains("open")){ closeDetail(); return; }
+  openKey=key; renderDetail(key);
+  detailWrap.classList.add("open");
+  var layer=0;
+  if(key==="canopy"||key==="sitrep"||key==="deck"||key==="daybook"||key==="workbench"||key==="godseye") layer=1;
+  if(key==="eng"||key==="media"||key==="team"||key==="setup"||key.indexOf("src-")===0||key.indexOf("cat-")===0||key==="quickbooks"||key==="kul"||key==="lg"||key==="blueprint"||key==="trellis") layer=2;
+  shownLayer=Math.max(shownLayer, layer);
+  draw();
+  requestAnimationFrame(function(){ requestAnimationFrame(draw); });
+}
+function closeDetail(){ openKey=null; detailWrap.classList.remove("open"); }
+document.getElementById("dClose").addEventListener("click", function(e){ e.stopPropagation(); closeDetail(); });
+detailWrap.addEventListener("click", function(e){ if(e.target===detailWrap) closeDetail(); });
+document.addEventListener("keydown", function(e){ if(e.key==="Escape"){ closeDetail(); if(selectedKey){ clearIsolate(); draw(); } } });
+var ISOLATE_ONLY = {canopy:1, sitrep:1, deck:1, daybook:1, workbench:1, godseye:1, trellis:1, blueprint:1, kul:1, lg:1, quickbooks:1};
+document.querySelectorAll("[data-key]").forEach(function(n){
+  n.addEventListener("click", function(e){
+    e.stopPropagation();
+    var key=n.getAttribute("data-key");
+    var nm=(n.querySelector("h2,h3,h4")||n).textContent.trim().split("—")[0].trim();
+    if(n.classList.contains("appchip")||n.classList.contains("deptchip")||n.classList.contains("srcchip")||n.classList.contains("catchip")||n.classList.contains("teamstrip")||n.classList.contains("portal")||n.classList.contains("setupshelf")){
+      openDetail(key); return;
+    }
+    if(ISOLATE_ONLY[key]){ isolate(key, nm||key); return; }
+    openDetail(key);
+  });
+  n.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); n.click(); } });
+});
+document.getElementById("roAll").addEventListener("click", function(){
+  showAll=!showAll; shownLayer = showAll?2:0;
+  this.textContent = showAll? "Spokes only" : "All connections";
+  draw();
+});
+var rto=null;
+window.addEventListener("resize", function(){ clearTimeout(rto); rto=setTimeout(draw,120); });
+window.addEventListener("load", function(){ draw(); setTimeout(draw,350); });
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ draw(); });
+draw();
+})();
+</script>
+</body>
+</html>

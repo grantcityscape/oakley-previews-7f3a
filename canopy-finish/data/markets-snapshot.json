@@ -1,0 +1,40 @@
+{
+ "note": "Daily-close snapshot for the Markets panel, fetched server-side by the hub (the in-browser Stooq route is unreachable and Yahoo serves no CORS headers; the live snapshot route lands with the hub proxy in the packaging phase). Values are previous closes, labelled DELAYED with source and as-of date in the app \u2014 never shown as live.",
+ "fetched_at": "2026-11-22T03:59:42Z",
+ "tsx": {
+  "val": "33,189.90",
+  "chg": -2.46,
+  "asOf": "2026-11-20",
+  "src": "Yahoo Finance chart (^GSPTSE)"
+ },
+ "spx": {
+  "val": "6,910.39",
+  "chg": -3.7,
+  "asOf": "2026-11-20",
+  "src": "Yahoo Finance chart (^GSPC)"
+ },
+ "y10": {
+  "val": "3.81",
+  "chg": 0.01,
+  "asOf": "2026-11-19",
+  "src": "Bank of Canada Valet BD.CDN.10YR.DQ.YLD"
+ },
+ "cad": {
+  "val": "1.4340",
+  "chg": null,
+  "asOf": "2026-11-21",
+  "src": "Yahoo Finance chart (CADUSD=X, inverted)"
+ },
+ "btcusd": {
+  "val": "59,258",
+  "chg": 0.78,
+  "asOf": "2026-11-22",
+  "src": "Yahoo Finance chart (BTC-USD)"
+ },
+ "btccad": {
+  "val": "85,048",
+  "chg": 0.78,
+  "asOf": "2026-11-22",
+  "src": "Yahoo Finance chart (BTC-CAD)"
+ }
+}

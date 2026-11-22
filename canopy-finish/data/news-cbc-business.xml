@@ -6,7 +6,7 @@
       <link>https://www.cbc.ca/news/business/?cmp=rss</link>
       <copyright><![CDATA[Copyright: (C) Canadian Broadcasting Corporation, http://www.cbc.ca/aboutcbc/discover/termsofuse.html#Rss]]></copyright>
       <docs><![CDATA[https://www.cbc.ca/rss]]></docs>
-      <lastBuildDate>Sat, 21 Nov 2026 14:43:13 EST</lastBuildDate>
+      <lastBuildDate>Sun, 22 Nov 2026 04:00:00 EST</lastBuildDate>
       <atom:link href="https://www.cbc.ca/webfeed/rss/rss-business" rel="self" type="application/rss+xml"/>
       <image>
          <title><![CDATA[CBC | Business News]]></title>
@@ -21,6 +21,28 @@
          <category>News/Canada/British Columbia</category>
          <guid isPermaLink="false">9.7431142</guid>
          <dc:creator>Arden McLeod</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Quebecor CEO defends Telus bid, cites falling wireless prices and Canada's sovereignty]]></title>
+         <link>https://www.cbc.ca/news/politics/pierre-karl-peladeau-quebecor-telus-bid-9.7431320?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/026b960f-a838-446c-bc5b-544c5b612d8f,1795281794767/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C354%2C6500%2C3656%29%3B' alt='Quebecor President and CEO Pierre Karl Peladeau waits to speak at the Freedom Mobile Arch concert venue ahead of its inaugural event at the Pacific National Exhibition grounds, in Vancouver, on Friday, June 5, 2026' width='620' height='349' title='Quebecor President and CEO Pierre Karl Peladeau waits to speak at the Freedom Mobile Arch concert venue ahead of its inaugural event at the Pacific National Exhibition grounds, in Vancouver, on Friday, June 5, 2026. The amphitheatre holds up to 10,000 people and will host live match broadcasts, entertainment and music during the FIFA World Cup. Freedom Mobile is owned by Quebecor Inc. THE CANADIAN PRESS/Darryl Dyck'/><p>Quebecor CEO Pierre Karl Péladeau is defending his company's $31-billion bid to buy Telus amid concerns over competition in Canada's telecom sector, arguing the cost of wireless plans is dropping and non-Canadian companies are trying to expand.</p>]]></description>
+         <pubDate>Sun, 22 Nov 2026 04:00:00 EST</pubDate>
+         <category>News/Politics</category>
+         <guid isPermaLink="false">9.7431320</guid>
+         <dc:creator>Benjamin Lopez Steven</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Will Canadian workers refuse to handle Israeli goods? Why unions increasingly say they should]]></title>
+         <link>https://www.cbc.ca/news/canada/clc-resolution-canadian-unions-israel-9.7428991?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/dda16fe4-5807-4956-8a97-66e5573eaf7a,1795128795489/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C613%2C8640%2C4860%29%3B' alt='People stand with a bombed-out building in the background' width='620' height='349' title='Palestinians inspect damage to a building and tents a day after they were hit by an Israeli airstrike in Gaza City, Wednesday, Nov. 11, 2026. (AP Photo/Jehad Alshrafi)'/><p>A movement to cut off Israeli goods is spreading across Canada's unions. The Canadian Labour Congress, which represents more than 3 million workers, passed a resolution last month declaring trade, services and relationships with Israel to be “hot cargo,"  emphasizing a call for workers  to refuse to handle weapons and military equipment destined for Israel.</p>]]></description>
+         <pubDate>Sun, 22 Nov 2026 04:00:00 EST</pubDate>
+         <category>News/Canada</category>
+         <guid isPermaLink="false">9.7428991</guid>
+         <dc:creator>Kevin Maimann</dc:creator>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
@@ -203,28 +225,6 @@
          <category>News/Politics</category>
          <guid isPermaLink="false">9.7424993</guid>
          <dc:creator>John Mazerolle</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[TC Energy plans Alberta pipeline expansion to serve natural gas demand]]></title>
-         <link>https://www.cbc.ca/news/canada/edmonton/tc-energy-pipeline-expansion-9.7425116?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/f978e355-02c8-4fcd-9a89-9207153dda58,1794933540765/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C299%2C4500%2C2531%29%3B' alt='A silver-blue skyscraper view of a downtown street.' width='620' height='349' title='TC Energy headquarters in Calgary, Alta., Tuesday, July 30, 2024.'/><p>TC Energy Corp. is looking to seize on booming natural gas demand in Alberta, announcing plans Monday to expand its pipeline network to add an initial billion cubic feet per day of new capacity.</p>]]></description>
-         <pubDate>Tue, 17 Nov 2026 11:42:25 EST</pubDate>
-         <category>News/Canada/Edmonton</category>
-         <guid isPermaLink="false">9.7425116</guid>
-         <dc:creator>Lauren Krugel</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Telus abandons involvement in 2 Vancouver AI data centres]]></title>
-         <link>https://www.cbc.ca/news/canada/british-columbia/ai-data-centre-telus-vancouver-9.7424536?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/dc1b8076-8041-4d73-a680-dea1263ca1b0,1794922863904/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C265%2C3000%2C1687%29%3B' alt='A large metal facility is shown with a sports stadium in the background.' width='620' height='349' title='A rendering of a proposed Telus data centre near B.C. Place in downtown Vancouver.'/><p>Telus says it's decided not to proceed with co-developing two Vancouver data centres, and will instead turn its focus to expanding an existing data centre in Kamloops, B.C.</p>]]></description>
-         <pubDate>Tue, 17 Nov 2026 09:00:00 EST</pubDate>
-         <category>News/Canada/British Columbia</category>
-         <guid isPermaLink="false">9.7424536</guid>
-         <dc:creator>Ruby Cornish</dc:creator>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>

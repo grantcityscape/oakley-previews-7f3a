@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Canopy — Connectors Diagram</title>
+<style>
+:root{
+  --home:#EDE6C8; --home-glow:#FFF3C4;
+  --deck:#2FA866; --deck-glow:#46E08D;
+  --day:#D64541;  --day-glow:#FF7A72;
+  --wb:#3E8FE0;   --wb-glow:#6FB6FF;
+  --sit:#C9A227;  --sit-glow:#FFD94D;
+  --amber:#FFB02E; --grey:#9AA3AD; --ink:#F4F6F8;
+  --violet:#D9D2FF; --qb:#43D17C;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background-color:#000;
+  background-image:radial-gradient(1200px 700px at 50% -8%, #16202b 0%, rgba(0,0,0,0) 55%);
+  background-repeat:no-repeat;
+  color:var(--ink);
+  font-family:"Avenir Next","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+header{text-align:center;padding:34px 18px 6px}
+header h1{
+  margin:0;font-size:58px;letter-spacing:.35em;text-indent:.35em;font-weight:800;color:#FFF8DC;
+  text-shadow:0 0 14px rgba(255,243,196,.85),0 0 46px rgba(255,217,77,.45),0 0 110px rgba(111,182,255,.35);
+}
+header .sub{margin:10px auto 0;max-width:900px;font-size:20px;line-height:1.45;color:#D8E2EC}
+header .date{margin-top:8px;font-size:15px;letter-spacing:.18em;color:#8fa3b5;text-transform:uppercase}
+.legend{
+  display:flex;flex-wrap:wrap;gap:10px 22px;justify-content:center;align-items:center;
+  max-width:1240px;margin:20px auto 4px;padding:14px 20px;
+  background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.16);border-radius:16px;
+  font-size:16.5px;
+}
+.legend b{letter-spacing:.12em;font-size:15px;color:#BFD0DE}
+.sw{display:inline-block;width:30px;height:16px;border-radius:5px;vertical-align:-2px;margin-right:8px}
+.sw.work{background:linear-gradient(180deg,#3a4a56,#141c22);border:2px solid #E8F2FF;box-shadow:0 0 10px rgba(232,242,255,.8)}
+.sw.wired{background:transparent;border:2px dashed #BFD9EA}
+.sw.cand{background:transparent;border:2px dotted var(--amber)}
+.sw.link{background:transparent;border:2px solid #5d6871}
+.sw.grant{background:#fff;border:2px solid #fff}
+.sw.none{background:transparent;border:2px solid #444c53}
+.sw.kin-in{background:linear-gradient(180deg,#3a4a56,#141c22);border:2px solid #E8F2FF;border-radius:5px}
+.sw.kin-app{background:transparent;border:2.5px solid var(--wb-glow);border-radius:3px;box-shadow:inset 0 0 0 3px #000, inset 0 0 0 5px rgba(111,182,255,.55)}
+.sw.kin-out{background:transparent;border:2px solid #A9BAC9;border-radius:999px}
+.sw.ring{width:32px;height:18px;border-radius:50%;border:3px solid var(--violet);box-shadow:0 0 10px rgba(217,210,255,.85);background:transparent}
+.sw.nest{background:transparent;border:2.5px solid var(--wb-glow);border-radius:4px;box-shadow:inset 0 0 0 4px #000, inset 0 0 0 6.5px var(--qb)}
+.sw.lsolid{width:34px;height:0;border-radius:0;border-top:3.5px solid var(--wb-glow);background:none;vertical-align:3px}
+.sw.lflow{width:34px;height:0;border-radius:0;border-top:3.5px dashed var(--qb);background:none;vertical-align:3px}
+.sw.sock{width:15px;height:15px;border-radius:50%;border:3px solid var(--qb);background:#000;vertical-align:-3px}
+.legend .lg-item{white-space:nowrap}
+#readout{
+  position:sticky;top:10px;z-index:50;max-width:1240px;margin:16px auto 0;
+  background:rgba(8,12,16,.92);border:1.5px solid rgba(255,243,196,.55);border-radius:14px;
+  box-shadow:0 0 22px rgba(255,217,77,.25),0 10px 26px rgba(0,0,0,.7);
+  padding:12px 18px;font-size:17px;line-height:1.5;display:flex;gap:14px;align-items:center;flex-wrap:wrap;
+  backdrop-filter:blur(6px);
+}
+#readout .ro-name{font-weight:800;font-size:19px;color:#FFF3C4;white-space:nowrap}
+#readout .ro-body{flex:1;min-width:260px;color:#E6EDF3}
+#readout button{
+  font:inherit;font-size:16px;font-weight:700;color:#0A0F14;background:linear-gradient(180deg,#FFEFA8,#FFD94D);
+  border:0;border-radius:10px;padding:9px 16px;cursor:pointer;
+  box-shadow:0 0 14px rgba(255,217,77,.55),0 4px 10px rgba(0,0,0,.6);
+}
+#readout button:focus-visible{outline:3px solid #6FB6FF;outline-offset:2px}
+.mapwrap{position:relative;max-width:1720px;margin:0 auto;padding:26px 22px 10px}
+#wires{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;overflow:visible}
+#wires2{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;overflow:visible}
+#labels{position:absolute;inset:0;width:100%;height:100%;z-index:4;pointer-events:none;overflow:visible}
+.grid{
+  position:relative;z-index:2;display:grid;gap:30px;pointer-events:none;
+  grid-template-columns:1fr 1.12fr 1fr;
+  grid-template-areas:
+    "home deck eng"
+    "daybook canopy media"
+    "godseye godseye godseye"
+    "workbench workbench workbench"
+    "team team team";
+}
+.panel{
+  pointer-events:auto;position:relative;border-radius:24px;padding:20px 20px 16px;
+  background:linear-gradient(165deg, rgba(255,255,255,.075), rgba(0,0,0,.62) 55%);
+  border:2.5px solid var(--c);
+  box-shadow:0 0 24px var(--glowsoft), inset 0 0 30px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.28), 0 20px 38px rgba(0,0,0,.8);
+  cursor:pointer;transition:opacity .35s ease, filter .35s ease, box-shadow .35s ease;
+}
+.panel:focus-visible,.app:focus-visible,.dept:focus-visible,.sitrepbox:focus-visible,.geye:focus-visible,.srcchip:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.panel h2{
+  margin:0;font-size:33px;letter-spacing:.1em;font-weight:800;color:var(--ctext,#fff);
+  text-shadow:0 0 12px var(--glow),0 0 34px var(--glowsoft);
+}
+.panel .tagline{margin:3px 0 14px;font-size:17px;color:#C7D3DE}
+.chips{display:flex;flex-direction:column;gap:8px}
+.chip{
+  position:relative;font-size:17px;line-height:1.3;color:#EDF3F8;border-radius:12px;padding:9px 13px;
+  background:linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.03));
+  border:1.5px solid rgba(230,240,250,.75);
+  box-shadow:0 5px 12px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.3), 0 0 8px rgba(255,255,255,.10);
+  transition:opacity .35s ease;
+}
+.chip small{display:block;font-size:15px;color:#A9BAC9}
+.chip.k-out{border-radius:999px;padding-left:32px}
+.chip.k-out::before{content:"";position:absolute;left:12px;top:50%;transform:translateY(-50%);width:9px;height:9px;border-radius:50%;border:2px solid #A9BAC9}
+.st-wired{border-style:dashed;border-color:rgba(200,220,235,.6);background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.01))}
+.st-cand{border-style:dotted;border-color:var(--amber);color:#FFD9A0;box-shadow:0 5px 12px rgba(0,0,0,.65),0 0 9px rgba(255,176,46,.35)}
+.st-link{border-color:#5d6871;color:#B9C4CE;box-shadow:0 5px 12px rgba(0,0,0,.65)}
+.st-none{border-color:#3c434a;color:#79838d;box-shadow:none;background:rgba(255,255,255,.02)}
+.st-dir{border-style:dashed;border-color:rgba(160,190,215,.45);color:#C4D2DE;background:rgba(255,255,255,.025)}
+.grant{
+  display:inline-block;background:#fff;color:#0A0F14;font-size:12.5px;font-weight:800;letter-spacing:.08em;
+  border-radius:6px;padding:1.5px 7px;margin-left:8px;vertical-align:2px;box-shadow:0 0 9px rgba(255,255,255,.75);
+}
+.cluster{margin-top:12px;border:1.5px solid rgba(255,255,255,.16);border-radius:14px;padding:10px 12px 12px;background:rgba(0,0,0,.35)}
+.cluster .cl-label{font-size:15px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#9FB4C6;margin-bottom:8px}
+.cluster.amber{border-color:rgba(255,176,46,.4)}
+.cluster.amber .cl-label{color:var(--amber)}
+</style>
+</head>
+<body>
+<style>
+.app{
+  pointer-events:auto;border-radius:18px;padding:14px 16px;margin-bottom:14px;cursor:pointer;
+  background:linear-gradient(165deg, rgba(255,255,255,.1), rgba(0,0,0,.5));
+  border:2.5px solid var(--wb);
+  box-shadow:0 0 18px rgba(111,182,255,.4), inset 0 1px 0 rgba(255,255,255,.3), 0 14px 26px rgba(0,0,0,.75);
+  transition:opacity .35s ease, filter .35s ease;
+}
+.app.dashed{border-style:dashed}
+.app h3{margin:0;font-size:24px;letter-spacing:.06em;color:#EAF4FF;text-shadow:0 0 10px var(--wb-glow)}
+.app h3::before,.dept h5::before{content:"";display:inline-block;width:11px;height:11px;border-radius:3px;background:var(--wb-glow);box-shadow:0 0 9px rgba(111,182,255,.85);margin-right:9px;vertical-align:1px}
+.app .app-sub{font-size:16px;color:#B9CCE0;margin:2px 0 10px}
+.app .chips{gap:7px}
+.app .chip{font-size:16px;padding:7px 11px}
+.app .chip.k-out{padding-left:30px}
+.p-home{--c:var(--home);--glow:var(--home-glow);--glowsoft:rgba(255,243,196,.28);--ctext:#FFF6D8;grid-area:home}
+.p-deck{--c:var(--deck);--glow:var(--deck-glow);--glowsoft:rgba(70,224,141,.30);--ctext:#C9F5DC;grid-area:deck}
+.p-eng{--c:var(--deck);--glow:var(--deck-glow);--glowsoft:rgba(70,224,141,.30);--ctext:#C9F5DC;grid-area:eng}
+.p-media{--c:var(--deck);--glow:var(--deck-glow);--glowsoft:rgba(70,224,141,.30);--ctext:#C9F5DC;grid-area:media}
+.p-day{--c:var(--day);--glow:var(--day-glow);--glowsoft:rgba(255,122,114,.30);--ctext:#FFD9D6;grid-area:daybook}
+.p-wb{--c:var(--wb);--glow:var(--wb-glow);--glowsoft:rgba(111,182,255,.30);--ctext:#D9ECFF;grid-area:workbench}
+.p-team{--c:#7d8ea0;--glow:#BFD0DE;--glowsoft:rgba(191,208,222,.18);--ctext:#EAF1F7;grid-area:team;cursor:default}
+.orbcell{grid-area:canopy;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;padding:6px}
+.orb{
+  pointer-events:auto;cursor:pointer;width:320px;height:320px;border-radius:50%;position:relative;flex:none;
+  background:radial-gradient(circle at 34% 28%, #3d4c5a 0%, #141d26 52%, #05080b 100%);
+  border:3px solid #FFF3C4;
+  box-shadow:0 0 34px rgba(255,243,196,.55),0 0 110px rgba(255,217,77,.30), inset 0 0 44px rgba(0,0,0,.8), inset -14px -18px 44px rgba(0,0,0,.75), 0 26px 50px rgba(0,0,0,.85);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;
+  transition:opacity .35s ease, filter .35s ease;
+}
+.orb .disc{
+  width:168px;height:168px;border-radius:50%;background:radial-gradient(circle at 38% 30%, #FFFDF2, #F2EDDB 70%);
+  box-shadow:0 0 22px rgba(255,246,216,.8), inset 0 -8px 18px rgba(120,105,40,.25);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+}
+.orb .disc img{width:162px;height:162px;display:block}
+.orb .orb-name{margin-top:5px;font-size:37px;line-height:1.15;font-weight:800;letter-spacing:.3em;text-indent:.3em;color:#FFF8DC;text-shadow:0 0 12px rgba(255,243,196,.9),0 0 40px rgba(255,217,77,.5)}
+.orb .orb-sub{font-size:14.5px;color:#C9D6E2;letter-spacing:.02em}
+.orb .orb-brand{font-size:14px;letter-spacing:.34em;text-indent:.34em;color:#93A7BA;margin-top:2px}
+.srccluster{pointer-events:auto;margin-top:34px;width:372px;max-width:100%;text-align:center}
+.src-h{font-size:13.5px;font-weight:800;letter-spacing:.15em;color:#FFEDB0;text-shadow:0 0 10px rgba(255,217,77,.55)}
+.srcgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:11px}
+.srcchip{
+  font-size:15.5px;font-weight:650;color:#FFF6D8;padding:10px 9px;border-radius:12px;cursor:pointer;
+  border:2px solid var(--sit-glow);background:linear-gradient(180deg, rgba(255,217,77,.16), rgba(0,0,0,.5));
+  box-shadow:0 0 14px rgba(255,217,77,.35), 0 6px 14px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.25);
+  transition:opacity .35s ease, filter .35s ease, box-shadow .35s ease;
+}
+.srcchip small{display:block;font-size:13px;font-weight:500;color:#D8CCA0;margin-top:2px;line-height:1.35}
+.src-note{font-size:13.5px;color:#A9BAC9;margin-top:11px;line-height:1.5}
+.sitrepbox{
+  margin-top:16px;border:2.5px solid var(--sit);border-radius:18px;padding:14px 16px;cursor:pointer;pointer-events:auto;
+  background:linear-gradient(165deg, rgba(255,217,77,.10), rgba(0,0,0,.5));
+  box-shadow:0 0 20px rgba(255,217,77,.35), inset 0 1px 0 rgba(255,255,255,.22);
+  transition:opacity .35s ease, filter .35s ease, box-shadow .35s ease;
+}
+.sitrepbox h3{margin:0;font-size:25px;letter-spacing:.08em;color:#FFEDB0;text-shadow:0 0 12px var(--sit-glow)}
+.sitrepbox .sb-sub{font-size:15.5px;color:#E4D6A8;margin:2px 0 12px}
+.geye{
+  grid-area:godseye;position:relative;pointer-events:auto;cursor:pointer;text-align:center;
+  border:3px solid var(--violet);border-radius:50%;
+  background:radial-gradient(ellipse at 50% 42%, rgba(230,225,255,.10), rgba(24,20,48,.28) 58%, rgba(0,0,0,.15));
+  box-shadow:0 0 34px rgba(210,200,255,.5), inset 0 0 60px rgba(180,170,255,.16), 0 18px 34px rgba(0,0,0,.7);
+  padding:26px 40px 20px;transition:opacity .35s ease, filter .35s ease, box-shadow .35s ease;
+}
+.geye h2{margin:0;font-size:30px;letter-spacing:.13em;font-weight:800;color:#F4F1FF;text-shadow:0 0 14px rgba(220,210,255,.9),0 0 44px rgba(170,160,255,.5)}
+.geye .ge-sub{font-size:15.5px;color:#CFC8EE;margin-top:3px}
+.ge-shelf{display:flex;gap:10px;flex-wrap:nowrap;justify-content:center;margin-top:15px}
+.ge-chip{
+  padding:9px 13px;border-radius:999px;border:2px solid rgba(230,225,255,.75);text-align:left;
+  background:linear-gradient(180deg, rgba(255,255,255,.13), rgba(0,0,0,.35));
+  font-size:15.5px;font-weight:650;color:#F2EFFF;line-height:1.3;
+  box-shadow:0 0 12px rgba(200,190,255,.35), 0 6px 12px rgba(0,0,0,.6);
+}
+.ge-chip small{display:block;font-size:13px;color:#BDB4E4;font-weight:500}
+.ge-chip.link{border-color:#5d6871;color:#C4CED8;box-shadow:0 6px 12px rgba(0,0,0,.6)}
+.ge-port{width:52px;height:52px;border-radius:50%;border:3px solid rgba(237,233,255,.9);margin:13px auto 0;
+  box-shadow:0 0 16px rgba(220,210,255,.7), inset 0 0 14px rgba(0,0,0,.8);
+  background:radial-gradient(circle at 50% 40%, rgba(120,200,255,.4), rgba(0,0,0,.65) 72%)}
+.wb-cols{display:grid;grid-template-columns:1.25fr 1fr;gap:22px;margin-top:6px}
+.ownerbox{border:2px solid rgba(111,182,255,.45);border-radius:18px;padding:14px 16px;background:rgba(0,0,0,.3)}
+.ownerbox > h3{margin:0;font-size:22px;letter-spacing:.1em;color:#D9ECFF;text-shadow:0 0 10px rgba(111,182,255,.55)}
+.ownerbox > .ob-sub{font-size:15.5px;color:#A9C6E4;margin:2px 0 12px}
+.companyrow{display:grid;grid-template-columns:1.55fr 1fr;gap:16px;margin-top:14px}
+.companybox{border:1.5px solid rgba(255,255,255,.2);border-radius:14px;padding:11px 13px;background:rgba(255,255,255,.03)}
+.companybox > h4{margin:0;font-size:18px;letter-spacing:.12em;color:#EAF4FF}
+.companybox > .cb-sub{font-size:14.5px;color:#9FB4C6;margin:1px 0 8px}
+.topapps{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.subgroup-h{font-size:15.5px;font-weight:800;letter-spacing:.14em;color:#9FB4C6;text-transform:uppercase;margin:14px 0 8px}
+.dept{
+  border:2px solid rgba(111,182,255,.55);border-radius:14px;padding:11px 13px;margin-top:10px;cursor:pointer;pointer-events:auto;
+  background:linear-gradient(165deg, rgba(111,182,255,.08), rgba(0,0,0,.4));
+  transition:opacity .35s ease, filter .35s ease, box-shadow .35s ease;
+}
+.dept h5{margin:0;font-size:19px;letter-spacing:.04em;color:#EAF4FF}
+.dept h5 .gloss{font-size:15px;color:#A9C6E4;font-weight:600}
+.dept.flurryd{border-color:var(--sit);background:linear-gradient(165deg, rgba(255,217,77,.12), rgba(0,0,0,.45));box-shadow:0 0 16px rgba(255,217,77,.35)}
+.dept.flurryd h5{color:#FFEDB0;text-shadow:0 0 10px var(--sit-glow)}
+.dept.flurryd h5::before{background:var(--sit-glow);box-shadow:0 0 9px rgba(255,217,77,.85)}
+.dept .snow{font-size:16.5px;font-weight:700;color:#FFF3C4;margin-top:7px}
+.dept .pride{font-size:15px;font-style:italic;color:#E8D9A0;margin-top:2px}
+.secs{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0}
+.sec-chip{font-size:14.5px;padding:4px 10px;border-radius:999px;border:1.5px solid rgba(200,225,255,.5);color:#D9ECFF;background:rgba(255,255,255,.05);line-height:1.35}
+.dept .chips{gap:7px;margin-top:8px}
+.dept .chip{font-size:15.5px;padding:7px 11px}
+.dept .chip.k-out{padding-left:29px}
+.trellisbox{
+  border:2.5px solid var(--wb);border-radius:16px;padding:13px 15px;cursor:pointer;pointer-events:auto;
+  background:linear-gradient(165deg, rgba(111,182,255,.09), rgba(0,0,0,.5));
+  box-shadow:0 0 18px rgba(111,182,255,.35), inset 0 1px 0 rgba(255,255,255,.22);
+  transition:opacity .35s ease, filter .35s ease, box-shadow .35s ease;
+}
+.trellisbox h4{margin:0;font-size:23px;letter-spacing:.08em;color:#EAF4FF;text-shadow:0 0 10px var(--wb-glow)}
+.trellisbox .tb-sub{font-size:15px;color:#A9C6E4;margin:2px 0 6px}
+.wb-caption{
+  margin:2px 0 16px;padding:11px 16px;border-radius:12px;text-align:center;
+  border:1.5px dashed rgba(111,182,255,.6);background:rgba(62,143,224,.08);
+  font-size:17.5px;color:#D9ECFF;
+}
+.wb-caption b{color:#fff}
+.wb-foot{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
+.wb-foot .chip{flex:1 1 240px}
+.teamgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}
+footer{max-width:1180px;margin:14px auto 40px;padding:0 22px;text-align:center;color:#93A7BA;font-size:16.5px;line-height:1.55}
+footer b{color:#D8E2EC}
+#wires path,#wires2 path{fill:none;stroke-linecap:round;transition:opacity .35s ease}
+#wires .spoke,#wires2 .spoke{stroke-width:6;opacity:.85}
+#wires .tie,#wires2 .tie{stroke-width:5;opacity:.8}
+#wires .thin,#wires2 .thin{stroke-width:3.5;opacity:.55}
+#wires .hero,#wires2 .hero{stroke-width:8;opacity:.95}
+#wires2 .tether{stroke-width:3.5;opacity:.75}
+#labels text{
+  font-size:17.5px;font-weight:700;fill:#fff;paint-order:stroke;stroke:#000;stroke-width:6px;stroke-linejoin:round;
+  transition:opacity .35s ease;
+}
+#wires .dim,#wires2 .dim{opacity:.05 !important}
+#labels text.dim{opacity:0 !important}
+.panel.dimmed,.app.dimmed,.orb.dimmed,.geye.dimmed,.sitrepbox.dimmed,.dept.dimmed,.trellisbox.dimmed,.srcchip.dimmed,.chip.dimmed{opacity:.32;filter:saturate(.35)}
+.panel.hotring,.app.hotring{box-shadow:0 0 40px var(--glow), inset 0 0 30px rgba(0,0,0,.6), 0 20px 38px rgba(0,0,0,.8)}
+.orb.hotring{box-shadow:0 0 54px rgba(255,243,196,.9),0 0 130px rgba(255,217,77,.45), inset 0 0 44px rgba(0,0,0,.8), 0 26px 50px rgba(0,0,0,.85)}
+.geye.hotring{box-shadow:0 0 54px rgba(220,210,255,.85), inset 0 0 60px rgba(180,170,255,.2), 0 18px 34px rgba(0,0,0,.7)}
+.sitrepbox.hotring{box-shadow:0 0 36px rgba(255,217,77,.8), inset 0 1px 0 rgba(255,255,255,.22)}
+.dept.hotring,.trellisbox.hotring{box-shadow:0 0 26px rgba(111,182,255,.65)}
+.srcchip.hotring{box-shadow:0 0 28px rgba(255,217,77,.85), 0 6px 14px rgba(0,0,0,.7)}
+.flow{stroke-dasharray:14 10;animation:dashmove 1.6s linear infinite}
+.tetherflow{animation:dashmove 1.6s linear infinite}
+@keyframes dashmove{to{stroke-dashoffset:-24}}
+@media (prefers-reduced-motion: reduce){
+  .flow,.tetherflow{animation:none}
+  .panel,.app,.orb,#wires path,#wires2 path,#labels text{transition:none}
+}
+@media (max-width:1080px){
+  .grid{grid-template-columns:1fr;grid-template-areas:"canopy" "home" "deck" "eng" "media" "daybook" "godseye" "workbench" "team"}
+  header h1{font-size:40px}
+  .panel h2{font-size:29px}
+  .legend{justify-content:flex-start;text-align:left}
+  .legend .lg-item{white-space:normal}
+  .mapwrap{padding:18px 12px 6px}
+  .wb-cols,.companyrow,.topapps{grid-template-columns:1fr}
+  .ge-shelf{flex-wrap:wrap}
+  .geye{border-radius:28px;padding:20px 16px}
+}
+</style>
+<header>
+  <h1>CANOPY</h1>
+  <p class="sub">One app. Everything you use — work, home, life — plugged in, linked up, and run with you by your AI team.</p>
+  <p class="date">What plugs into it · Updated 22 Nov 2026</p>
+  <div class="legend" aria-label="How to read this diagram">
+    <span><b>HOW TO READ IT</b></span>
+    <span class="lg-item"><span class="sw work"></span>Solid glow — working now</span>
+    <span class="lg-item"><span class="sw wired"></span>Dashed — wired by design, packaging still to come</span>
+    <span class="lg-item"><span class="sw cand"></span>Amber dotted — candidate, not connected yet</span>
+    <span class="lg-item"><span class="sw link"></span>Grey — link only, opens the app or site</span>
+    <span class="lg-item"><span class="sw grant"></span>GRANT — waiting on Grant's decision</span>
+    <span class="lg-item"><span class="sw none"></span>Dim ✕ — no way to connect yet</span>
+    <span class="lg-item"><span class="sw kin-in"></span>Built into Canopy</span>
+    <span class="lg-item"><span class="sw kin-app"></span>Our apps</span>
+    <span class="lg-item"><span class="sw kin-out"></span>Outside services we plug in</span>
+    <span class="lg-item"><span class="sw ring"></span>God's Eye View — what is inside it sits on its shelf</span>
+    <span class="lg-item"><span class="sw nest"></span>Inside an app — belongs to that app</span>
+    <span class="lg-item"><span class="sw lsolid"></span>Solid line — belongs to Canopy</span>
+    <span class="lg-item"><span class="sw lflow"></span>Dashed line, flowing — links back</span>
+    <span class="lg-item"><span class="sw sock"></span>A socket — where a link plugs in</span>
+  </div>
+</header>
+<div id="readout" role="status">
+  <span class="ro-name">EXPLORE</span>
+  <span class="ro-body">Tap or click any glowing panel, app or source — its connections light up and everything else dims. Square markers are our apps; round pills are outside services we plug in; plain blocks are built into Canopy.</span>
+  <button id="resetBtn" type="button">All connections</button>
+</div>
+<div class="mapwrap" id="mapwrap">
+<svg id="wires" aria-hidden="true"></svg>
+<svg id="wires2" aria-hidden="true"></svg>
+<div class="grid" id="grid">
+
+  <div class="orbcell">
+    <div class="orb" id="node-canopy" data-node="canopy" tabindex="0" role="button" aria-label="Canopy — the centre">
+      <div class="disc"><img alt="Northbirch husky" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMTIzIDIxMjMiIHdpZHRoPSIyMTIzIiBoZWlnaHQ9IjIxMjMiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iTk9SVEhCSVJDSCDigJQgaHVza3kgaGVhZCBvbmx5LCBjb3JyZWN0aW9uIDEyIGNhbmRpZGF0ZSAob24gY3JlYW0pIj4KPHRpdGxlPk5PUlRIQklSQ0gg4oCUIGh1c2t5IGhlYWQgb25seSwgY29ycmVjdGlvbiAxMiBjYW5kaWRhdGUgKG9uIGNyZWFtKTwvdGl0bGU+Cgo8ZyBpZD0iaHVza3kiPjxwYXRoIGlkPSJodXNreS1vdXRsaW5lIiBmaWxsPSIjMUI0QTNGIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xMDQ3LjUgMTM3My4zQzEwNDMuNCAxMzY1LjggMTA0NC40IDEzNTEuNiAxMDQ0LjMgMTM0Mi45QzEwNDQuMiAxMzE3LjIgMTA0Ny44IDEyOTEuNyAxMDQ4LjIgMTI2Ni4xQzEwNDguNCAxMjUyLjggMTA0OC4xIDEyMzkuNSAxMDQ4LjQgMTIyNi4xQzEwNDguNCAxMjIyLjkgMTA0OS45IDEyMTkuNiAxMDUwLjEgMTIxNi4zQzEwNTAuOCAxMjA1LjMgMTA1MS4xIDExOTMuNCAxMDUxLjEgMTE4Mi40QzEwNTEgMTE1Ni41IDEwNTAuOSAxMTMwLjUgMTA1Mi4xIDExMDQuN0MxMDUzLjIgMTA4MC43IDEwNTQuNCAxMDU2LjcgMTA1NS40IDEwMzIuN0MxMDU1LjUgMTAyOS40IDEwNTcgMTAyNi4yIDEwNTcuMSAxMDIyLjlDMTA1Ny43IDEwMDkuMiAxMDU3LjUgOTk1LjcgMTA1OC41IDk4Mi4xQzEwNjEuMSA5NDguNyAxMDYzLjUgOTE0LjYgMTA2MC43IDg4MS4yQzEwNjAuMSA4NzMuMyAxMDYwLjEgODUyLjYgMTA1My4xIDg0OC41QzEwNDYuOSA4NTUgMTAzNy4yIDg5OS44IDEwMzYgOTEwLjVDMTAzNS4xIDkxOCAxMDM1LjcgOTI1LjggMTAzNS4zIDkzMy40QzEwMzEuMyAxMDA0LjYgMTA0MS45IDEwODEuMiAxMDI3LjIgMTE1MC40QzEwMjYuMyAxMTU0LjMgMTAyNi42IDExNTguNCAxMDI1LjggMTE2Mi4zQzEwMjEuNyAxMTgyLjggMTAxMSAxMjA4LjkgOTk2IDEyMjMuM0M5ODkuOSAxMjI5LjIgOTg4LjUgMTI0MCA5NzguMSAxMjQwQzk3Ni40IDEyMzAuMyA5ODMuOSAxMjIzLjEgOTg2LjYgMTIxNC4zQzk5Mi4zIDExOTUuNyA5OTcuNyAxMTc2LjcgMTAwMS44IDExNTcuNkMxMDAzLjggMTE0OC42IDEwMDQuNCAxMDk3LjMgMTAwMi45IDEwODcuOEMxMDAxLjUgMTA3OC44IDk5Ny4zIDEwNzAgOTk1LjYgMTA2MC45Qzk5My45IDEwNTEuOCA5OTcuMyAxMDQxLjQgOTk1LjkgMTAzMkM5OTQuMyAxMDIxLjEgOTg2LjkgMTAxNi40IDk4MS43IDEwMDcuNUM5NzkuNyAxMDA0IDk3OC44IDk5OS45IDk3Ni41IDk5Ni43Qzk2OS41IDk4Ni44IDk2MiA5ODguMyA5NTYuMyA5ODIuOUM5NDcuNCA5NzQuNCA5MzkuMiA5NjQuOSA5MjkgOTU4QzkxMC4yIDk0NS40IDg5My42IDkzOS41IDg3MSA5NDEuM0M4NjguMSA5NDEuNSA4NjUgOTQwLjggODYyLjEgOTQxLjlDODU2IDk0NC4yIDg0OS42IDk0OS4yIDg0NC42IDk1My4zQzg0Mi4yIDk1NS4zIDgzOC43IDk1NyA4MzYuNyA5NTkuNEM4MzMuMyA5NjMuNiA4MzAuNSA5NzAuMiA4MjguMSA5NzUuMUM4MjMuMyA5ODUuMSA4MjQuMyA5OTcuMSA4MjguNSAxMDA3LjJDODI5LjcgMTAxMC4xIDgzMi4xIDEwMTMuMiA4MzIuNiAxMDE2LjNDODMyLjkgMTAxOC4yIDgyMy45IDEwNDUuMiA4MjIuNSAxMDQ2LjJDODE3LjUgMTA0OS43IDgxMS43IDEwNDggODA2IDEwNDguNkM4MDEuNSAxMDQ5IDc4Ni4zIDEwNTMuOCA3ODEuMSAxMDU1LjRDNzczLjMgMTA1Ny45IDc2My43IDEwNTkuNCA3NTYuMyAxMDYyLjlDNzQyLjUgMTA2OS40IDcyOC44IDEwNzYuMyA3MTUuNyAxMDg0LjJDNzEzLjkgMTA4NS4yIDcxMS44IDEwODUuMiA3MTAuMSAxMDg2LjJDNzA3LjUgMTA4Ny43IDcwNS44IDEwOTAuNCA3MDMuMiAxMDkyQzY5NS43IDEwOTcgNjc3LjEgMTEwNy4yIDY3NC44IDExMTZDNjcyLjEgMTEyNi43IDY4My43IDExNDYuMyA2ODYuNCAxMTU3QzY4Ny41IDExNjEuNyA2ODcuMSAxMTY3LjIgNjg2LjggMTE3MkM2ODUuNiAxMTcyLjggNjg0LjQgMTE3NC4xIDY4My4yIDExNzVDNjgyLjggMTE4MiA2ODQuMSAxMTkwLjEgNjgyLjIgMTE5Ni43QzY3Ny4xIDExOTcgNjc2LjUgMTE5My42IDY3Mi43IDExOTFDNjcyLjEgMTE5MC42IDY1Mi45IDExODIuNyA2NTEuNSAxMTgyLjNDNjQyLjcgMTE3OS42IDYzMy4zIDExNzcuNiA2MjQuMSAxMTc3QzYxOS41IDExNzYuNyA2MTMuNSAxMTc4LjUgNjA5LjMgMTE3Ni4zQzU5Mi44IDExNjcuNyA1NzUuNiAxMTI5LjkgNTY5LjcgMTExMy4xQzU2Ny45IDExMDcuOSA1NjQuNSAxMTA0LjMgNTYzLjggMTA5OC41QzU2MiAxMDg0LjEgNTgwLjQgMTA2OS41IDU4Ni44IDEwNTguOEM2MDcuNiAxMDIzLjcgNjUyIDk4My41IDY2MC44IDk0My42QzY2My44IDkyOS45IDY1MSA5MjEuOCA2NDIuNyA5MTIuOEM2MzIuMyA5MDEuNSA2MjEuNCA4OTAuOSA2MTIuNiA4NzguNEM2MTEuMyA4NzYuNCA2MTEgODc0IDYwOS43IDg3Mi4xQzYwOC4zIDg2OS45IDYwNS44IDg2OC40IDYwNC41IDg2NkM2MDMuMSA4NjMuMyA2MDMuMSA4NjAuMiA2MDEuNyA4NTcuNUM2MDAuNSA4NTUuMSA1OTguOSA4NTMuMSA1OTguMyA4NTAuM0M1OTIuNiA4MjIuNiA2MjIuMSA4MDguNSA2MzAuNiA3ODUuNUM2NDcuOSA3MzkgNjQwLjQgNjg4LjYgNjQ3IDY0MC4yQzY0OC42IDYyOC43IDY0OC4xIDU5NS42IDY1Ni4zIDU4OEM2NzIuMSA1ODguNiA2OTQuNCA2MjYuNCA3MDEuNSA2MzkuN0M3MDQuOCA2NDUuOCA3MDkuMiA2NTEuMyA3MTIuMiA2NTcuN0M3MTMuOCA2NjEgNzEzLjkgNjY1LjEgNzE1LjUgNjY4LjFDNzE2LjggNjcwLjcgNzIwLjIgNjcxLjkgNzIxLjcgNjc0LjVDNzIzLjIgNjc3LjEgNzIzLjQgNjgwLjMgNzI0LjcgNjgzQzcyNi4zIDY4Ni4yIDcyOC45IDY4OSA3MzAuNSA2OTIuM0M3MzYgNzA0LjIgNzQxLjkgNzE2LjUgNzQ2LjMgNzI4LjlDNzQ3LjQgNzMyIDc0Ny4yIDczNS43IDc0OC42IDczOC42Qzc1NC43IDc1MS43IDc2MC44IDc2Ni4zIDc2Mi44IDc4MUM3NjMuNyA3ODcuMiA3NjIuOCA3OTMuNyA3NjMgNzk5LjlDNzYzLjIgODAzLjYgNzY1LjIgODA2LjkgNzY1LjEgODEwLjdDNzY0LjkgODI2LjEgNzUyLjIgODQ2LjQgNzQ3LjcgODYxLjRDNzQ2IDg2Ny4xIDc0MS4xIDg3My4zIDc0My4zIDg3OS4xQzc0OS40IDg3OS43IDc1Ni44IDg3Mi4yIDc2MS42IDg2OC40Qzc3My41IDg1OS4yIDc4My45IDg0OC41IDc5NS42IDgzOUM3OTcuMiA4MzcuOCA3OTkuMyA4MzcuNiA4MDAuOCA4MzYuMUM4MDIuNSA4MzQuNCA4MDIuOCA4MzEuOSA4MDQuNCA4MzAuMkM4MTAuMSA4MjQuMiA4MjkuMyA4MDggODMwLjEgODAwLjVDODMxLjEgNzkwLjcgODExLjggNzQxLjggODA3LjIgNzI5LjVDODA1IDcyMy42IDgwNC4xIDcxNy4xIDgwMS44IDcxMS40QzgwMS4xIDcwOS44IDc5OS41IDcwOS4xIDc5OC44IDcwNy41Qzc5NC4xIDY5Ny42IDc5MC42IDY4Ny4xIDc4NS45IDY3Ny4yQzc3MS45IDY0OC40IDc1Ny4zIDYyMC4yIDc0MS4zIDU5Mi40QzczOS43IDU4OS44IDc0MCA1ODYuNiA3MzguNSA1ODMuOUM3MzcuMyA1ODEuNyA3MzQuNCA1ODAuNCA3MzIuOCA1NzguNEM3MjguNSA1NzMgNzI0LjkgNTY2LjkgNzIwLjYgNTYxLjRDNzE1IDU1NC40IDcxMC42IDU0Ni4zIDcwNS4yIDUzOS40QzY5Ni4yIDUyNy45IDY4NC41IDUxOC40IDY3NC42IDUwNy44QzY2OC43IDUwMS40IDY1NiA0OTIuMiA2NDYuNiA0OTUuOEM2NDEgNDk4IDYzMy41IDUxMS42IDYzMC4yIDUxNi45QzYyNC4yIDUyNi41IDYyMC40IDUzNy4yIDYxNS42IDU0Ny41QzYxNC44IDU0OS4zIDYxMyA1NTAuNSA2MTIuMiA1NTIuM0M2MTAuNiA1NTYgNjExIDU2MC4yIDYwOS41IDU2NEM2MDcuOCA1NjcuOSA2MDQuNCA1NzEuMSA2MDMuMiA1NzUuM0M2MDIuMyA1NzguOSA2MDMgNTgyLjYgNjAxLjggNTg2LjJDNTk5LjkgNTkyIDU5Ny42IDU5Ny4zIDU5NS40IDYwMi45QzU5NC4xIDYwNi4xIDU5NC4zIDYwOS41IDU5My42IDYxMi43QzU5MC45IDYyNS4zIDU4Ny4xIDYzNy45IDU4My44IDY1MC4zQzU4Mi4zIDY1NS45IDU3OS41IDY2MC44IDU3OC4yIDY2Ni40QzU3Ny40IDY3MC4yIDU3OCA2NzMuNSA1NzcuNiA2NzcuMkM1NzYuOSA2ODQuNCA1NzMuNSA2OTEuNCA1NzIgNjk4LjRDNTcwLjkgNzAzLjkgNTcwLjggNzA5LjYgNTY5LjUgNzE1LjFDNTY3LjIgNzI1LjMgNTYzLjYgNzM1LjkgNTYyLjEgNzQ2LjJDNTYxLjMgNzUxLjcgNTYyLjEgNzU3LjUgNTYxLjMgNzYzLjFDNTU4LjggNzc4LjkgNTU1LjYgNzk1LjcgNTU1LjQgODExLjZDNTU1LjMgODIxLjUgNTU2LjEgODMxLjYgNTU2IDg0MS41QzU1NS45IDg0OC43IDU1NC42IDg1Ny40IDU1Ni4yIDg2NC41QzU1Ny42IDg3MC43IDU2MC4xIDg3Ny40IDU2Mi4yIDg4My41QzU3MC4xIDkwNy4yIDU3OS4xIDkzMC4zIDU4OC4zIDk1My4yQzU5MyA5NjQuNyA1OTkuOCA5NzYuMSA1OTkuNCA5ODkuMkM1OTkgMTAwMC44IDU5My4yIDEwMTEuOCA1ODguNCAxMDIxLjlDNTg0LjcgMTAyOS42IDU4MiAxMDQxLjkgNTc0LjEgMTA0Ni4zQzU2Ni4xIDEwNDMuNCA1NjYuNCAxMDEyLjkgNTY2LjIgMTAwNC4yQzU2NS44IDk4OS45IDU1NC4zIDk3Ny44IDU0Ny45IDk2NS44QzU0MS45IDk1NC40IDUzNi4yIDk0MS40IDUzMi41IDkyOUM1MzEuNiA5MjYuMiA1MzEuNiA5MjMuMSA1MzAuNSA5MjAuM0M1MjIgODk3LjYgNTE0LjUgODY3LjYgNTIwLjQgODQzLjRDNTIzLjcgODI5LjcgNTM2LjcgODI0LjggNTM4IDgwNS4xQzUzOS45IDc3Ni44IDUzNi43IDc0OC41IDUzOS44IDcyMC4yQzU0MS4yIDcwNy42IDU0NC4zIDY5NS4zIDU0Ni4xIDY4Mi44QzU1MC4xIDY1My45IDU1Ni4xIDYyNS4yIDU2My45IDU5Ni45QzU2NS40IDU5MS44IDU2Ny44IDU4Ny4xIDU2OS43IDU4Mi4xQzU3MS4xIDU3OC42IDU3MC44IDU3NC45IDU3MS45IDU3MS40QzU3NC44IDU2Mi4yIDU3OC45IDU1My4zIDU4MiA1NDQuMkM1OTEuOSA1MTQuMSA2MTUgNDYzLjIgNjQwIDQ0My44QzY0Mi44IDQ0MS43IDY0NC4yIDQzOC45IDY0Ny42IDQzNy40QzY1My40IDQzNC44IDY2NS42IDQzNS44IDY3MSA0MzguOUM2NzMuNyA0NDAuNCA2NzUuNSA0NDMgNjc4IDQ0NC41QzY5NS44IDQ1NC45IDcxNy4yIDQ3OC4zIDcyOS45IDQ5NUM3MzEuMyA0OTYuOSA3MzEuMyA0OTkuNCA3MzIuNiA1MDEuNEM3MzYuNSA1MDcuMyA3NDIgNTA5LjQgNzQ2LjUgNTE1Qzc2My4zIDUzNi40IDc4MC43IDU1Ny4xIDc5Ny4zIDU3OC45QzgwMy4yIDU4Ni42IDgwNy4yIDU5NS42IDgxMi42IDYwMy40QzgxNS41IDYwNy40IDgxOSA2MTAuOSA4MjEuOSA2MTUuMUM4MjcuNiA2MjMuNiA4MzEuMSA2MzMuNiA4MzUuMyA2NDIuN0M4MzYuNCA2NDUuMSA4MzkuMiA2NDYuMyA4NDAuNiA2NDguNkM4NDYuNyA2NTggODUxLjEgNjY4LjYgODU3IDY3OC4yQzg2My45IDY4OS41IDg5Mi44IDczNC4yIDkwNS4zIDczNC43QzkxNi4zIDczNS4yIDkyOC42IDcyOS4xIDkzOSA3MjYuMUM5NTEgNzIyLjcgOTYzLjggNzE5LjggOTc2LjEgNzE4LjFDOTgwLjggNzE3LjUgOTg1LjQgNzE3LjggOTkwLjEgNzE3LjVDOTk1IDcxNy4yIDk5OS43IDcxNC45IDEwMDQuNyA3MTQuNUMxMDMwLjUgNzEyLjMgMTA1Ni45IDcxMi43IDEwODIuNCA3MTQuNUMxMDg2LjggNzE0LjggMTA5MC43IDcxNy4xIDEwOTUgNzE3LjVDMTEwMC42IDcxNy45IDExMDYuNCA3MTcuMiAxMTEyIDcxNy43QzExMjAuMSA3MTguMyAxMTMwIDcxOS4yIDExMzcuNyA3MjEuNkMxMTQxLjUgNzIyLjggMTE0NSA3MjQuNiAxMTQ5IDcyNS40QzExNTIuOSA3MjYuMSAxMTU3IDcyNS4zIDExNjEgNzI2LjFDMTE2Ni44IDcyNy4zIDExNzEuMSA3MzAuNSAxMTc2LjcgNzMyLjNDMTE4NC4zIDczNC43IDExOTIgNzM2IDExOTkuNiA3MzkuMUMxMjA1LjEgNzQxLjMgMTIyOC4zIDc1MS4xIDEyMzIuNSA3NDguMUMxMjM2LjYgNzQ1LjMgMTI1Mi43IDcyNS4xIDEyNTUuNCA3MjAuNkMxMjU4LjggNzE0LjggMTI2MC42IDcwOC42IDEyNjQuNiA3MDNDMTI3MC42IDY5NC41IDEyNzcuNyA2ODcuMSAxMjg0LjMgNjc5LjFDMTMwMiA2NTcuMyAxMzIxLjUgNjM2LjMgMTM0MC4yIDYxNS4yQzEzNDEuNyA2MTMuNSAxMzQzLjkgNjEyLjQgMTM0NS4zIDYxMC41QzEzNjQuNyA1ODYgMTM4My45IDU2MS4zIDE0MDMuOSA1MzcuMkMxNDA4LjMgNTMxLjkgMTQxNiA1MjYuNyAxNDE5IDUyMi45QzE0MjAuNiA1MjAuOSAxNDIwLjggNTE4IDE0MjIuNCA1MTUuOEMxNDM2LjcgNDk3LjMgMTQ2Mi42IDQ3Mi4zIDE0ODIuNyA0NjFDMTQ5MC4yIDQ1Ni44IDE0OTMuMyA0NDcuNyAxNTAzIDQ0NS44QzE1MDUuNyA0NDcuOCAxNTA2LjcgNDUxLjQgMTUwOS41IDQ1My4yQzE1MTIuNCA0NTUuMSAxNTE2LjEgNDUzLjggMTUxOC43IDQ1Ni40QzE1MzAuNCA0NjcuOCAxNTQwIDQ4NS4xIDE1NDUuNCA1MDAuNUMxNTQ2LjQgNTAzLjQgMTU0Ni40IDUwNi40IDE1NDcuNCA1MDkuMkMxNTQ4LjIgNTExLjUgMTU0OS45IDUxMy4xIDE1NTAuOCA1MTUuM0MxNTUzLjQgNTIyLjUgMTU1NS44IDUyOS44IDE1NTcuOCA1MzcuMUMxNTU5LjkgNTQ0LjcgMTU2MSA1NTMuMSAxNTYzLjQgNTYwLjRDMTU2NS40IDU2Ni42IDE1NjguNCA1NzIuOCAxNTY5LjUgNTc5LjNDMTU3MC4zIDU4NCAxNTcwLjEgNTg4LjYgMTU3MS4zIDU5My4yQzE1NzIuMiA1OTYuMiAxNTc0IDU5OC40IDE1NzQuOSA2MDEuM0MxNTc3LjEgNjA4LjcgMTU3Ny42IDYxNi40IDE1NzkuMiA2MjMuOEMxNTgxLjMgNjMzLjggMTU4NS43IDY0My42IDE1ODYuOSA2NTMuOEMxNTg3LjYgNjU5LjcgMTU4Ni4zIDY2NS44IDE1ODcuMSA2NzEuN0MxNTg3LjUgNjc0LjkgMTU4OS43IDY3NiAxNTkwLjkgNjc4LjZDMTU5Mi42IDY4Mi4yIDE1OTIuOSA2ODguMiAxNTkzLjYgNjkyLjNDMTU5NC41IDY5Ny4xIDE1OTMuMiA3MDIuMyAxNTk0LjEgNzA3LjJDMTU5Ny43IDcyNy4xIDE2MDAuOSA3NDcuMSAxNjAyLjIgNzY3LjRDMTYwMy44IDc5Mi40IDE2MDEuNCA4MTcuNSAxNjAyLjggODQyLjRDMTYwMy42IDg1Ny4yIDE2MDIuNCA4NzguOCAxNTk4LjggODkzLjFDMTU5Ny45IDg5Ni44IDE1OTUuNCA5MDAuNyAxNTk1LjEgOTA0LjVDMTU5NC41IDkwOS40IDE1OTUuMyA5MTQuNSAxNTk0LjggOTE5LjVDMTU5My44IDkyOS42IDE1OTEuMiA5NDAuMSAxNTg4LjMgOTQ5LjZDMTU4Ni4yIDk1Ni41IDE1ODYuMyA5NzkuNyAxNTc3LjcgOTgxLjRDMTU3Mi41IDk4Mi40IDE1NzEuNCA5NzYuNCAxNTY3LjcgOTc0LjRDMTU2NS40IDk3My4yIDE1NjIuMyA5NzIuOCAxNTYwLjQgOTcxLjJDMTU0NC4zIDk1OCAxNTUxLjQgOTM3LjEgMTU1NSA5MTkuOUMxNTU3IDkxMC45IDE1NjAuNiA4OTkuOSAxNTY0IDg5MS40QzE1NjcuNSA4ODIuOCAxNTc0IDg3NC4xIDE1NzUuMSA4NjQuOEMxNTc3LjQgODQ0LjkgMTU3My4yIDgyMy43IDE1NzEuMSA4MDRDMTU3MC40IDc5Ny44IDE1NzEgNzkxLjQgMTU2OS45IDc4NS4yQzE1NjYuOSA3NjguMSAxNTY0LjYgNzUxIDE1NjIgNzMzLjlDMTU2MC43IDcyNSAxNTU3LjcgNzE1LjcgMTU1Ni4xIDcwNi43QzE1NTMuNSA2OTIuMyAxNTUwLjEgNjc4LjEgMTU0Ny40IDY2My43QzE1NDYuNiA2NTkuMSAxNTQ3LjggNjU0LjMgMTU0Ni44IDY0OS43QzE1NDYuMyA2NDcuMyAxNTQ0IDY0Ni4xIDE1NDMuMyA2NDMuOEMxNTQxLjggNjM5LjIgMTU0MC45IDYzNCAxNTM5LjYgNjI5LjNDMTUzOC40IDYyNC45IDE1NDAuMiA2MTkuNyAxNTM4LjQgNjE1LjRDMTUzNy42IDYxMy41IDE1MzYuMSA2MTIuMiAxNTM1LjIgNjEwLjRDMTUzMS43IDYwMy4xIDE1MzEuMiA1OTQgMTUyOC45IDU4Ni4zQzE1MjQuNyA1NzEuNiAxNTE5LjcgNTU2IDE1MTMuMSA1NDIuMUMxNTEwLjkgNTM3LjYgMTUwNy41IDUyMy43IDE1MDEuMiA1MjMuM0MxNDkzLjcgNTIyLjcgMTQ3NS44IDUzNS44IDE0NzAuMyA1NDAuOEMxNDQ3LjIgNTYxLjUgMTQyNy44IDU4Ny4yIDE0MTAgNjEyLjRDMTQwMi44IDYyMi44IDEzOTUgNjMyLjggMTM4Ny4xIDY0Mi43QzEzODUuNCA2NDQuOCAxMzgyLjYgNjQ1LjYgMTM4MSA2NDcuN0MxMzc5LjEgNjUwLjQgMTM3OC4yIDY1My44IDEzNzYuMiA2NTYuNEMxMzY5LjggNjY0LjcgMTM2My4yIDY3Mi40IDEzNTYuNSA2ODAuMkMxMzU1LjEgNjgxLjcgMTM1NC44IDY4My44IDEzNTMuNiA2ODUuNEMxMzQwLjggNzAxLjkgMTMyOS4zIDcxOC4zIDEzMTcuOSA3MzUuN0MxMzA0LjIgNzU2LjYgMTI4OS45IDc4My40IDEyOTYuMSA4MDkuMkMxMjk2LjkgODEyLjcgMTI5OS44IDgxNS42IDEzMDEuOCA4MTguNUMxMzA0LjggODIyLjkgMTMwNy4xIDgyNy44IDEzMTAuMyA4MzIuMUMxMzIwLjcgODQ2LjIgMTMzNCA4NTguNCAxMzQ2LjMgODcwLjlDMTM1NS4zIDg4MC4xIDEzOTIuNCA5MTUuNCAxNDAzLjMgOTE2LjJDMTQwNy4xIDkxMS4xIDE0MDMuOCA4OTUuNCAxNDAxLjggODg5LjJDMTM5OS4xIDg4MC42IDEzODEuMSA4NTIuNiAxMzc0LjUgODQ2LjVDMTM3MS43IDg0NCAxMzU2LjQgODI4LjMgMTM1Ni40IDgyNS43QzEzNTYuNSA4MTkuNCAxMzYxIDgxMy42IDEzNjIuNyA4MDhDMTM2My42IDgwNS4xIDEzNjMgODAyIDEzNjMuOSA3OTkuMUMxMzY1LjUgNzkzLjkgMTM2OC42IDc4OS41IDEzNzAuNSA3ODQuNkMxMzc5LjUgNzYyIDEzODkuNSA3MzIuMiAxNDAzLjUgNzEyLjJDMTQwNS4xIDcxMCAxNDA4IDcwOS41IDE0MDkuNiA3MDcuMkMxNDExLjggNzAzLjggMTQxMS4xIDY5OS4zIDE0MTMgNjk1LjhDMTQyMS42IDY3OS43IDE0MzIuMyA2NjQuNyAxNDQyLjQgNjQ5LjVDMTQ0Ni43IDY0My4xIDE0NTEuOSA2MzguOCAxNDU2LjggNjMzLjFDMTQ1OC4zIDYzMS4zIDE0NTguOCA2MjguOSAxNDYwLjIgNjI3QzE0NjQuNyA2MjAuNSAxNDgwLjEgNjAzIDE0ODcgNjAwLjlDMTQ5NC4yIDYwNi43IDE0OTQuNyA2MTkuOSAxNDk2LjggNjI4LjVDMTUwMi45IDY1Mi4yIDE1MDAuMyA2OTQuNCAxNTAwLjkgNzIwQzE1MDEuNyA3NTEuOSAxNDk5LjQgNzg0LjkgMTUwNy4zIDgxNi4zQzE1MDkgODIzLjEgMTUxMS42IDgyOS42IDE1MTUuNCA4MzUuNUMxNTE5LjYgODQxLjggMTUyNy44IDg0Ny41IDE1MjUuOSA4NTYuMUMxNTIzLjkgODY0LjggMTUwOS4zIDg4MC42IDE1MDMuMiA4ODcuNkMxNDkwLjMgOTAyLjUgMTQ3OS4yIDkyMS4yIDE0NzEuOCA5MzkuNUMxNDU3LjEgOTc1LjcgMTQ3NC4yIDk4Mi44IDE0NzMuOCAxMDE0LjZDMTQ3My43IDEwMjUuOSAxNDY1IDEwNDUuNSAxNDY5LjIgMTA1NC4zQzE0NzcuMiAxMDU2LjYgMTQ5Ny45IDEwNTEuOCAxNTAzLjggMTA1NS4zQzE1MDUuOSAxMDU2LjYgMTUwNi43IDEwNTguOSAxNTA4LjYgMTA2MC4yQzE1MTAuNiAxMDYxLjYgMTUxMy4xIDEwNjEuNCAxNTE1LjEgMTA2Mi44QzE1MjAuMyAxMDY2LjUgMTUyNC4yIDEwNzMgMTUyNy42IDEwNzguM0MxNTMwLjMgMTA4Mi41IDE1MzMuNiAxMDg2LjMgMTUzNC43IDEwOTEuM0MxNTM4LjEgMTEwNi4yIDE1MjIuOCAxMTMwLjQgMTUxNS45IDExNDIuN0MxNTEwLjYgMTE1MS45IDE1MDUuNSAxMTY0LjkgMTQ5Ni4zIDExNzEuMkMxNDkzLjUgMTE3My4xIDE0ODkuOSAxMTczLjUgMTQ4Ni45IDExNzQuN0MxNDc3LjMgMTE3OC44IDE0NjUuOSAxMTgxLjUgMTQ1NSAxMTgxLjRDMTQ1Mi4yIDExODEuMyAxNDUwLjEgMTE4MC44IDE0NDcuMiAxMTgxLjZDMTQzNS40IDExODQuOCAxNDI3LjIgMTE5NC45IDE0MTcuNCAxMjAxLjNDMTQxNS43IDEyMDIuNSAxNDE0LjQgMTIwMS4yIDE0MTIuNiAxMjAxLjdDMTQxMS4yIDEyMDIuMSAxNDA5LjggMTIwNC41IDE0MDguNSAxMjA1LjNDMTQwNi4xIDEyMDEuOSAxNDA0LjYgMTIwMS44IDE0MDAuNiAxMjAwLjhDMTM5Ni41IDExODIuNCAxNDA0LjIgMTE3OC41IDE0MTAuNSAxMTYzLjdDMTQxNC4xIDExNTUuMiAxNDE3LjUgMTE0Ni4zIDE0MTkuOSAxMTM3LjRDMTQyMS40IDExMzEuOCAxNDI2LjkgMTEyMC43IDE0MjMuOSAxMTE1LjJDMTQxOC42IDExMDUuNyAxNDA2IDEwOTguNSAxMzk3LjMgMTA5Mi43QzEzNzIuNyAxMDc2LjEgMTM0MC44IDEwNjEuNyAxMzEwLjkgMTA1OS4xQzEyOTkuMiAxMDU4LjEgMTI3MCAxMDYxIDEyNjEuMSAxMDU2LjRDMTI1NC4yIDEwNTIuOSAxMjU0LjggMTA0MS4zIDEyNTYuOSAxMDM1LjNDMTI2My4zIDEwMTcuMSAxMjcyLjYgMTAwMC45IDEyNjEuOCA5ODIuMkMxMjU3LjggOTc1LjMgMTI1NCA5NjcgMTI0OC4yIDk2MS40QzEyMzMuNCA5NDYuOSAxMjA5LjUgOTQzIDExOTAuMyA5NDkuOUMxMTgxLjQgOTUzIDExNzIuOSA5NTguOSAxMTY1LjMgOTY0LjJDMTE2My4xIDk2NS44IDExNjAuMyA5NjUuNSAxMTU4IDk2Ny4yQzExNTUuNiA5NjkgMTE1NC43IDk3Mi4yIDExNTIuNyA5NzQuM0MxMTUwLjEgOTc3IDExNDYuOSA5NzguNyAxMTQ0LjUgOTgxLjZDMTEzOSA5ODguNSAxMTMzLjcgOTk2LjQgMTEyNy43IDEwMDIuN0MxMTIyLjYgMTAwNy45IDExMTIgMTAwMCAxMTA0LjQgMTAxNC45QzEwOTcuOCAxMDI3LjkgMTEwMy41IDEwNDYuNSAxMTAxLjggMTA2MC41QzExMDAuNyAxMDY5LjggMTA5My4xIDEwNzguMyAxMDkxLjIgMTA4Ny40QzEwOTAuNSAxMDkwLjYgMTA5MS4yIDEwOTQuMSAxMDkwLjggMTA5Ny40QzEwODkuNCAxMTExLjEgMTA4Ny44IDExMjQuNCAxMDg4IDExMzguMkMxMDg4LjEgMTE0OS40IDEwODkuMiAxMTYxIDEwOTEuMSAxMTcyQzEwOTMgMTE4My41IDEwOTkgMTE5NC4xIDEwOTggMTIwNi4xQzEwOTcuMyAxMjE0LjQgMTA5MC43IDEyMjMuMyAxMDg3LjQgMTIzMC44QzEwODEuNSAxMjQ0LjIgMTA3MC4yIDEyNjggMTA2OCAxMjgyQzEwNjYuNCAxMjkyLjEgMTA2NC44IDEzMDIuMiAxMDYyLjkgMTMxMi40QzEwNjIuMiAxMzE2LjEgMTA1OS40IDEzMTguOCAxMDU5IDEzMjIuNkMxMDU3LjYgMTMzOS42IDEwNTguNCAxMzU5LjEgMTA0Ny41IDEzNzMuM1pNOTM0LjUgMTI0OC45QzkyNy41IDEyNDMuNSA5MzAuOCAxMjI5LjQgOTE3LjMgMTIyMy44QzkwNy41IDEyMTkuOCA4ODEuMSAxMjE5LjMgODcwLjggMTIyMS43Qzg2NS44IDEyMjIuOCA4NjEuNyAxMjI0LjkgODU2LjQgMTIyNS40Qzg0NyAxMjI2LjMgODM4LjkgMTIyNC42IDgyOS45IDEyMjIuN0M4MjYuNSAxMjIyIDgyMy40IDEyMjIuMiA4MjAuMSAxMjIwLjlDODEwLjcgMTIxNy4yIDc5Ni43IDEyMDAuNyA3OTEuOCAxMTkxLjhDNzg2LjEgMTE4MS41IDc4Mi42IDExNjguMyA3NzMuOCAxMTU5LjhDNzY5LjcgMTE1NS45IDc1MCAxMTU5LjggNzQzLjQgMTE1Ny41Qzc0My4xIDExNTUgNzQxLjkgMTE1MC4yIDc0Mi43IDExNDcuN0M3NDYuNSAxMTM2LjUgNzU0LjQgMTEyOS44IDc2MS43IDExMjEuM0M3NjMgMTExOS42IDc2Mi44IDExMTcuNSA3NjQgMTExNS45Qzc2OC44IDExMDkuNiA3NzcuMSAxMTAwIDc4NC4xIDEwOTYuOUM3ODguMSAxMTAwLjYgNzkxLjQgMTEwNS43IDc5Ni42IDExMDguMkM4MDAuNiAxMTEwLjEgODA1IDExMDkuNyA4MDkuMiAxMTEwLjdDODE2LjYgMTExMi42IDgyMy45IDExMTUuMiA4MzEuMSAxMTE3LjdDODM3IDExMTkuOCA4NDIuNiAxMTI1LjcgODQ4LjkgMTEyNi40Qzg1Ny4zIDExMjcuNCA4NjguOCAxMTIzLjkgODc2LjggMTEyN0M4OTIuMiAxMTMzLjEgOTEzLjQgMTE1NC4zIDkyMS45IDExNjguNEM5MjUgMTE3My43IDkyNi43IDExODAuMSA5MjkuNiAxMTg1LjdDOTMxLjIgMTE4OC43IDkzNC4yIDExOTAuNSA5MzUuNSAxMTkzLjZDOTQwLjIgMTIwNS41IDk0NS41IDEyNDAuMyA5MzQuNSAxMjQ4LjlaTTExNTkuNSAxMjU0LjFDMTE1MC43IDEyNTQuMiAxMTUyLjMgMTI0MiAxMTUyLjkgMTIzNS44QzExNTMuMiAxMjMzIDExNTIuMSAxMjMwLjYgMTE1Mi4yIDEyMjcuOUMxMTUyLjMgMTIyNC44IDExNTUuMyAxMjA5LjQgMTE1Ni40IDEyMDYuNUMxMTU3LjggMTIwMy4xIDExNjAuNiAxMjAwLjMgMTE2MS43IDExOTYuOUMxMTYyLjYgMTE5NCAxMTYyLjQgMTE5MSAxMTY0IDExODguMkMxMTcxLjQgMTE3NC40IDExODMuNiAxMTU0LjcgMTE5NiAxMTQ1QzExOTkuMiAxMTQyLjUgMTIwNi40IDExNDYuNCAxMjEwLjYgMTE0NS4xQzEyMjQuNSAxMTQwLjggMTIyNC44IDExMzAuMSAxMjI5LjEgMTExOUMxMjM2LjQgMTExNi45IDEyNzkuOCAxMTE2IDEyODguNyAxMTE2LjdDMTI5NS45IDExMTcuMiAxMzAyLjMgMTExOS4yIDEzMDkuMiAxMTIxLjFDMTMxMy4yIDExMjIuMiAxMzE1IDExMjQuNSAxMzE4LjYgMTEyNi4zQzEzMjQuNiAxMTI5LjIgMTMzMy4xIDExMjcuNyAxMzMxLjggMTEzNy41QzEzMzAuNiAxMTQ2LjkgMTMwMy43IDEyMDAuNyAxMjk3LjIgMTIwOEMxMjg5LjIgMTIxNyAxMjgwIDEyMjUgMTI2OCAxMjI4QzEyNTguNyAxMjMwLjQgMTI1MS40IDEyMjguNSAxMjQyLjQgMTIyNy41QzEyMzcuNyAxMjI3IDEyMzMgMTIyNy42IDEyMjguNCAxMjI3LjJDMTIxMS43IDEyMjUuNiAxMTg1LjMgMTIyMSAxMTcwLjggMTIzMi4zQzExNjQuMyAxMjM3LjQgMTE2NC4zIDEyNDcuOSAxMTU5LjUgMTI1NC4xWk04NzEgMTIwMkM4OTAuNSAxMTk5IDkwMS4xIDExNzQuMyA4OTAuMSAxMTcwLjhDODc1LjUgMTE2Ni4yIDg1Ny41IDExODMuNiA4NDIuNSAxMTcyLjRDODMwLjYgMTE2My41IDgzOSAxMTQyIDgzMi41IDExMzcuNEM4MzAgMTEzNS42IDgyNi43IDExMzUuNyA4MjMuOCAxMTM1LjRDODA4LjkgMTEzNC4yIDgwMi45IDExNDkuNCA4MDQuMSAxMTYyLjVDODA2LjggMTE5MS4xIDg0Ni40IDEyMDUuOCA4NzEgMTIwMlpNMTI1My4xIDEyMDVDMTI3Ny40IDExOTkuNiAxMjg3IDExODQuMSAxMjkxLjEgMTE2MC45QzEyOTIuMSAxMTU1LjEgMTI5My4yIDExNDUuNSAxMjkwLjcgMTE0MEMxMjg4LjIgMTEzNC43IDEyNjcgMTEzNS44IDEyNjMuNCAxMTM5LjZDMTI1OC45IDExNDQuMiAxMjYwLjYgMTE1OC44IDEyNTYuOCAxMTY1LjVDMTI1My4yIDExNzIgMTI0MCAxMTgzLjYgMTIzMS44IDExODAuOUMxMjI2LjIgMTE3OSAxMjIyLjEgMTE3My42IDEyMTYuNyAxMTcxLjFDMTIxMS41IDExNjguNiAxMjAwLjQgMTE2OC44IDExOTguOCAxMTc2LjNDMTE5OCAxMTc5LjggMTIwMCAxMTg0LjcgMTIwMS43IDExODcuOEMxMjExIDEyMDUgMTIzNS40IDEyMDguOSAxMjUzLjEgMTIwNVpNMTA2NS41IDE2ODZDMTA1OC45IDE2ODcuNyAxMDMyLjQgMTY4Ny43IDEwMjUuNSAxNjg2LjNDMTAxNS43IDE2ODQuNCA5NzguOSAxNjY0IDk3MS43IDE2NTYuOUM5NjIuNyAxNjQ4LjIgOTY2LjcgMTY0Ny4yIDk2Mi42IDE2NDAuOUM5NjAuOCAxNjM4LjEgOTU3LjUgMTYzNy43IDk1NS42IDE2MzUuNEM5NDkuNiAxNjI3LjkgOTQ1LjMgMTYxNi41IDk0Mi4yIDE2MDcuNkM5MzYuNiAxNTkxLjUgOTMxLjkgMTU2NSA5NDAuNCAxNTQ5LjNDOTQ1LjYgMTUzOS44IDk1MS4xIDE1MzcuOSA5NTkuNSAxNTMyLjdDOTYyIDE1MzEuMSA5NjMuNCAxNTI4LjIgOTY2LjEgMTUyNi43Qzk3OS41IDE1MTkuMiAxMDA5LjUgMTUxMC40IDEwMjUuMSAxNTA5LjVDMTA2NC4xIDE1MDcuNSAxMTEzLjYgMTUwNy4xIDExNDIgMTUzOS4zQzExNjcuMSAxNTY3LjYgMTE1MyAxNjI0LjYgMTEyNi43IDE2NDguMkMxMTE2LjUgMTY1Ny40IDExMDQuOSAxNjY0IDEwOTIuNiAxNjY5LjhDMTA5MC44IDE2NzAuNyAxMDkwIDE2NzIuOCAxMDg4LjIgMTY3My44QzEwODUuNiAxNjc1LjUgMTA2Ny4zIDE2ODUuNiAxMDY1LjUgMTY4NlpNMTAzMC45IDE1NTkuNkMxMDM0LjggMTU2Mi41IDEwNjQuOSAxNTY1LjUgMTA3MS43IDE1NjUuN0MxMDg2LjEgMTU2Ni4xIDEwOTMuNiAxNTgxLjUgMTEwNy4xIDE1ODMuNEMxMTEzLjcgMTU4NC4zIDExMjYuMSAxNTcyIDExMjEuMyAxNTY2LjNDMTExOS40IDE1NjQgMTExNi4xIDE1NjMuNCAxMTEzLjUgMTU2MkMxMTEwIDE1NjAuMiAxMTA3LjEgMTU1NyAxMTAzLjMgMTU1NS44QzEwODguMiAxNTUwLjkgMTA0Mi4xIDE1NDcuMSAxMDMwLjkgMTU1OS42WiIvPjxwYXRoIGlkPSJjaGluLXNub3V0LW91dGxpbmUiIGQ9Ik05MzggMTcwMEM5NzUgMTc1OCAxMTI1IDE3NTggMTE2MiAxNzAwIiBmaWxsPSJub25lIiBzdHJva2U9IiMxQjRBM0YiIHN0cm9rZS13aWR0aD0iMTEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIGlkPSJ1bmRlci1leWUtbWFya3MiIGZpbGw9IiM0RDU1NTIiPjxwYXRoIGQ9Ik01MzUuNSA4MTEuMkM1MzQuOSA4MDYuNyA1MzUuOCA3NzcgNTM3LjUgNzc0LjRDNTM4LjYgNzgzIDUzOS44IDgwNC45IDUzNS41IDgxMS4yWk03NjYuNSA4MDlDNzY2LjMgODA4LjggNzY1LjggODA5LjQgNzY1LjUgODA5LjNDNzYyLjYgODA3LjcgNzYzIDc4OS45IDc2My40IDc4Ni42Qzc2Ny40IDc5MS4yIDc2Ny40IDgwMi42IDc2Ni41IDgwOVpNODc5LjUgMTEyNy4yQzg3Ny4yIDExMjYuOCA4NzQuMSAxMTI3IDg3MS43IDExMjYuM0M4NjggMTEyNS4xIDg2Ny41IDExMjEuNiA4NjQuNSAxMTE5LjdDODYyLjIgMTExOC4yIDg1OS40IDExMTguMyA4NTcuNCAxMTE2LjNDODU2LjIgMTExNS4yIDg1Ni45IDExMTQuOSA4NTYuNiAxMTEzLjlDODY0LjUgMTExNi4zIDg3My4xIDExMjEuOSA4NzkuNSAxMTI3LjJaTTgwMy4yIDEyNzQuN0M4MDcuOCAxMjY5LjkgODIxLjQgMTI3NS4xIDgyNy40IDEyNzcuMkM4NDkuOSAxMjg1LjEgODczLjIgMTI5NCA4OTMuMyAxMzA3LjFDODk5LjMgMTMxMSA5MTQuMiAxMzE1LjcgOTE0LjQgMTMyM0M4OTcuMSAxMzI0LjQgODQ2LjYgMTMwMS40IDgyOS44IDEyOTIuOUM4MjIuOSAxMjg5LjQgODA2LjMgMTI4MSA4MDMuMiAxMjc0LjdaTTExODQuNiAxMzIzQzExODUuMSAxMzE1LjkgMTE5OS40IDEzMTEuOSAxMjA1LjEgMTMwNy44QzEyMTkuOCAxMjk3LjQgMTI1OC4xIDEyNzkuMyAxMjc1LjcgMTI3Ni40QzEyODEuOSAxMjc1LjQgMTI5MC45IDEyNjkuOCAxMjk2LjEgMTI3NC42QzEyOTIuMSAxMjgyLjQgMTI4MC4xIDEyODYuMiAxMjczIDEyOTEuMUMxMjU5LjUgMTMwMC40IDExOTkuNSAxMzI0LjEgMTE4NC42IDEzMjNaTTEwNDkuNiAxMzg0LjNDMTA0Mi4yIDEzNzkuNCAxMDUxLjMgMTM2OC4yIDEwNTMuNyAxMzYyQzEwNTQuMSAxMzY2LjUgMTA1My44IDEzODAuMSAxMDQ5LjYgMTM4NC4zWiIvPjwvZz48L2c+CjxnIGlkPSJhY2NlbnQtZXllcyIgZmlsbD0iIzhCRDNGRiIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNODcyLjUgMTIwMC4yQzg2Ny4xIDEyMDIgODYwLjMgMTIwMC43IDg1NC44IDExOTkuOEM4NDkuNSAxMTk4LjkgODQ0LjMgMTE5OC43IDgzOS4xIDExOTdDODM1LjQgMTE5NS44IDgzMy4xIDExOTMuMyA4MjkuNyAxMTkxLjVDODE3LjUgMTE4NC45IDgwOC43IDExNzcuNiA4MDUuNSAxMTYzLjJDODAyLjQgMTE0OS41IDgxNC4yIDExMzIuNyA4MjkuMSAxMTM3LjhDODM4LjIgMTE0MSA4MjkuMSAxMTY0LjcgODQxLjIgMTE3My4xQzg1NCAxMTgyIDg2Ny4zIDExNzUuMyA4ODEuMyAxMTczLjVDODgzLjMgMTE3My4yIDg4NS4xIDExNzIuNCA4ODcuMiAxMTczQzg5NC4yIDExNzQuNyA4OTEuNSAxMTg2LjQgODg4LjMgMTE5MC4zQzg4NC4yIDExOTUuNCA4NzguNiAxMTk4LjIgODcyLjUgMTIwMC4yWk0xMjUwLjUgMTIwNEMxMjM2LjcgMTIwNS43IDEyMTguNyAxMjA0LjcgMTIwOC4yIDExOTRDMTIwMy45IDExODkuNyAxMTk3LjMgMTE3Ny43IDEyMDQuNSAxMTcyLjlDMTIxMy44IDExNjYuNyAxMjIxLjYgMTE3OCAxMjI5LjIgMTE4MS4zQzEyMzkuOSAxMTg1LjkgMTI1My45IDExNzUgMTI1OC41IDExNjUuOUMxMjYyLjEgMTE1OC44IDEyNjAuMiAxMTQ4LjIgMTI2NC45IDExNDEuOUMxMjY5LjEgMTEzNi41IDEyODUuMiAxMTM2LjEgMTI4OC4zIDExNDIuOEMxMjkzLjUgMTE1NC4yIDEyODguOSAxMTY2LjcgMTI4NC42IDExNzcuNUMxMjgzLjQgMTE4MC42IDEyODIuOCAxMTg1IDEyODAuNyAxMTg3LjdDMTI3NC4xIDExOTUuOSAxMjYwLjggMTIwMi44IDEyNTAuNSAxMjA0WiIvPjwvZz4KPC9zdmc+Cg=="></div>
+      <div class="orb-name">CANOPY</div>
+      <div class="orb-sub">one app · everything connected</div>
+      <div class="orb-brand">NORTHBIRCH</div>
+    </div>
+    <div class="srccluster">
+      <div class="src-h">SHARED SOURCES — DRAWN ONCE, SHOWN IN TWO PLACES</div>
+      <div class="srcgrid">
+        <div class="srcchip" id="node-src-weather" data-node="src-weather" tabindex="0" role="button">Environment Canada — weather + alerts<small>one feed — forecasts, warnings, public alerts</small></div>
+        <div class="srcchip" id="node-src-cams" data-node="src-cams" tabindex="0" role="button">432 traffic camera views<small>403 City of Ottawa + 29 Ontario highway (MTO) cameras</small></div>
+        <div class="srcchip" id="node-src-roads" data-node="src-roads" tabindex="0" role="button">Ottawa road closures<small>the city's road events feed</small></div>
+        <div class="srcchip" id="node-src-511" data-node="src-511" tabindex="0" role="button">Ontario 511 — road conditions<small>provincial highways</small></div>
+      </div>
+      <div class="src-note">Each source is drawn once. Its lines run to both places that show it — Home and SITREP.</div>
+    </div>
+  </div>
+
+  <section class="panel p-home" id="node-home" data-node="home" tabindex="0" role="button" aria-label="Home">
+    <h2>HOME</h2>
+    <p class="tagline">the wall — weather, news, TV and the day at a glance</p>
+    <div class="chips">
+      <div class="chip" data-sel="home" data-name="News — CBC News · CityNews · BBC · DW">News — CBC News · CityNews · BBC · DW (German world news)</div>
+      <div class="chip" data-sel="home" data-name="Live TV — four world channels">Live TV — DW · TRT (Turkish) · CNA (Asian news) · NHK (Japanese) · Arirang (Korean)</div>
+      <div class="chip" data-sel="home" data-name="Markets — Bitcoin · Bank of Canada">Markets — Bitcoin price · Bank of Canada dollar rate + 10-year bond</div>
+      <div class="chip" data-sel="home" data-name="Markets snapshot — Yahoo · TradingView">Markets snapshot — Yahoo · market charts (TradingView)</div>
+      <div class="chip" data-sel="home" data-name="Calendar feed">Calendar feed</div>
+      <div class="chip" data-sel="home" data-name="Team feed — team + briefing">Team feed — team + briefing</div>
+      <div class="chip" data-sel="home" data-name="Home security feed">Home security feed<span class="grant">GRANT</span></div>
+      <div class="chip" data-sel="home" data-name="Home cameras — 4 zones">Home cameras — 4 zones<span class="grant">GRANT</span></div>
+    </div>
+    <div class="cluster">
+      <div class="cl-label">Link only — opens the app or site ↗</div>
+      <div class="chips">
+        <div class="chip st-link k-out" data-sel="home" data-name="CBC Gem · CTV News · Global News — link only">CBC Gem (free TV) · CTV News · Global News ↗</div>
+        <div class="chip st-link k-out" data-sel="home" data-name="Ottawa Airport (YOW) — link only">Ottawa Airport (YOW) ↗</div>
+        <div class="chip st-none" data-sel="home" data-name="Police scanner — no feed exists">Police scanner — no feed exists ✕</div>
+        <div class="chip st-none" data-sel="home" data-name="World monitor — no route">World monitor — no way to connect yet ✕</div>
+      </div>
+    </div>
+    <div class="cluster amber">
+      <div class="cl-label">Candidates — from the hunt, not connected yet</div>
+      <div class="chips">
+        <div class="chip st-cand k-out" data-sel="home" data-name="OpenWeather — deeper forecasts">OpenWeather — deeper forecasts</div>
+        <div class="chip st-cand k-out" data-sel="home" data-name="Home Assistant — smart home">Home Assistant — smart home</div>
+        <div class="chip st-cand k-out" data-sel="home" data-name="Hydro Ottawa — power outages">Hydro Ottawa — power outages</div>
+        <div class="chip st-cand k-out" data-sel="home" data-name="Internet radio — Radio Browser">Internet radio — Radio Browser</div>
+        <div class="chip st-cand k-out" data-sel="home" data-name="Solar + grid data">Solar + grid data</div>
+      </div>
+    </div>
+    <div class="sitrepbox" id="node-sitrep" data-node="sitrep" tabindex="0" role="button" aria-label="SITREP — a section inside Home">
+      <h3>SITREP — the situation report</h3>
+      <p class="sb-sub">a section inside Home — weather, roads, world, right now · its own tab is retired. Weather, cameras, road closures and 511 arrive here from the shared sources at the centre.</p>
+      <div class="chips">
+        <div class="chip" data-sel="sitrep" data-name="News tapes">News tapes</div>
+        <div class="chip" data-sel="sitrep" data-name="DW stream — German world news">DW stream — German world news</div>
+        <div class="chip" data-sel="sitrep" data-name="TV wall — 4 channels">TV wall — 4 channels</div>
+        <div class="chip" data-sel="sitrep" data-name="City of Ottawa — permits · city services">City of Ottawa — permits · city services (dial 311)</div>
+      </div>
+      <div class="cluster">
+        <div class="cl-label">Link only ↗ + no route ✕</div>
+        <div class="chips">
+          <div class="chip st-link k-out" data-sel="sitrep" data-name="CBC Gem · CTV News · Global News — link only">CBC Gem · CTV News · Global News ↗</div>
+          <div class="chip st-link k-out" data-sel="sitrep" data-name="Ottawa Airport (YOW) — link only">Ottawa Airport (YOW) ↗</div>
+          <div class="chip st-link k-out" data-sel="sitrep" data-name="Scanner — official pages">Scanner — official pages ↗</div>
+          <div class="chip st-none" data-sel="sitrep" data-name="Police scanner — no feed exists">Police scanner — no feed exists ✕</div>
+        </div>
+      </div>
+      <div class="cluster amber">
+        <div class="cl-label">Candidates — from the hunt, not connected yet</div>
+        <div class="chips">
+          <div class="chip st-cand k-out" data-sel="sitrep" data-name="Snow stack — Tomorrow.io · rain and snow data">Snow stack — Tomorrow.io · rain and snow data (RDPA)</div>
+          <div class="chip st-cand k-out" data-sel="sitrep" data-name="Emergency alerts — Canada-wide (Alert Ready)">Emergency alerts — Canada-wide (Alert Ready)</div>
+          <div class="chip st-cand k-out" data-sel="sitrep" data-name="Ship tracking — AISHub">Ship tracking — AISHub</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel p-deck" id="node-deck" data-node="deck" tabindex="0" role="button" aria-label="Command Deck">
+    <h2>COMMAND DECK</h2>
+    <p class="tagline">the team's room — where the AI team works, talks and keeps score</p>
+    <div class="chips">
+      <div class="chip" data-sel="deck" data-name="Team usage feed">Team usage feed</div>
+      <div class="chip" data-sel="deck" data-name="Open tasks feed">Open tasks feed</div>
+      <div class="chip" data-sel="deck" data-name="Flags feed">Flags feed</div>
+      <div class="chip" data-sel="deck" data-name="5 team chats">5 team chats</div>
+      <div class="chip" data-sel="deck" data-name="5 work panes">5 work panes — one per team member</div>
+      <div class="chip" data-sel="deck" data-name="Talk to Assistant — 7 talk lines">Talk to Assistant — 7 talk lines</div>
+      <div class="chip" data-sel="deck" data-name="10 app links">10 app links</div>
+      <div class="chip" data-sel="deck" data-name="Doors back to the hub">Doors back to the hub</div>
+      <div class="chip" data-sel="deck" data-name="Projects feed">Projects feed</div>
+    </div>
+    <div class="cluster amber">
+      <div class="cl-label">Candidates — from the hunt, not connected yet</div>
+      <div class="chips">
+        <div class="chip st-cand k-out" data-sel="deck" data-name="Facebook Lead Ads — leads into the apps">Facebook Lead Ads — leads into the apps</div>
+        <div class="chip st-cand k-out" data-sel="deck" data-name="Zapier / Make — automation">Zapier / Make — automation layer</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel p-eng" id="node-eng" data-node="eng" tabindex="0" role="button" aria-label="Engineering Portal">
+    <h2>ENGINEERING</h2>
+    <p class="tagline">PORTAL — inside the Command Deck · the design shop</p>
+    <div class="chips">
+      <div class="chip" data-sel="eng" data-name="Design screen — CAD drawings">Design screen — CAD drawings<small>computer-aided design</small></div>
+      <div class="chip" data-sel="eng" data-name="FreeCAD → Blender → 3D preview">FreeCAD → Blender → 3D preview</div>
+      <div class="chip" data-sel="eng" data-name="6 project steps">6 project steps</div>
+      <div class="chip" data-sel="eng" data-name="Engineering chat">Engineering chat</div>
+    </div>
+    <div class="cluster amber">
+      <div class="cl-label">Candidates — from the hunt, not connected yet</div>
+      <div class="chips">
+        <div class="chip st-cand k-out" data-sel="eng" data-name="Autodesk Viewer — AutoCAD drawings in the app">Autodesk Viewer — AutoCAD drawings in the app</div>
+        <div class="chip st-cand k-out" data-sel="eng" data-name="3D viewer (Babylon / Three)">3D viewer (Babylon / Three)</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel p-media" id="node-media" data-node="media" tabindex="0" role="button" aria-label="Media Portal">
+    <h2>MEDIA PORTAL</h2>
+    <p class="tagline">inside the Command Deck · video, pictures and ad projects</p>
+    <div class="chips">
+      <div class="chip" data-sel="media" data-name="Videos feed">Videos feed</div>
+      <div class="chip" data-sel="media" data-name="Pictures feed">Pictures feed</div>
+      <div class="chip" data-sel="media" data-name="Ad projects feed">Ad projects feed</div>
+      <div class="chip" data-sel="media" data-name="Viewing screen">Viewing screen</div>
+      <div class="chip" data-sel="media" data-name="6 media steps">6 media steps</div>
+      <div class="chip" data-sel="media" data-name="Media chat">Media chat</div>
+    </div>
+    <div class="cluster amber">
+      <div class="cl-label">Candidates — from the hunt, not connected yet</div>
+      <div class="chips">
+        <div class="chip st-cand k-out" data-sel="media" data-name="Photo editor in the app (IMG.LY)">Photo editor in the app (IMG.LY)</div>
+        <div class="chip st-cand k-out" data-sel="media" data-name="Matterport — 3D walkthroughs">Matterport — 3D walkthroughs</div>
+        <div class="chip st-cand k-out" data-sel="media" data-name="Photopea — free photo editor">Photopea — free photo editor</div>
+        <div class="chip st-cand k-out" data-sel="media" data-name="Canva Connect — designs">Canva Connect — designs</div>
+        <div class="chip st-cand k-out" data-sel="media" data-name="CapCut — video editing">CapCut — video editing</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel p-day" id="node-daybook" data-node="daybook" tabindex="0" role="button" aria-label="Daybook">
+    <h2>DAYBOOK</h2>
+    <p class="tagline">Day to Day — your personal side: money, home, health, life</p>
+    <div class="chips">
+      <div class="chip" data-sel="daybook" data-name="Day stream + capture">Day stream + capture</div>
+      <div class="chip k-out" data-sel="daybook" data-name="Calendar — Google Calendar">Calendar — Google Calendar</div>
+      <div class="chip" data-sel="daybook" data-name="Commute — from your calendar">Commute — from your calendar</div>
+      <div class="chip" data-sel="daybook" data-name="Money book — Google Drive workbook">Money book — Google Drive workbook</div>
+      <div class="chip" data-sel="daybook" data-name="Team money pot — ledger">Team money pot — ledger</div>
+      <div class="chip k-out" data-sel="daybook" data-name="Investments — linked account">Investments — linked account<span class="grant">GRANT</span></div>
+      <div class="chip" data-sel="daybook" data-name="Cameras in 4 zones">Cameras in 4 zones<span class="grant">GRANT</span></div>
+      <div class="chip st-wired" data-sel="daybook" data-name="Home monitoring">Home monitoring</div>
+      <div class="chip st-wired" data-sel="daybook" data-name="Home automation">Home automation</div>
+      <div class="chip st-wired k-out" data-sel="daybook" data-name="Social — Messenger, Instagram, Facebook, Threads">Social — Messenger, Instagram, Facebook, Threads<small>worked in — feeds readable here + one composer</small></div>
+      <div class="chip" data-sel="daybook" data-name="Shopping → budgeting">Shopping → budgeting</div>
+      <div class="chip" data-sel="daybook" data-name="Notes">Notes</div>
+      <div class="chip" data-sel="daybook" data-name="Talk to Assistant — voice bar">Talk to Assistant — voice bar</div>
+      <div class="chip st-dir k-out" data-sel="daybook" data-name="FordPass — Ranger link, setup pending">FordPass — Ranger link · setup pending<span class="grant">GRANT</span><small>through Home Assistant — lock, start, GPS (researched: go)</small></div>
+    </div>
+    <div class="cluster amber">
+      <div class="cl-label">Candidates — from the hunt, not connected yet</div>
+      <div class="chips">
+        <div class="chip st-cand k-out" data-sel="daybook" data-name="Plaid — bank data, read-only (TD)">Plaid — bank data, read-only (TD)</div>
+        <div class="chip st-cand k-out" data-sel="daybook" data-name="Spotify — music and podcasts">Spotify — music and podcasts</div>
+        <div class="chip st-cand k-out" data-sel="daybook" data-name="WhatsApp — messages">WhatsApp — messages</div>
+        <div class="chip st-cand k-out" data-sel="daybook" data-name="Calendly — bookings">Calendly — bookings</div>
+        <div class="chip st-cand k-out" data-sel="daybook" data-name="Buffer — schedule social posts">Buffer — schedule social posts</div>
+        <div class="chip st-cand k-out" data-sel="daybook" data-name="Health — watches, rings, apps">Health — watches, rings, apps</div>
+        <div class="chip st-cand k-out" data-sel="daybook" data-name="Google Photos + YouTube">Google Photos + YouTube</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="geye" id="node-godseye" data-node="godseye" tabindex="0" role="button" aria-label="God's Eye View — the world layer">
+    <h2>GOD'S EYE VIEW</h2>
+    <div class="ge-sub">the world layer — it lives inside SITREP, in Home · what is inside it sits on its shelf</div>
+    <div class="ge-shelf">
+      <div class="ge-chip">Earthquakes — live, worldwide<small>U.S. Geological Survey</small></div>
+      <div class="ge-chip">Disaster alerts — worldwide<small>GDACS — United Nations / European Commission</small></div>
+      <div class="ge-chip">Natural events — wildfires, storms, floods, volcanoes<small>NASA EONET</small></div>
+      <div class="ge-chip link">Emergency scanner audio<small>Broadcastify — listen there ↗</small></div>
+      <div class="ge-chip">World map + rain radar<small>OpenStreetMap · RainViewer</small></div>
+      <div class="ge-chip link">Ottawa Airport (YOW)<small>link only — opens the airport site ↗</small></div>
+    </div>
+    <div class="ge-port" aria-hidden="true"></div>
+  </div>
+
+  <section class="panel p-wb" id="node-workbench" data-node="workbench" tabindex="0" role="button" aria-label="Workbench">
+    <h2>WORKBENCH</h2>
+    <p class="tagline">the docking shelf — apps plug in here</p>
+    <div class="wb-caption"><b>Apps plug in here</b> — everything they carry works across Canopy. The lines out of an app mean: <b>this app's things now work across Canopy.</b></div>
+    <div class="wb-cols">
+      <div class="ownerbox">
+        <h3>GRANT'S APPS</h3>
+        <p class="ob-sub">Grant's own apps — grouped by company</p>
+        <div class="topapps">
+          <div class="dept" data-node="aqua" id="node-aqua" tabindex="0" role="button">
+            <h5>Brand My Aqua <span class="gloss">— water brand</span></h5>
+            <div class="secs"><span class="sec-chip">Social</span><span class="sec-chip">Email</span><span class="sec-chip">Calendar</span><span class="sec-chip">Assistant</span></div>
+          </div>
+          <div class="dept" data-node="purenzyme" id="node-purenzyme" tabindex="0" role="button">
+            <h5>purEnzyme <span class="gloss">— cleaning products</span></h5>
+            <div class="secs"><span class="sec-chip">Social</span><span class="sec-chip">Email</span><span class="sec-chip">Calendar</span><span class="sec-chip">Assistant</span></div>
+          </div>
+          <div class="dept" data-node="atra" id="node-atra" tabindex="0" role="button">
+            <h5>Atra Lend <span class="gloss">— lending</span></h5>
+            <div class="secs"><span class="sec-chip">Social</span><span class="sec-chip">Email</span><span class="sec-chip">Calendar</span><span class="sec-chip">Assistant</span></div>
+          </div>
+          <div class="dept" data-node="northbirchapp" id="node-northbirchapp" tabindex="0" role="button">
+            <h5>Northbirch App</h5>
+            <div class="secs"><span class="sec-chip">Social</span><span class="sec-chip">Email</span><span class="sec-chip">Calendar</span><span class="sec-chip">Assistant</span></div>
+          </div>
+        </div>
+        <div class="companyrow">
+          <div class="companybox">
+            <h4>NORTHBIRCH</h4>
+            <p class="cb-sub">Grant's company — Trellis and SiteVision live here</p>
+            <div class="trellisbox" id="node-trellis" data-node="trellis" tabindex="0" role="button" aria-label="Trellis family">
+              <h4>TRELLIS — the green-trades family</h4>
+              <p class="tb-sub">Grant's umbrella of trade apps — seven departments, each with its own sections and services inside</p>
+              <div class="subgroup-h">Shared by the whole family — one account each</div>
+              <div class="chips">
+                <div class="chip st-cand k-out" id="node-quickbooks" data-node="quickbooks" data-sel="quickbooks" data-name="QuickBooks — books + payroll (under Trellis)">QuickBooks — books + payroll</div>
+                <div class="chip st-cand k-out" data-sel="trellis" data-name="Stripe — payments rail">Stripe — payments rail</div>
+                <div class="chip st-cand k-out" data-sel="trellis" data-name="Jobber — field jobs">Jobber — field jobs: scheduling, dispatch, quotes</div>
+                <div class="chip st-cand k-out" data-sel="trellis" data-name="Homebase — crew schedules">Homebase — crew schedules</div>
+                <div class="chip st-cand k-out" data-sel="trellis" data-name="HomeStars — leads + reviews">HomeStars — leads + reviews</div>
+                <div class="chip st-cand k-out" data-sel="trellis" data-name="WhatsApp — crew + client texts">WhatsApp — crew + client texts</div>
+                <div class="chip st-cand k-out" data-sel="trellis" data-name="Mailchimp — marketing email">Mailchimp — marketing email</div>
+                <div class="chip st-cand k-out" data-sel="trellis" data-name="Google Business Profile — reviews + listings">Google Business Profile — reviews + listings</div>
+                <div class="chip st-cand k-out" data-sel="trellis" data-name="HubSpot — one sales pipeline (Cityscape's own)">HubSpot — one sales pipeline (Cityscape's own)</div>
+                <div class="chip st-dir k-out" data-sel="trellis" data-name="Routific — route planning (Flurry + Tend)">Routific — route planning (Flurry + Tend)</div>
+                <div class="chip" data-sel="trellis" data-name="Also on the family shelf">Also on the family shelf — Go iLawn + ExaYard measuring · Qwilr proposals · Sendspark personal video · Yelp reviews · Perenual + Trefle plant data · candidates: Housecall Pro, FreshBooks, Wave</div>
+              </div>
+
+              <div class="dept" id="node-mainline" data-node="mainline" tabindex="0" role="button">
+                <h5>MAINLINE <span class="gloss">— watering systems</span></h5>
+                <div class="secs"><span class="sec-chip">Service</span><span class="sec-chip">Install</span><span class="sec-chip">Office</span><span class="sec-chip">Routes</span><span class="sec-chip">Crews</span><span class="sec-chip">Equipment</span><span class="sec-chip">Hardware</span></div>
+                <div class="chips">
+                  <div class="chip st-dir k-out" data-sel="mainline" data-name="Hunter Hydrawise — smart watering controllers">Hunter Hydrawise — smart watering controllers</div>
+                  <div class="chip st-dir k-out" data-sel="mainline" data-name="Rain Bird IQ4 — commercial watering">Rain Bird IQ4 — commercial watering</div>
+                </div>
+              </div>
+              <div class="dept" id="node-course" data-node="course" tabindex="0" role="button">
+                <h5>COURSE <span class="gloss">— stonework and patios</span></h5>
+                <div class="chips">
+                  <div class="chip st-link k-out" data-sel="course" data-name="Unilock — stone catalogue + design studio">Unilock — stone catalogue + design studio ↗</div>
+                  <div class="chip st-link k-out" data-sel="course" data-name="Techo-Bloc — stone catalogue + calculators">Techo-Bloc — stone catalogue + calculators ↗</div>
+                  <div class="chip st-link k-out" data-sel="course" data-name="Permacon + Permacon Studio — stone + designs">Permacon + Permacon Studio — stone + designs ↗</div>
+                  <div class="chip st-cand k-out" data-sel="course" data-name="iScape — yard design in AR">iScape — yard design in AR</div>
+                  <div class="chip k-out" data-sel="course" data-name="Shadowmap — sun and shadow">Shadowmap — sun and shadow</div>
+                </div>
+              </div>
+              <div class="dept" id="node-tend" data-node="tend" tabindex="0" role="button">
+                <h5>TEND <span class="gloss">— lawn care</span></h5>
+                <div class="chips">
+                  <div class="chip st-dir k-out" data-sel="tend" data-name="Service Autopilot — recurring schedules">Service Autopilot — recurring schedules</div>
+                  <div class="chip st-cand k-out" data-sel="tend" data-name="RealGreen — maintenance software (alternative)">RealGreen — maintenance software (alternative)</div>
+                </div>
+              </div>
+              <div class="dept flurryd" id="node-flurry" data-node="flurry" tabindex="0" role="button">
+                <h5>FLURRY <span class="gloss">— snow clearing</span></h5>
+                <div class="secs"><span class="sec-chip">Dispatch</span><span class="sec-chip">Residential</span><span class="sec-chip">Commercial</span><span class="sec-chip">Operations</span></div>
+                <div class="snow">SNOW SITREP — storm mode</div>
+                <div class="pride">for the snow fighters — we fight Mother Nature</div>
+                <div class="chips">
+                  <div class="chip st-dir k-out" data-sel="flurry" data-name="Weather stack — from SITREP's shared sources">Weather stack — from SITREP's shared sources</div>
+                  <div class="chip st-cand k-out" data-sel="flurry" data-name="Tomorrow.io — snow depth + alerts">Tomorrow.io — snow depth + alerts</div>
+                  <div class="chip st-cand k-out" data-sel="flurry" data-name="SnowPlowTracker — snow job tracking">SnowPlowTracker — snow job tracking</div>
+                  <div class="chip st-cand k-out" data-sel="flurry" data-name="Geotab — truck tracking (readers + GPS)">Geotab — truck tracking (readers + GPS)</div>
+                </div>
+              </div>
+              <div class="dept" id="node-lumen" data-node="lumen" tabindex="0" role="button">
+                <h5>LUMEN <span class="gloss">— garden lighting</span></h5>
+                <div class="chips">
+                  <div class="chip st-link k-out" data-sel="lumen" data-name="FX Luminaire — lighting catalogue">FX Luminaire — lighting catalogue ↗</div>
+                  <div class="chip st-link k-out" data-sel="lumen" data-name="Kichler — lighting catalogue">Kichler — lighting catalogue ↗</div>
+                </div>
+              </div>
+              <div class="dept" id="node-bole" data-node="bole" tabindex="0" role="button">
+                <h5>BOLE <span class="gloss">— tree care</span></h5>
+                <div class="chips">
+                  <div class="chip st-dir k-out" data-sel="bole" data-name="ArborNote — tree work orders">ArborNote — tree work orders</div>
+                  <div class="chip st-dir k-out" data-sel="bole" data-name="TreePlotter — tree inventory">TreePlotter — tree inventory</div>
+                </div>
+              </div>
+              <div class="dept" id="node-glimmer" data-node="glimmer" tabindex="0" role="button">
+                <h5>GLIMMER <span class="gloss">— holiday decor</span></h5>
+                <div class="chips">
+                  <div class="chip st-dir k-out" data-sel="glimmer" data-name="LumiOps — decor designs + schedules">LumiOps — decor designs + schedules</div>
+                  <div class="chip st-link k-out" data-sel="glimmer" data-name="Suppliers — Dekra-Lite · Holiday Light Supplies · Illuminations">Suppliers — Dekra-Lite · Holiday Light Supplies · Illuminations ↗</div>
+                </div>
+              </div>
+            </div>
+            <div class="dept" data-node="sitevision" id="node-sitevision" tabindex="0" role="button">
+              <h5>SiteVision <span class="gloss">— site views · by itself under Northbirch</span></h5>
+            </div>
+          </div>
+          <div class="companybox">
+            <h4>CITYSCAPE</h4>
+            <p class="cb-sub">the landscaping company — BluePrint is its app</p>
+            <div class="dept" id="node-blueprint" data-node="blueprint" tabindex="0" role="button">
+              <h5>BluePrint <span class="gloss">— Grant's app</span><span class="grant">GRANT</span></h5>
+              <div class="secs"><span class="sec-chip">Social</span><span class="sec-chip">Email</span><span class="sec-chip">Calendar</span><span class="sec-chip">Assistant</span><span class="sec-chip">Quotes</span><span class="sec-chip">Leads</span></div>
+              <div class="chips">
+                <div class="chip st-dir k-out" data-sel="blueprint" data-name="Aspire — schedules + billing">Aspire — schedules + billing</div>
+                <div class="chip st-dir k-out" data-sel="blueprint" data-name="LMN — landscaping software (no app link)">LMN — landscaping software (no app link)</div>
+                <div class="chip k-out" data-sel="blueprint" data-name="Google Maps — job sites">Google Maps — job sites</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ownerbox">
+        <h3>JOHNNY'S APPS</h3>
+        <p class="ob-sub">Johnny Kulwartian's businesses — client apps on the shelf</p>
+        <div class="app" id="node-kul" data-node="kul" tabindex="0" role="button" aria-label="KÜL Real Estate">
+          <h3>KÜL REAL ESTATE</h3>
+          <p class="app-sub">real estate · Ottawa + Costa Rica · its sections, inside the app:</p>
+          <div class="secs"><span class="sec-chip">Today</span><span class="sec-chip">Listings</span><span class="sec-chip">Transactions</span><span class="sec-chip">Developments</span><span class="sec-chip">Open Houses</span><span class="sec-chip">Clients</span><span class="sec-chip">Leads</span><span class="sec-chip">Follow-ups + appointments</span><span class="sec-chip">Calendar</span><span class="sec-chip">Email drafts</span><span class="sec-chip">Newsletter</span><span class="sec-chip">Social</span><span class="sec-chip">Commission forecast</span><span class="sec-chip">Toolkit</span><span class="sec-chip">Assistant</span></div>
+          <div class="chips">
+            <div class="chip st-dir k-out" data-sel="kul" data-name="CREA listings feed — live homes (permissioned)">CREA listings feed — live homes (permissioned)</div>
+            <div class="chip st-cand k-out" data-sel="kul" data-name="ShowingTime + BrokerBay — showings">ShowingTime + BrokerBay — showings</div>
+            <div class="chip st-cand k-out" data-sel="kul" data-name="SentriLock / Supra — lockboxes">SentriLock / Supra — lockboxes</div>
+            <div class="chip st-cand k-out" data-sel="kul" data-name="SkySlope — deal paperwork">SkySlope — deal paperwork</div>
+            <div class="chip k-out" data-sel="kul" data-name="Google Maps — property maps">Google Maps — property maps</div>
+            <div class="chip" data-sel="kul" data-name="Social — Instagram + Facebook">Social — Instagram + Facebook</div>
+            <div class="chip st-cand k-out" data-sel="kul" data-name="BoxBrownie — virtual staging">BoxBrownie — virtual staging</div>
+            <div class="chip st-cand k-out" data-sel="kul" data-name="Matterport — 3D walkthroughs">Matterport — 3D walkthroughs</div>
+            <div class="chip st-cand k-out" data-sel="kul" data-name="WhatsApp — client messages">WhatsApp — client messages</div>
+            <div class="chip st-cand k-out" data-sel="kul" data-name="Facebook Lead Ads — leads into the app">Facebook Lead Ads — leads into the app</div>
+            <div class="chip st-cand k-out" data-sel="kul" data-name="HubSpot — one sales pipeline (KÜL's own)">HubSpot — one sales pipeline (KÜL's own)</div>
+            <div class="chip st-cand k-out" data-sel="kul" data-name="DocuSign — sign documents">DocuSign — sign documents</div>
+            <div class="chip st-cand k-out" data-sel="kul" data-name="Calendly — bookings">Calendly — bookings</div>
+            <div class="chip st-cand k-out" data-sel="kul" data-name="Mailchimp — marketing email">Mailchimp — marketing email</div>
+            <div class="chip st-cand k-out" data-sel="kul" data-name="Google Business Profile — reviews">Google Business Profile — reviews</div>
+            <div class="chip st-cand k-out" data-sel="kul" data-name="Yelp — review excerpts">Yelp — review excerpts</div>
+          </div>
+        </div>
+        <div class="app dashed" id="node-lg" data-node="lg" tabindex="0" role="button" aria-label="Lions Gate Yachts">
+          <h3>LIONS GATE YACHTS</h3>
+          <p class="app-sub">yacht brokerage · its sections, inside the app:</p>
+          <div class="secs"><span class="sec-chip">Fleet</span><span class="sec-chip">Clients</span><span class="sec-chip">Service Board</span><span class="sec-chip">Calendar</span><span class="sec-chip">Email</span><span class="sec-chip">Social</span><span class="sec-chip">Toolkit</span><span class="sec-chip">Assistant</span></div>
+          <div class="chips">
+            <div class="chip st-cand k-out" data-sel="lg" data-name="MarineTraffic — live ship tracking">MarineTraffic — live ship tracking</div>
+            <div class="chip st-cand k-out" data-sel="lg" data-name="Windy + Open-Meteo — marine weather">Windy + Open-Meteo — marine weather</div>
+            <div class="chip st-cand k-out" data-sel="lg" data-name="CHS — sea charts + tides">CHS — sea charts + tides</div>
+            <div class="chip st-cand k-out" data-sel="lg" data-name="Dockwa — marina slips">Dockwa — marina slips</div>
+            <div class="chip st-cand k-out" data-sel="lg" data-name="Vessel Vanguard — service tracking">Vessel Vanguard — service tracking</div>
+            <div class="chip st-cand k-out" data-sel="lg" data-name="Binnacle — marine catalogue">Binnacle — marine catalogue</div>
+            <div class="chip st-link k-out" data-sel="lg" data-name="YachtWorld / Boat Trader — boat listings">YachtWorld / Boat Trader — boat listings ↗</div>
+            <div class="chip" data-sel="lg" data-name="Social — Instagram + Facebook">Social — Instagram + Facebook</div>
+            <div class="chip st-cand k-out" data-sel="lg" data-name="WhatsApp — client messages">WhatsApp — client messages</div>
+            <div class="chip st-cand k-out" data-sel="lg" data-name="HubSpot — one sales pipeline (Lions Gate's own)">HubSpot — one sales pipeline (Lions Gate's own)</div>
+            <div class="chip st-cand k-out" data-sel="lg" data-name="DocuSign — sign documents">DocuSign — sign documents</div>
+            <div class="chip st-cand k-out" data-sel="lg" data-name="Calendly — sea-trial bookings">Calendly — sea-trial bookings</div>
+            <div class="chip st-cand k-out" data-sel="lg" data-name="Mailchimp — marketing email">Mailchimp — marketing email</div>
+            <div class="chip st-cand k-out" data-sel="lg" data-name="Google Business Profile — reviews">Google Business Profile — reviews</div>
+            <div class="chip st-cand k-out" data-sel="lg" data-name="Yelp — review excerpts">Yelp — review excerpts</div>
+            <div class="chip st-cand k-out" data-sel="lg" data-name="Facebook Lead Ads — leads into the app">Facebook Lead Ads — leads into the app</div>
+          </div>
+        </div>
+        <div class="dept" data-node="cms" id="node-cms" tabindex="0" role="button">
+          <h5>CMS Construction <span class="gloss">— builder</span></h5>
+          <div class="secs"><span class="sec-chip">Social</span><span class="sec-chip">Email</span><span class="sec-chip">Calendar</span><span class="sec-chip">Assistant</span></div>
+        </div>
+        <div class="dept" data-node="structureiq" id="node-structureiq" tabindex="0" role="button">
+          <h5>StructureIQ <span class="gloss">— building checks</span></h5>
+          <div class="secs"><span class="sec-chip">Social</span><span class="sec-chip">Email</span><span class="sec-chip">Calendar</span><span class="sec-chip">Assistant</span></div>
+        </div>
+        <div class="dept" data-node="eighttwelve" id="node-eighttwelve" tabindex="0" role="button">
+          <h5>8Twelve Mortgages <span class="gloss">— mortgages</span></h5>
+          <div class="secs"><span class="sec-chip">Social</span><span class="sec-chip">Email</span><span class="sec-chip">Calendar</span><span class="sec-chip">Assistant</span></div>
+          <div class="chips">
+            <div class="chip st-dir k-out" data-sel="eighttwelve" data-name="Mortgage door — 65+ lenders">Mortgage door — 65+ lenders</div>
+            <div class="chip st-cand k-out" data-sel="eighttwelve" data-name="Ratehub.ca † — mortgage rates (candidate)">Ratehub.ca † — mortgage rates (candidate)</div>
+            <div class="chip st-cand k-out" data-sel="eighttwelve" data-name="nesto † — mortgage rates (candidate)">nesto † — mortgage rates (candidate)</div>
+          </div>
+        </div>
+        <div class="cluster amber">
+          <div class="cl-label">Johnny's shared toolbox — both businesses use these</div>
+          <div class="chips">
+            <div class="chip st-cand k-out" data-sel="kul" data-name="HeyGen — avatar video">HeyGen — avatar video</div>
+            <div class="chip st-cand k-out" data-sel="kul" data-name="ElevenLabs — voice">ElevenLabs — voice</div>
+            <div class="chip st-cand k-out" data-sel="kul" data-name="Sendspark + Bonjoro — personal video">Sendspark + Bonjoro — personal video</div>
+            <div class="chip st-cand k-out" data-sel="kul" data-name="Qwilr — proposals">Qwilr — proposals</div>
+            <div class="chip st-cand k-out" data-sel="kul" data-name="PandaDoc † — documents (alternative)">PandaDoc † — documents (alternative)</div>
+            <div class="chip" data-sel="trellis" data-name="Deposits run on the Trellis family's Stripe rail">Deposits run on the Trellis family's Stripe rail — drawn once, under Trellis</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="wb-foot">
+      <div class="chip" data-sel="workbench" data-name="Talk to Assistant">Talk to Assistant<small>voice helpers — for every app on the shelf</small></div>
+      <div class="chip st-dir" data-sel="workbench" data-name="Add your own — empty slots">Add your own — empty slots for the next app</div>
+    </div>
+  </section>
+
+  <section class="panel p-team" id="node-team" data-node="team" aria-label="Team and Accounts">
+    <h2>TEAM + ACCOUNTS</h2>
+    <p class="tagline">the connections behind the scenes — the team's own plumbing</p>
+    <div class="teamgrid">
+      <div class="chip k-out" data-sel="team" data-name="Todoist — task list → Command Deck">Todoist — task list → Command Deck</div>
+      <div class="chip k-out" data-sel="team" data-name="Gmail → Daybook">Gmail → Daybook</div>
+      <div class="chip k-out" data-sel="team" data-name="Google Calendar → Daybook · Home">Google Calendar → Daybook · Home</div>
+      <div class="chip k-out" data-sel="team" data-name="Google Drive — the record → Daybook and team">Google Drive — the record → Daybook and team</div>
+      <div class="chip k-out" data-sel="team" data-name="Google Contacts → Workbench and Daybook">Google Contacts → Workbench and Daybook</div>
+      <div class="chip k-out" data-sel="team" data-name="Google Sheets — state board → Command Deck">Google Sheets — state board → Command Deck</div>
+      <div class="chip k-out" data-sel="team" data-name="Google Docs — main record → Command Deck">Google Docs — main record → Command Deck</div>
+      <div class="chip k-out" data-sel="team" data-name="GitHub — preview builds → Workbench">GitHub — preview builds → Workbench</div>
+      <div class="chip k-out" data-sel="team" data-name="Vercel — hub relay → Home and SITREP">Vercel — hub relay → Home and SITREP</div>
+      <div class="chip k-out" data-sel="team" data-name="FordPass — Ford's app only → Daybook (on the phone)">FordPass — Ford's app only → Daybook (on the phone)</div>
+      <div class="chip st-dir k-out" data-sel="team" data-name="Plaid — bank data → Daybook">Plaid — bank data → Daybook</div>
+    </div>
+  </section>
+</div>
+<svg id="labels" aria-hidden="true"></svg>
+</div>
+<footer>
+  <p><b>Statuses are honest.</b> Solid glow means working now — if something isn't connected yet, it doesn't pretend. Dashed is wired by design with packaging still to come; amber is a candidate from the team's connector hunt, not connected yet; grey is link only — it opens the app or site. Partly connected is said in plain words wherever it applies.</p>
+  <p><b>How things connect</b> — live feed (updates itself) · hub relay (through Canopy) · signed-in account · shown inside Canopy · in your home, no cloud.</p>
+  <p>Section colours — <b style="color:#FFF6D8">Home</b> (SITREP inside it, gold) · <b style="color:#46E08D">Command Deck + Portals</b> · <b style="color:#FF7A72">Daybook</b> · <b style="color:#6FB6FF">Workbench</b> · <b style="color:#D9D2FF">God's Eye View</b> (the world layer, inside SITREP). Built from the Canopy connectors roadmap · 22 Nov 2026.</p>
+</footer>
+
+<script>
+(function(){
+"use strict";
+var COLORS = {cream:"#FFF3C4", green:"#46E08D", red:"#FF7A72", blue:"#6FB6FF", gold:"#FFD94D", pale:"#C7D6E4", amber:"#FFB02E", violet:"#D9D2FF", qb:"#43D17C"};
+var NODEINFO = {
+  canopy:{name:"CANOPY — the centre", blurb:"Every section plugs into Canopy, and every door runs both ways."},
+  home:{name:"HOME — the wall", blurb:"Weather, news, live TV, markets and the day at a glance. SITREP lives inside Home now. Weather, cameras, road closures and 511 arrive from the shared sources at the centre — drawn once, shown in two places."},
+  deck:{name:"COMMAND DECK — the team's room", blurb:"Where the AI team works, talks and keeps score. Both portals live inside it."},
+  eng:{name:"ENGINEERING PORTAL", blurb:"The design shop — CAD drawings, 3D and project steps. Lives inside the Command Deck."},
+  media:{name:"MEDIA PORTAL", blurb:"Video, pictures and ad projects. Lives inside the Command Deck."},
+  daybook:{name:"DAYBOOK — Day to Day", blurb:"The personal side: money, home, health, social and everyday life. Finances live here — the Trellis paycheque lands in Daybook Finances."},
+  sitrep:{name:"SITREP — inside Home", blurb:"The situation report — a section inside Home, not its own tab. Weather, roads, cameras and the world, right now. God's Eye View, the world layer, lives inside SITREP."},
+  godseye:{name:"GOD'S EYE VIEW — the world layer", blurb:"The world layer, inside SITREP. On its shelf: earthquakes — live, worldwide (U.S. Geological Survey) · disaster alerts, worldwide (GDACS — United Nations / European Commission) · natural events — wildfires, storms, floods, volcanoes (NASA EONET) · emergency scanner audio (Broadcastify — listen there) · world map + rain radar · Ottawa Airport (YOW) — link only. No live flight feed is drawn — the airport is a link-out."},
+  "src-weather":{name:"SHARED SOURCE — ENVIRONMENT CANADA WEATHER + ALERTS", blurb:"One feed, drawn once. Home shows it on the wall; SITREP shows it in the situation report — one source, two views."},
+  "src-cams":{name:"SHARED SOURCE — 432 TRAFFIC CAMERA VIEWS", blurb:"432 live traffic camera views across Ottawa — 403 City of Ottawa cameras and 29 Ontario highway (MTO) cameras, from the City's traffic camera list. Drawn once; Home and SITREP both show the same views."},
+  "src-roads":{name:"SHARED SOURCE — OTTAWA ROAD CLOSURES", blurb:"The city's road events feed, drawn once for both Home and SITREP — one source, two views."},
+  "src-511":{name:"SHARED SOURCE — ONTARIO 511", blurb:"Provincial road conditions, drawn once for both Home and SITREP — one source, two views."},
+  workbench:{name:"WORKBENCH — the docking shelf", blurb:"Apps plug in here — everything they carry works across Canopy. Two owner boxes: Grant's Apps and Johnny's Apps. A service worked into a specific app nests under that app; only genuinely shared rails are drawn once."},
+  trellis:{name:"TRELLIS — the green-trades family", blurb:"Grant's umbrella of trade apps, under Northbirch. Seven departments, each with its sections and services inside, and links between departments where a job flows from one trade to another."},
+  quickbooks:{name:"QUICKBOOKS — under Trellis", blurb:"Trellis's own books + payroll. It belongs to Trellis — it sits inside it. Its one line out is the dashed tether: the paycheque feeds Daybook — Finances."},
+  mainline:{name:"MAINLINE — watering systems", blurb:"A Trellis department. Sections inside: Service · Install · Office · Routes · Crews · Equipment · Hardware. Freeze alerts arrive from SITREP; winterise jobs flow to the team's tasks."},
+  course:{name:"COURSE — stonework and patios", blurb:"A Trellis department. Leads + sites arrive from the Command Deck for quotes; materials and designs flow back into proposals. BluePrint sends it plans."},
+  tend:{name:"TEND — lawn care", blurb:"A Trellis department. Shares route planning (Routific) and crews with Flurry."},
+  flurry:{name:"FLURRY — snow clearing", blurb:"A Trellis department. Sections inside: Dispatch · Residential · Commercial · Operations. When a storm hits: SNOW SITREP storm mode. For the snow fighters — we fight Mother Nature."},
+  lumen:{name:"LUMEN — garden lighting", blurb:"A Trellis department. Fixture catalogues nest inside it; fixtures flow into proposals at the Command Deck. BluePrint sends it plans."},
+  bole:{name:"BOLE — tree care", blurb:"A Trellis department. Work orders sync with the team's tasks; finished work flows to Daybook Finances as invoices."},
+  glimmer:{name:"GLIMMER — holiday decor", blurb:"A Trellis department. Designs and install dates sync with proposals and the calendar."},
+  blueprint:{name:"BLUEPRINT — Grant's app", blurb:"Cityscape's sales-workflow app, under Cityscape. Sections inside: Social · Email · Calendar · Assistant · Quotes · Leads. It sends plans to the Trellis departments."},
+  sitevision:{name:"SITEVISION — site views", blurb:"Sits by itself under Northbirch, beside Trellis."},
+  aqua:{name:"BRAND MY AQUA — water brand", blurb:"One of Grant's apps. Sections inside: Social · Email · Calendar · Assistant. No app-specific services in the record yet."},
+  purenzyme:{name:"PURENYME — cleaning products", blurb:"One of Grant's apps. Sections inside: Social · Email · Calendar · Assistant. No app-specific services in the record yet."},
+  atra:{name:"ATRA LEND — lending", blurb:"One of Grant's apps. Sections inside: Social · Email · Calendar · Assistant. No app-specific services in the record yet."},
+  northbirchapp:{name:"NORTHBIRCH APP", blurb:"One of Grant's apps. Sections inside: Social · Email · Calendar · Assistant. No app-specific services in the record yet."},
+  kul:{name:"KÜL REAL ESTATE", blurb:"Johnny's real estate app — Ottawa + Costa Rica. Its sections sit inside it, and its own services nest under it — the live listings feed (CREA) feeds it automatically. Its lines out mean: KÜL's things work across Canopy."},
+  lg:{name:"LIONS GATE YACHTS", blurb:"Johnny's yacht brokerage app. Its sections sit inside it, and its own services nest under it — MarineTraffic, the live ship tracking, is Lions Gate's own. Its lines out mean: Lions Gate's things work across Canopy."},
+  cms:{name:"CMS CONSTRUCTION — builder", blurb:"One of Johnny's apps. Sections inside: Social · Email · Calendar · Assistant. No app-specific services in the record yet."},
+  structureiq:{name:"STRUCTUREIQ — building checks", blurb:"One of Johnny's apps. Sections inside: Social · Email · Calendar · Assistant. No app-specific services in the record yet."},
+  eighttwelve:{name:"8TWELVE MORTGAGES", blurb:"One of Johnny's apps — the mortgage door: 65+ lenders. Ratehub.ca and nesto are candidates, not adopted."},
+  team:{name:"TEAM + ACCOUNTS", blurb:"The plumbing behind the scenes — the accounts and services the team itself runs on."}
+};
+var LINKS = [
+  {a:"canopy", b:"home",    cls:"spoke", col:"cream"},
+  {a:"canopy", b:"deck",    cls:"spoke", col:"green"},
+  {a:"canopy", b:"eng",     cls:"spoke", col:"green", bend:26},
+  {a:"canopy", b:"media",   cls:"spoke", col:"green", bend:-26},
+  {a:"canopy", b:"daybook", cls:"spoke", col:"red"},
+  {a:"canopy", b:"workbench", cls:"spoke", col:"blue", bend:22},
+  {a:"deck", b:"eng",   label:"Engineering lives inside the Deck", cls:"tie", col:"green", bend:34},
+  {a:"deck", b:"media", label:"Media lives inside the Deck", cls:"tie", col:"green", bend:44},
+  {a:"deck", b:"workbench", label:"app doors — there and back", cls:"tie", col:"pale", bend:30, lt:0.85},
+  {a:"daybook", b:"home", label:"day stream + capture → the hub", cls:"tie", col:"pale", bend:26},
+  {a:"src-weather", b:"home",   cls:"tie", col:"gold", bend:-26},
+  {a:"src-weather", b:"sitrep", label:"one source, two views", cls:"tie", col:"gold", bend:34, lt:0.3},
+  {a:"src-cams", b:"home",   cls:"tie", col:"gold", bend:-38},
+  {a:"src-cams", b:"sitrep", label:"one source, two views", cls:"tie", col:"gold", bend:48, lt:0.25},
+  {a:"src-roads", b:"home",   cls:"thin", col:"pale", bend:-18},
+  {a:"src-roads", b:"sitrep", cls:"thin", col:"pale", bend:60},
+  {a:"src-511", b:"home",   cls:"thin", col:"pale", bend:-12},
+  {a:"src-511", b:"sitrep", cls:"thin", col:"pale", bend:70},
+  {a:"team", b:"deck",    cls:"thin", col:"pale", bend:-30},
+  {a:"team", b:"daybook", cls:"thin", col:"pale", bend:30},
+  {a:"godseye", b:"sitrep", label:"the world layer — inside SITREP", cls:"tie", col:"violet", bend:-40, lt:0.4, layer:2},
+  {a:"kul", b:"media",   label:"listing photos & video tours", cls:"hero", col:"blue", bend:-80, lt:0.97, layer:2},
+  {a:"kul", b:"deck",    label:"Facebook leads → client files", cls:"hero", col:"blue", bend:-56, layer:2},
+  {a:"kul", b:"daybook", label:"email · calendar · sheets", cls:"hero", col:"blue", bend:64, lt:0.86, layer:2},
+  {a:"lg", b:"media",    label:"vessel photos & tours", cls:"hero", col:"blue", bend:-44, lt:0.93, layer:2},
+  {a:"lg", b:"deck",     label:"leads → client files", cls:"hero", col:"blue", bend:-96, layer:2},
+  {a:"lg", b:"daybook",  label:"email · calendar", cls:"hero", col:"blue", bend:44, lt:0.84, layer:2},
+  {a:"lg", b:"sitrep",   label:"marine weather · ship tracking", cls:"hero", col:"amber", bend:-54, dash:true, lt:0.3, layer:2},
+  {a:"kul", b:"sitrep",  label:"shared weather", cls:"tie", col:"gold", bend:-70, layer:2},
+  {a:"flurry", b:"sitrep", label:"SNOW SITREP — storm mode", cls:"hero", col:"gold", bend:36, lt:0.1, dy:32, layer:2},
+  {a:"sitrep", b:"mainline", label:"freeze alerts in", cls:"thin", col:"gold", bend:20, layer:2},
+  {a:"blueprint", b:"course", label:"plan → materials + specs", cls:"thin", col:"blue", bend:16, layer:2},
+  {a:"blueprint", b:"mainline", label:"plan → specs", cls:"thin", col:"blue", bend:-14, layer:2},
+  {a:"blueprint", b:"lumen", label:"plan → fixtures", cls:"thin", col:"blue", bend:24, layer:2},
+  {a:"flurry", b:"tend", label:"shared routing + crews", cls:"thin", col:"blue", bend:-18, layer:2},
+  {a:"deck", b:"course", label:"a lead + site — for a quote · proposals back", cls:"thin", col:"pale", bend:-30, lt:0.65, layer:2},
+  {a:"quickbooks", b:"daybook", label:"paycheque → Daybook — Finances", cls:"tether", col:"qb", bend:-46, lt:0.5, layer:2, tether:true}
+];
+var wrap = document.getElementById("mapwrap");
+var svg = document.getElementById("wires");
+var svg2 = document.getElementById("wires2");
+var labelSvg = document.getElementById("labels");
+var readout = document.getElementById("readout");
+var roName = readout.querySelector(".ro-name");
+var roBody = readout.querySelector(".ro-body");
+var NS = "http://www.w3.org/2000/svg";
+var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+var selected = null;
+function el(id){ return document.getElementById("node-" + id); }
+function centre(e, wr){
+  var r = e.getBoundingClientRect();
+  return {x:r.left + r.width/2 - wr.left, y:r.top + r.height/2 - wr.top, r:r};
+}
+function anchor(e, c, tx, ty){
+  var dx = tx - c.x, dy = ty - c.y;
+  if(dx === 0 && dy === 0) return [c.x, c.y];
+  var hw = c.r.width/2, hh = c.r.height/2;
+  var sx = dx !== 0 ? hw/Math.abs(dx) : Infinity;
+  var sy = dy !== 0 ? hh/Math.abs(dy) : Infinity;
+  var s = Math.min(sx, sy);
+  return [c.x + dx*s, c.y + dy*s];
+}
+function qpoint(p0, c, p2, t){
+  var u = 1 - t;
+  return [u*u*p0[0] + 2*u*t*c[0] + t*t*p2[0], u*u*p0[1] + 2*u*t*c[1] + t*t*p2[1]];
+}
+function draw(){
+  var wr = wrap.getBoundingClientRect();
+  [svg, svg2, labelSvg].forEach(function(s){ s.setAttribute("viewBox", "0 0 " + wr.width + " " + wr.height); });
+  while(svg.firstChild) svg.removeChild(svg.firstChild);
+  while(svg2.firstChild) svg2.removeChild(svg2.firstChild);
+  while(labelSvg.firstChild) labelSvg.removeChild(labelSvg.firstChild);
+  var defs = document.createElementNS(NS, "defs");
+  Object.keys(COLORS).forEach(function(k){
+    var m = document.createElementNS(NS, "marker");
+    m.setAttribute("id", "arr-" + k);
+    m.setAttribute("viewBox", "0 0 10 10");
+    m.setAttribute("refX", "8.2"); m.setAttribute("refY", "5");
+    m.setAttribute("markerWidth", "4.6"); m.setAttribute("markerHeight", "4.6");
+    m.setAttribute("orient", "auto-start-reverse");
+    var p = document.createElementNS(NS, "path");
+    p.setAttribute("d", "M0,0 L10,5 L0,10 z");
+    p.setAttribute("fill", COLORS[k]);
+    m.appendChild(p); defs.appendChild(m);
+  });
+  svg.appendChild(defs);
+  var order = {thin:0, spoke:1, tie:2, tether:2, hero:3};
+  var sorted = LINKS.slice().sort(function(x, y){ return order[x.cls] - order[y.cls]; });
+  sorted.forEach(function(L){
+    var ea = el(L.a), eb = el(L.b);
+    if(!ea || !eb) return;
+    var ca = centre(ea, wr), cb = centre(eb, wr);
+    var p0 = anchor(ea, ca, cb.x, cb.y);
+    var p2 = anchor(eb, cb, ca.x, ca.y);
+    var mx = (p0[0] + p2[0])/2, my = (p0[1] + p2[1])/2;
+    var dx = p2[0] - p0[0], dy = p2[1] - p0[1];
+    var len = Math.sqrt(dx*dx + dy*dy) || 1;
+    var bend = (L.bend || 0);
+    var cx = mx + (-dy/len)*bend, cy = my + (dx/len)*bend;
+    var target = L.layer === 2 ? svg2 : svg;
+    var path = document.createElementNS(NS, "path");
+    path.setAttribute("d", "M" + p0[0].toFixed(1) + "," + p0[1].toFixed(1) + " Q" + cx.toFixed(1) + "," + cy.toFixed(1) + " " + p2[0].toFixed(1) + "," + p2[1].toFixed(1));
+    path.setAttribute("class", L.cls);
+    path.setAttribute("stroke", COLORS[L.col]);
+    path.dataset.a = L.a; path.dataset.b = L.b;
+    if(L.tether){
+      path.setAttribute("stroke-dasharray", "0.5 10");
+      path.style.filter = "drop-shadow(0 0 4px " + COLORS[L.col] + ")";
+      if(!reduced) path.classList.add("tetherflow");
+      var sockA = document.createElementNS(NS, "circle");
+      sockA.setAttribute("cx", p0[0]); sockA.setAttribute("cy", p0[1]); sockA.setAttribute("r", "6.5");
+      sockA.setAttribute("fill", "#000"); sockA.setAttribute("stroke", COLORS[L.col]); sockA.setAttribute("stroke-width", "3");
+      var sockB = document.createElementNS(NS, "rect");
+      sockB.setAttribute("x", p2[0] - 6); sockB.setAttribute("y", p2[1] - 6); sockB.setAttribute("width", "12"); sockB.setAttribute("height", "12");
+      sockB.setAttribute("fill", "#000"); sockB.setAttribute("stroke", COLORS[L.col]); sockB.setAttribute("stroke-width", "3");
+      target.appendChild(sockA); target.appendChild(sockB);
+      L._sock = [sockA, sockB];
+    } else {
+      path.setAttribute("marker-end", "url(#arr-" + L.col + ")");
+      if(L.dash) path.setAttribute("stroke-dasharray", "12 9");
+      if(L.cls === "hero" || L.cls === "spoke") path.style.filter = "drop-shadow(0 0 6px " + COLORS[L.col] + ")";
+      if(L.cls === "hero" && !reduced && !L.dash) path.classList.add("flow");
+    }
+    target.appendChild(path);
+    L._path = path;
+    if(L.label){
+      var t = document.createElementNS(NS, "text");
+      var pt = qpoint(p0, [cx, cy], p2, L.lt || 0.5);
+      t.setAttribute("x", pt[0].toFixed(1)); t.setAttribute("y", (pt[1] - 10 + (L.dy || 0)).toFixed(1));
+      t.setAttribute("text-anchor", "middle");
+      t.textContent = L.label;
+      t.dataset.a = L.a; t.dataset.b = L.b;
+      labelSvg.appendChild(t);
+      L._label = t;
+    }
+  });
+  if(selected) applySelection();
+}
+function connectionsOf(id){
+  var out = [];
+  LINKS.forEach(function(L){
+    if(L.a === id) out.push({other:L.b, label:L.label});
+    else if(L.b === id) out.push({other:L.a, label:L.label});
+  });
+  return out;
+}
+function applySelection(){
+  var hot = {};
+  hot[selected] = true;
+  LINKS.forEach(function(L){
+    var on = (L.a === selected || L.b === selected);
+    if(on){ hot[L.a] = true; hot[L.b] = true; }
+    if(L._path) L._path.classList.toggle("dim", !on);
+    if(L._label) L._label.classList.toggle("dim", !on);
+    if(L._sock) L._sock.forEach(function(s){ s.style.opacity = on ? "1" : "0.06"; });
+  });
+  Object.keys(NODEINFO).forEach(function(id){
+    var e = el(id);
+    if(!e) return;
+    e.classList.toggle("dimmed", !hot[id]);
+    e.classList.toggle("hotring", !!hot[id] && id !== selected);
+  });
+}
+function select(id, chipName){
+  if(!NODEINFO[id]) return;
+  selected = id;
+  var info = NODEINFO[id];
+  var conns = connectionsOf(id);
+  var parts = conns.map(function(c){
+    var n = NODEINFO[c.other] ? NODEINFO[c.other].name : c.other;
+    return c.label ? n + " (" + c.label + ")" : n;
+  });
+  roName.textContent = info.name;
+  var body = "";
+  if(chipName) body += "\u201C" + chipName + "\u201D lives here. ";
+  body += info.blurb;
+  if(parts.length) body += " Connects to: " + parts.join(" · ") + ".";
+  roBody.textContent = body;
+  applySelection();
+}
+function reset(){
+  selected = null;
+  LINKS.forEach(function(L){
+    if(L._path) L._path.classList.remove("dim");
+    if(L._label) L._label.classList.remove("dim");
+    if(L._sock) L._sock.forEach(function(s){ s.style.opacity = "1"; });
+  });
+  Object.keys(NODEINFO).forEach(function(id){
+    var e = el(id);
+    if(e){ e.classList.remove("dimmed"); e.classList.remove("hotring"); }
+  });
+  roName.textContent = "EXPLORE";
+  roBody.textContent = "Tap or click any glowing panel, app or source — its connections light up and everything else dims. Square markers are our apps; round pills are outside services we plug in; plain blocks are built into Canopy.";
+}
+document.getElementById("resetBtn").addEventListener("click", reset);
+Object.keys(NODEINFO).forEach(function(id){
+  var e = el(id);
+  if(!e) return;
+  e.addEventListener("click", function(ev){ ev.stopPropagation(); select(id); });
+  e.addEventListener("mouseenter", function(){ select(id); });
+  e.addEventListener("keydown", function(ev){
+    if(ev.key === "Enter" || ev.key === " "){ ev.preventDefault(); select(id); }
+  });
+});
+Array.prototype.forEach.call(document.querySelectorAll(".chip[data-sel]"), function(chip){
+  chip.addEventListener("click", function(ev){
+    ev.stopPropagation();
+    select(chip.getAttribute("data-sel"), chip.getAttribute("data-name"));
+  });
+  chip.addEventListener("mouseenter", function(){
+    select(chip.getAttribute("data-sel"), chip.getAttribute("data-name"));
+  });
+});
+document.addEventListener("keydown", function(ev){ if(ev.key === "Escape") reset(); });
+var rt;
+window.addEventListener("resize", function(){ clearTimeout(rt); rt = setTimeout(draw, 120); });
+window.addEventListener("load", draw);
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ draw(); });
+if(window.ResizeObserver) new ResizeObserver(function(){ draw(); }).observe(wrap);
+draw();
+})();
+</script>
+</body></html>

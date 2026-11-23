@@ -6,13 +6,33 @@
       <link>https://www.cbc.ca/news/business/?cmp=rss</link>
       <copyright><![CDATA[Copyright: (C) Canadian Broadcasting Corporation, http://www.cbc.ca/aboutcbc/discover/termsofuse.html#Rss]]></copyright>
       <docs><![CDATA[https://www.cbc.ca/rss]]></docs>
-      <lastBuildDate>Sun, 22 Nov 2026 10:59:04 EST</lastBuildDate>
+      <lastBuildDate>Mon, 23 Nov 2026 16:51:26 EST</lastBuildDate>
       <atom:link href="https://www.cbc.ca/webfeed/rss/rss-business" rel="self" type="application/rss+xml"/>
       <image>
          <title><![CDATA[CBC | Business News]]></title>
          <url>https://www.cbc.ca/rss/image/cbc_144.gif</url>
          <link>https://www.cbc.ca/news/business/?cmp=rss</link>
       </image>
+      <item>
+         <title><![CDATA[Nvidia reinstates Jensen Huang as CEO]]></title>
+         <link>https://www.cbc.ca/news/business/jensen-huang-reinstated-nvidia-9.7432353?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/335994d6-980a-4c1e-a9b4-abbcb9a1b34c,1795443564678/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C656%2C3000%2C1687%29%3B' alt='Close up of face of man with grey hair and glasses.' width='620' height='349' title='Nvidia founder and CEO Jensen Huang speaks with the media ahead of a meeting with the Senate Banking Committee on Capitol Hill in Washington, D.C., U.S., December 3, 2025.'/><p>Nvidia's board reinstated Jensen Huang as its president and CEO on Monday in a surprise move shortly after rejecting his offer to return. It's the latest twist in the fallout from Huang's admission of an affair with a woman suspected of being a Chinese spy.</p>]]></description>
+         <pubDate>Mon, 23 Nov 2026 09:18:53 EST</pubDate>
+         <category>News/Business</category>
+         <guid isPermaLink="false">9.7432353</guid>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[North American stocks soar, recovering half of last week's plunge after Jensen Huang returns as Nvidia's CEO]]></title>
+         <link>https://www.cbc.ca/news/business/stock-market-latest-9.7432277?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/35f41e0a-b378-4950-8493-4f97ff897b9c,1795439461605/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C223%2C4278%2C2406%29%3B' alt='Pedestrians walk past outdoor signage displaying stock market information.' width='620' height='349' title='AI-related stocks including Nvidia, Broadcom and Advanced Micro Devices bore the brunt of the selling on Friday,'/><p>Nvidia led a tremendous rally on Wall Street on Monday following the surprise return of Jensen Huang as its CEO. Nvidia's stock finished just shy of its best day since 2000.</p>]]></description>
+         <pubDate>Mon, 23 Nov 2026 09:02:18 EST</pubDate>
+         <category>News/Business</category>
+         <guid isPermaLink="false">9.7432277</guid>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
       <item>
          <title><![CDATA[Etsy faces backlash over including AI model training in new policy update]]></title>
          <link>https://www.cbc.ca/news/canada/british-columbia/etsy-ai-model-training-backlash-9.7431142?cmp=rss</link>
@@ -204,27 +224,6 @@
          <pubDate>Wed, 18 Nov 2026 07:45:44 EST</pubDate>
          <category>News/Business</category>
          <guid isPermaLink="false">9.7426164</guid>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[No plans to reinstate CEO Jensen Huang, Nvidia chair tells investors]]></title>
-         <link>https://www.cbc.ca/news/business/nvidia-earnings-jensen-huang-9.7425620?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/9ed44bef-8351-444e-856b-4fb4aada6b01,1794951507238/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C156%2C3000%2C1687%29%3B' alt='A green logo and word against a black background' width='620' height='349' title='FILE PHOTO: Nvidia logo is seen in this illustration taken, January 27, 2025.'/><p>Nvidia board chair Harvey Jones opened an investor conference call on Tuesday by saying the AI chip company would ‌not rehire co-founder Jensen Huang as CEO and would not take questions on the matter.</p>]]></description>
-         <pubDate>Tue, 17 Nov 2026 17:56:59 EST</pubDate>
-         <category>News/Business</category>
-         <guid isPermaLink="false">9.7425620</guid>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Canada has extended and expanded its deal with China. Here's how it affects different sectors]]></title>
-         <link>https://www.cbc.ca/news/politics/china-canada-tariffs-deal-extended-expanded-trade-pork-seafood-9.7424993?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/40cafb53-5d84-408b-a2ff-40fadec574bb,1794928349110/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C108%2C2048%2C1152%29%3B' alt='Two hands reach out for a handshake with a Canadian flag in the background.' width='620' height='349' title='Prime Minister Mark Carney, left, shakes hands with Chinese President Xi Jinping at the Great Hall of the People in Beijing on Jan. 1'/><p>Prime Minister Mark Carney and Chinese President Xi Jinping agreed to deepen economic and trade ties at a bilateral meeting in Shenzhen, China, on Tuesday, expanding a tariff deal to include relief on Canadian exports worth roughly $400 million, including some pork and seafood products. Here's a breakdown.</p>]]></description>
-         <pubDate>Tue, 17 Nov 2026 13:52:05 EST</pubDate>
-         <category>News/Politics</category>
-         <guid isPermaLink="false">9.7424993</guid>
-         <dc:creator>John Mazerolle</dc:creator>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>

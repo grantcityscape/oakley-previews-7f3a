@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Command Deck — Team at Work</title>
+<style>
+  :root{
+    --bg:#070b14; --panel:#0d1424; --panel2:#101a30; --line:#22345c;
+    --ink:#dbe6ff; --dim:#8fa3c8; --faint:#5c6f96;
+    --gold:#e8b34b; --gold-soft:#f5cf7d;
+    --violet:#a58fff; --violet-dim:#6f5fd0;
+    --green:#3fd68f; --green-dim:#1f7a52;
+    --blue:#6db3ff; --blue-dim:#2b5ea7;
+    --red:#ff7a7a;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    background:radial-gradient(1200px 600px at 70% -10%, #12224a 0%, var(--bg) 55%);
+    color:var(--ink);
+    font-family:"Avenir Next","Segoe UI",system-ui,-apple-system,sans-serif;
+    overflow:hidden;
+  }
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+  .wrap{height:100vh;display:flex;flex-direction:column;padding:14px 18px 12px;gap:10px}
+
+  /* ---------- header ---------- */
+  header{display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--line);padding-bottom:9px}
+  .deckmark{width:30px;height:30px;border:1.5px solid var(--gold);border-radius:8px;display:grid;place-items:center;color:var(--gold);font-weight:800;font-size:15px;background:#141b31}
+  h1{font-size:19px;letter-spacing:.14em;font-weight:700}
+  h1 .accent{color:var(--gold)}
+  .legend{display:flex;gap:8px;margin-left:10px}
+  .legend span{font-size:11px;color:var(--dim);border:1px solid var(--line);border-radius:20px;padding:3px 10px;background:var(--panel)}
+  .legend b{font-weight:700}
+  .lg-lead{color:var(--gold-soft)} .lg-adv{color:var(--violet)} .lg-route{color:var(--green)} .lg-swarm{color:var(--blue)}
+  .asof{margin-left:auto;text-align:right;font-size:11px;color:var(--faint);line-height:1.5}
+  .asof b{color:var(--dim);font-weight:600}
+
+  /* ---------- main grid ---------- */
+  main{flex:1;display:grid;grid-template-columns:308px 1fr;gap:12px;min-height:0}
+  .col{display:flex;flex-direction:column;gap:10px;min-height:0}
+  .card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .card h2{font-size:12px;letter-spacing:.18em;font-weight:700;margin-bottom:6px}
+  .sub{font-size:11px;color:var(--dim);letter-spacing:.04em}
+
+  /* advisor rail */
+  .advisor{border-color:var(--violet-dim);height:100%;display:flex;flex-direction:column}
+  .advisor h2{color:var(--violet);font-size:15px;letter-spacing:.1em}
+  .advisor .role{font-size:12px;color:var(--dim);margin-bottom:10px}
+  .reads{font-size:12.5px;line-height:1.55;color:var(--ink);border-left:2px dashed #33477a;padding-left:10px;margin:4px 0 10px}
+  .touch{margin:8px 0}
+  .touch .tp{display:flex;align-items:center;gap:8px;font-size:12.5px;padding:5px 0}
+  .diamond{color:var(--violet);font-size:11px}
+  .gate-state{margin-left:auto;font-size:11px;font-weight:700;letter-spacing:.06em}
+  .passed{color:var(--green)} .pending{color:var(--gold)}
+  .advice{margin-top:6px;background:#131038;border:1px solid #2c2560;border-radius:8px;padding:8px 10px}
+  .advice .lbl{font-size:10.5px;color:var(--violet);letter-spacing:.12em;margin-bottom:4px}
+  .advice p{font-size:12.5px;line-height:1.5}
+  .adv-stats{margin-top:auto;border-top:1px solid var(--line);padding-top:9px;font-size:12px;color:var(--dim);line-height:1.7}
+  .adv-stats b{color:var(--ink);font-weight:600}
+  .flagline{margin-top:8px;background:#2a1430;border:1px solid #5c2a4d;border-radius:8px;padding:6px 9px;font-size:12px;color:#ffb3c8}
+  .silent{font-size:11.5px;color:var(--faint);font-style:italic;margin-top:8px;line-height:1.5}
+
+  /* lead */
+  .lead{border-color:#8a6a24;background:linear-gradient(180deg,#1a2138,#10182c)}
+  .lead h2{color:var(--gold-soft);font-size:15px;letter-spacing:.08em}
+  .lead .job{font-size:13.5px;line-height:1.5}
+  .lead .job b{color:var(--gold-soft)}
+  .lead .meta{display:flex;gap:16px;margin-top:7px;font-size:11.5px;color:var(--dim)}
+  .lead .meta b{color:var(--ink)}
+
+  /* routing strip */
+  .routing{border-color:var(--green-dim)}
+  .routing h2{color:var(--green)}
+  .routes{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:2px}
+  .route{background:#0a1f18;border:1px solid #17452f;border-radius:9px;padding:8px 11px}
+  .route .when{font-size:12px;font-weight:700;color:#b9f4d8}
+  .route .then{font-size:12px;color:var(--dim);line-height:1.45;margin-top:3px}
+  .route .then b{color:var(--green)}
+  .routebar{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:11px;color:var(--faint)}
+  .routebar .track{flex:1;height:7px;border-radius:4px;background:#12233f;overflow:hidden;display:flex}
+  .routebar .seg-sharp{background:var(--green);width:62%}
+  .routebar .seg-split{background:var(--gold);width:38%}
+
+  /* swarm */
+  .swarmhead{display:flex;align-items:baseline;gap:10px}
+  .swarmhead h2{color:var(--blue);font-size:13px;letter-spacing:.16em}
+  .swarmhead .sub{margin-left:auto}
+  .swarm{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .worker{background:linear-gradient(180deg,#101c36,#0c1528);border:1px solid #274a7d;border-radius:11px;padding:10px 12px 9px}
+  .worker .name{font-size:13.5px;font-weight:700;color:#bcd7ff}
+  .worker .kind{font-size:10.5px;color:var(--blue);letter-spacing:.1em}
+  .worker .task{font-size:12px;color:var(--ink);line-height:1.45;margin:5px 0 8px;min-height:34px}
+  .bar{height:8px;border-radius:4px;background:#16263f;overflow:hidden;position:relative}
+  .bar i{position:absolute;inset:0 auto 0 0;border-radius:4px;background:linear-gradient(90deg,#3f8fe0,#7db9ff)}
+  .bar.done i{background:linear-gradient(90deg,#2fbf71,#5fe3a1)}
+  .bar .shimmer{position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);background-size:200% 100%;animation:shim 2.2s linear infinite}
+  @keyframes shim{from{background-position:180% 0}to{background-position:-80% 0}}
+  .wmeta{display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:11px;color:var(--dim)}
+  .status{font-weight:700;letter-spacing:.05em}
+  .st-run{color:var(--blue)} .st-done{color:var(--green)}
+  .lanes{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .lane{background:#0b1220;border:1px solid var(--line);border-radius:10px;padding:8px 11px}
+  .lane .lname{font-size:12.5px;font-weight:700}
+  .lane .lrole{font-size:11px;color:var(--dim);line-height:1.45;margin-top:2px}
+  .lane .lnext{font-size:11px;margin-top:4px;color:var(--gold-soft)}
+  .lane .lnext b{color:var(--gold)}
+
+  /* return strip */
+  .return{border-color:#8a6a24;display:flex;align-items:center;gap:14px;padding:10px 14px}
+  .return .rt{font-size:13px;font-weight:700;color:var(--gold-soft);letter-spacing:.05em;white-space:nowrap}
+  .return .flow{display:flex;align-items:center;gap:8px;flex:1;font-size:12px;color:var(--dim)}
+  .ckpt{border:1px solid var(--line);border-radius:8px;padding:5px 10px;background:var(--panel);white-space:nowrap}
+  .ckpt b{color:var(--ink)}
+  .arrow{color:var(--faint)}
+
+  /* session log */
+  .log{border-top:1px solid var(--line);padding-top:8px}
+  .log h2{font-size:11px;letter-spacing:.18em;color:var(--dim);margin-bottom:5px}
+  .loglines{display:flex;flex-direction:column;gap:2px}
+  .ll{display:flex;gap:12px;font-size:12px;line-height:1.5;animation:arrive .5s ease both}
+  .ll:nth-child(2){animation-delay:.15s}.ll:nth-child(3){animation-delay:.3s}.ll:nth-child(4){animation-delay:.45s}
+  .ll:nth-child(5){animation-delay:.6s}.ll:nth-child(6){animation-delay:.75s}.ll:nth-child(7){animation-delay:.9s}
+  .ll:nth-child(8){animation-delay:1.05s}.ll:nth-child(9){animation-delay:1.2s}
+  @keyframes arrive{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .ll .t{color:var(--faint);width:44px;flex:none}
+  .ll .who{width:86px;flex:none;font-weight:700}
+  .w-hub{color:var(--gold-soft)} .w-build{color:var(--blue)} .w-check{color:var(--green)}
+  .w-rule{color:#ffb3c8} .w-dec{color:var(--violet)} .w-pub{color:#7dd7f0}
+  .ll .what{color:var(--ink)}
+  .ll .what .dim{color:var(--dim)}
+  footer{font-size:10.5px;color:var(--faint);display:flex;justify-content:space-between}
+  @media (prefers-reduced-motion: reduce){
+    .bar .shimmer{animation:none}
+    .ll{animation:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="deckmark">N</div>
+    <h1>COMMAND DECK <span class="accent">·</span> TEAM AT WORK</h1>
+    <div class="legend">
+      <span><b class="lg-lead">■</b> Oakley · lead</span>
+      <span><b class="lg-adv">■</b> Claude · advisor</span>
+      <span><b class="lg-route">■</b> routing</span>
+      <span><b class="lg-swarm">■</b> swarm · workers + lanes</span>
+    </div>
+    <div class="asof">
+      <b>The team's live board — tonight's real jobs</b><br>
+      Sunday, November 22, 2026 · as of about 9:00 p.m. EST · a board snapshot, not a live feed
+    </div>
+  </header>
+
+  <main>
+    <!-- ADVISOR RAIL -->
+    <aside class="card advisor">
+      <h2>CLAUDE</h2>
+      <div class="role">advisor of record · on call · never builds on a job he advises</div>
+      <div class="reads">reads the whole filed record — briefs, receipts, the state board, the live-state file — every ruling and result, before he speaks.</div>
+      <div class="touch">
+        <div class="tp"><span class="diamond">◇</span> before a plan <span class="gate-state passed">✓ PASSED tonight</span></div>
+        <div class="tp"><span class="diamond">◇</span> before done <span class="gate-state pending">○ PENDING</span></div>
+      </div>
+      <div class="advice">
+        <div class="lbl">LAST ADVICE — ON THE .22 BRIEF</div>
+        <p>“The three check carries lead the brief. Fix the governing rule, not another override block — and the Lions Gate dead space rides in the same build.”</p>
+      </div>
+      <div class="silent">silent on every routine turn — he speaks at the two gates, and when the same failure shows up twice.</div>
+      <div class="flagline">◆ same failure ×2 — Today alignment missed in .21 after the .20 gate flagged it · advisor read the full record at the brief gate</div>
+      <div class="adv-stats">
+        consults tonight <b>1 of 2</b> (brief gate used · delivery gate to come)<br>
+        usage meter <b>snapshot rule:</b> no reading captured tonight — never shown fake-live<br>
+        Claude's reset <b>Thursday 11:00 a.m.</b> (weekly)
+      </div>
+    </aside>
+
+    <!-- CENTRE COLUMN -->
+    <div class="col">
+      <!-- LEAD -->
+      <section class="card lead">
+        <h2>OAKLEY · LEAD — MAIN SESSION</h2>
+        <div class="job">Dispatches, edits + verifies. Current main job: <b>Johnny's apps .22</b> — carries from the .21 check, Lions Gate dead space, phone-width pass. Verifying: <b>Canopy round-6</b> build as it lands.</div>
+        <div class="meta"><span>effort <b>■■■■ high</b></span><span>team clocked in <b>all members</b></span><span>standing rule <b>if a lane stops, Grant hears it immediately</b></span></div>
+      </section>
+
+      <!-- ROUTING -->
+      <section class="card routing">
+        <h2>ROUTING — HOW WORK GETS SPLIT</h2>
+        <div class="routes">
+          <div class="route"><div class="when">Clear job, one file, known fix</div><div class="then"><b>sharp → straight to a worker.</b> No meeting, no relay — the brief carries everything.</div></div>
+          <div class="route"><div class="when">Shared piece, or the ask is unclear</div><div class="then"><b>split → back to the lead.</b> Oakley splits it into sharp jobs first, then dispatches.</div></div>
+          <div class="route"><div class="when">Same failure twice, or a retry stalls</div><div class="then"><b>stop → advisor reads the record.</b> The lead applies the advice; the advisor never builds.</div></div>
+        </div>
+        <div class="routebar"><span>tonight's dispatches:</span><div class="track"><div class="seg-sharp"></div><div class="seg-split"></div></div><span><b style="color:var(--green)">most</b> went straight to workers · <b style="color:var(--gold)">the rest</b> came back to the lead to split</span></div>
+      </section>
+
+      <!-- SWARM: HUB WORKERS -->
+      <div class="swarmhead"><h2>SWARM — HUB WORKERS, IN PARALLEL</h2><span class="sub">stages, not guesses: brief → build → verify → deliver</span></div>
+      <section class="swarm">
+        <div class="worker">
+          <div class="kind">BUILD · JOHNNY'S APPS</div><div class="name">.22 fix build</div>
+          <div class="task">KÜL + Lions Gate: fix the governing Today rule, the Closed-bar colour at its source, tab position, dead space, 390px pass.</div>
+          <div class="bar"><i style="width:50%"></i><div class="shimmer"></div></div>
+          <div class="wmeta"><span>stage: building — 2 of 4</span><span class="status st-run">● running</span></div>
+        </div>
+        <div class="worker">
+          <div class="kind">BUILD · CANOPY</div><div class="name">Round-6 build</div>
+          <div class="task">The round-5 fail list in one consolidated build: truncation cluster, TV badge, Markets fallback, Talk snap-back, crossfade.</div>
+          <div class="bar"><i style="width:50%"></i><div class="shimmer"></div></div>
+          <div class="wmeta"><span>stage: building — 2 of 4</span><span class="status st-run">● running</span></div>
+        </div>
+        <div class="worker">
+          <div class="kind">AUDIT · HUB</div><div class="name">Hub regression audit</div>
+          <div class="task">Every conversation since day one: when the hub worked right, when the call-outs began, what changed, and the fixes.</div>
+          <div class="bar"><i style="width:25%"></i><div class="shimmer"></div></div>
+          <div class="wmeta"><span>stage: sweeping the record — 1 of 4</span><span class="status st-run">● running</span></div>
+        </div>
+        <div class="worker">
+          <div class="kind">CHECK · RENDERED</div><div class="name">.21 rendered check</div>
+          <div class="task">Clicked every KÜL rail tab for real, measured both Todays, sampled the graph colours. Verdict: 4 pass · 2 fail.</div>
+          <div class="bar done"><i style="width:100%"></i></div>
+          <div class="wmeta"><span>proof: 13 screenshots filed</span><span class="status st-done">✓ done</span></div>
+        </div>
+        <div class="worker">
+          <div class="kind">BUILD · CANOPY FEEDS</div><div class="name">Proxy package</div>
+          <div class="task">Seven routes built: 432 cameras, ECCC weather, markets snapshot, news, Osiris, TV. Held: Fluid check before 60-second cadences ship.</div>
+          <div class="bar done"><i style="width:100%"></i></div>
+          <div class="wmeta"><span>9 files · all parse clean · not deployed</span><span class="status st-done">✓ done</span></div>
+        </div>
+        <div class="worker">
+          <div class="kind">BRIEF · JOHNNY'S APPS</div><div class="name">.22 brief + record sweep</div>
+          <div class="task">The .21 carries verbatim, plus two filed-but-never-built items the sweep found: weather parity, Social photo content.</div>
+          <div class="bar done"><i style="width:100%"></i></div>
+          <div class="wmeta"><span>advisor gate: passed before it shipped</span><span class="status st-done">✓ done</span></div>
+        </div>
+      </section>
+
+      <!-- LANES -->
+      <section class="lanes">
+        <div class="lane"><div class="lname" style="color:var(--violet)">Claude — advisor lane</div><div class="lrole">Advisor of record tonight; his building on advised jobs is reassigned.</div><div class="lnext"><b>next:</b> delivery gate on .22 + round-6</div></div>
+        <div class="lane"><div class="lname" style="color:var(--blue)">ChatGPT — interaction checks</div><div class="lrole">Real-pointer hover / press / switch tests; the decider when eyes disagree.</div><div class="lnext"><b>next:</b> .22 second check when the build lands</div></div>
+        <div class="lane"><div class="lname" style="color:var(--green)">Gemini — design QA</div><div class="lrole">Design eye on builds: fit, voids, colour, feel — against the filed fix lists.</div><div class="lnext"><b>next:</b> round-6 design QA, run-list ready (45 lines)</div></div>
+        <div class="lane"><div class="lname" style="color:var(--gold-soft)">Perplexity — research + routes</div><div class="lrole">Verifies real routes and sources before anything is promised as working.</div><div class="lnext"><b>tonight:</b> six Osiris feeds verified live · Green Button = sign-in door</div></div>
+      </section>
+
+      <!-- RETURN STRIP -->
+      <section class="card return">
+        <div class="rt">↩ BACK TO OAKLEY · LEAD — REVIEW + VERIFY</div>
+        <div class="flow">
+          <span class="ckpt">worker result lands</span><span class="arrow">→</span>
+          <span class="ckpt"><b>Gate 1 · advisor pass</b> — before the plan <b style="color:var(--green)">✓</b></span><span class="arrow">→</span>
+          <span class="ckpt">hub verifies it itself</span><span class="arrow">→</span>
+          <span class="ckpt"><b>Gate 2 · advisor pass</b> — before “done” <b style="color:var(--gold)">○ pending</b></span><span class="arrow">→</span>
+          <span class="ckpt">Grant sees it</span>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- SESSION LOG -->
+  <section class="log">
+    <h2>SESSION LOG — TONIGHT</h2>
+    <div class="loglines mono">
+      <div class="ll"><span class="t">20:21</span><span class="who w-hub">hub</span><span class="what">all lanes verified idle — stoppage reported to Grant, per his rule <span class="dim">· two cancelled jobs re-dispatched</span></span></div>
+      <div class="ll"><span class="t">20:30</span><span class="who w-rule">ruling</span><span class="what">Lions Gate: the big client bar on Clients comes out <span class="dim">· Grant, live review of the .20s</span></span></div>
+      <div class="ll"><span class="t">20:31</span><span class="who w-rule">ruling</span><span class="what">roadmap stopped, team-wide <span class="dim">· whole team onto Johnny's two apps + Canopy only</span></span></div>
+      <div class="ll"><span class="t">20:34</span><span class="who w-pub">publish</span><span class="what">.21s live — commit 7298c27 · Pages run #145 <span class="dim">· KÜL 10,944,413 B · Lions Gate 3,501,615 B, hub-measured</span></span></div>
+      <div class="ll"><span class="t">20:44</span><span class="who w-check">check</span><span class="what">.21 rendered verdict — 4 pass · 2 fail <span class="dim">· Today alignment still off (x 465 vs 298) · KÜL Closed bar #2972E8, not the shared #6A9FC2</span></span></div>
+      <div class="ll"><span class="t">20:45</span><span class="who w-build">brief</span><span class="what">.22 brief filed — 3 carries verbatim + sweep items S1/S2 <span class="dim">· advisor gate 1: passed</span></span></div>
+      <div class="ll"><span class="t">20:52</span><span class="who w-build">build</span><span class="what">.22 build + Canopy round-6 build running in parallel <span class="dim">· proxy package done, held at the Fluid check</span></span></div>
+      <div class="ll"><span class="t">20:59</span><span class="who w-hub">hub</span><span class="what">regression audit dispatched <span class="dim">· every conversation since day one: the good period, the inflection, the fixes</span></span></div>
+      <div class="ll"><span class="t">21:00</span><span class="who w-dec">decision</span><span class="what">subagent model — team decision: adopt parts <span class="dim">· advisor of record + two hard gates + hub swarm · lanes stay separate services</span></span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Command Deck · Team at Work — the working model the team adopted 2026-11-22, shown on tonight's real board.</span>
+    <span>Nothing on this board is a live feed; times and identities are from the filed record.</span>
+  </footer>
+</div>
+</body>
+</html>

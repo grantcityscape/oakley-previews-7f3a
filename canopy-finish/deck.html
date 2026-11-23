@@ -343,7 +343,7 @@ body .card:active{transform:scale(.98);transition-duration:100ms}
 </head><body>
 <nav class="cstrip" id="cstrip" aria-label="Canopy destinations"><a href="./index.html" data-door="canopy">CANOPY</a><a href="./daybook.html" data-door="day">DAYBOOK</a><a href="./workbench.html" data-door="wb">WORKBENCH</a><span class="sp"></span></nav>
 <div class="bridge" id="bridge">
- <header class="top"><a class="hlogo" id="hm-logo" aria-label="Northbirch — return to Home" title="Home"><img class="nb-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true"></a><div class="chrono"><a class="ckin" id="hm-clock" aria-label="Clock — return to Home" title="Home"><b id="ck" class="num">--:--:--</b><span><i id="dt">---</i><i id="ut">---</i><i class="chrome-wm" aria-hidden="true">CANOPY</i></span></a><a class="wxdoor" href="./index.html#win=weather" aria-label="Weather, Ottawa — opens the Weather window on Canopy Home" title="Weather — snapshot, Ottawa · opens the Weather window"><span class="wx" aria-hidden="true"><svg viewBox="0 0 48 30"><g class="rays" stroke="#FACC15" stroke-width="2.4" stroke-linecap="round" fill="none"><path d="M14 2v4M5 6l3 3M23 6l-3 3M2 15h4"/></g><circle cx="14" cy="15" r="5.4" fill="#FACC15"/><path class="cld" d="M20 24.6h17.4a4.9 4.9 0 0 0 .8-9.7 8.2 8.2 0 0 0-15.7-1.6A5.4 5.4 0 0 0 20 24.6Z" fill="#dfe9f5"/></svg></span><span class="wxt">WX ▸</span><span class="wxc">SNAPSHOT · OTTAWA</span></a></div><nav class="doors" id="doors" aria-label="Sections"></nav></header>
+ <header class="top"><a class="hlogo" id="hm-logo" aria-label="Northbirch — return to Home" title="Home"><img class="nb-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true"></a><div class="chrono"><a class="ckin" id="hm-clock" aria-label="Clock — return to Home" title="Home"><b id="ck" class="num">--:--:--</b><span><i id="dt">---</i><i id="ut">---</i><i class="chrome-wm" aria-hidden="true">CANOPY</i></span></a><a class="wxdoor" href="./index.html#win=weather" aria-label="Weather, Ottawa — opens the Weather window on Canopy Home" title="Weather — snapshot, Ottawa · opens the Weather window"><span class="wx" aria-hidden="true"><svg viewBox="0 0 48 30"><g class="rays" stroke="#FACC15" stroke-width="2.4" stroke-linecap="round" fill="none"><path d="M14 2v4M5 6l3 3M23 6l-3 3M2 15h4"/></g><circle cx="14" cy="15" r="5.4" fill="#FACC15"/><path class="cld" d="M20 24.6h17.4a4.9 4.9 0 0 0 .8-9.7 8.2 8.2 0 0 0-15.7-1.6A5.4 5.4 0 0 0 20 24.6Z" fill="#dfe9f5"/></svg></span><span class="wxt num" id="ckwx-t">--°</span><span class="wxc" id="ckwx-c">PENDING · OTTAWA</span></a></div><nav class="doors" id="doors" aria-label="Sections"></nav></header>
  <main class="deck" id="deck">
   <section class="view" id="v-home" aria-label="Command Deck — primary screen">
    <div class="stkey" id="stkey"></div>
@@ -361,6 +361,7 @@ body .card:active{transform:scale(.98);transition-duration:100ms}
   <section class="view" id="v-member" hidden aria-label="Member — full chat room and code box"></section>
   <section class="view" id="v-team" hidden aria-label="Team room — the whole team's group chat"></section>
   <section class="view" id="v-eng" hidden aria-label="Engineering portal"></section>
+  <section class="view" id="v-swarm" hidden aria-label="Team at work — member swarms, flow lines and code boxes"></section>
   <section class="view" id="v-media" hidden aria-label="Media portal"></section>
  </main>
  <footer class="dock" id="dock" aria-label="Talk to Oakley">
@@ -434,7 +435,7 @@ const hdr=(t,pill,tall)=>'<div class="hd'+(tall?' tall':'')+'"><span class="ttl"
 const bdg=s=>'<span'+(s[2]?' title="'+esc(s[2])+'"':'')+' class="pill '+({live:'p-live',stale:'p-warn',err:'p-crit',pend:'p-off',ice:'p-ice'}[s[1]]||'p-off')+'">'+esc(s[0])+'</span>';
 const NC='<span class="nc">○</span> ';
 const unkTxt=f=>'Shown as UNKNOWN, not live: '+(f.why==='NO SOURCE'?'the feed names no source':'its timestamp is missing or invalid, so its age is unknown')+'. It currently lists nothing.';
-const ncb=(msg,t)=>'<div class="ncb"><i></i><b>'+(t||'NOT CONNECTED')+'</b><span>'+msg+'</span></div>';
+const ncb=(msg,t)=>'<div class="ncb"><b>'+(t||'NOT CONNECTED')+'</b><span>'+msg+'</span></div>';
 
 /* ---------- feeds: empty address = NOT CONNECTED; fetched = LIVE / STALE by its own asOf; failed = OFFLINE ---------- */
 const D={};
@@ -584,8 +585,8 @@ function ur(r){const asl=r.unk?'<span class="snp">UNKNOWN AGE</span>':'<span cla
   if(!r.sw&&!r.ww&&r.cnt)return '<div class="ur'+(r.snap?' stale-dim':'')+'" title="'+tip+'"><div class="uh"><span class="un">'+esc(r.n)+'</span><span class="ua">'+asl+'</span></div><div class="uw ct2"><b class="cnt">'+esc(r.cnt)+'</b> '+esc(r.cntl||'')+'</div><div class="uw na"><span class="ul2">DAY·WK</span><span class="nr">not recorded · no cap</span></div></div>';
   return '<div class="ur '+r.cls+(r.snap?' stale-dim':'')+'" title="'+tip+'"><div class="uh"><span class="un">'+esc(r.n)+'</span><span class="ua">'+asl+'</span></div>'+uw(r.sw,'DAY',r)+uw(r.ww,'WK',r)+'</div>'}
 /* ROUND 4 (R4-5 §3): Team Usage renders BOTH forms; the panel's own measured width picks one (hub width rule) — wide = the designer's G5 columns, narrow = the rows form. */
-function uc(r){const w=r.sw||r.ww,v=w&&w.pct!=null?w.pct+'%':r.cnt?esc(r.cnt):'—';
-  const sub=w?((w===r.sw?'DAY':'WEEK')+' · '+esc(w.rsT||'no reset')):esc(r.cntl||'COUNT');
+function uc(r){const w=(r.pri==='s'?r.sw:r.pri==='w'?r.ww:null)||r.sw||r.ww,v=w&&w.pct!=null?w.pct+'%':r.cnt?esc(r.cnt):'—';
+  const sub=w?((w===r.sw?(w.k||'5H'):'WEEK')+' · '+esc(w.rsT||'no reset')):esc(r.cntl||'COUNT');
   return '<div class="uc"><b class="uv">'+v+'</b><span class="un">'+esc(r.n)+'</span><span class="us">'+sub+'</span>'+(w?'<span class="us2">'+(w.passed?'PASSED':'upcoming')+'</span>':'')+'<span class="ua">'+(r.unk?'UNKNOWN AGE · ':'')+esc(r.asD)+'</span></div>'}
 function rUsage(){const rows=teamRows(),snap=rows.some(r=>r.snap),d=ageDays();
   setH($('#usage .hdw'),hdr('TEAM USAGE',(rows.some(r=>r.unk)?bdg(['UNKNOWN · '+fs('hubfeed').why,'err',ptt(fs('hubfeed'))]):snap?'<span class="pill p-warn" title="Copied from each service’s own usage screen on '+esc(CFG.team.asOf)+' — never shown as live. PASSED = the reset has gone by, so the number needs re-capturing.">SNAPSHOT'+(d>0?' · '+d+(d===1?' DAY':' DAYS')+' OLD':'')+'</span>':bdg(['LIVE','live']))+'<button class="btn sm" data-a="urefresh" style="margin-left:.4rem" title="Re-read the usage snapshot held in this app and update its age in place">REFRESH SNAPSHOT</button>'));
@@ -602,7 +603,7 @@ function appLink(id,x){const a=appOf(id);if(!a)return '';const u=ctxUrl(a.url,x)
 function flagRow(x){return '<div class="rw fl"><span class="tt" title="'+esc(clip(x.project,120))+'">'+esc(clip(x.project,80))+'</span><span class="ow">'+esc(clip(x.raisedBy,14).toUpperCase())+'</span><span class="rs" title="'+esc(clip(x.reason,300))+'">'+esc(clip(x.reason,160))+'</span></div>'}
 function rFlags(){const f=fs('flags'),l=arr('flags','flags');
   setH($('#flags .hdw'),hdr('FLAGGED PROJECTS',pillS(f)+(f.s==='NC'&&!RMS.f?'<button class="btn sm" data-a="rms:f" style="margin-left:.4rem">✕ REMOVE SAMPLE</button>':'')));
-  setH($('#flags-bd'),'<div class="cols f"><span>PROJECT · REASON</span><span>'+(f.s==='NC'?'RAISED BY':cnote(f,l.length,'OPEN').replace('class="ct"','class="ct"'))+'</span></div>'+(l.length?'<div class="rows">'+l.map(flagRow).join('')+'</div><div class="term">— End of list —</div>':f.s==='NC'?(RMS.f?ncb('Sample removed. The hub flag feed is not connected — real flags raised by any lane or the checker show here once it is.','NOT CONNECTED'):'<div class="smp">'+ncb('Example flags — real flags show here once the hub flag feed is connected.','SAMPLE')+'<div class="rows">'+[flagRow({project:'Canopy — SITREP wall',raisedBy:'CLAUDE',reason:'Example flag — two of four wall tiles not playing'}),flagRow({project:'KÜL — client files',raisedBy:'CHECKER',reason:'Example flag — sample cards still showing'})].join('')+'</div></div><div class="term">— End of list —</div>'):f.s==='OFFLINE'?ncb('The flag feed is not answering.','OFFLINE'):f.s==='UNKNOWN'?ncb(unkTxt(f),'UNKNOWN · '+f.why):f.s==='WAIT'?ncb('Waiting for the flag feed.','WAITING'):ncb('The feed reports no open flags.','NONE OPEN')))}
+  setH($('#flags-bd'),'<div class="cols f"><span>PROJECT · REASON</span><span>'+(f.s==='NC'?'RAISED BY':cnote(f,l.length,'OPEN').replace('class="ct"','class="ct"'))+'</span></div>'+(l.length?'<div class="rows">'+l.map(flagRow).join('')+'</div><div class="term">— End of list —</div>':f.s==='NC'?(RMS.f?ncb('Sample removed. The hub flag feed is not connected — real flags raised by any lane or the checker show here once it is.','NOT CONNECTED'):'<div class="smp">'+ncb('Example flags — real flags show here once the hub flag feed is connected.','SAMPLE')+'</div><div class="rows">'+[flagRow({project:'Canopy — SITREP wall',raisedBy:'CLAUDE',reason:'Example flag — two of four wall tiles not playing'}),flagRow({project:'KÜL — client files',raisedBy:'CHECKER',reason:'Example flag — sample cards still showing'})].join('')+'</div></div><div class="term">— End of list —</div>'):f.s==='OFFLINE'?ncb('The flag feed is not answering.','OFFLINE'):f.s==='UNKNOWN'?ncb(unkTxt(f),'UNKNOWN · '+f.why):f.s==='WAIT'?ncb('Waiting for the flag feed.','WAITING'):ncb('The feed reports no open flags.','NONE OPEN')))}
 
 /* ---------- portal doors (summary data on the primary screen) ---------- */
 const ICON={eng:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 3.5 7.2v9.6l8.5 4.7 8.5-4.7V7.2zM3.5 7.2 12 12l8.5-4.8M12 12v9.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',media:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 9.2v5.6l4.8-2.8z" fill="currentColor"/></svg>'};
@@ -615,7 +616,7 @@ function rPortals(){const fe=fs('eng');
    +'<div class="chain">'+chain+'</div><div class="pn">'+(fe.s==='NC'?NC+'not connected · no project feed set — projects land when the hub feed connects':'projects '+esc(fe.s.toLowerCase()))+'</div></div>'
    +'<div class="portal" id="p-media" tabindex="0" role="button" data-a="portal:media" aria-label="Enter the Media portal — a whole area"><div class="phd">'+ICON.media+'<b>MEDIA PORTAL</b><span class="go">▸</span></div>'
    +'<div class="pkv"><span><i>VIDEOS</i><b>'+cnt('mvid')+'</b></span><span><i>PICTURES</i><b>'+cnt('mpic')+'</b></span><span><i>AD PROJ.</i><b>'+cnt('mads')+'</b></span></div>'
-   +'<div class="pn">'+(['mvid','mpic','mads'].every(k=>fs(k).s==='NC')?NC+'not connected · no media feeds set — items land when the hub feeds connect':'videos · pictures · ad projects')+'</div></div>')}
+   +'<div class="pn">'+(['mvid','mpic','mads'].every(k=>fs(k).s==='NC')?NC+'not connected · no media feeds set — items land when the hub feeds connect':'videos · pictures · ad projects')+'</div></div></div>'+'<div class="portal" id="p-swarm" tabindex="0" role="button" data-a="portal:swarm" aria-label="Open Team at Work — member swarms, flow lines and code boxes"><div class="phd"><span style="font-size:1.05rem;line-height:1;color:rgb(var(--r-ice))">\u2699</span><b>TEAM AT WORK</b><span class="go">\u25B8</span></div>'+'<div class="pkv"><span><i>MEMBERS</i><b>6</b></span><span><i>WORKERS</i><b>13</b></span><span><i>GATES</i><b>2</b></span></div>'+'<div class="pn">swarms \u00B7 flow lines \u00B7 code boxes \u2014 the team working, on the Deck</div></div>')}
 
 /* ---------- view shells ---------- */
 const spineCard=p=>'<section class="card" id="'+p+'-spine" style="flex:none;height:12.2rem"><div class="hdw"></div><div class="spine"></div></section>';
@@ -648,6 +649,8 @@ function rChat(card,room,title,sub,narrow){const f=fs('chat:'+room),l=msgs(room)
   /* ROUND 4 (R4-5 §2): the opened team room always carries its brief block at the head and the caught-up terminator at the foot; the composer stays pinned below (it is outside .msgs). */
   setH(bd,(room==='team'?'<div class="tbrief"><b>TEAM BRIEF</b><span>One room for the whole team — clock-ins, checker notes and lane updates land here. A completion is announced with its content, or it did not happen.</span></div>':'')+(xr?XCHAT[room].map(msgHTML).join('')+l.map(msgHTML).join(''):l.length?l.map(msgHTML).join(''):f.s==='NC'?ncb('No conversation feed is set for '+sub+'. Messages show here once the hub feed is connected — none are invented.'):f.s==='OFFLINE'?ncb('The conversation feed is not answering.','OFFLINE'):f.s==='UNKNOWN'?ncb(unkTxt(f),'UNKNOWN · '+f.why):f.s==='WAIT'?ncb('Waiting for the conversation feed.','WAITING'):ncb('No messages in this lane yet.','EMPTY'))+(room==='team'?'<div class="term">— You’re caught up —</div>':''));
   if(near)bd.scrollTop=bd.scrollHeight}
+const SMPT={claude:['Gate check — Canopy acceptance run'],chatgpt:['Second check — protocol re-run'],oakley:['Publish + verify the live build']};
+const SMPF={claude:[{project:'Canopy — SITREP wall',raisedBy:'CLAUDE',reason:'Example flag — two of four wall tiles not playing'}]};
 function rMemberView(){const m=MEMBERS.find(x=>x.id===V.member)||MEMBERS[0],L=lampOf(m);
   setH($('#mtabs'),MEMBERS.map(x=>'<button class="btn" data-a="m:'+x.id+'" aria-pressed="'+(x.id===m.id)+'"><i class="lamp '+lampOf(x).cls+'"></i>'+x.n+'</button>').join(''));
   setH($('#mv-st'),'<i class="lamp '+L.cls+'"></i><b>'+esc(m.n)+' · STATION · '+esc(L.word)+'</b>');
@@ -663,10 +666,10 @@ function rMemberView(){const m=MEMBERS.find(x=>x.id===V.member)||MEMBERS[0],L=la
   setH($('#mv-codep'),ls.length?ls.map((x,i)=>'<div class="cl"><i>'+(i+1)+'</i><span>'+hl(clip(x,300))+'</span></div>').join(''):cf.s==='NC'?'<div class="cdx">'+xPill()+'</div>'+(XCODE[m.id]||[]).map((x,i)=>'<div class="cl"><i>'+(i+1)+'</i><span>'+hl(clip(x,300))+'</span></div>').join(''):ncb('No work-pane feed is set for '+m.nm+'. The member’s current work / build shows here in a code box once the hub feed is connected.',cf.s==='UNKNOWN'?'UNKNOWN · '+cf.why:cf.s==='OFFLINE'?'OFFLINE':'NOT CONNECTED'));
   const tl=arr('tasks','tasks').filter(t=>String(t.owner||'').toLowerCase()===m.id),tf=fs('tasks');
   setH($('#mv-tasks .hdw'),hdr('OPEN TASKS',pillS(tf)));
-  setH($('#mv-tasks .bd'),tl.length?'<div class="rows">'+tl.map(t=>'<div class="rw" style="grid-template-columns:minmax(0,1fr)"><span class="tt">'+esc(clip(t.title,120))+'</span></div>').join('')+'</div>':tf.s==='NC'?ncb('No task feed is set.'):tf.s==='OFFLINE'?ncb('The task feed is not answering.','OFFLINE'):tf.s==='UNKNOWN'?ncb(unkTxt(tf),'UNKNOWN · '+tf.why):ncb('No open tasks for '+m.nm+' in the feed.','NONE OPEN'));
+  setH($('#mv-tasks .bd'),tl.length?'<div class="rows">'+tl.map(t=>'<div class="rw" style="grid-template-columns:minmax(0,1fr)"><span class="tt">'+esc(clip(t.title,120))+'</span></div>').join('')+'</div>':tf.s==='NC'?('<div class="smp">'+ncb('Example tasks — real open tasks show here once the hub task feed is connected.','SAMPLE')+'</div>'+(SMPT[m.id]?'<div class="rows">'+SMPT[m.id].map(t=>'<div class="rw" style="grid-template-columns:minmax(0,1fr)"><span class="tt">'+esc(t)+'</span></div>').join('')+'</div>':'')):tf.s==='OFFLINE'?ncb('The task feed is not answering.','OFFLINE'):tf.s==='UNKNOWN'?ncb(unkTxt(tf),'UNKNOWN · '+tf.why):ncb('No open tasks for '+m.nm+' in the feed.','NONE OPEN'));
   const fl=arr('flags','flags').filter(x=>String(x.raisedBy||'').toLowerCase()===m.id),ff=fs('flags');
   setH($('#mv-flags .hdw'),hdr('FLAGS RAISED',pillS(ff)));
-  setH($('#mv-flags .bd'),fl.length?'<div class="rows">'+fl.map(flagRow).join('')+'</div>':ff.s==='NC'?ncb('No flag feed is set.'):ff.s==='OFFLINE'?ncb('The flag feed is not answering.','OFFLINE'):ff.s==='UNKNOWN'?ncb(unkTxt(ff),'UNKNOWN · '+ff.why):ncb('No open flags raised by '+m.nm+'.','NONE OPEN'))}
+  setH($('#mv-flags .bd'),fl.length?'<div class="rows">'+fl.map(flagRow).join('')+'</div>':ff.s==='NC'?('<div class="smp">'+ncb('Example flags — real flags show here once the hub flag feed is connected.','SAMPLE')+'</div>'+(SMPF[m.id]?'<div class="rows">'+SMPF[m.id].map(flagRow).join('')+'</div>':'')):ff.s==='OFFLINE'?ncb('The flag feed is not answering.','OFFLINE'):ff.s==='UNKNOWN'?ncb(unkTxt(ff),'UNKNOWN · '+ff.why):ncb('No open flags raised by '+m.nm+'.','NONE OPEN'))}
 
 /* ---------- team room (group chat: the face box shows the last two messages; the room opens as its own view) ---------- */
 function rTeamBox(){const f=chatF('team'),l=msgs('team'),src=f.s==='NC'?XCHAT.team.concat(l):l,last=src.slice(-2);
@@ -740,7 +743,7 @@ function cadInit(){const c=$('#cad');let m=null;
 const V={view:'home',member:'claude',coll:'videos'};
 function parseHash(){const p=(location.hash||'').replace(/^#\/?/,'').split('/');
   if(p[0]==='member'&&MEMBERS.some(m=>m.id===p[1])){V.view='member';V.member=p[1]}
-  else if(p[0]==='team')V.view='team';
+  else if(p[0]==='team')V.view='team';else if(p[0]==='swarm')V.view='swarm';
   else if(p[0]==='eng')V.view='eng';
   else if(p[0]==='media'){V.view='media';if(COLLS[p[1]])V.coll=p[1]}
   else V.view='home'}
@@ -756,7 +759,7 @@ function route(){parseHash();closeApps();
   else if(dr.classList.contains('open')||!dr.hidden){dr.classList.remove('open');sc.classList.remove('on');setTimeout(()=>{if(V.view!=='member'){dr.hidden=true;sc.hidden=true}},260)}
   const el=$('#v-'+V.view);if(!isM&&lastView!==V.view){el.classList.remove('in');void el.offsetWidth;el.classList.add('in')}lastView=V.view;paint();if(V.view==='eng')cadAsk()}
 function paint(){rDoors();rStations();rMembers();rTeamBox();rUsage();rTasks();rFlags();rPortals();
-  if(V.view==='member')rMemberView();else if(V.view==='team')rTeamView();else if(V.view==='eng')rEng();else if(V.view==='media')rMedia();
+  if(V.view==='member')rMemberView();else if(V.view==='team')rTeamView();else if(V.view==='eng')rEng();else if(V.view==='media')rMedia();else if(V.view==='swarm')rSwarm();
   rDock();rTalkRoomSt();placeStrips()}
 function closeApps(){['eng','media'].forEach(p=>{const e=$('#pop-'+p),b=$('#apps-btn-'+p);if(e&&!e.hidden){e.hidden=true;if(b)b.setAttribute('aria-expanded','false')}})}
 function toggleApps(){const p=$('#pop-'+V.view),b=$('#apps-btn-'+V.view);if(!p||!b)return;const open=p.hidden;closeApps();if(open){rApps();p.hidden=false;b.setAttribute('aria-expanded','true')}}
@@ -1250,7 +1253,7 @@ if(strip&&!strip.querySelector('[data-door="sitrep"]')){var a=document.createEle
 /* the router navigates via replaceState, so watch the views themselves: while a
    team/eng/media drawer is visible the scrim is on; when none is, it follows route()'s lead */
 var sc=document.getElementById('scrim');
-function syncScrim(){if(!sc)return;var open=['v-team','v-eng','v-media'].some(function(id){var e=document.getElementById(id);return e&&!e.hidden});
+function syncScrim(){if(!sc)return;var open=['v-team','v-eng','v-media','v-swarm'].some(function(id){var e=document.getElementById(id);return e&&!e.hidden});
   var mem=document.getElementById('v-member'),memOpen=mem&&mem.classList.contains('open');
   if(open){sc.hidden=false;sc.classList.add('on')}else if(!memOpen&&!sc.classList.contains('on')){/* route() owns the member scrim */}
   else if(!memOpen){sc.classList.remove('on');setTimeout(function(){if(!sc.classList.contains('on'))sc.hidden=true},260)}}
@@ -1463,4 +1466,155 @@ body .mbox:active,body .portal:active,body .card:active{transform:scale(.98)!imp
 .uc .us2{display:block;color:var(--amber);font-size:.82em;letter-spacing:.06em}
 </style>
 
+
+<style id="r6-deck-css">
+/* ===== ROUND 6 — Command Deck fixes (2026-11-22) ===== */
+/* Member-box headers: two lines — lamp+avatar+FULL name on line 1, state + OPEN on line 2 */
+.mbox .hd.mh{height:auto!important;min-height:0!important;flex-direction:column!important;align-items:stretch!important;justify-content:center!important;gap:.12rem!important;padding:.32rem .5rem!important}
+.mbox .hd.mh .mt1{flex:none!important}
+.mbox .hd.mh .mnm{overflow:visible!important;text-overflow:clip!important}
+.mbox .hd.mh .mt2{flex:none!important;width:100%!important;justify-content:space-between!important;padding-left:0!important}
+/* Open Tasks / Flagged Projects rows: text wraps, nothing truncates */
+#tasks .tt,#flags .tt,#tasks .rs,#flags .rs,#mv-tasks .tt,#mv-flags .tt,#mv-flags .rs{white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
+/* Team Usage columns: window + reset text wraps instead of truncating */
+.uc .us{white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
+/* Team Room face box: the caught-up bar anchors to the panel bottom */
+#teamroom .pchat{display:flex!important;flex-direction:column!important;height:100%!important}
+#teamroom .pchat .term{margin-top:auto!important}
+/* Tasks/Flags panels: body is a flex column; the rows area flexes and the
+   terminator anchors the foot; owner flows inline so task text gets full width */
+#tasks .bd,#flags .bd{display:flex!important;flex-direction:column!important}
+#tasks .rows,#flags .rows{flex:1 1 auto!important;min-height:0!important;height:auto!important;overflow-y:auto!important}
+#tasks .rw,#flags .rw{display:block!important;height:auto!important;padding:.18rem .35rem!important}
+#tasks .rw .ow,#flags .rw .ow{display:inline-block!important;margin-right:.45rem!important;vertical-align:top}
+#tasks .rw .tt,#flags .rw .tt{display:inline!important}
+#flags .rw .rs{display:block!important;margin-top:.1rem!important}
+#tasks .term,#flags .term{flex:none!important}
+/* Tasks/Flags vertical budget: compact note + rows so every row fits the panel */
+#tasks .bd,#flags .bd{gap:.15rem!important}
+#tasks .ncb,#flags .ncb{height:auto!important;min-height:0!important;padding:.2rem .5rem!important}
+#tasks .rows,#flags .rows{gap:.2rem!important}
+#tasks .rw,#flags .rw{padding:.12rem .35rem!important}
+#flags .rw .tt,#flags .rw .rs{line-height:1.3!important}
+/* Face grid re-prioritised (round 6): the Team Room carries void space; the
+   bottom row (Team Usage / Tasks / Flags / Portals) needs the height so no
+   row is cut. One screen still fits exactly — nothing scrolls at page level. */
+#v-home{grid-template-rows:1.5rem minmax(0,1.02fr) minmax(0,1.15fr)!important}
+</style>
+<script id="r6-wx-js">
+/* ROUND 6 — shared weather object in the header: the same ECCC GeoMet Ottawa
+   object (on-118) and the same chip text Home renders. */
+(function(){var t=document.getElementById('ckwx-t'),c=document.getElementById('ckwx-c');if(!t||!c)return;
+function fail(){t.textContent='--\u00B0';c.textContent='OFFLINE \u00B7 OTTAWA'}
+fetch('https://api.weather.gc.ca/collections/citypageweather-realtime/items/on-118?f=json&lang=en')
+.then(function(r){if(!r.ok)throw 0;return r.json()})
+.then(function(d){var cc=d.properties.currentConditions,v=cc.temperature.value.en,cond=cc.condition.value.en;
+t.textContent=(v>0?'+':'')+(Math.round(v*10)/10)+'\u00B0';c.textContent=String(cond||'OTTAWA').toUpperCase()+' \u00B7 SNAPSHOT \u00B7 OTTAWA'})
+.catch(fail)})();
+</script>
+
+<style id="r6-swarm-css">
+/* ===== ROUND 6 — TEAM AT WORK: the swarm layer ON the Deck (Grant 2026-11-22) =====
+   Purely additive: a third Portals door opens this view over the face; every
+   existing Deck panel, drawer, room and control is untouched. */
+#v-swarm{grid-template-rows:auto minmax(0,1fr)}
+.sw-flow{display:flex;align-items:stretch;gap:.3rem;flex-wrap:nowrap;overflow:hidden;flex:none}
+.sw-route{flex:none}
+.sw-node{flex:1 1 0;min-width:0;border:1px solid #22314a;background:#0a101c;border-radius:.35rem;padding:.32rem .45rem;display:flex;flex-direction:column;gap:.12rem;justify-content:center}
+.sw-node b{font:700 .66rem var(--fd);letter-spacing:.06em;color:var(--tp);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sw-node span{font:.6rem/1.3 var(--fm);color:var(--ts)}
+.sw-node.gate{border-color:rgb(250 204 21 / .55);background:#141106}
+.sw-node.gate b{color:#facc15}
+.sw-arrow{flex:none;align-self:center;text-align:center;color:var(--ts);font:.58rem var(--fm);line-height:1.15;white-space:nowrap}
+.sw-arrow i{display:block;font-style:normal;color:#7dd3fc;font-size:.8rem}
+.sw-route{display:flex;gap:.3rem}
+.sw-route .sw-node{border-style:dashed}
+.sw-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.35rem;min-height:0;overflow:auto;padding-right:.1rem}
+.sw-mem{border:1px solid #22314a;border-radius:.4rem;background:#0a0f18;padding:.4rem .5rem;display:flex;flex-direction:column;gap:.3rem;min-height:0}
+.sw-mem .mh2{display:flex;align-items:baseline;gap:.4rem;flex-wrap:wrap}
+.sw-mem .mh2 b{font:700 .78rem var(--fd);letter-spacing:.07em;color:var(--tp)}
+.sw-mem .mh2 span{font:.6rem var(--fm);color:#facc15;letter-spacing:.05em}
+.sw-wk{border:1px solid #1a2535;border-left:3px solid #38bdf8;border-radius:.3rem;background:#0d1420;padding:.3rem .45rem}
+.sw-wk.done{border-left-color:#4ade80}.sw-wk.wait{border-left-color:#64748b}
+.sw-wk b{display:block;font:700 .64rem/1.3 var(--fm);color:var(--tp)}
+.sw-wk p{margin:.1rem 0 .15rem;font:.62rem/1.4 var(--fm);color:var(--ts)}
+.sw-wk .stg{font:.6rem var(--fm);color:#7dd3fc}
+.sw-wk .stg .run{color:#4ade80}.sw-wk .stg .done{color:#4ade80}.sw-wk .stg .wait{color:#94a3b8}
+.sw-code{border:1px solid #1a2535;border-radius:.3rem;background:#05080d;padding:.35rem .5rem;font:.6rem/1.5 "JetBrains Mono",monospace;color:#a5f3a5;white-space:pre-wrap;word-break:break-word}
+.sw-code .hd{color:#7dd3fc}
+#v-member .sw-sec{margin-top:.5rem}
+</style>
+<script id="r6-swarm-js">
+/* ROUND 6 — swarm board state: ONE source of truth for the layer. The Deck
+   renders it in full here; Home's Team Usage panel carries the same board in
+   miniature (same jobs, same stages — a snapshot of tonight's real work,
+   never shown as a live feed). */
+var SWARM=[
+{id:'oakley',name:'OAKLEY',role:'LEAD — MAIN SESSION',workers:[
+ {job:'BUILD · JOHNNY’S APPS — .22 fix build',detail:'KÜL + Lions Gate: the governing Today rule fixed at source, Closed-bar colour at source, tab position, Lions Gate dead space, 390px pass.',stage:'building — 2 of 4',st:'run'},
+ {job:'BUILD · CANOPY — round-6 build',detail:'The round-5 fail list in one consolidated build: truncation cluster, TV badge, Markets fallback, Talk snap-back, crossfade.',stage:'building — 2 of 4',st:'run'},
+ {job:'AUDIT · HUB — regression audit',detail:'Every conversation since day one: when the hub worked right, when the call-outs began, what changed, and the fixes.',stage:'sweeping the record — 1 of 4',st:'run'}],
+ code:['> main job: Johnny’s apps .22 — carries from the .21 check','> gate 1 · advisor — PASSED before the brief shipped','> verifying: Canopy round-6 build as it lands']},
+{id:'claude',name:'CLAUDE',role:'ADVISOR OF RECORD',workers:[
+ {job:'GATE 1 · BEFORE THE PLAN — .22 brief',detail:'“Fix the governing rule, not another override block — and the Lions Gate dead space rides in the same build.”',stage:'PASSED tonight',st:'done'},
+ {job:'GATE 2 · BEFORE DONE — .22 + round-6',detail:'The delivery gate: the advisor reads the whole filed record again before anything is called done.',stage:'PENDING',st:'wait'}],
+ code:['> consults tonight: 1 of 2 — brief gate used, delivery gate to come','> flagged: same failure ×2 — Today alignment (missed in .21)','> rule: the advisor never builds on a job he advises']},
+{id:'chatgpt',name:'CHATGPT',role:'INTERACTION CHECKS',workers:[
+ {job:'CHECK · RENDERED — .21 clicked through',detail:'Every KÜL rail tab clicked for real, both Todays measured, graph colours sampled. Verdict: 4 pass · 2 fail — 13 screenshots filed.',stage:'done',st:'done'},
+ {job:'CHECK · INTERACTION — .22 second check',detail:'Real-pointer hover / press / switch tests; the decider when eyes disagree.',stage:'next, when the build lands',st:'wait'}],
+ code:['> method: real pointer, mid-motion frames, pixel probes','> tonight: .21 verdict filed — 4 pass · 2 fail','> next: .22 second check + round-6 interaction pass']},
+{id:'gemini',name:'GEMINI',role:'DESIGN QA',workers:[
+ {job:'DESIGN QA — Canopy round-6',detail:'Fit, voids, colour and feel against the filed fix lists — the 45-line check run-list is ready.',stage:'queued',st:'wait'},
+ {job:'CHECK · .21 DESIGN',detail:'Today alignment and rail geometry read off the renders; both misses went into the .22 brief.',stage:'done',st:'done'}],
+ code:['> eye: one-screen fit, dead space, colour at source','> tonight: .21 design flags carried into .22','> next: round-6 design QA on the landed build']},
+{id:'perplexity',name:'PERPLEXITY',role:'RESEARCH + ROUTES',workers:[
+ {job:'ROUTES — Osiris feeds verified',detail:'Six Osiris feeds verified live tonight. Green Button = the customer’s own sign-in door — no public feed exists.',stage:'done tonight',st:'done'},
+ {job:'ROUTES — Canopy feed package',detail:'432 cameras, ECCC weather, markets snapshot, news — every source verified before anything is promised as working.',stage:'done — held for the Fluid check',st:'done'}],
+ code:['> rule: a route is real only when it answered tonight','> tonight: 6 Osiris feeds live · Green Button door ruled','> package: 7 routes built · all parse clean · not deployed']},
+{id:'clerk',name:'THE CLERK',role:'LEDGER — ON THE TEAM',workers:[
+ {job:'LEDGER — bookkeeping under watch',detail:'Real ledger work inside its fenced scope: expiry-invariant test held, head-hash checkpoint retained, meter-linked caps on.',stage:'standing — always on the team',st:'run'}],
+ code:['> scope: fenced ledger work only, under watch','> conditions: expiry test · head-hash checkpoint · caps','> status: counted with the team, works when the job fits']}
+];
+function swCard(m){
+  var wk=m.workers.map(function(w){return '<div class="sw-wk '+w.st+'"><b>'+w.job+'</b><p>'+w.detail+'</p><span class="stg"><span class="'+w.st+'">●</span> stage: '+w.stage+'</span></div>'}).join('');
+  var cd=m.code.map(function(l,i){return (i===0?'<span class="hd">'+l+'</span>':l)}).join('\n');
+  return '<div class="sw-mem"><div class="mh2"><b>'+m.name+'</b><span>'+m.role+'</span></div>'+wk+'<div class="sw-code">'+cd+'</div></div>';
+}
+function rSwarm(){
+  var el=document.getElementById('v-swarm');if(!el)return;
+  var flow='<div class="sw-flow">'
+   +'<div class="sw-node"><b>BRIEF</b><span>record sweep first — every filed item in or parked</span></div><div class="sw-arrow">dispatch out<i>→</i></div>'
+   +'<div class="sw-node gate"><b>GATE 1 · ADVISOR</b><span>before the plan — ✓ PASSED tonight (.22 brief)</span></div><div class="sw-arrow">dispatch out<i>→</i></div>'
+   +'<div class="sw-node"><b>WORKERS BUILD</b><span>sharp jobs, in parallel — stages, not guesses</span></div><div class="sw-arrow">result back<i>←</i></div>'
+   +'<div class="sw-node"><b>HUB VERIFIES</b><span>Oakley checks the artifact itself, never the claim</span></div><div class="sw-arrow">consult<i>→</i></div>'
+   +'<div class="sw-node gate"><b>GATE 2 · ADVISOR</b><span>before done — ○ PENDING (.22 + round-6)</span></div><div class="sw-arrow">deliver<i>→</i></div>'
+   +'<div class="sw-node"><b>DELIVERED</b><span>only when Grant can open the finished thing</span></div></div>';
+  var route='<div class="sw-route">'
+   +'<div class="sw-node"><b>SHARP → STRAIGHT TO A WORKER</b><span>clear job, one file, known fix — the brief carries everything</span></div>'
+   +'<div class="sw-node"><b>SHARED / UNCLEAR → BACK TO THE LEAD</b><span>Oakley splits it into sharp jobs first, then dispatches</span></div>'
+   +'<div class="sw-node"><b>SAME FAILURE ×2 → ADVISOR READS THE RECORD</b><span>the lead applies the advice; the advisor never builds</span></div></div>';
+  el.innerHTML='<div class="vh"><button class="btn bk" data-a="back:" aria-label="Back to the Command Deck primary screen">◂ COMMAND DECK</button><div class="vt"><b>TEAM AT WORK</b><span>member swarms · flow lines · code boxes — tonight’s real jobs · a board snapshot, not a live feed</span></div></div>'
+   +'<div style="display:flex;flex-direction:column;gap:.35rem;min-height:0">'+flow+route
+   +'<div class="sw-grid">'+SWARM.map(swCard).join('')+'</div></div>';
+}
+/* The same board inside each member's drawer: their workers + code box,
+   appended under the sections the drawer already has — nothing removed. */
+(function(){
+  if(typeof rMemberView!=='function')return;
+  var orig=rMemberView;
+  rMemberView=function(){
+    orig.apply(this,arguments);
+    try{
+      var m=SWARM.filter(function(x){return x.id===V.member})[0];
+      var host=document.querySelector('#v-member .mvf')||document.querySelector('#v-member .mv')||document.getElementById('v-member');
+      if(!m||!host||host.querySelector('.sw-sec'))return;
+      var d=document.createElement('div');d.className='sw-sec';
+      d.innerHTML='<div class="sw-mem"><div class="mh2"><b>SWARM — '+m.name+'</b><span>'+m.role+'</span></div>'
+        +m.workers.map(function(w){return '<div class="sw-wk '+w.st+'"><b>'+w.job+'</b><p>'+w.detail+'</p><span class="stg"><span class="'+w.st+'">●</span> stage: '+w.stage+'</span></div>'}).join('')
+        +'<div class="sw-code">'+m.code.join('\n')+'</div></div>';
+      host.appendChild(d);
+    }catch(e){}
+  };
+})();
+</script>
 </body></html>

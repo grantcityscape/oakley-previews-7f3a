@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- ROUND 6 (2026-11-22): weather bar <=112px, unified Back, camera grid + caption, news cards, World containment · base: round-5 sitrep.html -->
 <!-- PACKAGED COPY · sitrep.html (SITREP) · source: sitrep-v1.0.0.html (frozen master, untouched) · Canopy Phase 0 wiring, 2026-11-18 · News wall pass 2026-11-18 (LIVE TV: single DW embed + link-out doors replaced by a 4-channel wall) -->
 <html lang="en" data-theme="dark"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SITREP — Canopy</title><meta name="theme-color" content="#0a0c0f"><link rel="icon" href="data:,">
 <style>:root{--fs:16px;--bg:#0a0c0f;--bg2:#10141a;--pn:#12171e;--pn2:#171d26;--ln:rgba(250,204,21,.24);--ln2:rgba(250,204,21,.5);--gold:#FACC15;--amb:#FF9F1C;--gtx:#FACC15;--on:#15120a;--tx:#f2eee0;--dim:#a29d8b;--mut:#6f6b5d;--ok:#46e09a;--warn:#FF9F1C;--bad:#ff6b5f;--info:#6cb8ff;--shadow:0 1px 0 rgba(255,255,255,.03) inset,0 18px 40px -22px #000;--grid:rgba(250,204,21,.045)}
@@ -623,7 +624,7 @@ function wallAudio(id){const T=WALL.tiles[id];if(!T)return;WALL.aud=WALL.aud===i
  x.video.muted=!hear;if(hear){x.video.volume=1;const p=x.video.play();if(p&&p.catch)p.catch(()=>{})}
  x.tile.classList.toggle('aud',hear);const b=$('.waud',x.tile);if(b){b.textContent=hear?'🔊 LISTEN':'🔇 MUTED';b.setAttribute('aria-pressed',String(hear))}})}
 function hlPn(k,title){const h=H.news,items=newsRows(k).filter(x=>x.t);const id='hl-'+k;
- FL[id]={items,rowFn:(r,i)=>{const rb=rowB('1fr','<span class="hlc"><span class="hlm"><b class="gt">'+esc(r.o)+'</b><span class="dim">'+(r.ts?dayTxt(r.ts):'NO TIMESTAMP')+'</span></span><span class="l2 a hlt">'+esc(r.t)+'</span></span>','row:hl:'+k+':'+i);return rb.replace('class="row"','class="row hlcard'+(i===0?' lead':'')+'"')},opt:{empty:'<div class="dim">No headlines available.</div>'}};if(!(id in UI.pg))UI.pg[id]=0;
+ FL[id]={items,rowFn:(r,i)=>{const rb=rowB('1fr','<span class="hlc"><span class="r6th" aria-hidden="true">'+esc(String(r.o||'').replace(/[^A-Za-z]/g,'').slice(0,2).toUpperCase())+'</span><span class="hlm"><b class="gt">'+esc(r.o)+'</b><span class="dim">'+(r.ts?dayTxt(r.ts):'NO TIMESTAMP')+'</span></span><span class="l2 a hlt">'+esc(r.t)+'</span></span>','row:hl:'+k+':'+i);return rb.replace('class="row"','class="row hlcard'+(i===0?' lead':'')+'"')},opt:{empty:'<div class="dim">No headlines available.</div>'}};if(!(id in UI.pg))UI.pg[id]=0;
  return{t:title,pgid:id,chip:chipH(h,CFG.news.staleMs),body:'<div class="fl" data-fl="'+id+'"></div>',src:SM()?srcLine('',null):srcLine(CFG.news[k].map(s=>s.o).join(' · '),h)}}
 PN['hl-local']=()=>hlPn('local','LOCAL NEWS');PN['hl-world']=()=>hlPn('world','WORLD NEWS');
 PN['tv-doors']=()=>doorsPn('CHAIN DOORS',[goDoor('→ World','world','Radar and events'),doorHTML('→ Markets','markets','Stays where it is'),doorHTML('→ Workbench','wb','Open a headline first to carry it')]);
@@ -689,11 +690,11 @@ PN.camwall=()=>{const tiles=CFG.cam.set.map(c=>{const f=D.frames[c.id]||frameOf(
 /* ===== layouts ===== */
 const LAY={
  home:{c:'minmax(0,1fr) minmax(0,1.25fr)',r:'minmax(0,1fr) minmax(0,1fr) auto',a:'"ov osiris" "news osiris" "doors doors"',p:[['sh-ov','ov'],['osiris','osiris'],['sh-news','news'],['sh-doors','doors']]},
- weather:{c:'minmax(0,1.05fr) minmax(0,1.5fr) minmax(0,1fr)',r:'minmax(0,1fr) minmax(0,1fr) minmax(0,1.15fr) auto',a:'"now hourly alerts" "now outlook oper" "data data radar" "doors doors doors"',p:[['now','now'],['hourly','hourly'],['alerts','alerts'],['outlook','outlook'],['oper','oper'],['wxdata','data'],['wmap','radar'],['wx-doors','doors']]},
- cams:{c:'minmax(0,1.35fr) minmax(0,1fr)',r:'minmax(0,1fr) minmax(0,1fr) auto',a:'"wall list" "wall events" "doors doors"',p:[['camwall','wall'],['camlist','list'],['events','events'],['cam-doors','doors']]},
+ weather:{c:'minmax(0,1.05fr) minmax(0,1.5fr) minmax(0,1fr)',r:'auto minmax(0,1fr) minmax(0,1fr) minmax(0,1.15fr) auto',a:'"now now now" "hourly hourly alerts" "outlook outlook oper" "data data radar" "doors doors doors"',p:[['now','now'],['hourly','hourly'],['alerts','alerts'],['outlook','outlook'],['oper','oper'],['wxdata','data'],['wmap','radar'],['wx-doors','doors']]},
+ cams:{c:'minmax(0,1.35fr) minmax(0,1fr)',r:'auto minmax(0,1fr) auto',a:'"wall wall" "list events" "doors doors"',p:[['camwall','wall'],['camlist','list'],['events','events'],['cam-doors','doors']]},
  airport:{c:'minmax(0,1fr) minmax(0,1fr)',r:'minmax(0,1.3fr) minmax(0,1fr) auto',a:'"dep arr" "facts more" "doors doors"',p:[['ap_dep','dep'],['ap_arr','arr'],['ap_facts','facts'],['ap_more','more'],['ap-doors','doors']]},
  tv:{c:'minmax(0,1.7fr) minmax(0,1fr) minmax(0,1fr)',r:'auto minmax(0,1fr) auto',a:'"tapes tapes tapes" "player hl1 hl2" "doors doors doors"',p:[['tapes','tapes'],['wall','player'],['hl-local','hl1'],['hl-world','hl2'],['tv-doors','doors']]},
- world:{c:'minmax(0,1.4fr) minmax(0,1fr)',r:'minmax(0,1fr) minmax(0,1fr) auto',a:'"map ev" "map health" "doors doors"',p:[['wmap','map'],['wevents','ev'],['whealth','health'],['w-doors','doors']]}};
+ world:{c:'minmax(0,1.35fr) minmax(0,1fr)',r:'minmax(0,1fr) minmax(0,1fr) auto',a:'"map ev" "map health" "doors doors"',p:[['wmap','map'],['wevents','ev'],['whealth','health'],['w-doors','doors']]}};
 const RO=new ResizeObserver(()=>relayout());
 function render(){const oldPb=document.querySelector('#pn-wall .pb'),keepWall=!!(oldPb&&oldPb.querySelector('.wtile:not(.dead)'));if(keepWall)window.__WALL_KEEP=true;else wallStop();const L=LAY[UI.sec],s=$('#stage');s.style.gridTemplateColumns=L.c;s.style.gridTemplateRows=L.r;s.style.gridTemplateAreas=L.a;s.innerHTML=L.p.map(p=>panelShell(p[0],p[1])).join('');mapKey='';
  L.p.forEach(p=>panelFill(p[0]));if(keepWall){const nw2=document.querySelector('#pn-wall .pb');if(nw2&&nw2!==oldPb)nw2.replaceWith(oldPb);window.__WALL_KEEP=false}wallChip();RO.disconnect();$$('.pn',s).forEach(n=>RO.observe(n));crumb();tabs();glyphPaint();foot();relayout();$$('.pn',s).forEach(n=>n.classList.add('cnd-rise'))}
@@ -1248,6 +1249,75 @@ setInterval(function(){try{var j=JSON.parse(localStorage.getItem('cnd-wx')||'nul
   if(j&&j.t!=null){var txt=j.t+'° · '+String(j.cond||'').toUpperCase();if(el.textContent!==txt)el.textContent=txt;
     el.title='Weather snapshot · as of '+new Date(j.at).toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'})}}catch(e){}
 },4000);
+})();
+</script>
+
+<style id="r6-sitrep-css">
+/* ROUND 6 · SITREP — weather bar, Back, camera grid/labels, news cards, World containment */
+.pn,#stage{min-width:0}
+.ph{flex-wrap:wrap;row-gap:4px}.ph .chip{flex-shrink:0}
+.pn input{min-width:0;max-width:100%}
+/* 5 · weather panel ≤112px */
+#pn-now .pb{display:flex!important;flex-direction:row!important;flex-wrap:wrap!important;flex:0 0 auto!important;align-items:center;gap:6px 10px;padding:10px 14px;overflow:visible}
+#pn-now .pb>.big,#pn-now .pb>.a{display:none}
+#pn-now .pb .fl{position:absolute;left:-9999px;top:0;width:560px;height:600px;visibility:hidden;pointer-events:none}
+#pn-now .src{display:none}
+.r6-wxs{display:inline-flex;align-items:center;gap:10px;font:600 1.05rem/1.2 var(--fm,inherit);color:var(--gtx,#facc15);white-space:nowrap;min-width:0}
+.r6-wxs svg{width:24px;height:24px;flex:0 0 24px}
+.r6-chip{display:inline-flex;align-items:center;height:22px;padding:0 9px;border:1px solid var(--ln2,rgba(250,204,21,.3));border-radius:999px;font:600 11px/1 var(--fm,inherit);letter-spacing:.03em;color:var(--tx,#e8e4d8);white-space:nowrap;flex-shrink:0}
+.r6-chip.na{border-style:dashed;color:var(--dim,#8a8f98)}
+@media(max-width:1499px){.r6-chip.x{display:none}}
+@media(max-width:760px){.r6-chip.opt{display:none}#pn-now .pb{padding:8px 12px;gap:6px 10px}.r6-wxs{font-size:.95rem}}
+/* 7 · unified Back */
+html.embed .app{grid-template-rows:auto auto minmax(0,1fr)!important}
+#r6-bar{display:block;min-height:0;padding:0 12px}#r6-bar:not(.on){height:0;overflow:hidden;padding:0}#r6-bar.on{padding:8px 12px 0}
+#r6-back{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--ln2,rgba(250,204,21,.3));background:rgba(255,255,255,.04);color:var(--tx,#e8e4d8);font-family:inherit;font-size:13px;font-weight:600;line-height:1;white-space:nowrap;cursor:pointer;transform:scale(1);transition:transform 160ms cubic-bezier(.2,0,0,1),background 160ms ease}
+#r6-back svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#r6-back:hover{background:rgba(250,204,21,.12)}
+#r6-back:active,#r6-back.r6p{transform:scale(.95);transition-duration:60ms}
+/* 8 · camera grid + full labels + caption */
+.r6-camcap{margin:0 0 8px;font-size:12.5px;font-weight:500;line-height:1.3;color:var(--dim,#8a8f98)}
+.camwall{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important;height:auto!important;align-content:start}
+.cwt{display:flex!important;flex-direction:column;height:auto!important;aspect-ratio:auto!important;background:#05070a}
+.cwt>img{position:static!important;width:100%;height:auto!important;aspect-ratio:16/9;object-fit:cover;display:block}
+.cwt .cwnf{position:static!important;display:flex;align-items:center;justify-content:center;aspect-ratio:16/9;font:600 .7rem var(--fm,inherit);color:var(--dim,#8a8f98)}
+.cwt .cwb{position:static!important;height:auto!important;background:rgba(0,0,0,.62)!important;padding:6px 8px!important;line-height:1.25;flex-wrap:wrap;gap:4px 8px;justify-content:space-between;text-transform:uppercase}
+.cwt .cwb b{max-width:none!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;font:600 11px/1.25 var(--fm,inherit)}
+@media(max-width:760px){.camwall{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}}
+/* 9 · news cards */
+.hlcard{height:auto!important;min-height:0!important;flex:none!important;overflow:visible!important;border-radius:12px!important;padding:12px!important;border:1px solid var(--ln)!important;margin-bottom:10px}
+.hlcard .hlc{display:grid!important;grid-template-columns:96px minmax(0,1fr);grid-template-rows:auto 1fr;gap:4px 12px;align-items:start}
+.hlcard .r6th{grid-row:1/3;grid-column:1;aspect-ratio:16/10;border-radius:8px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(250,204,21,.2),rgba(18,23,30,.95));border:1px solid rgba(250,204,21,.18);color:rgba(250,204,21,.7);font:800 1.1rem var(--fm,inherit);letter-spacing:.1em}
+.hlcard .hlm{grid-column:2;grid-row:1;font:600 11.5px/1.3 var(--fm,inherit);font-variant-numeric:tabular-nums;flex-wrap:wrap}
+.hlcard .hlt{grid-column:2;grid-row:2;font-size:14.5px!important;font-weight:600;line-height:1.35!important;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;white-space:normal}
+/* 6 · World / God's Eye containment */
+#pn-wmap,#pn-wevents,#pn-whealth{border-radius:12px;overflow:hidden}
+#stage[style*="1.35fr"]{gap:16px}
+#pn-wmap .pb,#pn-wmap .wbody,#wm{min-height:190px}
+@media(max-width:760px){.seg{max-width:100%;flex-wrap:wrap}.seg button{min-width:0}#stage{gap:12px}}
+.pn .row,.pn .l2{overflow-wrap:anywhere}
+@media(max-width:760px){.bd-h{display:flex;flex-wrap:wrap;gap:4px 8px;max-width:100%}.bd-h>span{min-width:0;overflow-wrap:anywhere}}
+@media(prefers-reduced-motion:reduce){#r6-back{transition:none}}
+</style>
+<script id="r6-sitrep-js">
+(function(){'use strict';
+var $=function(s){return document.querySelector(s)};
+function icon(c){c=(c||'').toLowerCase();var sun='<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>',cl='<path d="M7 18h10a4 4 0 0 0 .6-7.95A5.5 5.5 0 0 0 7 9.5 4.3 4.3 0 0 0 7 18z"/>';var b=/snow/.test(c)?'<path d="M7 16h10a4 4 0 0 0 .6-7.9A5.5 5.5 0 0 0 7 7.5 4.3 4.3 0 0 0 7 16z"/><path d="M9 19v.01M12 20v.01M15 19v.01"/>':/rain|shower|drizzle/.test(c)?cl+'<path d="M9 21l1-2M13 21l1-2"/>':/sun|clear/.test(c)&&!/cloud/.test(c)?sun:cl;return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+b+'</svg>'}
+var MAP=[['WIND','Wind ',0],['FEELS / CHILL','Feels ',0],['GUST','Gust ',0],['HUMIDITY','Humidity ',0],['OBSERVED','Obs ',0],['PRESSURE','Pressure ',1],['DEW POINT','Dew pt ',1],['VISIBILITY','Visibility ',1]];
+function wx(){var p=$('#pn-now');if(!p)return;var pb=p.querySelector('.pb');if(!pb)return;var big=pb.querySelector(':scope>.big'),cond=pb.querySelector(':scope>.a');if(!big)return;
+ var rows={};pb.querySelectorAll('.fl .row').forEach(function(r){var k=(r.querySelector('.k')||{}).textContent||'',v=(r.querySelector('.l2')||{}).textContent||'';rows[k.trim()]=v.trim()});
+ var t=(big.textContent||'').trim().replace(/°$/,'°C'),c=cond?cond.textContent.trim():'',key=t+'|'+c+'|'+JSON.stringify(rows);var old=pb.querySelector('.r6-wxs');if(old&&old.dataset.k===key)return;
+ pb.querySelectorAll('.r6-wxs,.r6-chip').forEach(function(n){n.remove()});
+ var s=document.createElement('span');s.className='r6-wxs';s.dataset.k=key;s.innerHTML=icon(c)+'<span>'+t+' · '+c+' · Ottawa</span>';pb.insertBefore(s,pb.firstChild);
+ var anchor=s;function add(txt,cls){var e=document.createElement('span');e.className='r6-chip '+(cls||'');e.textContent=txt;anchor.insertAdjacentElement('afterend',e);anchor=e}
+ MAP.forEach(function(m,i){var v=rows[m[0]];if(!v||v==='--'&&m[0]!=='VISIBILITY')return;if(v==='--')return;add(m[1]+v,(m[2]?'x ':'')+(i>0?'opt':''));if(m[0]==='WIND'){add('UV not reported','na')}});
+ if(!rows['WIND'])add('UV not reported','na');
+ p.querySelector('.ph').title=(p.querySelector('.src')||{}).textContent||''}
+function bar(){var tabs=$('#tabs'),stage=$('#stage');if(!tabs||!stage)return;var b=$('#r6-bar');if(!b){b=document.createElement('div');b.id='r6-bar';b.innerHTML='<button type="button" id="r6-back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span>Back</span></button>';stage.parentNode.insertBefore(b,stage);b.querySelector('#r6-back').addEventListener('click',function(){var h=$('#b-back');if(h&&!h.hidden){h.click()}else{var t=document.querySelector('#tabs>*');t&&t.click()}});['pointerup','pointercancel','pointerleave'].forEach(function(ev){b.querySelector('#r6-back').addEventListener(ev,function(){this.classList.remove('r6p')})});window.addEventListener('blur',function(){var x=$('#r6-back');x&&x.classList.remove('r6p')})}
+ var sel=[].indexOf.call(tabs.children,tabs.querySelector('[aria-selected="true"]'));b.classList.toggle('on',sel>0)}
+function cap(){var cw=$('.camwall');if(cw&&!document.querySelector('.r6-camcap')){var p=document.createElement('p');p.className='r6-camcap';p.textContent='432 traffic cameras — City of Ottawa + Ontario highways';cw.parentNode.insertBefore(p,cw)}}
+var T=null;function tick(){clearTimeout(T);T=setTimeout(function(){try{wx();bar();cap()}catch(e){}},40)}
+new MutationObserver(tick).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['aria-selected','hidden']});tick();setInterval(tick,1200);
 })();
 </script>
 

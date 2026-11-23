@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- PACKAGED COPY · index.html (Home) · source: home-wall-v4.3.8.html (frozen master, untouched) · Canopy Phase 0 wiring, 2026-11-18 -->
+<!-- PACKAGED COPY · index.html (Home) · source: home-wall-v4.3.8.html (frozen master, untouched) · Canopy Phase 0 wiring, 2026-11-18 · ROUND 6 (Home pass) 2026-11-22 on the round-5 published build -->
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <!-- CSP: connect-src is https: because the hub may point CFG.PROXY / CFG.cam.base / feed URLs at its own host at packaging. Tighten to those hosts when known. -->
@@ -816,7 +816,7 @@ function geInit(){if(GE.map)return true;if(!window.L)return false;
   el.style.position='absolute';map.createPane('radar').style.zIndex=250;
   GE.base=L.tileLayer(CFG.ge.tile,{maxZoom:19,noWrap:true,keepBuffer:1,updateWhenIdle:true,updateWhenZooming:false}).addTo(map);
   L.marker([HOME.lat,HOME.lon],{icon:L.divIcon({className:'ghi',html:'<i></i><b>HOME</b>',iconSize:[0,0]}),interactive:false,keyboard:false}).addTo(map);
-  GE.rg=L.layerGroup([25,50,100].map(k=>L.circle([HOME.lat,HOME.lon],{radius:k*1000,color:'#efe9d9',weight:1,opacity:.28,fill:false,dashArray:'2 5',interactive:false}))).addTo(map);GE.qg=L.layerGroup().addTo(map);
+  GE.rg=L.layerGroup([]).addTo(map);GE.qg=L.layerGroup().addTo(map);   /* R6: the dashed 25/50/100 km range rings are removed */
   GE.map=map;GE.el=el;GE.since=Date.now();geRadar();geCaps();return true}
 function geRadar(force){if(!GE.map||GE.mode!=='eccc')return;const k=geK(),ln='RADAR_1KM_'+k;
   if(GE.layer!==ln){[GE.cov,GE.radar].forEach(l=>l&&GE.map.removeLayer(l));
@@ -875,7 +875,7 @@ const STN=[{k:'trt',n:'TRT',t:'TRT WORLD',site:'youtube.com',w:'TRT World offici
  {k:'ctv',n:'CTV',t:'CTV NEWS',site:'ctvnews.ca',w:'Opens CTV News live in a new tab',url:()=>CFG.links.ctv},
  {k:'global',n:'GLOBAL',t:'GLOBAL NEWS',site:'globalnews.ca',w:'Opens Global News live in a new tab',url:()=>CFG.links.global}];
 const stnNow=()=>STN.find(x=>x.k===UI.stn)||STN[0];
-const ytSt=()=>({idle:['IDLE','pend'],loading:['LOADING','stale'],playing:['PLAYING','live'],paused:['PAUSED','stale'],offline:['OFFLINE','err']}[UI.yt]||['IDLE','pend']);
+const ytSt=()=>{if(window.r6TvState)return window.r6TvState();return ({idle:['IDLE','pend'],loading:['CHECKING\u2026','pend'],playing:['LIVE','live'],paused:['PAUSED','stale'],offline:['OFFLINE','err']}[UI.yt]||['IDLE','pend'])};
 function playerHTML(){const s=stnNow();if(s.yt)return '<iframe title="'+esc(s.t)+' livestream (YouTube embed)" src="https://www.youtube.com/embed/'+s.yt+'?autoplay=1&mute=1&playsinline=1&rel=0&enablejsapi=1'+(/^https?:/.test(location.protocol)?'&origin='+encodeURIComponent(location.origin):'')+'" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-presentation allow-popups"></iframe>';
   return '<a class="poster" href="'+esc(s.url())+'" target="_blank" rel="noopener noreferrer"><b>'+s.n+'</b><span>'+esc(s.t)+' · '+esc(s.w)+'</span><u>OPEN '+esc(s.site)+' ↗</u></a>'}
 function setStation(){const pv=$('#plv');if(!pv)return;const s=stnNow();if(s.yt){UI.yt='loading';UI.ytAt=Date.now()}pv.innerHTML=playerHTML();const f=$('iframe',pv);if(f)f.addEventListener('load',()=>{try{f.contentWindow.postMessage(JSON.stringify({event:'listening',id:1,channel:'widget'}),'*')}catch(e){}});rNews()}
@@ -1002,7 +1002,7 @@ function rWx(){const w=D.wx,s=wxSt(),o=w&&w.o,x=X('wx'),pl=UI.wx==='plow',f=w?pl
       +'<div class="r4w4"><span>'+(obs?'OBS '+obs+' · ECCC s0000430':'AWAITING FIRST READING')+'</span><span class="r4open">OPEN IN SITREP WEATHER →</span></div></div>'}
   else L=dsgHTML()+'<div class="pgrid">'+plowCells(kvh)+'</div><div class="pbot">'+strip+kv1('ALERTS',alV,alC)+'</div>';
   setH($('#wx .bd'),x?L:'<div class="wxl'+(pl?' plow':'')+'">'+L+'</div>')
-  {const _wt=$('#ckwx-t'),_wc=$('#ckwx-c');if(_wt&&_wc){if(o){_wt.textContent=sg(o.t)+'°';_wc.textContent=String(o.cond||'OTTAWA').toUpperCase().slice(0,16)}else{_wt.textContent='--°';_wc.textContent=s[1]==='err'?'OFFLINE · OTTAWA':'PENDING · OTTAWA'}}}
+  {const _wt=$('#ckwx-t'),_wc=$('#ckwx-c');if(_wt&&_wc){if(o){_wt.textContent=sg(o.t)+'°';_wc.textContent=String(o.cond||'OTTAWA').toUpperCase()+' · SNAPSHOT · OTTAWA'}else{_wt.textContent='--°';_wc.textContent=s[1]==='err'?'OFFLINE · OTTAWA':'PENDING · OTTAWA'}}}
 }
 /* ---------- commute + traffic cameras (camera status derived from config/state — CERT PENDING flow) ---------- */
 const tevK=r=>r.t==='INCIDENT'?0:r.c==='ROAD_CLOSED'?1:r.c==='LANES_CLOSED'?2:3;
@@ -1046,7 +1046,7 @@ function gauge(m,big){const p=m.pct,cls=m.stale?'stl':p>=80?'cx':p>=60?'hi':'ok'
 function rTm(){const rows=teamRows(),x=X('tm');hdw('tm','TEAM USAGE',bdg(['SNAPSHOT','stale']));
   /* ROUND 4 (fix notes Part 1 §5): the face renders 5 ROWS (name left, value right, as-of under the name) — the 5-column gauge strip truncated names and starved the panel. The grown view keeps the big gauges. */
   if(x){setH($('#tm .bd'),'<div class="tg big">'+rows.map(m=>gauge(m,1)).join('')+'</div><div class="tnote">Values are snapshots copied from each service’s own usage screen on '+CFG.team.asOf+' unless the hub team feed is live. ⟲ = window reset; “passed” means the reset time has gone by, so the value needs re-capturing.</div>');return}
-  setH($('#tm .bd'),'<div class="r4tu">'+rows.map(m=>{const v=m.pct!=null?m.pct+'%'+(m.win?' · '+esc(m.win):''):esc((m.cnt||'')+' '+(m.cntl||''));return '<div class="r4tr"><span class="r4tn">'+esc(m.nm)+'</span><span class="r4tv">'+v+'</span><span class="r4ta">'+esc(m.asD)+' · '+(m.passed?'reset PASSED — re-capture':esc(m.rsT))+'</span></div>'}).join('')+'</div><div class="r4tf">SNAPSHOT '+esc(CFG.team.asOf)+' · copied from each service’s own usage screen — never shown as live</div>')}
+  setH($('#tm .bd'),'<div class="r4tu">'+rows.map(m=>{const v=m.pct!=null?m.pct+'%'+(m.win?' · '+esc(m.win):''):esc((m.cnt||'')+' '+(m.cntl||''));return '<div class="r4tr"><span class="r4tn">'+esc(m.nm)+'</span><span class="r4tv">'+v+'</span><span class="r4ta">'+esc(m.asD)+' · '+(m.passed?'reset PASSED — re-capture':esc(m.rsT))+'</span></div>'}).join('')+'</div><div class="r4tf">SNAPSHOT '+esc(CFG.team.asOf)+' · own screens — never live</div><div class="r4sw"><b>TEAM SWARM · 13 WORKERS</b><span>Oakley builds · Claude gate 2 · ChatGPT checks</span><span>Gemini QA · Perplexity ✓ · Clerk ledger</span></div>')}
 /* ---------- live TV card: 16:9 stage (the video fills its area) + LOCAL/WORLD bars ---------- */
 const barHTML=(k,n,c)=>'<div class="bar2 '+c+'" data-bar="'+k+'"><span class="bg2">'+n+'</span><span class="bst"></span><div class="win"><div class="trk"></div></div></div>';
 function nwInit(){setH($('#nw'),'<div class="hdw"></div><div class="nwm"><div class="stage" id="plv"></div><div class="nxs" id="nxs"></div></div><div class="tks">'+barHTML('local','LOCAL','lo')+barHTML('world','WORLD','wo')+'</div>');setStation()}
@@ -1056,7 +1056,7 @@ function rNews(){const el=$('#nw .hdw');if(!el)return;const st=stnNow().yt?ytSt(
   setH(el,'<div class="hd tall"><span class="ttl"><i class="led"></i><span class="tt">LIVE TV</span></span><span class="hr">'+bdg(st)+xbtns('nw')+'</span></div>');
   if(X('nw')){const s=STN.find(x=>x.k===UI.stn),lst=k=>D.news[k].length?D.news[k].slice(0,5).map(x=>'<div class="hl"><b>'+esc(x.o)+'</b><span>'+esc(x.t)+'</span><i>'+(x.ts?ago(x.ts)+' ago':'')+'</i></div>').join(''):'<div class="hl"><span class="dm">'+esc(barOff(k)[1])+'</span></div>';
     setH($('#nxs'),'<div class="rch xp">'+chips+'</div><div class="nxh"><span class="k">ON AIR</span><b>'+esc(s.t)+'</b><span>'+esc(s.w)+'</span></div><div class="nxl"><span class="k lo">LOCAL HEADLINES</span>'+lst('local')+'</div><div class="nxl"><span class="k wo">WORLD HEADLINES</span>'+lst('world')+'</div>')}
-  else setH($('#nxs'),'<div class="rail"><div class="rch">'+chips+'</div><div class="rnp"><span class="k">NOW PLAYING</span><b>'+esc(stnNow().t)+'</b><span>'+(stnNow().yt?esc(ytSt()[0]):'LINK-OUT ↗')+'</span></div></div>')}
+  else setH($('#nxs'),'<div class="rail"><div class="rch">'+chips+'</div><div class="rnp"><span class="k">NOW PLAYING</span><b>'+esc(stnNow().t)+'</b><span>'+(stnNow().yt?esc(ytSt()[2]||ytSt()[0]):'LINK-OUT ↗')+'</span></div></div>')}
 /* ---------- world view: layer toggles with ticking counts · layered severity markers on the map · tap for detail ---------- */
 const sevN=['INFO','ELEVATED','CRITICAL'];
 const LAY=[{k:'eq',n:'QUAKES',g:'●',sh:'q',src:'USGS',get:()=>D.wmi.usgs,h:()=>H.wm.usgs},
@@ -1134,23 +1134,25 @@ function rMk(){const now=Date.now(),x=X('mk'),b=D.btc,bs=D.btcS,bo=D.boc,q=D.stq
     putTile('btc',{lb:'BTC/USD',val:Math.round(b.usd).toLocaleString('en-CA'),chg:ch,ck:bs?'svg':'none',ser:bs?bs.p.map(r=>r[1]):null,cst,tag:pst?'STALE '+hm(pt):'LIVE'+(x?' · '+b.src+' '+hm(pt):''),tc:pst?'st':'lv',dim:pst,
       cstx:cst?(x?'chart STALE since '+hm(cAt):'∿ STALE'):null,note:bs?null:'∿ '+(H.mk.btcSErr?'no chart · sources down':'chart pending'),
       tip:'BTC/USD price: '+b.src+' as of '+hm(pt)+(pst?' (STALE)':'')+(b.ch==null&&ch!=null?' · change vs the 24 h chart start':'')+' · 24 h chart: '+(bs?bs.src+' to '+hm(cAt)+(cst?' (chart STALE)':''):(H.mk.btcSErr||'pending'))})}
+  else if(D.mksnap&&D.mksnap.btcusd&&!bs){const sn=D.mksnap.btcusd;putTile('btc',{lb:'BTC/USD',val:sn.val,chg:sn.chg,ck:'none',tag:'DELAYED · '+sn.asOf.slice(5),tc:'dl',note:'∿ snapshot',tip:'BTC/USD — '+sn.src+', previous close as of '+sn.asOf+' · snapshot — never shown as live'})}
   else putTile('btc',bs?{lb:'BTC/USD',val:'—',tag:H.mk.btcErr?'OFFLINE':'PENDING',tc:H.mk.btcErr?'of':'pd',dim:1,ck:'svg',ser:bs.p.map(r=>r[1]),cst:1,note:'price '+(H.mk.btcErr?'offline':'pending')}:noChart('BTC/USD',H.mk.btcErr,'sources down'));
   if(bo&&bo.fx.length>1)putTile('cad',dailyO('USD/CAD',bo.fx,bo.src==='ECB'?'ECB ref':'BoC',x,4,bo.src==='ECB'?'USD/CAD — ECB reference rate via Frankfurter (Bank of Canada '+(CFG.PROXY?'unavailable':'blocked in this browser; hub proxy at integration')+')':'USD/CAD — Bank of Canada daily rate'));
   else if(q.cad&&q.cad.p.length>1)putTile('cad',dailyO('USD/CAD',q.cad.p,'Stooq',x,4,'USD/CAD — Stooq daily close'));
-  else if(D.mksnap&&D.mksnap.cad){const sn=D.mksnap.cad;putTile('cad',{lb:'USD/CAD',val:sn.val,chg:sn.chg,ck:'none',tag:'DELAYED',tc:'dl',note:'∿ snapshot · as of '+sn.asOf,tip:'USD/CAD — '+sn.src+', daily close as of '+sn.asOf+' · snapshot — never shown as live'})}
+  else if(D.mksnap&&D.mksnap.cad){const sn=D.mksnap.cad;putTile('cad',{lb:'USD/CAD',val:sn.val,chg:sn.chg,ck:'none',tag:'DELAYED · '+sn.asOf.slice(5),tc:'dl',note:'∿ snapshot',tip:'USD/CAD — '+sn.src+', daily close as of '+sn.asOf+' · snapshot — never shown as live'})}
   else putTile('cad',noChart('USD/CAD',H.mk.fxErr,'BoC + ECB down'));
   [['tsx','TSX'],['spx','S&P 500']].forEach(([k,n])=>{const d=q[k];
     if(d&&d.p.length>1){putTile(k,dailyO(n,d.p,'Stooq',x,null,n+' — Stooq daily close'));return}
-    const sn=D.mksnap&&D.mksnap[k];if(sn){putTile(k,{lb:n,val:sn.val,chg:sn.chg,ck:'none',tag:'DELAYED',tc:'dl',note:'∿ snapshot · as of '+sn.asOf,tip:n+' — '+sn.src+' daily close as of '+sn.asOf+' · snapshot (the live snapshot route lands with the hub proxy) — never shown as live'});return}
+    const sn=D.mksnap&&D.mksnap[k];if(sn){putTile(k,{lb:n,val:sn.val,chg:sn.chg,ck:'none',tag:'DELAYED · '+sn.asOf.slice(5),tc:'dl',note:'∿ snapshot',tip:n+' — '+sn.src+' daily close as of '+sn.asOf+' · snapshot (the live snapshot route lands with the hub proxy) — never shown as live'});return}
     const fl=$('#mt-'+k+' .chl.tvf');
     putTile(k,{lb:n,val:'',ck:'tv',sym:CFG.markets.tv[k],tag:fl?'OFFLINE':'DELAYED',tc:fl?'of':'dl',dim:!!fl,note:fl?'∿ chart did not load':(x?'TradingView mini chart · '+CFG.markets.tvRange+' · delayed':'TradingView · '+CFG.markets.tvRange),
       tip:n+' — TradingView mini chart ('+CFG.markets.tvRange+', delayed). Our own Stooq daily closes: '+(D.stqE[k]==='blocked'?'blocked in this browser (no CORS) — the hub proxy enables them at integration':D.stqE[k]?'unreachable':'pending')})});
   /* CORRECTION ROUND: tiles 5 + 6 — BTC/CAD (CoinGecko's CAD quote; derived via the USD/CAD rate when only a USD spot answered) and the Canada 10Y yield (BoC series already requested in CFG.markets.boc). Previous-close/daily data — never labelled live (Grant's markets ruling 2026-11-21). */
   if(b&&(b.cad||(bo&&bo.fx.length>1))){const fxr=bo&&bo.fx.length>1?bo.fx[bo.fx.length-1][1]:null,cadv=b.cad||Math.round(b.usd*fxr),cst2=now-(b.t||b.at)>CFG.markets.btcStaleMs;
     putTile('btcc',{lb:'BTC/CAD',val:Math.round(cadv).toLocaleString('en-CA'),chg:b.ch,ck:'none',tag:cst2?'STALE '+hm(b.t||b.at):'DELAYED',tc:cst2?'st':'dl',dim:cst2,tip:'BTC/CAD: '+(b.cad?'CoinGecko CAD quote':'derived — '+b.src+' USD spot × USD/CAD '+(fxr||'')+' (Bank of Canada)')+' as of '+hm(b.t||b.at)+' — daily/delayed, never live'})}
+  else if(D.mksnap&&D.mksnap.btccad){const sn=D.mksnap.btccad;putTile('btcc',{lb:'BTC/CAD',val:sn.val,chg:sn.chg,ck:'none',tag:'DELAYED · '+sn.asOf.slice(5),tc:'dl',note:'∿ snapshot',tip:'BTC/CAD — '+sn.src+', previous close as of '+sn.asOf+' · snapshot — never shown as live'})}
   else putTile('btcc',noChart('BTC/CAD',H.mk.btcErr,'BTC sources down'));
   if(bo&&bo.y&&bo.y.length>1){const yo=dailyO('CA 10Y YIELD',bo.y,'BoC',x,2,'Canada 10-year benchmark bond yield — Bank of Canada daily');yo.val=yo.val+'%';putTile('y10',yo)}
-  else if(D.mksnap&&D.mksnap.y10){const sn=D.mksnap.y10;putTile('y10',{lb:'CA 10Y YIELD',val:sn.val+'%',chg:sn.chg,ck:'none',tag:'DELAYED',tc:'dl',note:'∿ snapshot · BoC · as of '+sn.asOf,tip:'Canada 10-year benchmark bond yield — '+sn.src+', as of '+sn.asOf+' · snapshot — never shown as live'})}
+  else if(D.mksnap&&D.mksnap.y10){const sn=D.mksnap.y10;putTile('y10',{lb:'CA 10Y YIELD',val:sn.val+'%',chg:sn.chg,ck:'none',tc:'dl',tag:'DELAYED · '+sn.asOf.slice(5),note:'∿ snapshot · BoC',tip:'Canada 10-year benchmark bond yield — '+sn.src+', previous close as of '+sn.asOf+' · snapshot — never shown as live'})}
   else putTile('y10',noChart('CA 10Y YIELD',H.mk.fxErr,'BoC yield series not in the ECB fallback'));
   const srcs=[b&&b.src,bs&&bs.src!==(b&&b.src)?bs.src:null,bo?(bo.src==='ECB'?'ECB':'BoC'):null,(!q.tsx||!q.spx)?'TradingView':null,(q.tsx||q.spx)?'Stooq':null].filter(Boolean);
   hdw('mk','MARKETS',(srcs.length?'<span class="msrc" title="data now drawing: '+[...new Set(srcs)].join(' · ')+'">'+[...new Set(srcs)].join(' · ')+'</span>':'')+bdg(['TAPE DELAYED','stale']))}
@@ -1176,7 +1178,7 @@ function rCl(){const c=D.cal,x=X('cl'),now=new Date(),evs=c&&c.events?c.events:[
   const days=[...Array(x?14:7)].map((_,i)=>{const d=new Date(now);d.setDate(now.getDate()+i);return d});
   const nxt=evs.filter(e=>Date.parse(e.end||e.start)>Date.now()).sort((a,b)=>Date.parse(a.start)-Date.parse(b.start))[0];
   const nx=c?(Date.now()-c.at>CFG.cal.everyMs*5?'<b class="am">STALE since '+hm(c.at)+'</b> · no event shown as current':nxt?(nxt.allDay?'all day':hm(Date.parse(nxt.start)))+' · '+(CFG.cal.private&&nxt.title?esc(nxt.title):'title hidden (private)'):'nothing further this week'):'SAMPLE · example events below';
-  setH($('#cl .bd'),'<div class="wk'+(x?' big':'')+'">'+days.map((d,i)=>cell(d,i,x)).join('')+'</div><div class="rows">'+'<div class="rw '+(c?'on':'wa')+'"><b>NEXT</b><span>'+nx+'</span></div>'+(c?'':'<div class="rw wa"><b>SAMPLE</b><span>09:00 · team check-in (example) · 13:00 · site visit (example)</span></div>')+(x?'<div class="rw"><b>TODAY</b><span>'+(c?evs.filter(e=>sameDay(new Date(Date.parse(e.start)),now)).length+' events today':'no events shown · nothing invented')+'</span></div><div class="rw"><b>GATE</b><span>titles show only when the private presentation is on (CFG.cal.private)</span></div><div class="rw"><b>SOURCE</b><span>hub-supplied calendar JSON at app integration (CFG.cal.url)</span></div>':'')+'</div>')}
+  setH($('#cl .bd'),'<div class="wk'+(x?' big':'')+'">'+days.map((d,i)=>cell(d,i,x)).join('')+'</div><div class="rows">'+(c?'<div class="rw on"><b>NEXT</b><span>'+nx+'</span></div>':'<div class="rw wa"><b>SAMPLE</b><span>09:00 · team check-in (example)</span></div><div class="rw wa"><b>SAMPLE</b><span>13:00 · site visit (example)</span></div>')+(x?'<div class="rw"><b>TODAY</b><span>'+(c?evs.filter(e=>sameDay(new Date(Date.parse(e.start)),now)).length+' events today':'no events shown · nothing invented')+'</span></div><div class="rw"><b>GATE</b><span>titles show only when the private presentation is on (CFG.cal.private)</span></div><div class="rw"><b>SOURCE</b><span>hub-supplied calendar JSON at app integration (CFG.cal.url)</span></div>':'')+'</div>')}
 /* ---------- YOW: the airport's own FREE FIDS board (direct → hub proxy → snapshot) + city weather (explicitly not an airport feed) ---------- */
 async function getYow(){
   try{let j=null,via='',asOf=null;
@@ -1448,7 +1450,7 @@ html:not(.stk) .chrono{grid-column:3;grid-row:1}
  </div>
 </div>
 <!-- CANOPY FINISH PASS — floating assistant (Oakley's face; tap to talk, drag to move) -->
-<button id="abub" class="abub" aria-label="Talk to Oakley — tap to open, drag to move" title="Talk to Oakley"><img class="nblogo" src="./assets/northbirch-head-only-v10-clear.svg" alt="Oakley"></button>
+<button id="abub" class="abub" aria-label="Talk to Oakley — tap to open, drag to move" title="Talk to Oakley"><span class="r6-housing"><img class="nblogo" src="./assets/northbirch-head-only-v10-clear.svg" alt="Oakley" draggable="false"></span></button>
 <!-- CANOPY FINISH PASS — neon section wheel (phone navigation) -->
 <style id="pass2-2026-11-21">
 /* ============ CANOPY PASS 2 (2026-11-21) — Home: the roadmap panel gets the 240ms slide-in; the phone wheel carries every section ============ */
@@ -1565,12 +1567,7 @@ var rd=e.target.closest('[data-road]');if(rd){e.stopPropagation();e.preventDefau
 window.addEventListener('hashchange',function(){var m=/[&#]win=([a-z]+)/.exec(location.hash||'');if(m)openWin(m[1])});
 (function(){var h=location.hash||'';var m=/[&#]win=([a-z]+)/.exec(h);if(m){openWin(m[1]);return}
 var b=/[&#]box=([a-z]+)/.exec(h);if(b&&typeof xpSet==='function'){try{xpSet(b[1])}catch(e){}}})();
-/* --- Floating assistant bubble: drag to move, tap to talk (opens the shell talk dialog) --- */
-var bub=$('#abub');
-if(bub){var sx=0,sy=0,ox=0,oy=0,moved=false,drag=false;
-bub.addEventListener('pointerdown',function(e){drag=true;moved=false;sx=e.clientX;sy=e.clientY;var r=bub.getBoundingClientRect();ox=r.left;oy=r.top;try{bub.setPointerCapture(e.pointerId)}catch(err){}bub.style.right='auto';bub.style.bottom='auto';bub.style.left=ox+'px';bub.style.top=oy+'px';e.preventDefault()});
-bub.addEventListener('pointermove',function(e){if(!drag)return;var dx=e.clientX-sx,dy=e.clientY-sy;if(Math.abs(dx)+Math.abs(dy)>6)moved=true;if(moved){bub.style.left=Math.min(Math.max(0,ox+dx),window.innerWidth-58)+'px';bub.style.top=Math.min(Math.max(0,oy+dy),window.innerHeight-58)+'px'}});
-bub.addEventListener('pointerup',function(){drag=false;if(!moved){var t=$('#tkh');if(t)t.hidden=false}});}
+/* --- Floating assistant bubble: drag/press/snap-back live in #r6-index-js (round 6) --- */
 /* --- Neon section wheel (phone) --- */
 var nwEl=$('#nwheel'),wbtn=$('#wheelbtn');
 function wheelClose(){nwEl.hidden=true}
@@ -2124,22 +2121,7 @@ var RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)');
 
 /* --- switch crossfade (spec §3): clone-overlay — the outgoing pane fades out over
        the incoming one while the incoming fades in with a 6px rise; chrome untouched --- */
-function R5X(clone,target){
-  if(!clone||!target)return;
-  if(!RM||RM.matches){return}
-  var parent=target.parentElement;if(!parent)return;
-  if(getComputedStyle(parent).position==='static')parent.style.position='relative';
-  var pr=parent.getBoundingClientRect(),r=target.getBoundingClientRect();
-  if(!r.width||!r.height)return;
-  clone.removeAttribute('id');clone.setAttribute('aria-hidden','true');
-  clone.style.cssText+=';position:absolute;left:'+(r.left-pr.left+parent.scrollLeft)+'px;top:'+(r.top-pr.top+parent.scrollTop)+'px;width:'+r.width+'px;height:'+r.height+'px;margin:0;z-index:60;pointer-events:none;overflow:hidden';
-  parent.appendChild(clone);
-  requestAnimationFrame(function(){requestAnimationFrame(function(){
-    try{target.animate([{opacity:0,transform:'translateY(6px)'},{opacity:1,transform:'translateY(0)'}],{duration:200,easing:'cubic-bezier(.2,0,0,1)'})}catch(e){}
-    var a=null;try{a=clone.animate([{opacity:1},{opacity:0}],{duration:200,easing:'cubic-bezier(.2,0,0,1)'})}catch(e){}
-    if(a&&a.finished)a.finished.then(function(){clone.remove()});else setTimeout(function(){clone.remove()},280);
-  })});
-}
+function R5X(){}   /* R6: superseded by R6X (#r6-index-js) */
 document.addEventListener('click',function(e){
   var b=e.target&&e.target.closest?e.target.closest('[data-a]'):null;
   /* World interactivity (R5-J): the footer button and the event cards open the World window */
@@ -2151,7 +2133,6 @@ document.addEventListener('click',function(e){
   if(a.indexOf('sf:')===0)pane=document.querySelector('#sc .bd');
   else if(a.indexOf('wxm:')===0)pane=document.querySelector('#wx .bd');
   else if(a.indexOf('ly:')===0)pane=document.querySelector('#wm .bd');
-  if(pane){var cl=pane.cloneNode(true);setTimeout(function(){R5X(cl,pane)},0)}
   /* R5-L: persist in-page switch state so a reload/navigation keeps it */
   setTimeout(function(){try{sessionStorage.setItem('cnd-home-state',JSON.stringify({fl:UI.fl,wxm:UI.wxm,lay:UI.lay}))}catch(_){}} ,60);
 },true);
@@ -2163,24 +2144,10 @@ window.addEventListener('load',function(){setTimeout(function(){
   }catch(e){}
 },400)});
 
-/* --- TV badge state machine (fix notes §1): the header badge is the WALL count from
-       the one shared source (localStorage 'cnd-tv', written by SITREP's wall).
-       It only ever reads "PARTIAL n of 4" or "LIVE" — never CONNECTING/LOADING/PLAYING. --- */
-function tvCount(){try{var j=JSON.parse(localStorage.getItem('cnd-tv')||'null');if(j&&typeof j.n==='number'&&Date.now()-j.at<600000)return j.n}catch(e){}return 0}
-function tvBadge(){var n=tvCount();return n>=4?['LIVE','live']:['PARTIAL '+n+' of 4',n===0?'err':'pend']}
-function fixTv(){
-  var t=tvBadge();
-  var hd=document.querySelector('#nw .hdw .bdg');
-  if(hd&&hd.textContent.trim()!==t[0]){hd.textContent=t[0];hd.className='bdg '+t[1]}
-  var rnp=document.querySelector('#nxs .rnp');
-  if(rnp){var spans=rnp.querySelectorAll('span'),last=spans[spans.length-1];
-    if(last&&typeof ytSt==='function'){var want=ytSt()[0]+' · '+t[0];if(last.textContent.trim()!==want)last.textContent=want}}
-}
-setInterval(fixTv,500);fixTv();
+/* --- TV badge: round 6 replaces the round-5 wall-count writer — the badge now follows the PLAYER state (see #r6-index-js · r6TvState). --- */
 
-/* --- Markets snapshot loader (R5-E): real daily closes fetched server-side by the hub,
-       labelled DELAYED with source + as-of in rMk's snapshot branches --- */
-(async function(){try{if(typeof snapGet!=='function')return;var sr=await snapGet('markets-snapshot.json');D.mksnap=JSON.parse(sr.t);if(typeof rMk==='function')rMk()}catch(e){}})();
+/* --- Markets snapshot loader (R6): the daily previous-close file, read directly. Every value, change and as-of date on the cards comes from this file — nothing is hard-coded. --- */
+(async function(){try{var j=await jget('./data/markets-snapshot.json','json',8000);if(j&&typeof j==='object'){D.mksnap=j;if(typeof rMk==='function')rMk()}}catch(e){if(window.console)console.warn('markets snapshot unavailable',e&&e.message)}})();
 
 /* --- share the one weather object for the other sections' headers (R5-D) --- */
 setInterval(function(){try{if(window.D&&D.wx&&D.wx.o)localStorage.setItem('cnd-wx',JSON.stringify({t:D.wx.o.t,cond:D.wx.o.cond||'',at:Date.now()}))}catch(e){}},15000);
@@ -2219,20 +2186,7 @@ body .card.linked{position:relative;z-index:2}
 </style>
 
 
-<script id="cnd-r5-drag">
-/* ROUND 5 — Talk drag release: keep the 72×72 fully on screen; a drop that lands in the
-   bottom-right exclusion zone snaps to the rest position (right 24 / bottom 24). */
-(function(){var bub=document.querySelector('#abub');if(!bub)return;
-document.addEventListener('pointerup',function(){
-  if(!bub.style.left)return; /* never dragged: rest position stands */
-  var r=bub.getBoundingClientRect();
-  var inZone=r.right>innerWidth-104&&r.bottom>innerHeight-104;
-  if(inZone){bub.style.left='';bub.style.top='';bub.style.right='24px';bub.style.bottom='24px';return}
-  var x=Math.min(Math.max(0,r.left),innerWidth-72),y=Math.min(Math.max(0,r.top),innerHeight-72);
-  bub.style.left=x+'px';bub.style.top=y+'px';
-},true);
-})();
-</script>
+<!-- round-5 Talk drag script retired: replaced by #r6-index-js -->
 
 
 <style id="cnd-r5d-index">
@@ -2258,4 +2212,258 @@ document.addEventListener('pointerup',function(){
 #sc .cb>b{max-width:calc(100% - 79px)!important}
 </style>
 
+
+<style id="r6-index-css">
+/* ===== ROUND 6 · HOME — TV badge, Talk button (Gemini visual spec 2026-11-22), crossfade hooks ===== */
+/* TV badge — pill at the player's top-left; absolutely placed, so it never moves the stage */
+#plv{position:relative}
+.r6tvb{position:absolute;top:12px;left:12px;z-index:20;box-sizing:border-box;height:24px;min-width:68px;padding:0 10px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  border:1px solid rgba(148,163,184,.35);background:rgba(18,22,29,.82);color:#CBD5E1;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  font:700 11px/1 var(--fm,ui-monospace,monospace);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;pointer-events:none;
+  transition:background-color 180ms ease,border-color 180ms ease,color 180ms ease}
+.r6tvb .d{width:7px;height:7px;border-radius:50%;flex:none;background:#94A3B8;transition:background-color 180ms ease}
+.r6tvb[data-st="live"]{background:rgba(18,22,29,.82);border-color:rgba(239,68,68,.55);color:#F8FAFC}
+.r6tvb[data-st="live"] .d{background:#EF4444;animation:r6tvpulse 1.8s ease-in-out infinite}
+.r6tvb[data-st="ad"]{background:rgba(38,28,12,.88);border-color:rgba(245,158,11,.65);color:#FDE68A}
+.r6tvb[data-st="ad"] .d{background:#F59E0B}
+.r6tvb[data-st="checking"],.r6tvb[data-st="offline"],.r6tvb[data-st="paused"],.r6tvb[data-st="linkout"]{background:rgba(18,22,29,.82);border-color:rgba(148,163,184,.35);color:#CBD5E1}
+@keyframes r6tvpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.8)}}
+@media (prefers-reduced-motion:reduce){.r6tvb[data-st="live"] .d{animation:none}}
+
+/* Talk button — 44x44 hit target at right/bottom 24, 40x40 circular housing, 24px glyph.
+   Press: scale(.91) in 70ms cubic-bezier(.2,0,0,1), fill #DC2626, ring 0 0 0 5px rgba(220,38,38,.26).
+   Release: rebound to scale(1) in 220ms (overshoot 1.03); the reset is bound to pointerup / pointercancel / pointerleave / window blur. */
+#abub.abub{position:fixed!important;box-sizing:border-box;width:44px!important;height:44px!important;min-width:44px;min-height:44px;right:24px!important;bottom:24px!important;left:auto;top:auto;z-index:95;
+  display:grid!important;place-items:center;padding:0!important;margin:0!important;background:transparent!important;border:0!important;box-shadow:none!important;border-radius:50%;overflow:visible!important;
+  touch-action:none;cursor:grab;-webkit-tap-highlight-color:transparent;outline-offset:2px}
+#abub.abub{transition:none!important}
+#abub.abub:active,#abub.abub:hover,#abub.abub.r6-down{cursor:grabbing;transform:none!important;filter:none!important;box-shadow:none!important}
+#abub.abub:hover{cursor:grab}
+#abub .r6-housing,#abub img{pointer-events:none;-webkit-user-drag:none;user-select:none;-webkit-user-select:none}
+#abub .r6-housing{box-sizing:border-box;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(14,18,22,.94);
+  box-shadow:0 0 0 1px rgba(255,255,255,.16),0 4px 12px rgba(0,0,0,.5);transform:scale(1);
+  transition:background-color 220ms cubic-bezier(.34,1.56,.64,1),box-shadow 220ms cubic-bezier(.34,1.56,.64,1)}
+#abub .r6-housing img{width:24px!important;height:24px!important;display:block;border-radius:0;filter:drop-shadow(0 0 1px rgba(53,208,127,.95)) drop-shadow(0 0 3px rgba(77,163,255,.55))}
+#abub.r6-down .r6-housing{transform:scale(.91);background:#DC2626;box-shadow:0 0 0 5px rgba(220,38,38,.26),0 4px 12px rgba(0,0,0,.5);
+  transition:transform 70ms cubic-bezier(.2,0,0,1),background-color 70ms cubic-bezier(.2,0,0,1),box-shadow 70ms cubic-bezier(.2,0,0,1)}
+#abub.r6-rel .r6-housing{animation:r6rebound 220ms both}
+@keyframes r6rebound{0%{transform:scale(.91);animation-timing-function:cubic-bezier(.2,.6,.3,1)}58%{transform:scale(1.03);animation-timing-function:cubic-bezier(.34,1.56,.64,1)}100%{transform:scale(1)}}
+@media (min-width:761px){#face{padding-bottom:112px!important}}
+@media (prefers-reduced-motion:reduce){#abub.r6-rel .r6-housing{animation:none}#abub.r6-down .r6-housing{transition-duration:1ms}}
+
+/* switch crossfade: the outgoing clone sits above the incoming pane for 200ms */
+.r6-xf-out{pointer-events:none!important}
+</style>
+
+<script id="r6-index-js">
+/* ===== ROUND 6 · HOME runtime: TV badge state machine · Talk press/snap-back · switch crossfade ===== */
+(function(){'use strict';
+var RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)');
+var AD_LABEL='Checking live stream… (a channel ad break or a slow start can take a couple of minutes)';
+
+/* ---------- 1. TV badge: LIVE / AD BREAK / CHECKING… / OFFLINE, driven by the player ---------- */
+var TV={alive:false,adNow:false,probeAt:0,last:'',cur:null};
+window.addEventListener('message',function(e){
+  if(typeof e.data!=='string'||!/youtube/.test(e.origin))return;var j;try{j=JSON.parse(e.data)}catch(x){return}
+  TV.alive=true;
+  var info=j&&j.info;if(info&&typeof info==='object'){
+    var vd=info.videoData;if(vd&&typeof vd==='object'&&vd.video_id){var want=(stnNow().yt||'');TV.adNow=!!want&&vd.video_id!==want}
+    if(typeof info.adState==='number')TV.adNow=info.adState>0}
+});
+function compute(){
+  var s=stnNow();
+  if(!s.yt)return{k:'linkout',l:'LINK-OUT',c:'pend',t:'Opens '+s.site+' in a new tab — this channel has no embedded stream'};
+  if(UI.ytAt!==TV.probeAt){TV.probeAt=UI.ytAt;TV.alive=false;TV.adNow=false}
+  var age=Date.now()-(UI.ytAt||Date.now());
+  if(UI.yt==='offline')return{k:'offline',l:'OFFLINE',c:'err',t:'The stream is not playing'};
+  if(UI.yt==='playing')return TV.adNow?{k:'ad',l:'AD BREAK',c:'stale',t:AD_LABEL}:{k:'live',l:'LIVE',c:'live',t:'Live stream playing'};
+  if(UI.yt==='paused')return{k:'paused',l:'PAUSED',c:'stale',t:'The stream is paused'};
+  /* loading / idle: a probe. 0–4 s CHECKING…; then the player is either answering but not yet playing (a channel ad break or a slow start) or silent (OFFLINE) */
+  if(age<4000)return{k:'checking',l:'CHECKING…',c:'pend',t:'Checking the live stream'};
+  return TV.alive?{k:'ad',l:'AD BREAK',c:'stale',t:AD_LABEL}:{k:'offline',l:'OFFLINE',c:'err',t:'The stream did not answer'};
+}
+window.r6TvState=function(){var c=TV.cur||compute();return[c.l,c.c,c.k==='ad'?AD_LABEL:c.l]};
+function badgeEl(){
+  var pv=document.getElementById('plv');if(!pv)return null;
+  var b=pv.querySelector('.r6tvb');
+  if(!b){b=document.createElement('div');b.className='r6tvb';b.id='r6tvb';b.setAttribute('role','status');b.setAttribute('aria-live','polite');b.innerHTML='<i class="d"></i><span class="t"></span>';pv.appendChild(b)}
+  return b}
+function tvTick(){
+  var c=compute();TV.cur=c;
+  var b=badgeEl();
+  if(b){if(b.getAttribute('data-st')!==c.k)b.setAttribute('data-st',c.k);var t=b.querySelector('.t');if(t.textContent!==c.l)t.textContent=c.l;b.title=c.t;b.setAttribute('aria-label','Live TV: '+c.l+(c.k==='ad'?' — '+AD_LABEL:''))}
+  var key=c.k+'|'+c.l+'|'+UI.stn;
+  if(key!==TV.last){TV.last=key;try{if(typeof rNews==='function')rNews()}catch(e){}}
+}
+setInterval(tvTick,250);
+var _ss=window.setStation;if(typeof _ss==='function'){window.setStation=function(){var r=_ss.apply(this,arguments);try{tvTick()}catch(e){}return r}}
+tvTick();
+
+/* ---------- 2. Talk button: press / drag / snap-back ---------- */
+(function(){
+  var bub=document.getElementById('abub');if(!bub)return;
+  var REST=24,SZ=44,ZONE=104,sx=0,sy=0,ox=0,oy=0,moved=false,drag=false,relT=0;
+  var shield=null;
+  function shieldOn(){if(shield)return;shield=document.createElement('div');shield.setAttribute('aria-hidden','true');shield.style.cssText='position:fixed;inset:0;z-index:94;background:transparent;cursor:grabbing';document.body.appendChild(shield)}
+  function shieldOff(){if(shield){shield.remove();shield=null}}
+  function press(){clearTimeout(relT);bub.classList.remove('r6-rel');bub.classList.add('r6-down')}
+  function release(){if(!bub.classList.contains('r6-down'))return;bub.classList.remove('r6-down');bub.classList.add('r6-rel');clearTimeout(relT);relT=setTimeout(function(){bub.classList.remove('r6-rel')},260)}
+  function place(l,t){bub.style.setProperty('left',l+'px','important');bub.style.setProperty('top',t+'px','important');bub.style.setProperty('right','auto','important');bub.style.setProperty('bottom','auto','important')}
+  function rest(){['left','top','right','bottom'].forEach(function(p){bub.style.removeProperty(p)})}
+  function settle(){
+    var r=bub.getBoundingClientRect();
+    if(r.right>innerWidth-ZONE&&r.bottom>innerHeight-ZONE){rest();return}   /* corner zone: snap back to right 24 / bottom 24 */
+    place(Math.min(Math.max(REST,r.left),innerWidth-REST-SZ),Math.min(Math.max(REST,r.top),innerHeight-REST-SZ));
+  }
+  function openTalk(){var t=document.getElementById('tkh');if(t)t.hidden=false}
+  bub.addEventListener('dragstart',function(e){e.preventDefault()});
+  bub.addEventListener('pointerdown',function(e){
+    if(e.button!==undefined&&e.button>0)return;
+    drag=true;moved=false;sx=e.clientX;sy=e.clientY;var r=bub.getBoundingClientRect();ox=r.left;oy=r.top;
+    try{bub.setPointerCapture(e.pointerId)}catch(err){}
+    press();e.preventDefault()});
+  bub.addEventListener('pointermove',function(e){
+    if(!drag)return;var dx=e.clientX-sx,dy=e.clientY-sy;
+    if(!moved&&Math.abs(dx)+Math.abs(dy)>6){moved=true;shieldOn();place(ox,oy)}
+    if(moved)place(Math.min(Math.max(0,ox+dx),innerWidth-SZ),Math.min(Math.max(0,oy+dy),innerHeight-SZ))});
+  function end(isUp){var wasDrag=drag,wasMoved=moved;drag=false;moved=false;shieldOff();release();
+    if(wasDrag&&wasMoved)settle();else if(wasDrag&&isUp)openTalk()}
+  bub.addEventListener('pointerup',function(){end(true)});
+  bub.addEventListener('pointercancel',function(){end(false)});
+  bub.addEventListener('pointerleave',function(){if(!drag)release()});          /* a drag-off with no capture never leaves it pressed */
+  bub.addEventListener('lostpointercapture',function(){if(drag)end(false);else release()});
+  window.addEventListener('blur',function(){var wm=moved;drag=false;moved=false;shieldOff();release();if(wm)settle()});
+  bub.addEventListener('click',function(e){if(e.detail===0)openTalk()});           /* keyboard: Enter / Space */
+  window.addEventListener('resize',function(){if(bub.style.left)settle()});
+})();
+
+/* ---------- 3. switch crossfade: outgoing clone fades out over the incoming pane while it fades in (200 ms) ---------- */
+var XF=window.__r6xf={n:0,active:0,last:null};
+function R6X(clone,target,tag){
+  if(!clone||!target||!target.parentElement)return;
+  var parent=target.parentElement;if(getComputedStyle(parent).position==='static')parent.style.position='relative';
+  var pr=parent.getBoundingClientRect(),r=target.getBoundingClientRect();if(!r.width||!r.height)return;
+  var reduce=!!(RM&&RM.matches),rise=reduce?'0px':'6px';
+  clone.removeAttribute('id');clone.setAttribute('aria-hidden','true');clone.classList.add('r6-xf-out');
+  clone.style.cssText+=';position:absolute;left:'+(r.left-pr.left+parent.scrollLeft)+'px;top:'+(r.top-pr.top+parent.scrollTop)+'px;width:'+r.width+'px;height:'+r.height+'px;margin:0;z-index:60;pointer-events:none;overflow:hidden';
+  parent.appendChild(clone);
+  var t0=performance.now();XF.n++;XF.active++;XF.last={tag:tag,t0:t0,dur:200,reduced:reduce};
+  target.setAttribute('data-r6-xf','in');clone.setAttribute('data-r6-xf','out');
+  var ease='cubic-bezier(.2,0,0,1)';
+  var a1=target.animate([{opacity:0,transform:'translateY('+rise+')'},{opacity:1,transform:'translateY(0)'}],{duration:200,easing:ease});
+  var a2=clone.animate([{opacity:1},{opacity:0}],{duration:200,easing:ease,fill:'forwards'});
+  var done=function(){if(clone.parentNode)clone.remove();target.removeAttribute('data-r6-xf');XF.active=Math.max(0,XF.active-1);XF.last.t1=performance.now()};
+  if(a2&&a2.finished)a2.finished.then(done,done);else setTimeout(done,260);
+}
+var SW=[['sf:','#sc .bd'],['wx:','#wx .bd'],['wxm:','#wx .bd'],['ly:','#wm .wbody'],['st:','#plv']];
+document.addEventListener('click',function(e){
+  var b=e.target&&e.target.closest?e.target.closest('[data-a]'):null;if(!b)return;
+  var a=b.getAttribute('data-a')||'',sel=null;for(var i=0;i<SW.length;i++)if(a.indexOf(SW[i][0])===0)sel=SW[i][1];if(!sel)return;
+  var pane=document.querySelector(sel);if(!pane)return;
+  var clone=pane.cloneNode(true);
+  Array.prototype.forEach.call(clone.querySelectorAll('iframe,video'),function(n){var d=document.createElement('div');d.style.cssText='width:100%;height:100%;background:#020203';n.replaceWith(d)});
+  /* re-query after the app has re-rendered: a re-render can replace the pane node, so the incoming target is looked up fresh */
+  setTimeout(function(){var tgt=document.querySelector(sel);R6X(clone,tgt,a)},0);
+},true);
+})();
+</script>
+<style id="r6-f6-css">
+/* ROUND 6 · F6 truncation/clipping — grow or wrap in place; type size never shrinks */
+.hlogo{overflow:visible!important}
+.doors .door .nm{letter-spacing:.02em!important;overflow:visible!important;text-overflow:clip!important}
+.doors .door .in{overflow:visible!important}
+.doors .door{overflow:visible}
+#cc .ch>span,#cc .ch span{white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
+#cc .ch{height:auto!important;min-height:26px;overflow:visible!important;line-height:1.15}
+.ces .ce .tr{white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
+#cc .ces .ce{height:auto!important;min-height:35px;overflow:visible!important}
+#cc .cl.sp{height:auto!important;max-height:none!important;overflow:visible!important}
+.cg .cam .cl1,.cg .cam .cl1.em{max-width:calc(100% - 24px)!important;padding:4px 10px!important;text-overflow:clip!important;overflow:visible!important}
+.cg .cam .cl1.em i{text-overflow:clip!important;max-width:none!important;overflow:visible!important}
+.mt4 i.cnt{white-space:nowrap;overflow:visible!important;text-overflow:clip!important;max-width:none!important}
+.cbx .cb>b{max-width:none!important;overflow:visible!important;text-overflow:clip!important;white-space:normal!important;overflow-wrap:anywhere}
+#cl.card .bd{overflow-y:auto!important;min-height:0}
+#cl .rows .rw.wa{height:auto!important;min-height:99px;padding-bottom:10px!important;overflow:visible!important}
+#tm.card .bd,#nw .nxs .rail{overflow-y:auto!important}
+#mkt.mkt{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+#mk .bd{overflow-x:hidden!important}
+.r4wc,.r4w3 .tr{text-overflow:clip!important}
+.uvp,.uv,[class*="uvpill"]{min-width:max-content!important;flex-shrink:0!important;padding:3px 9px!important}
+</style>
+<style id="r6-f6-css2">
+.mt4 .txl .b{display:flex!important;flex-wrap:wrap;align-items:baseline;column-gap:.5rem}
+.mt4{min-width:0}
+.cg .cam{overflow:visible!important}
+.cg .cam .cl1,.cg .cam .cl1.em{white-space:normal!important;line-height:1.15!important}
+#sc .hd,#sc .ch,#sc>.h,#sc .hh{flex-wrap:wrap}
+</style>
+<style id="r6-f6-css3">
+.card:not(.xp) #sc .hd.slim,#sc .hd.slim{height:auto!important;min-height:1.3rem;flex-wrap:wrap;overflow:visible!important;row-gap:.2rem;padding-top:.15rem;padding-bottom:.15rem}
+#sc .hd.slim *{white-space:nowrap}
+.r4w1,.r4w3{flex-wrap:wrap;row-gap:0}
+@media(max-width:1599px){.r4wc,.r4w3 .tr{white-space:normal!important;overflow:visible!important}}
+</style>
+<style id="r6-f6-css4">
+@media(max-width:1599px){
+.r4w1,.r4w3{flex-wrap:nowrap!important;column-gap:.35rem}
+.r4w1 *,.r4w3 *{letter-spacing:0!important;white-space:nowrap!important}
+.r4w1 .r4wc,.r4w3 .tr{overflow:visible!important}
+.cg{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.cg .cam .cl1{white-space:normal!important}
+.mt4 .tg,.mt4 .tag{white-space:normal!important}
+}
+</style>
+<style id="r6-f6-css5">
+.mt4 .txl .a{flex-wrap:wrap!important;column-gap:.4rem;row-gap:0;height:auto!important}
+.mt4 .txl .a i.tag{white-space:nowrap}
+@media(max-width:1599px){
+.r4w1,.r4w3{column-gap:.1rem!important;line-height:1.05!important}
+.r4w1 *,.r4w3 *{padding-left:0!important;padding-right:0!important}
+#cc .cg .cam{min-width:0!important}
+#cc .bd{overflow-x:hidden!important}
+}
+</style>
+<style id="r6-f6-css6">
+.mt4 i.cnt{white-space:normal!important}
+</style>
+<style id="r6-f6-css7">
+.cg .cam .cl1,.cg .cam .cl1.em{display:flex!important;flex-wrap:wrap;column-gap:.3rem;align-items:baseline;width:auto!important;box-sizing:border-box}
+.cg .cam .cl1 b,.cg .cam .cl1 i{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;max-width:100%!important;min-width:0}
+.cbx .cb{flex-wrap:wrap!important;row-gap:.1rem}
+.cbx .cb>b{flex:1 1 4.5rem!important;min-width:0;overflow-wrap:normal!important;word-break:normal!important}
+#cl .wk{display:grid!important;grid-template-columns:minmax(max-content,1.5fr) repeat(6,minmax(0,1fr))!important}
+#cl .wk .dy{overflow:visible!important;min-width:0}
+#cl .wk .dy span{white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important}
+#cl .rows .rw{align-items:flex-start}
+</style>
+<style id="r6-f6-css8">
+.cbx .cb>b{flex:1 1 100%!important}
+</style>
+
+
+<style id="r6-home-css">
+/* ===== ROUND 6 — Home fixes (2026-11-22) ===== */
+/* Security camera tiles: the SAMPLE badge moves to the tile's top-right
+   corner so the camera name gets the full bottom bar — DRIVEWAY and
+   BACKYARD were ellipsised by the 79px reservation for the badge. */
+#sc .cb>span{top:3px;bottom:auto!important}
+#sc .cb>b{max-width:calc(100% - 12px)!important}
+/* Calendar: the NEXT/event rows were 105px stacked blocks and the last row
+   clipped at the panel's bottom edge. Label-left, text-right rows fit the
+   panel with every row whole. */
+#cl .rows .rw{display:flex!important;flex-direction:row!important;align-items:baseline;gap:.5rem;min-height:0!important;flex:none!important;padding:.3rem .5rem!important;font-size:.82rem!important;line-height:1.35!important}
+#cl .rows .rw>b{flex:none}
+#cl .rows .rw>span{flex:1 1 auto;min-width:0;font-size:.82rem!important;line-height:1.35!important}
+#cl .rows .rw>b{font-size:.82rem!important;line-height:1.35!important}
+/* The panel carried a 69px bottom padding reserving room for an element
+   that renders zero-height — that dead space is what pushed the last row
+   past the fold. Reclaimed for the panel body. */
+#cl{padding-bottom:.5rem!important}
+/* Team Usage carried the same dead reserve (90px). Part of it now holds the
+   swarm miniature — the same board the Command Deck shows in full. */
+#tm{padding-bottom:.15rem!important}
+#tm .r4sw{margin-top:.15rem;border-top:1px dashed #2a3648;padding-top:.15rem;display:flex;flex-direction:column;gap:.05rem}
+#tm .r4sw b{font:700 .52rem var(--fm);letter-spacing:.05em;color:#7dd3fc}
+#tm .r4sw span{font:.52rem/1.25 var(--fm);color:var(--ts)}
+</style>
 </body></html>

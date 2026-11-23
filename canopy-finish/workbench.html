@@ -249,7 +249,7 @@ body .btn:active{transform:scale(.98);transition-duration:100ms}
 </head><body>
 <div class="bench" id="bench">
  <div class="sysbar"><a class="syslbl" id="sl-canopy" href="./index.html" aria-label="Canopy — Home"><img class="sl-logo nb-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true"><span class="chrome-wm">CANOPY</span></a><span class="syssep" aria-hidden="true"></span><nav class="sdoors" id="doors" aria-label="Sections"></nav></div>
- <header class="top"><a class="hlogo" id="hm-logo" aria-label="Canopy — return to Home" title="Home"><img class="nb-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true"></a><div class="lockup" id="hm-lockup" data-logo-slot="masthead-brand" role="img" aria-label="Canopy"></div><a class="chrono" id="hm-clock" aria-label="Clock — return to Home" title="Home (clock shows this device's time)"><b id="ck" class="num">--:--:--</b><span><i id="dt">---</i><i id="ut">---</i></span></a><a class="wxdoor" href="./index.html#win=weather" aria-label="Weather — snapshot, Ottawa; opens the Weather window on Canopy Home" title="Weather — snapshot, Ottawa · opens the Weather window"><span class="wx" aria-hidden="true" title="Weather — snapshot, Ottawa (this standalone file shows a snapshot, not live weather)"><svg viewBox="0 0 48 30"><g class="rays" stroke="rgb(var(--gold))" stroke-width="1.7" stroke-linecap="round"><path d="M23.5 12h3M21.3 17.3l2.1 2.1M16 19.5v3M10.7 17.3l-2.1 2.1M8.5 12h-3M10.7 6.7L8.6 4.6M16 4.5v-3M21.3 6.7l2.1-2.1"/></g><circle cx="16" cy="12" r="5.4" fill="rgb(var(--gold))"/><g class="cld"><path d="M24.5 25.5h17.2a4.6 4.6 0 0 0 .9-9.1A7.2 7.2 0 0 0 29 12.6a5.6 5.6 0 0 0-4.5 12.9z" fill="rgb(var(--silver))"/></g></svg><span class="wxl"><i>SNAPSHOT</i><i>OTTAWA</i></span></span><span class="wxg" aria-hidden="true">▸</span></a></header>
+ <header class="top"><a class="hlogo" id="hm-logo" aria-label="Canopy — return to Home" title="Home"><img class="nb-head" src="./assets/northbirch-head-only-v10.svg" alt="" aria-hidden="true"></a><div class="lockup" id="hm-lockup" data-logo-slot="masthead-brand" role="img" aria-label="Canopy"></div><a class="chrono" id="hm-clock" aria-label="Clock — return to Home" title="Home (clock shows this device's time)"><b id="ck" class="num">--:--:--</b><span><i id="dt">---</i><i id="ut">---</i></span></a><a class="wxdoor" href="./index.html#win=weather" aria-label="Weather — snapshot, Ottawa; opens the Weather window on Canopy Home" title="Weather — snapshot, Ottawa · opens the Weather window"><span class="wx" aria-hidden="true" title="Weather — snapshot, Ottawa (this standalone file shows a snapshot, not live weather)"><svg viewBox="0 0 48 30"><g class="rays" stroke="rgb(var(--gold))" stroke-width="1.7" stroke-linecap="round"><path d="M23.5 12h3M21.3 17.3l2.1 2.1M16 19.5v3M10.7 17.3l-2.1 2.1M8.5 12h-3M10.7 6.7L8.6 4.6M16 4.5v-3M21.3 6.7l2.1-2.1"/></g><circle cx="16" cy="12" r="5.4" fill="rgb(var(--gold))"/><g class="cld"><path d="M24.5 25.5h17.2a4.6 4.6 0 0 0 .9-9.1A7.2 7.2 0 0 0 29 12.6a5.6 5.6 0 0 0-4.5 12.9z" fill="rgb(var(--silver))"/></g></svg><span class="wxl"><i id="ckwx-t">--&deg;</i><i id="ckwx-c">PENDING &middot; OTTAWA</i></span></span><span class="wxg" aria-hidden="true">▸</span></a></header>
  <main class="stage">
   <section class="pic" aria-label="The bench at a glance"><div class="ttl"><span class="eb">CANOPY</span><span class="h1" id="h1">THE BENCH</span></div><div class="chips" id="chips"></div><div class="rt"><div class="pager" id="pager" hidden><button class="ib" id="pg-p" aria-label="Previous page">◂</button><span id="pg-n">1/1</span><button class="ib" id="pg-x" aria-label="Next page">▸</button></div><button class="ib egg" id="egg" aria-label="The whole picture" title="the whole picture" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="5" cy="6" r="2.2" fill="currentColor"/><circle cx="19" cy="5" r="2.2" fill="currentColor"/><circle cx="12" cy="19" r="2.2" fill="currentColor"/><circle cx="12" cy="11" r="1.5"/><path d="M6.6 7.3l4.2 2.8M17.4 6.4l-4.2 3.8M12 12.5V16.8"/></svg></button></div></section>
   <section class="shelf" id="shelf" aria-label="Shelf of businesses"></section>
@@ -918,4 +918,27 @@ setInterval(function(){try{var j=JSON.parse(localStorage.getItem('cnd-wx')||'nul
 })();
 </script>
 
+
+<style id="r6-workbench-css">
+/* ===== ROUND 6 — Workbench fixes (2026-11-22) ===== */
+/* The LINK badge pseudo inherited the status dot's 8px box and clipped its
+   own text at the card edge. Sized as a badge, fully inside the card. */
+.card.linked::after{width:auto!important;height:auto!important;min-width:0!important}
+/* Bench-card halo: ring + diffuse halo only (the round-5 door construction) —
+   the black elevation layer no longer stacks over the glow. */
+.card.linked{box-shadow:0 0 0 1px rgba(250,204,21,.55),0 0 16px rgba(250,204,21,.40),0 0 38px rgba(250,204,21,.20)!important}
+</style>
+
+<script id="r6-wx-js">
+/* ROUND 6 — shared weather object in the header: the same ECCC GeoMet Ottawa
+   object (on-118) and the same chip text Home renders, stacked for this
+   page's compact beside-the-clock chip. */
+(function(){var t=document.getElementById('ckwx-t'),c=document.getElementById('ckwx-c');if(!t||!c)return;
+function fail(){t.textContent='--\u00B0';c.textContent='OFFLINE \u00B7 OTTAWA'}
+fetch('https://api.weather.gc.ca/collections/citypageweather-realtime/items/on-118?f=json&lang=en')
+.then(function(r){if(!r.ok)throw 0;return r.json()})
+.then(function(d){var cc=d.properties.currentConditions,v=cc.temperature.value.en,cond=cc.condition.value.en;
+t.textContent=(v>0?'+':'')+(Math.round(v*10)/10)+'\u00B0 '+String(cond||'').toUpperCase();c.textContent='SNAPSHOT \u00B7 OTTAWA'})
+.catch(fail)})();
+</script>
 </body></html>

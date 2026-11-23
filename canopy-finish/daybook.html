@@ -407,7 +407,7 @@ body .card:active{transform:scale(.98);transition-duration:100ms}
     <a id="hm-clock" href="./index.html" aria-label="Home" title="Home (clock shows this device's time; weather is a snapshot, Ottawa — not live)">
       <span class="t" id="clock-t">--:--</span><br><span class="d" id="clock-d"></span>
     </a>
-    <a class="wxdoor" href="./index.html#win=weather" aria-label="Weather — snapshot, Ottawa; opens the Weather window on Canopy Home" title="Weather — snapshot, Ottawa · opens the Weather window"><span class="wx" aria-hidden="true"><svg viewBox="0 0 48 30"><g class="rays" stroke="var(--gold2)" stroke-width="1.7" stroke-linecap="round"><path d="M23.5 12h3M21.3 17.3l2.1 2.1M16 19.5v3M10.7 17.3l-2.1 2.1M8.5 12h-3M10.7 6.7L8.6 4.6M16 4.5v-3M21.3 6.7l2.1-2.1"/></g><circle cx="16" cy="12" r="5.4" fill="var(--gold2)"/><g class="cld"><path d="M24.5 25.5h17.2a4.6 4.6 0 0 0 .9-9.1A7.2 7.2 0 0 0 29 12.6a5.6 5.6 0 0 0-4.5 12.9z" fill="var(--silver)"/></g></svg><span class="wxl"><i>SNAPSHOT</i><i>OTTAWA</i></span></span><span class="wxg" aria-hidden="true">▸</span></a>
+    <a class="wxdoor" href="./index.html#win=weather" aria-label="Weather — snapshot, Ottawa; opens the Weather window on Canopy Home" title="Weather — snapshot, Ottawa · opens the Weather window"><span class="wx" aria-hidden="true"><svg viewBox="0 0 48 30"><g class="rays" stroke="var(--gold2)" stroke-width="1.7" stroke-linecap="round"><path d="M23.5 12h3M21.3 17.3l2.1 2.1M16 19.5v3M10.7 17.3l-2.1 2.1M8.5 12h-3M10.7 6.7L8.6 4.6M16 4.5v-3M21.3 6.7l2.1-2.1"/></g><circle cx="16" cy="12" r="5.4" fill="var(--gold2)"/><g class="cld"><path d="M24.5 25.5h17.2a4.6 4.6 0 0 0 .9-9.1A7.2 7.2 0 0 0 29 12.6a5.6 5.6 0 0 0-4.5 12.9z" fill="var(--silver)"/></g></svg><span class="wxl"><i id="ckwx-t">--&deg;</i><i id="ckwx-c">PENDING &middot; OTTAWA</i></span></span><span class="wxg" aria-hidden="true">▸</span></a>
   </div>
   <nav id="doors" aria-label="Sections"></nav>
 </header>
@@ -1298,5 +1298,18 @@ setInterval(function(){try{var j=JSON.parse(localStorage.getItem('cnd-wx')||'nul
 })();
 </script>
 
+
+<script id="r6-wx-js">
+/* ROUND 6 — shared weather object in the header: the same ECCC GeoMet Ottawa
+   object (on-118) and the same chip text Home renders, stacked for this
+   page's compact beside-the-clock chip. */
+(function(){var t=document.getElementById('ckwx-t'),c=document.getElementById('ckwx-c');if(!t||!c)return;
+function fail(){t.textContent='--\u00B0';c.textContent='OFFLINE \u00B7 OTTAWA'}
+fetch('https://api.weather.gc.ca/collections/citypageweather-realtime/items/on-118?f=json&lang=en')
+.then(function(r){if(!r.ok)throw 0;return r.json()})
+.then(function(d){var cc=d.properties.currentConditions,v=cc.temperature.value.en,cond=cc.condition.value.en;
+t.textContent=(v>0?'+':'')+(Math.round(v*10)/10)+'\u00B0 '+String(cond||'').toUpperCase();c.textContent='SNAPSHOT \u00B7 OTTAWA'})
+.catch(fail)})();
+</script>
 </body>
 </html>

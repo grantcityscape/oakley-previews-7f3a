@@ -6,13 +6,24 @@
       <link>https://www.cbc.ca/news/business/?cmp=rss</link>
       <copyright><![CDATA[Copyright: (C) Canadian Broadcasting Corporation, http://www.cbc.ca/aboutcbc/discover/termsofuse.html#Rss]]></copyright>
       <docs><![CDATA[https://www.cbc.ca/rss]]></docs>
-      <lastBuildDate>Mon, 23 Nov 2026 16:51:26 EST</lastBuildDate>
+      <lastBuildDate>Tue, 24 Nov 2026 09:13:47 EST</lastBuildDate>
       <atom:link href="https://www.cbc.ca/webfeed/rss/rss-business" rel="self" type="application/rss+xml"/>
       <image>
          <title><![CDATA[CBC | Business News]]></title>
          <url>https://www.cbc.ca/rss/image/cbc_144.gif</url>
          <link>https://www.cbc.ca/news/business/?cmp=rss</link>
       </image>
+      <item>
+         <title><![CDATA[Mortgage delinquency rate up 31% in third quarter: Equifax report]]></title>
+         <link>https://www.cbc.ca/news/business/mortgage-delinquency-9.7433747?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/bcbdb4f1-fbbb-4424-88ea-660c844d46be,1795528310104/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C260%2C5000%2C2812%29%3B' alt='a man walks past brightly coloured houses on a residential street' width='620' height='349' title='Houses are pictured in Vancouver, B.C on Thursday April 4, 2024. Mortgage delinquencies are on the rise in Canada, especially in B.C. and Ontario.'/><p>Equifax Canada's third-quarter consumer credit trends report says the national 90-plus day mortgage delinquency rate — defined as missed payments three months in a row — reached 0.32 per cent, the highest since the credit agency started tracking the metric in 2013.</p>]]></description>
+         <pubDate>Tue, 24 Nov 2026 09:13:47 EST</pubDate>
+         <category>News/Business</category>
+         <guid isPermaLink="false">9.7433747</guid>
+         <dc:creator>Ritika Dubey</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
       <item>
          <title><![CDATA[Nvidia reinstates Jensen Huang as CEO]]></title>
          <link>https://www.cbc.ca/news/business/jensen-huang-reinstated-nvidia-9.7432353?cmp=rss</link>
@@ -26,7 +37,7 @@
       <item>
          <title><![CDATA[North American stocks soar, recovering half of last week's plunge after Jensen Huang returns as Nvidia's CEO]]></title>
          <link>https://www.cbc.ca/news/business/stock-market-latest-9.7432277?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/35f41e0a-b378-4950-8493-4f97ff897b9c,1795439461605/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C223%2C4278%2C2406%29%3B' alt='Pedestrians walk past outdoor signage displaying stock market information.' width='620' height='349' title='AI-related stocks including Nvidia, Broadcom and Advanced Micro Devices bore the brunt of the selling on Friday,'/><p>Nvidia led a tremendous rally on Wall Street on Monday following the surprise return of Jensen Huang as its CEO. Nvidia's stock finished just shy of its best day since 2000.</p>]]></description>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/35f41e0a-b378-4950-8493-4f97ff897b9c,1795536519834/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C223%2C4278%2C2406%29%3B' alt='Pedestrians walk past outdoor signage displaying stock market information.' width='620' height='349' title='AI-related stocks including Nvidia, Broadcom and Advanced Micro Devices bore the brunt of the selling on Friday,'/><p>Nvidia led a tremendous rally on Wall Street on Monday following the surprise return of Jensen Huang as its CEO. Nvidia's stock finished just shy of its best day since 2000.</p>]]></description>
          <pubDate>Mon, 23 Nov 2026 09:02:18 EST</pubDate>
          <category>News/Business</category>
          <guid isPermaLink="false">9.7432277</guid>
@@ -214,16 +225,6 @@
          <pubDate>Wed, 18 Nov 2026 15:21:02 EST</pubDate>
          <category>News/Business</category>
          <guid isPermaLink="false">9.7426966</guid>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Waymo temporarily pulls robotaxis from U.S. highways]]></title>
-         <link>https://www.cbc.ca/news/business/waymo-california-ban-9.7426164?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/515a7fba-4920-4521-a315-d8f8c761884c,1795005051960/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C577%2C5542%2C3117%29%3B' alt='The back of a small vehicle is the focus on a roadway, with two other cars shown on either side of it.' width='620' height='349' title='The Waymo Ojai autonomous vehicle, a Chinese-made electric vehicle manufactured by Zeekr, travels along a major Los Angeles freeway through Hawthorne, California, US, October 13, 2026. A person sits in the driver&apos;s seat. REUTERS/Mike Blake'/><p>Waymo has temporarily stopped offering driverless taxi rides on freeways after California banned the vehicles from state freeways following recent traffic incidents.</p>]]></description>
-         <pubDate>Wed, 18 Nov 2026 07:45:44 EST</pubDate>
-         <category>News/Business</category>
-         <guid isPermaLink="false">9.7426164</guid>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>

@@ -6,7 +6,7 @@
       <link>https://www.cbc.ca/news/canada/ottawa/?cmp=rss</link>
       <copyright><![CDATA[Copyright: (C) Canadian Broadcasting Corporation, http://www.cbc.ca/aboutcbc/discover/termsofuse.html#Rss]]></copyright>
       <docs><![CDATA[https://www.cbc.ca/rss]]></docs>
-      <lastBuildDate>Tue, 24 Nov 2026 12:55:18 EST</lastBuildDate>
+      <lastBuildDate>Tue, 24 Nov 2026 20:24:40 EST</lastBuildDate>
       <atom:link href="https://www.cbc.ca/webfeed/rss/rss-canada-ottawa" rel="self" type="application/rss+xml"/>
       <image>
          <title><![CDATA[CBC | Ottawa News]]></title>
@@ -14,9 +14,19 @@
          <link>https://www.cbc.ca/news/canada/ottawa/?cmp=rss</link>
       </image>
       <item>
+         <title><![CDATA[Ottawa paramedic killed, another injured in highway crash in Cumberland]]></title>
+         <link>https://www.cbc.ca/news/canada/ottawa/highway-crash-in-cumberland-kills-one-paramedic-and-injures-another-9.7433709?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/2b22b228-2542-4c01-bc2d-e0c637c43bb4,1795552585400/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C40%2C512%2C288%29%3B' alt='A picture of Paramedic Mel Borthwick.' width='620' height='349' title='Ottawa Mayor Mark Sutcliffe expressed his condolences on social media after Paramedic Mel Borthwick was killed in a crash in Cumberland Tuesday morning.'/><p>An Ottawa paramedic has died and another is injured following a crash on Highway 174 in Ottawa's rural east end Tuesday morning, Ottawa paramedics have confirmed.</p>]]></description>
+         <pubDate>Tue, 24 Nov 2026 07:18:23 EST</pubDate>
+         <category>News/Canada/Ottawa</category>
+         <guid isPermaLink="false">9.7433709</guid>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
          <title><![CDATA[A teenage runaway turned to a Mountie for sanctuary. He had other plans]]></title>
          <link>https://www.cbc.ca/news/canada/ottawa/kim-budd-gilles-plouffe-podcast-9.7349352?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/15a42e0c-49c4-4f41-b0f7-62aaca120815,1795198768215/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1920%2C1080%29%3B' alt='A story graphic' width='620' height='349' title='No safe place.'/><p>Kim Budd spent much of her childhood on the run. When she thought she'd finally found a safe place to stay, it turned out to be anything but, and the adults and institutions that were supposed to protect her failed her when she needed them most.</p>]]></description>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/15a42e0c-49c4-4f41-b0f7-62aaca120815,1795198768215/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1920%2C1080%29%3B' alt='A story graphic' width='620' height='349' title='No safe place.'/><p>Kim Budd spent much of her childhood on the run. When she thought she'd finally found a safe place to stay it turned out to be anything but, and the adults and institutions that were supposed to protect her failed her when she needed them most.</p>]]></description>
          <pubDate>Tue, 24 Nov 2026 04:00:00 EST</pubDate>
          <category>News/Canada/Ottawa</category>
          <guid isPermaLink="false">9.7349352</guid>
@@ -25,19 +35,20 @@
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
       <item>
-         <title><![CDATA[Flooded Centrepointe theatres won't reopen until late April 2027, city says]]></title>
-         <link>https://www.cbc.ca/news/canada/ottawa/meridian-theatre-centrepointe-ottawa-flood-damage-reopen-9.7434192?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/1.5275769,1568031764000/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1919%2C1079%29%3B' alt='' width='620' height='349' title='Ben Franklin Place is a City of Ottawa office that used to be the former Nepean city hall.'/><p>Ottawa's flood-damaged Meridian Theatres @ Centrepointe are currently expected to be closed several more months, the city said Tuesday.</p>]]></description>
-         <pubDate>Tue, 24 Nov 2026 12:39:41 EST</pubDate>
+         <title><![CDATA[Canadian Children's Museum to close for 'complete renewal' starting in March]]></title>
+         <link>https://www.cbc.ca/news/canada/ottawa/canadian-children-s-museum-to-close-for-complete-renewal-starting-in-march-9.7434559?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/1.4856486,1539130827000/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1248%2C702%29%3B' alt='' width='620' height='349' title='The content of the Canadian Children&apos;s Museum has largely remained the same since it opened in 1989.'/><p>The Canadian Children's Museum in Gatineau, Que., will close for more than a year during a renovation that will see the space adapted for renewed focus on a "distinctly Canadian experience."</p>]]></description>
+         <pubDate>Tue, 24 Nov 2026 17:28:01 EST</pubDate>
          <category>News/Canada/Ottawa</category>
-         <guid isPermaLink="false">9.7434192</guid>
+         <guid isPermaLink="false">9.7434559</guid>
+         <dc:creator>Matthew Kupfer</dc:creator>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
       <item>
          <title><![CDATA[Ottawa proposes sweeping new land-seizure powers for Alto high-speed rail project]]></title>
          <link>https://www.cbc.ca/news/politics/alto-expropriation-changes-9.7433464?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/17dddc4e-e851-4d9b-8708-cd893371ac7f,1791571515599/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1200%2C675%29%3B' alt='alto rendition of their high speed train' width='620' height='349' title='The high-speed rail project connecting Quebec City and Toronto would also have stops in Peterborough, Ottawa, Montreal, Laval and Trois-Rivières.'/><p></p>]]></description>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/bced6610-d99b-4dee-bc30-7756949eaeb9,1795549322151/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C3840%2C2160%29%3B' alt='A green and blue high-speed passenger train with the word ALTO on the side travels along railway tracks beside a grassy hillside with trees.' width='620' height='349' title=''/><p></p>]]></description>
          <pubDate>Fri, 01 May 2026 17:52:25 EDT</pubDate>
          <category>News/Canada/Ottawa</category>
          <guid isPermaLink="false">9.7185102</guid>
@@ -45,12 +56,13 @@
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
       <item>
-         <title><![CDATA[Fatal crash closes Highway 174 in Cumberland]]></title>
-         <link>https://www.cbc.ca/news/canada/ottawa/highway-174-crash-closed-cumberland-9.7433709?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/7899f081-1b27-4db4-a6f0-a139e95334f7,1795522883323/full/max/0/default.jpg?im=Crop%2Crect%3D%28210%2C119%2C1302%2C732%29%3B' alt='Two police vehicles block a rural highway after a crash. It&apos;s sunrise on a late autumn morning.' width='620' height='349' title='Ottawa police vehicles block Highway 174 at Quigley Hill Road after a fatal crash early Nov. 24, 2026.'/><p>Ottawa police say there has been a fatal crash on Highway 174 in the city's rural east end. The highway is closed during the morning peak between Cameron Street and Quigley Hill Road.</p>]]></description>
-         <pubDate>Tue, 24 Nov 2026 07:18:23 EST</pubDate>
+         <title><![CDATA['It's the hot, it's the cold, it's the reset': A look inside Ottawa's new floating sauna]]></title>
+         <link>https://www.cbc.ca/news/canada/ottawa/saunoa-opens-november-25-9.7433044?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/adab2f51-aaf6-46a3-ae18-92ba352d525f,1795529525596/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C4032%2C2268%29%3B' alt='A man in an orange jacket stands next to a wooden structure.' width='620' height='349' title='Mat Slaman, founder of Saunoa, stands on the cold plunge deck of the floating sauna on the Ottawa River.'/><p>Saunoa, a floating sauna offering a cold plunge experience on the Ottawa River, is welcoming its first customers this week.</p>]]></description>
+         <pubDate>Tue, 24 Nov 2026 10:51:58 EST</pubDate>
          <category>News/Canada/Ottawa</category>
-         <guid isPermaLink="false">9.7433709</guid>
+         <guid isPermaLink="false">9.7433044</guid>
+         <dc:creator>Matthew Kupfer</dc:creator>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
@@ -66,22 +78,22 @@
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
       <item>
+         <title><![CDATA[Flooded Centrepointe theatres won't reopen until late April 2027, city says]]></title>
+         <link>https://www.cbc.ca/news/canada/ottawa/meridian-theatre-centrepointe-ottawa-flood-damage-reopen-9.7434192?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/1.5275769,1568031764000/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1919%2C1079%29%3B' alt='' width='620' height='349' title='Ben Franklin Place is a City of Ottawa office that used to be the former Nepean city hall.'/><p>Ottawa's flood-damaged Meridian Theatres @ Centrepointe are currently expected to be closed several more months, the city said Tuesday.</p>]]></description>
+         <pubDate>Tue, 24 Nov 2026 12:39:41 EST</pubDate>
+         <category>News/Canada/Ottawa</category>
+         <guid isPermaLink="false">9.7434192</guid>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
          <title><![CDATA[Ottawa Titans AJ Wright retires after championship season]]></title>
          <link>https://www.cbc.ca/news/canada/ottawa/aj-wright-ottawa-titans-record-retire-9.7434140?cmp=rss</link>
          <description><![CDATA[<img src='https://i.cbc.ca/ais/6371d2e4-8cce-4a66-a8d4-bcb1f731e2f4,1795539861964/full/max/0/default.jpg?im=Crop%2Crect%3D%2870%2C0%2C1326%2C745%29%3B' alt='A baseball player gestures to his bench while rounding the bases.' width='620' height='349' title='Ottawa Titans infielder AJ Wright runs the bases during the 2026 season. The New Jersey native is retiring as a player at age 30, according to the team.'/><p>One of the signature Ottawa Titans players has announced his retirement after the team's championship-winning 2026 season.</p>]]></description>
          <pubDate>Tue, 24 Nov 2026 12:17:54 EST</pubDate>
          <category>News/Canada/Ottawa</category>
          <guid isPermaLink="false">9.7434140</guid>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA['It's the hot, it's the cold, it's the reset': A look inside Ottawa's new floating sauna]]></title>
-         <link>https://www.cbc.ca/news/canada/ottawa/saunoa-opens-november-25-9.7433044?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/adab2f51-aaf6-46a3-ae18-92ba352d525f,1795529525596/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C4032%2C2268%29%3B' alt='A man in an orange jacket stands next to a wooden structure.' width='620' height='349' title='Mat Slaman, founder of Saunoa, stands on the cold plunge deck of the floating sauna on the Ottawa River.'/><p>Saunoa, a floating sauna offering a cold plunge experience on the Ottawa River, is welcoming its first customers this week.</p>]]></description>
-         <pubDate>Tue, 24 Nov 2026 10:51:58 EST</pubDate>
-         <category>News/Canada/Ottawa</category>
-         <guid isPermaLink="false">9.7433044</guid>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
@@ -198,17 +210,6 @@
          <pubDate>Mon, 23 Nov 2026 04:00:00 EST</pubDate>
          <category>News/Canada/Ottawa</category>
          <guid isPermaLink="false">9.7431928</guid>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[More Canadians are using cannabis daily than are drinking alcohol daily: study]]></title>
-         <link>https://www.cbc.ca/news/health/daily-cannabis-use-higher-alcohol-cigarettes-9.7430174?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/97c8ae9e-a2bd-4e78-a6fa-374c73fc130f,1795199612799/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C425%2C6000%2C3375%29%3B' alt='A hand holds a lit joint.' width='620' height='349' title='A man holds a joint while smoking marijuana, in Vancouver on Wednesday Oct. 17, 2018. British Columbia has released the results of its public engagement to help inform the government&apos;s decision on allowing spaces for consuming cannabis.'/><p>Daily use of cannabis has outstripped daily use of alcohol in Canada, with young Canadians at the front of the trend, new data shows. Experts say this generational shift brings some positives, but that many Canadians remain unaware that there are risks with overuse of cannabis.</p>]]></description>
-         <pubDate>Mon, 23 Nov 2026 04:00:00 EST</pubDate>
-         <category>News/Health</category>
-         <guid isPermaLink="false">9.7430174</guid>
-         <dc:creator>Alexandra Mae Jones</dc:creator>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>

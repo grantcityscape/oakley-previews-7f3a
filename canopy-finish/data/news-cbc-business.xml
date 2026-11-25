@@ -6,7 +6,7 @@
       <link>https://www.cbc.ca/news/business/?cmp=rss</link>
       <copyright><![CDATA[Copyright: (C) Canadian Broadcasting Corporation, http://www.cbc.ca/aboutcbc/discover/termsofuse.html#Rss]]></copyright>
       <docs><![CDATA[https://www.cbc.ca/rss]]></docs>
-      <lastBuildDate>Tue, 24 Nov 2026 17:08:45 EST</lastBuildDate>
+      <lastBuildDate>Wed, 25 Nov 2026 06:17:09 EST</lastBuildDate>
       <atom:link href="https://www.cbc.ca/webfeed/rss/rss-business" rel="self" type="application/rss+xml"/>
       <image>
          <title><![CDATA[CBC | Business News]]></title>
@@ -20,6 +20,17 @@
          <pubDate>Tue, 24 Nov 2026 16:45:31 EST</pubDate>
          <category>News/Business</category>
          <guid isPermaLink="false">9.7434596</guid>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Can AI chatbots really help shoppers find the best deals?]]></title>
+         <link>https://www.cbc.ca/news/business/ai-shopping-assistant-black-friday-deals-9.7434424?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/92cdbab2-4b80-4b0a-8111-36d7e58c12c8,1795547642442/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1920%2C1080%29%3B' alt='Phone screen showing a Garmin smartwatch selling for $350, down from $489.99.' width='620' height='349' title='As part of a daily alert set up by ChatGPT, Monique Welter found the smartwatch she was looking to buy for her husband — selling at a 30 per cent discount, for $350.'/><p>Canadians are increasingly turning to AI chatbots to help them shop, compare items, scope out discounts and, in some cases, even make purchases. But are shoppers really seeing the best deals for Black Friday?</p>]]></description>
+         <pubDate>Wed, 25 Nov 2026 04:00:00 EST</pubDate>
+         <category>News/Business</category>
+         <guid isPermaLink="false">9.7434424</guid>
+         <dc:creator>Philippe de Montigny, Abby Hughes</dc:creator>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
@@ -214,17 +225,6 @@
          <category>News/Canada/Calgary</category>
          <guid isPermaLink="false">9.7426910</guid>
          <dc:creator>Ina Sidhu</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Anthropic prices IPO at $83 US per share, valuing AI giant at $1.51 trillion US]]></title>
-         <link>https://www.cbc.ca/news/business/anthropic-ipo-share-price-nasdaq-9.7426856?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/4fed3498-d2a6-4964-8762-1d91ebb7f3b7,1795046620119/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C294%2C3000%2C1687%29%3B' alt='Dario Amodei, CEO &amp; Co-Founder of Anthropic, attends the Annual Meeting of World Economic Forum in Davos, Switzerland' width='620' height='349' title='Dario Amodei, CEO &amp; Co-Founder of Anthropic, attends the Annual Meeting of World Economic Forum in Davos, Switzerland, Thursday, Jan. 23, 2025. (AP Photo/Markus Schreiber)'/><p>Anthropic has set a stock price of $83 US per share for its hotly anticipated initial public offering, with shares of the U.S. artificial intelligence giant set to debut on the Nasdaq exchange on Thursday.</p>]]></description>
-         <pubDate>Wed, 18 Nov 2026 18:58:12 EST</pubDate>
-         <category>News/Business</category>
-         <guid isPermaLink="false">9.7426856</guid>
-         <dc:creator>Jeff Lagerquist</dc:creator>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>

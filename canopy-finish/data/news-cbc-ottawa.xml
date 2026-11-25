@@ -6,13 +6,24 @@
       <link>https://www.cbc.ca/news/canada/ottawa/?cmp=rss</link>
       <copyright><![CDATA[Copyright: (C) Canadian Broadcasting Corporation, http://www.cbc.ca/aboutcbc/discover/termsofuse.html#Rss]]></copyright>
       <docs><![CDATA[https://www.cbc.ca/rss]]></docs>
-      <lastBuildDate>Tue, 24 Nov 2026 20:24:40 EST</lastBuildDate>
+      <lastBuildDate>Wed, 25 Nov 2026 04:00:00 EST</lastBuildDate>
       <atom:link href="https://www.cbc.ca/webfeed/rss/rss-canada-ottawa" rel="self" type="application/rss+xml"/>
       <image>
          <title><![CDATA[CBC | Ottawa News]]></title>
          <url>https://www.cbc.ca/rss/image/cbc_144.gif</url>
          <link>https://www.cbc.ca/news/canada/ottawa/?cmp=rss</link>
       </image>
+      <item>
+         <title><![CDATA[A closer look at one of the deadliest years for pedestrians on Ottawa's roads]]></title>
+         <link>https://www.cbc.ca/news/canada/ottawa/a-closer-look-at-one-of-the-deadliest-years-for-pedestrians-on-ottawa-s-roads-9.7434098?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/959a9797-c983-429e-9e71-0689c2a7a886,1795210864042/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C124%2C2384%2C1341%29%3B' alt='Traffic lights along a street.' width='620' height='349' title='A person crosses O&apos;Connor Street as seen from Parliament Hill in Ottawa, on Friday, Nov. 20, 2026.'/><p>Police are reporting more pedestrian fatalities in 2026 than in any year going back well over a decade. We studied where and when they happened to explain why so many have lost their lives on Ottawa's roads.</p>]]></description>
+         <pubDate>Wed, 25 Nov 2026 04:00:00 EST</pubDate>
+         <category>News/Canada/Ottawa</category>
+         <guid isPermaLink="false">9.7434098</guid>
+         <dc:creator>Arthur White-Crummey</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
       <item>
          <title><![CDATA[Ottawa paramedic killed, another injured in highway crash in Cumberland]]></title>
          <link>https://www.cbc.ca/news/canada/ottawa/highway-crash-in-cumberland-kills-one-paramedic-and-injures-another-9.7433709?cmp=rss</link>
@@ -48,7 +59,7 @@
       <item>
          <title><![CDATA[Ottawa proposes sweeping new land-seizure powers for Alto high-speed rail project]]></title>
          <link>https://www.cbc.ca/news/politics/alto-expropriation-changes-9.7433464?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/bced6610-d99b-4dee-bc30-7756949eaeb9,1795549322151/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C3840%2C2160%29%3B' alt='A green and blue high-speed passenger train with the word ALTO on the side travels along railway tracks beside a grassy hillside with trees.' width='620' height='349' title=''/><p></p>]]></description>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/f4e9223b-e8ec-48e1-810f-82051ead63b5,1795572633322/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1920%2C1080%29%3B' alt='Image of high-speed rail.' width='620' height='349' title='Farmers and land owners are pushing back against the federal government&apos;s proposal to scrap standard land-expropriation rules for Alto, Canada&apos;s first high-speed rail project, which would run between Toronto and Quebec City.'/><p></p>]]></description>
          <pubDate>Fri, 01 May 2026 17:52:25 EDT</pubDate>
          <category>News/Canada/Ottawa</category>
          <guid isPermaLink="false">9.7185102</guid>
@@ -200,16 +211,6 @@
          <category>News/Canada/Montreal</category>
          <guid isPermaLink="false">9.7431849</guid>
          <dc:creator>Benjamin Shingler</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Indigenous archaeologists find cutting tool, bone fragments in Outaouais wildlife reserve]]></title>
-         <link>https://www.cbc.ca/news/canada/ottawa/indigenous-archaeologists-find-cutting-tool-bone-fragments-in-outaouais-wildlife-reserve-9.7431928?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/33d6cd1a-0600-409f-8099-f44e91771e85,1795375610409/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1197%2C673%29%3B' alt='An image of a river in a forest.' width='620' height='349' title='The Marie-Lefranc-Petite-Nation coalition wants the Quebec government to make part of the Papineau-Labelle Wildlife Reserve a permanent protected area.'/><p>A Indigenous-led archaeology group has found artifacts in the Papineau-Labelle Wildlife Reserve northeast of Gatineau, Que., that may date back hundreds or even thousands of years, before European settlers arrived in North America.</p>]]></description>
-         <pubDate>Mon, 23 Nov 2026 04:00:00 EST</pubDate>
-         <category>News/Canada/Ottawa</category>
-         <guid isPermaLink="false">9.7431928</guid>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>

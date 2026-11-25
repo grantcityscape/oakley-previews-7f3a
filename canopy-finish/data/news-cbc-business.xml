@@ -6,7 +6,7 @@
       <link>https://www.cbc.ca/news/business/?cmp=rss</link>
       <copyright><![CDATA[Copyright: (C) Canadian Broadcasting Corporation, http://www.cbc.ca/aboutcbc/discover/termsofuse.html#Rss]]></copyright>
       <docs><![CDATA[https://www.cbc.ca/rss]]></docs>
-      <lastBuildDate>Wed, 25 Nov 2026 06:17:09 EST</lastBuildDate>
+      <lastBuildDate>Wed, 25 Nov 2026 14:54:48 EST</lastBuildDate>
       <atom:link href="https://www.cbc.ca/webfeed/rss/rss-business" rel="self" type="application/rss+xml"/>
       <image>
          <title><![CDATA[CBC | Business News]]></title>
@@ -14,12 +14,12 @@
          <link>https://www.cbc.ca/news/business/?cmp=rss</link>
       </image>
       <item>
-         <title><![CDATA[Drops for Nvidia, Anthropic and other AI stocks drag the markets back down]]></title>
-         <link>https://www.cbc.ca/news/business/stock-market-latest-nvidia-anthropic-ai-stocks-9.7434596?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/c1b35c9f-8629-4547-993f-2784c13578d4,1795555073240/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C406%2C7803%2C4389%29%3B' alt='Stock traders work at the New York Stock Exchange.' width='620' height='349' title='People work on the floor at the New York Stock Exchange in New York, Tuesday, Nov. 17, 2026. (AP Photo/Seth Wenig)'/><p>Stocks tied to the  artificial intelligence industry dragged the U.S. market lower Tuesday after their surge from the day before quickly fizzled.</p>]]></description>
-         <pubDate>Tue, 24 Nov 2026 16:45:31 EST</pubDate>
+         <title><![CDATA[Wall Street tempers its slide as pullback in AI stocks eases despite hotter inflation, new tariffs]]></title>
+         <link>https://www.cbc.ca/news/business/stock-market-latest-9.7435326?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/bf27a3ba-21f3-4a9d-9bcc-99ee6eeeb6ab,1795624990611/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C428%2C8225%2C4626%29%3B' alt='Traders stare at screens at the New York Stock Exchange.' width='620' height='349' title='People work on the floor at the New York Stock Exchange in New York, Tuesday, Nov. 17, 2026. (AP Photo/Seth Wenig)'/><p>Stocks on Wall Street are regaining their footing in afternoon trading after falling sharply in the early going as a pullback in AI stocks eases.</p>]]></description>
+         <pubDate>Wed, 25 Nov 2026 10:00:22 EST</pubDate>
          <category>News/Business</category>
-         <guid isPermaLink="false">9.7434596</guid>
+         <guid isPermaLink="false">9.7435326</guid>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
@@ -31,6 +31,16 @@
          <category>News/Business</category>
          <guid isPermaLink="false">9.7434424</guid>
          <dc:creator>Philippe de Montigny, Abby Hughes</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Drops for Nvidia, Anthropic and other AI stocks drag the markets back down]]></title>
+         <link>https://www.cbc.ca/news/business/stock-market-latest-nvidia-anthropic-ai-stocks-9.7434596?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/c1b35c9f-8629-4547-993f-2784c13578d4,1795555073240/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C406%2C7803%2C4389%29%3B' alt='Stock traders work at the New York Stock Exchange.' width='620' height='349' title='People work on the floor at the New York Stock Exchange in New York, Tuesday, Nov. 17, 2026. (AP Photo/Seth Wenig)'/><p>Stocks tied to the  artificial intelligence industry dragged the U.S. market lower Tuesday after their surge from the day before quickly fizzled.</p>]]></description>
+         <pubDate>Tue, 24 Nov 2026 16:45:31 EST</pubDate>
+         <category>News/Business</category>
+         <guid isPermaLink="false">9.7434596</guid>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
@@ -214,17 +224,6 @@
          <category>News/Business</category>
          <guid isPermaLink="false">9.7426928</guid>
          <dc:creator>Abby Hughes</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Calgary’s condo market is shifting as supply outpaces demand]]></title>
-         <link>https://www.cbc.ca/news/canada/calgary/sidhu-calgary-condo-building-boom-price-drop-9.7426910?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/deb4d0b3-04b9-4451-b938-c89ab1956632,1795042887131/full/max/0/default.jpg?im=Crop%2Crect%3D%28154%2C0%2C1765%2C992%29%3B' alt='The outside of a new condo building in northeast Calgary' width='620' height='349' title='Calgary is seeing a surge in new condos. Prices in this new northeast Calgary development have dropped up to $85,000.'/><p>After years of increases, some sellers are now cutting asking prices by tens of thousands of dollars to attract buyers. And with more housing on the way, the pressure on prices may not be over.</p>]]></description>
-         <pubDate>Thu, 19 Nov 2026 06:00:00 EST</pubDate>
-         <category>News/Canada/Calgary</category>
-         <guid isPermaLink="false">9.7426910</guid>
-         <dc:creator>Ina Sidhu</dc:creator>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>

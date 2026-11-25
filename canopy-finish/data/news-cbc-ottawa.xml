@@ -6,7 +6,7 @@
       <link>https://www.cbc.ca/news/canada/ottawa/?cmp=rss</link>
       <copyright><![CDATA[Copyright: (C) Canadian Broadcasting Corporation, http://www.cbc.ca/aboutcbc/discover/termsofuse.html#Rss]]></copyright>
       <docs><![CDATA[https://www.cbc.ca/rss]]></docs>
-      <lastBuildDate>Wed, 25 Nov 2026 04:00:00 EST</lastBuildDate>
+      <lastBuildDate>Wed, 25 Nov 2026 15:33:50 EST</lastBuildDate>
       <atom:link href="https://www.cbc.ca/webfeed/rss/rss-canada-ottawa" rel="self" type="application/rss+xml"/>
       <image>
          <title><![CDATA[CBC | Ottawa News]]></title>
@@ -14,14 +14,139 @@
          <link>https://www.cbc.ca/news/canada/ottawa/?cmp=rss</link>
       </image>
       <item>
-         <title><![CDATA[A closer look at one of the deadliest years for pedestrians on Ottawa's roads]]></title>
-         <link>https://www.cbc.ca/news/canada/ottawa/a-closer-look-at-one-of-the-deadliest-years-for-pedestrians-on-ottawa-s-roads-9.7434098?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/959a9797-c983-429e-9e71-0689c2a7a886,1795210864042/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C124%2C2384%2C1341%29%3B' alt='Traffic lights along a street.' width='620' height='349' title='A person crosses O&apos;Connor Street as seen from Parliament Hill in Ottawa, on Friday, Nov. 20, 2026.'/><p>Police are reporting more pedestrian fatalities in 2026 than in any year going back well over a decade. We studied where and when they happened to explain why so many have lost their lives on Ottawa's roads.</p>]]></description>
-         <pubDate>Wed, 25 Nov 2026 04:00:00 EST</pubDate>
+         <title><![CDATA[99-year-old woman assaulted, robbed in Lowertown home]]></title>
+         <link>https://www.cbc.ca/news/canada/ottawa/ottawa-assault-senior-elderly-9.7435422?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/a3bf35ac-a3bb-4d5f-b3dd-e135f868e9be,1795626491327/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1920%2C1080%29%3B' alt='A quiet residential street in a city with a line of rowhomes.' width='620' height='349' title='A 99-year-old woman living on Michel Riel Private was seriously injured in a violent robbery at her home Nov. 24, 2026, according to Ottawa police.'/><p>Ottawa police say a 99-year-old woman was seriously injured in a violent robbery at her Lowertown home Tuesday evening.</p>]]></description>
+         <pubDate>Wed, 25 Nov 2026 10:33:16 EST</pubDate>
          <category>News/Canada/Ottawa</category>
-         <guid isPermaLink="false">9.7434098</guid>
-         <dc:creator>Arthur White-Crummey</dc:creator>
+         <guid isPermaLink="false">9.7435422</guid>
          <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[PQ urges other parties to sit — despite recent ruling ordering oath to King]]></title>
+         <link>https://www.cbc.ca/news/canada/montreal/oath-king-quebec-pq-constitution-9.7435914?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/3396f23c-e65a-4139-aaaa-9470647e51ea,1795633607768/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C6000%2C3375%29%3B' alt='In the photo (left to right): Catherine Gentilcore and Marie-Claude Sarrazin. Photo taken at the National Assembly, Quebec City, Canada, November 25, 2026. Photo by Sylvain Roy Roussel, CBC/Radio-Canada.' width='620' height='349' title='Parti Québécois House Leader Catherine Gentilcore (left) and Quebec&apos;s Minister of Justice, Marie-Claude Sarrazin (right) confirmed at the National Assembly on Wednesday that their party was ready to sit as planned next Tuesday, regardless of the outcome of ongoing legal proceedings relating to legislators having to swear an oath to the king.'/><p>The battle over whether Quebec legislators will have to swear an oath to the King continues, with an appeal hearing scheduled for Friday. The premier wants his opponents to join him in sitting in the legislative session, regardless of the outcome of the court ruling.</p>]]></description>
+         <pubDate>Wed, 25 Nov 2026 15:33:50 EST</pubDate>
+         <category>News/Canada/Montreal</category>
+         <guid isPermaLink="false">9.7435914</guid>
+         <dc:creator>Patricia Kozicka</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Rural residents slam proposed high-speed rail land-seizure powers]]></title>
+         <link>https://www.cbc.ca/news/canada/ottawa/alto-rail-land-seizure-powers-reaction-9.7435114?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/a4ba3771-098a-4efe-83eb-3a8575bbdde8,1795634415207/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C6000%2C3375%29%3B' alt='A farmer in front of a group of cows in a field.' width='620' height='349' title='North Glengarry, Ont., farmer Mike MacGillivray on Nov. 25, 2026. He said he worries for the farm&apos;s future if the Alto high-speed rail project affects his property.'/><p>Some rural residents are speaking out against sweeping powers the federal government is proposing to help clear the way for Canada's first high-speed rail project, which they say leave their concerns in the dust.</p>]]></description>
+         <pubDate>Wed, 25 Nov 2026 08:00:13 EST</pubDate>
+         <category>News/Canada/Ottawa</category>
+         <guid isPermaLink="false">9.7435114</guid>
+         <dc:creator>Jenna Legge, Dan Taekema</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[A closer look at one of the deadliest years for pedestrians on Ottawa's roads]]></title>
+         <link>https://www.cbc.ca/news/canada/ottawa/ottawa-road-pedestrian-deaths-2026-number-reason-why-9.7434098?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/59ab0d12-db4e-4c58-857c-d2f5b2e19ddd,1794373528163/full/max/0/default.jpg?im=Crop%2Crect%3D%28529%2C0%2C5470%2C3076%29%3B' alt='Police are shown standing next to a white tent and debris from a crash on the road. It&apos;s night and dark except for flashing lights.' width='620' height='349' title='Police are asking anyone who witnessed a fatal collision on Viewmount Drive on Nov. 10, 2026 to contact investigators.'/><p></p>]]></description>
+         <pubDate>Wed, 25 Nov 2026 07:13:32 EST</pubDate>
+         <category>News/Canada/Ottawa</category>
+         <guid isPermaLink="false">9.7435188</guid>
+         <dc:type>contentpackage</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Freezing rain possible Thursday night in Ottawa-Gatineau]]></title>
+         <link>https://www.cbc.ca/news/canada/ottawa/freezing-rain-weather-outaouais-quebec-friday-9.7435216?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/1d0046dc-384d-489b-8cd7-2a9cb7a9a926,1773239961625/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1192%2C670%29%3B' alt='Ice coats a black vehicle with a spoiler.' width='620' height='349' title='Freezing rain coats a vehicle in Cantley, Que., the morning of March 11, 2026.'/><p>Most of eastern Ontario and western Quebec could get some freezing rain Thursday night and Friday morning, bringing the season's first touch of messy winter weather to some places.</p>]]></description>
+         <pubDate>Wed, 25 Nov 2026 08:14:42 EST</pubDate>
+         <category>News/Canada/Ottawa</category>
+         <guid isPermaLink="false">9.7435216</guid>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Santa's helpers working on replacing Kemptville's missing sled]]></title>
+         <link>https://www.cbc.ca/news/canada/ottawa/kemptville-ontario-santa-sled-missing-replacement-9.7434355?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/1f845d1e-35ef-4bac-8724-51ae36f96df5,1794331899772/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C756%2C1536%2C864%29%3B' alt='Santa sits in a sled in a park on a sunny late autumn day.' width='620' height='349' title='Kemptville&apos;s Santa sled, which was featured prominently in the eastern Ontario community&apos;s Rotary Park, is missing.'/><p>It looks like the holiday spirit is coming to the rescue of the eastern Ontario community that lost its vintage Santa's sled.</p>]]></description>
+         <pubDate>Wed, 25 Nov 2026 13:08:21 EST</pubDate>
+         <category>News/Canada/Ottawa</category>
+         <guid isPermaLink="false">9.7434355</guid>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[1 badly hurt, 1 charged after crash near St-Albert]]></title>
+         <link>https://www.cbc.ca/news/canada/ottawa/county-road-13-6-crash-north-stormont-9.7435247?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/1.5998041,1691508804000/full/max/0/default.jpg?im=Crop%2Crect%3D%281%2C0%2C869%2C488%29%3B' alt='Killaloe OPP are investigating a second drowning in Madawaska Valley township since late July.' width='620' height='349' title='Killaloe OPP are investigating a second drowning in Madawaska Valley township since late July. '/><p>Ontario Provincial Police say one driver was airlifted to hospital and the other arrested and charged after a crash in North Stormont Tuesday evening.</p>]]></description>
+         <pubDate>Wed, 25 Nov 2026 09:03:36 EST</pubDate>
+         <category>News/Canada/Ottawa</category>
+         <guid isPermaLink="false">9.7435247</guid>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Quebec subsidized daycare will only go up about 3% next year, says family minister]]></title>
+         <link>https://www.cbc.ca/news/canada/montreal/quebec-subsidized-daycare-three-per-cent-family-minister-9.7435726?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/1.6430458,1666894757000/full/max/0/default.jpg?im=Crop%2Crect%3D%28376%2C425%2C3648%2C2052%29%3B' alt='' width='620' height='349' title='Daycare costs are going down by about 50 per cent across New Brunswick starting from the beginning of June.'/><p>Last week, the Parti Québécois had announced that the rate was expected to jump by nearly 10 per cent, as the law that had limited increases to three per cent was about to expire. To avoid that big of an increase, the PQ amended the regulation, effectively capping Centres de la petite enfance increases to 3.1% for 2027.</p>]]></description>
+         <pubDate>Wed, 25 Nov 2026 13:59:44 EST</pubDate>
+         <category>News/Canada/Montreal</category>
+         <guid isPermaLink="false">9.7435726</guid>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Ontario to open HOV lanes to solo drivers on Jan. 1, during non-peak hours]]></title>
+         <link>https://www.cbc.ca/news/canada/toronto/hov-lane-single-occupant-vehicle-expansion-9.7435910?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/1.3763094,1473939892000/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C852%2C479%29%3B' alt='' width='620' height='349' title='Starting today, HOV lanes on the Burlington stretch of the QEW will be open to single-occupancy vehicles so long as the drivers have a permit, which costs $180 and is only available through a random draw.'/><p>Starting on January 1, 2027, single-occupancy vehicles will be permitted to use highway HOV lanes during off-peak hours, a change the Ford government says will help to reduce traffic congestion.</p>]]></description>
+         <pubDate>Wed, 25 Nov 2026 14:18:00 EST</pubDate>
+         <category>News/Canada/Toronto</category>
+         <guid isPermaLink="false">9.7435910</guid>
+         <dc:creator>Linus Mulherin</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[LCBO adding police officers to more than 40 stores in security push]]></title>
+         <link>https://www.cbc.ca/news/canada/toronto/lcbo-increases-security-police-presence-9.7435471?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/1.7259904,1720645436000/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C375%2C4032%2C2268%29%3B' alt='The outside of a store with signage that says &quot;LCBO.&quot;' width='620' height='349' title='LCBO stores across Ontario, including this one in Sudbury, are closed due to a workers&apos; strike that started on Friday. Customers can still purchase alcohol online from the LCBO.'/><p>The LCBO announced Wednesday that it's increasing security in stores where there's a high risk of theft. That includes deploying paid duty police officers to more than 40 locations.</p>]]></description>
+         <pubDate>Wed, 25 Nov 2026 12:18:36 EST</pubDate>
+         <category>News/Canada/Toronto</category>
+         <guid isPermaLink="false">9.7435471</guid>
+         <dc:creator>Linus Mulherin</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Opposition MPs say they want answers on planned Parks Canada cuts]]></title>
+         <link>https://www.cbc.ca/news/politics/parks-canada-cuts-opposition-9.7435217?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/f8657a3f-c1bb-48b2-b95b-f5b7fc410003,1795611983116/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C136%2C4101%2C2306%29%3B' alt='A Parks Canada logo on a jacket is shown close up.' width='620' height='349' title='A Parks Canada logo is pictured in Banff, Thursday, May 15, 2025.'/><p>Opposition MPs are looking for answers about planned cuts to Parks Canada, with one saying Ottawa shouldn't proceed
+with its plan to continue free admission to parks through 2027.</p>]]></description>
+         <pubDate>Wed, 25 Nov 2026 08:30:01 EST</pubDate>
+         <category>News/Politics</category>
+         <guid isPermaLink="false">9.7435217</guid>
+         <dc:creator>Nick Murray</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[El Niño is getting some monster-sized nicknames. But is the weather actually getting more extreme?]]></title>
+         <link>https://www.cbc.ca/news/climate/super-mega-godzilla-el-nino-9.7433588?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/12086259-64cf-46f3-a300-50fc36da9693,1795637758390/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C5447%2C3063%29%3B' alt='Big waves crashing in front of beach front homes.' width='620' height='349' title='A drone view shows waves being held back by barriers erected in front of beach front homes as a King Tide, El Nino warm waters and large surf impact the coastal area of Dana Point, California, US, November 25, 2026.'/><p>From "Super" to "Godzilla" to "Mega," the names for this year's powerful El Niño keep getting bigger. But scientists say there's no official upgrade. Here's what the dramatic labels mean, how exceptional this event really is and what Canadians can expect this winter.</p>]]></description>
+         <pubDate>Wed, 25 Nov 2026 04:00:00 EST</pubDate>
+         <category>News/Climate</category>
+         <guid isPermaLink="false">9.7433588</guid>
+         <dc:creator>Eric Michael Johnson</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Atlético Ottawa look ahead to next challenge after CPL final loss]]></title>
+         <link>https://www.cbc.ca/player/play/9.7434966?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/2f185562-92ed-4aa0-b4fc-d1d4c704f475,1795556127900/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1280%2C720%29%3B' alt='Two soccer players embrace one another.' width='620' height='349' title=''/><p>After a disappointing end to the season, Atlético Ottawa players say they "left everything on the field" and their focus is now on the CONCACAF Champions Cup in February. Emma Weller reports.</p>]]></description>
+         <pubDate>Tue, 24 Nov 2026 20:32:41 EST</pubDate>
+         <guid isPermaLink="false">9.7434966</guid>
+         <dc:type>video</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
       <item>
@@ -35,38 +160,6 @@
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
       <item>
-         <title><![CDATA[A teenage runaway turned to a Mountie for sanctuary. He had other plans]]></title>
-         <link>https://www.cbc.ca/news/canada/ottawa/kim-budd-gilles-plouffe-podcast-9.7349352?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/15a42e0c-49c4-4f41-b0f7-62aaca120815,1795198768215/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1920%2C1080%29%3B' alt='A story graphic' width='620' height='349' title='No safe place.'/><p>Kim Budd spent much of her childhood on the run. When she thought she'd finally found a safe place to stay it turned out to be anything but, and the adults and institutions that were supposed to protect her failed her when she needed them most.</p>]]></description>
-         <pubDate>Tue, 24 Nov 2026 04:00:00 EST</pubDate>
-         <category>News/Canada/Ottawa</category>
-         <guid isPermaLink="false">9.7349352</guid>
-         <dc:creator>Julie Ireton</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Canadian Children's Museum to close for 'complete renewal' starting in March]]></title>
-         <link>https://www.cbc.ca/news/canada/ottawa/canadian-children-s-museum-to-close-for-complete-renewal-starting-in-march-9.7434559?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/1.4856486,1539130827000/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1248%2C702%29%3B' alt='' width='620' height='349' title='The content of the Canadian Children&apos;s Museum has largely remained the same since it opened in 1989.'/><p>The Canadian Children's Museum in Gatineau, Que., will close for more than a year during a renovation that will see the space adapted for renewed focus on a "distinctly Canadian experience."</p>]]></description>
-         <pubDate>Tue, 24 Nov 2026 17:28:01 EST</pubDate>
-         <category>News/Canada/Ottawa</category>
-         <guid isPermaLink="false">9.7434559</guid>
-         <dc:creator>Matthew Kupfer</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Ottawa proposes sweeping new land-seizure powers for Alto high-speed rail project]]></title>
-         <link>https://www.cbc.ca/news/politics/alto-expropriation-changes-9.7433464?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/f4e9223b-e8ec-48e1-810f-82051ead63b5,1795572633322/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1920%2C1080%29%3B' alt='Image of high-speed rail.' width='620' height='349' title='Farmers and land owners are pushing back against the federal government&apos;s proposal to scrap standard land-expropriation rules for Alto, Canada&apos;s first high-speed rail project, which would run between Toronto and Quebec City.'/><p></p>]]></description>
-         <pubDate>Fri, 01 May 2026 17:52:25 EDT</pubDate>
-         <category>News/Canada/Ottawa</category>
-         <guid isPermaLink="false">9.7185102</guid>
-         <dc:type>contentpackage</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
          <title><![CDATA['It's the hot, it's the cold, it's the reset': A look inside Ottawa's new floating sauna]]></title>
          <link>https://www.cbc.ca/news/canada/ottawa/saunoa-opens-november-25-9.7433044?cmp=rss</link>
          <description><![CDATA[<img src='https://i.cbc.ca/ais/adab2f51-aaf6-46a3-ae18-92ba352d525f,1795529525596/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C4032%2C2268%29%3B' alt='A man in an orange jacket stands next to a wooden structure.' width='620' height='349' title='Mat Slaman, founder of Saunoa, stands on the cold plunge deck of the floating sauna on the Ottawa River.'/><p>Saunoa, a floating sauna offering a cold plunge experience on the Ottawa River, is welcoming its first customers this week.</p>]]></description>
@@ -74,17 +167,6 @@
          <category>News/Canada/Ottawa</category>
          <guid isPermaLink="false">9.7433044</guid>
          <dc:creator>Matthew Kupfer</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Ottawa Food Bank saw record number of visits, annual hunger report says]]></title>
-         <link>https://www.cbc.ca/news/canada/ottawa/ottawa-food-bank-saw-almost-600-000-visits-in-the-past-year-according-to-report-9.7433301?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/1.7561597,1749930716000/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C25%2C4032%2C2268%29%3B' alt='An Ottawa Food Bank donation box.' width='620' height='349' title='An Ottawa Food Bank donation box photographed at an event announcing donations to the annual summer food drive on June 14, 2025.'/><p>The Ottawa Food Bank has never been busier, according to a new report that shows some of the charity's member agencies are struggling to keep up with demand.</p>]]></description>
-         <pubDate>Tue, 24 Nov 2026 04:00:00 EST</pubDate>
-         <category>News/Canada/Ottawa</category>
-         <guid isPermaLink="false">9.7433301</guid>
-         <dc:creator>Justin Ball</dc:creator>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
@@ -119,98 +201,24 @@
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
       <item>
-         <title><![CDATA[$5K bonus payments for trades workers going out early next month, government says]]></title>
-         <link>https://www.cbc.ca/news/politics/trade-workers-bonus-payments-9.7434033?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/7200ed6b-1599-4323-a3a3-42978e3bbd86,1795536572773/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C306%2C4500%2C2531%29%3B' alt='A welder with a mask working on a car part, with sparks flying.' width='620' height='349' title='A welder works on a bus at the Prevost Car plant in Sainte-Claire, Que., on Thursday, Aug. 27, 2026.'/><p>Bonuses for Red Seal trades workers are set to be delivered starting early next month.</p>]]></description>
-         <pubDate>Tue, 24 Nov 2026 11:23:13 EST</pubDate>
-         <category>News/Politics</category>
-         <guid isPermaLink="false">9.7434033</guid>
-         <dc:creator>Catherine Morrison</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Ontario nurses at a breaking point share stories of stress and burnout in a new report]]></title>
-         <link>https://www.cbc.ca/news/health/nursing-burnout-ontario-9.7430910?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/7d4fa89c-49a0-4a31-82a0-aba880be36cc,1795485977356/full/max/0/default.jpg?im=Crop%2Crect%3D%28145%2C295%2C3763%2C2116%29%3B' alt='A nurse wearing PPE is seen in silhouette in front of a window adjusting an IV.' width='620' height='349' title='A nurse attends to a COVID-19 patient in the Humber River Hospital intensive care unit on Jan. 13, 2022.'/><p>A new report shares first-hand testimonies from Ontario nurses who describe enduring burnout, anxiety and distress working in understaffed and under-resourced hospitals in the province. The report's co-author says it's meant to shed light on the realities facing the profession.</p>]]></description>
+         <title><![CDATA[A teenage runaway turned to a Mountie for sanctuary. He had other plans]]></title>
+         <link>https://www.cbc.ca/news/canada/ottawa/kim-budd-gilles-plouffe-podcast-9.7349352?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/15a42e0c-49c4-4f41-b0f7-62aaca120815,1795198768215/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1920%2C1080%29%3B' alt='A story graphic' width='620' height='349' title='No safe place.'/><p>Kim Budd spent much of her childhood on the run. When she thought she'd finally found a safe place to stay it turned out to be anything but, and the adults and institutions that were supposed to protect her failed her when she needed them most.</p>]]></description>
          <pubDate>Tue, 24 Nov 2026 04:00:00 EST</pubDate>
-         <category>News/Health</category>
-         <guid isPermaLink="false">9.7430910</guid>
-         <dc:creator>Danielle Reid</dc:creator>
+         <category>News/Canada/Ottawa</category>
+         <guid isPermaLink="false">9.7349352</guid>
+         <dc:creator>Julie Ireton</dc:creator>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
       <item>
-         <title><![CDATA[Canada's air force charts a potential future without the Gripen in 'Project Arrow']]></title>
-         <link>https://www.cbc.ca/news/politics/canada-air-force-f35-fighters-defence-9.7433001?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/86f8120c-35b9-41ef-b361-96715800c71c,1795518331343/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C131%2C5724%2C3219%29%3B' alt='A fighter jet is seen flying over snowy terrain.' width='620' height='349' title='The Canadian government is considering the possibility of purchasing a fleet of Swedish Gripen aircraft, which would be assembled in Canada.'/><p>Canada's air force has sketched out a future fighter fleet built around American F-35s, homegrown combat drones and next-generation aircraft, with no mention of Sweden's Gripen.</p>]]></description>
+         <title><![CDATA[Ottawa Food Bank saw record number of visits, annual hunger report says]]></title>
+         <link>https://www.cbc.ca/news/canada/ottawa/ottawa-food-bank-saw-almost-600-000-visits-in-the-past-year-according-to-report-9.7433301?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/1.7561597,1749930716000/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C25%2C4032%2C2268%29%3B' alt='An Ottawa Food Bank donation box.' width='620' height='349' title='An Ottawa Food Bank donation box photographed at an event announcing donations to the annual summer food drive on June 14, 2025.'/><p>The Ottawa Food Bank has never been busier, according to a new report that shows some of the charity's member agencies are struggling to keep up with demand.</p>]]></description>
          <pubDate>Tue, 24 Nov 2026 04:00:00 EST</pubDate>
-         <category>News/Politics</category>
-         <guid isPermaLink="false">9.7433001</guid>
-         <dc:creator>Daniel Leblanc, Murray Brewster</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Man facing arson charges after 3 weekend fires]]></title>
-         <link>https://www.cbc.ca/news/canada/ottawa/dynes-shoreham-mooneys-bay-fire-arson-charges-9.7432948?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/1.3581663,1795462488815/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1320%2C742%29%3B' alt='A police vehicle at night with its sirens on.' width='620' height='349' title='A 20 year old man is expected to live after being shot Sunday Morning in North Preston'/><p>Ottawa police have charged a 54-year-old man from the city in connection with three weekend fires, including one at Mooney's Bay Beach. No one was injured in the fires.</p>]]></description>
-         <pubDate>Mon, 23 Nov 2026 14:38:41 EST</pubDate>
          <category>News/Canada/Ottawa</category>
-         <guid isPermaLink="false">9.7432948</guid>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Cumberland-Masson ferry reopens after crash near dock]]></title>
-         <link>https://www.cbc.ca/news/canada/ottawa/cumberland-masson-bourbonnais-ferry-closed-crash-9.7432256?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/1.4901749,1542030289000/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1919%2C1079%29%3B' alt='' width='620' height='349' title='Bourbonnais ferries cross the Ottawa River Nov. 11, 2018.'/><p>Repairs from a Sunday night crash into a hydro pole on Cameron Street temporarily blocked access to the east Ottawa-Gatineau ferry overnight. It restarted around 7 a.m.</p>]]></description>
-         <pubDate>Mon, 23 Nov 2026 07:47:21 EST</pubDate>
-         <category>News/Canada/Ottawa</category>
-         <guid isPermaLink="false">9.7432256</guid>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[As full-line testing starts, LRT riders are anxious for eastern extension to open]]></title>
-         <link>https://www.cbc.ca/news/canada/ottawa/as-full-line-testing-starts-lrt-riders-are-anxious-for-eastern-extension-to-open-9.7432017?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/87a2037b-fe07-4b17-81cb-7d8d75cf5f27,1795379972830/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1920%2C1080%29%3B' alt='An image of a man waiting for a bus.' width='620' height='349' title='Sebin John works in Orleans and says one of the five east extension stations would bring him straight to work, cutting a half-hour off his daily commute.'/><p>OC Transpo began running its complement of 23 trains all the way from Tunney's Pasture station to Trim station in Orléans on Sunday, as part of testing for the line's long-awaited eastern extension.</p>]]></description>
-         <pubDate>Mon, 23 Nov 2026 04:00:00 EST</pubDate>
-         <category>News/Canada/Ottawa</category>
-         <guid isPermaLink="false">9.7432017</guid>
-         <dc:creator>Cameron Mahler</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Defence Department tops up cadet program after outrage over cancelled activities]]></title>
-         <link>https://www.cbc.ca/news/politics/dnd-cadet-program-top-up-9.7432950?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/8bcb01e4-18ec-45d0-b2b1-136e1f367164,1795461842236/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C291%2C5694%2C3202%29%3B' alt='Cadets marching in a line.' width='620' height='349' title='Cadets march in the parade to the cenotaph as part of the Remembrance Day ceremony in Fredericton, on Wednesday, Nov. 11, 2026.'/><p>The Defence Department will top up the budget of the cadet and junior ranger programs to allow weekend training and other activities to continue into the new year, Defence Minister David McGuinty said on Monday.</p>]]></description>
-         <pubDate>Mon, 23 Nov 2026 15:06:34 EST</pubDate>
-         <category>News/Politics</category>
-         <guid isPermaLink="false">9.7432950</guid>
-         <dc:creator>Murray Brewster</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Quebec students open door to unlimited strike, give PQ government February deadline]]></title>
-         <link>https://www.cbc.ca/news/canada/montreal/student-strikes-affordability-9.7432174?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/e72dfca0-17b1-4dd7-88d3-ec90fd84bef3,1795433230108/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C5000%2C2812%29%3B' alt='people outdoors in a protest.' width='620' height='349' title='Students at the Université de Sherbrooke are among those who participated in protests during the week of Nov. 9.'/><p>Student coalition opens the door for unlimited strike this winter after voting unanimously in favour of launching the strike campaign over the weekend.</p>]]></description>
-         <pubDate>Mon, 23 Nov 2026 06:29:13 EST</pubDate>
-         <category>News/Canada/Montreal</category>
-         <guid isPermaLink="false">9.7432174</guid>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Quebec's legislative session in limbo as court mandates oath to the King]]></title>
-         <link>https://www.cbc.ca/news/canada/montreal/quebec-lawyer-block-parliamentary-work-oath-king-9.7431849?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/6ca105e8-9d9d-4829-987a-702608fded84,1795459939965/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C201%2C3872%2C2178%29%3B' alt='man coming out of car with coat' width='620' height='349' title='Premier of Quebec, Paul St-Pierre Plamondon, arrives at city hall in Montreal, on Monday, Nov. 23, 2026.'/><p>A Quebec Superior Court judge has suspended the province’s law that made the oath to King Charles optional, ordering that members of the province's legislature must swear allegiance before sitting at the National Assembly. Premier Paul St-Pierre Plamondon said Monday he would refuse to take the oath, and that he would fight the ruling.</p>]]></description>
-         <pubDate>Mon, 23 Nov 2026 04:00:00 EST</pubDate>
-         <category>News/Canada/Montreal</category>
-         <guid isPermaLink="false">9.7431849</guid>
-         <dc:creator>Benjamin Shingler</dc:creator>
+         <guid isPermaLink="false">9.7433301</guid>
+         <dc:creator>Justin Ball</dc:creator>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>

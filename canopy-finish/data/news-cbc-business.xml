@@ -6,13 +6,35 @@
       <link>https://www.cbc.ca/news/business/?cmp=rss</link>
       <copyright><![CDATA[Copyright: (C) Canadian Broadcasting Corporation, http://www.cbc.ca/aboutcbc/discover/termsofuse.html#Rss]]></copyright>
       <docs><![CDATA[https://www.cbc.ca/rss]]></docs>
-      <lastBuildDate>Wed, 25 Nov 2026 18:46:32 EST</lastBuildDate>
+      <lastBuildDate>Thu, 26 Nov 2026 07:35:15 EST</lastBuildDate>
       <atom:link href="https://www.cbc.ca/webfeed/rss/rss-business" rel="self" type="application/rss+xml"/>
       <image>
          <title><![CDATA[CBC | Business News]]></title>
          <url>https://www.cbc.ca/rss/image/cbc_144.gif</url>
          <link>https://www.cbc.ca/news/business/?cmp=rss</link>
       </image>
+      <item>
+         <title><![CDATA[Data breaches are coming fast and furious. Are businesses doing enough to protect your data?]]></title>
+         <link>https://www.cbc.ca/news/business/data-breaches-ai-data-protection-9.7436341?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/69eec3be-25fb-4c30-acdf-1e14467b4ffc,1795647358124/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C4000%2C2250%29%3B' alt='a man sits in front of a computer with the words &quot;data breach&quot; and lines of code running across the screen' width='620' height='349' title='The words &quot;Data Breach&quot; and PHP code are displayed on a screen in this illustration taken on October 22, 2026.'/><p>Recent data breaches at Bell and Staples are the latest in a swath of incidents where consumers' personal data was accessed by bad actors. As AI tools make it easier to carry out hacks, many businesses are trying to keep up with the onslaught of attacks — but security and data experts say poor data management and security practices often leave consumer information more vulnerable than it should be.</p>]]></description>
+         <pubDate>Thu, 26 Nov 2026 06:19:08 EST</pubDate>
+         <category>News/Business</category>
+         <guid isPermaLink="false">9.7436341</guid>
+         <dc:creator>Abby Hughes</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[The threat of Starlink looms over Quebecor's Telus bid. But are Canadian telecoms actually vulnerable?]]></title>
+         <link>https://www.cbc.ca/news/business/quebecor-starlink-threat-9.7435712?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/aa163c6c-a045-4062-95e6-f5058fac4127,1795632296873/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C183%2C3500%2C1968%29%3B' alt='The silhouette of Elon Musk and Starlink logo are seen in this illustration taken June 11, 2026.' width='620' height='349' title='The silhouette of Elon Musk and Starlink logo are seen in this illustration taken June 11, 2026.'/><p>In Quebecor’s $31-billion bid to take over Telus, the theme of Canadian sovereignty is emerging front and centre as the Montreal company pitches a merger, in part, to battle the threat of American satellite companies like Elon Musk's SpaceX.</p>]]></description>
+         <pubDate>Thu, 26 Nov 2026 04:00:00 EST</pubDate>
+         <category>News/Business</category>
+         <guid isPermaLink="false">9.7435712</guid>
+         <dc:creator>Rukhsar Ali</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
       <item>
          <title><![CDATA[Wall Street recovers most early losses as pullback in AI stocks eases]]></title>
          <link>https://www.cbc.ca/news/business/stock-market-latest-9.7435326?cmp=rss</link>
@@ -202,27 +224,6 @@
          <pubDate>Thu, 19 Nov 2026 14:04:08 EST</pubDate>
          <category>News/Business</category>
          <guid isPermaLink="false">9.7428473</guid>
-         <dc:creator>Abby Hughes</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[KPMG Canada client documents accessed in cybersecurity breach, accounting firm says]]></title>
-         <link>https://www.cbc.ca/news/business/kpmg-cybersecurity-breach-9.7427838?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/b4aca990-af02-4f7a-a324-a348d6cfb8f8,1795097628082/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C292%2C5616%2C3159%29%3B' alt='KPMG&apos;s blue and white name is spelled out on the front of a grey building, against a bright blue sky' width='620' height='349' title='Signage at the KPMG offices in Ottawa on Friday, June 28, 2024. KPMG Canada said some client documents were accessed in a recent data breach.'/><p>KPMG did not provide details about the breach, including the scope or nature of the attack. But a spokesperson says the company is confident that the accessed data is not available online, or being misused for any purpose.</p>]]></description>
-         <pubDate>Thu, 19 Nov 2026 09:34:37 EST</pubDate>
-         <category>News/Business</category>
-         <guid isPermaLink="false">9.7427838</guid>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[It's costing you less to fill up your gas tank. What's behind falling pump prices?]]></title>
-         <link>https://www.cbc.ca/news/business/gas-prices-falling-canada-9.7426928?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/e94b71fc-1a4d-4825-8a8d-8495d351d9c9,1795031713435/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C382%2C6179%2C3475%29%3B' alt='a man in a black jacket is pictured from shoulders down, holding a gas pump as he fills up his car' width='620' height='349' title='A man fuels up at a gas station in Surrey, British Columbia, on Friday, Mar. 13, 2026. Drivers across Canada will be paying less to fill their tanks this week, thanks to easing tensions in Iran and seasonal factors that are causing gas prices to dip.'/><p>While gas prices are still higher than they were a year ago, a litre of gas will cost you nearly 30 cents less than it did a month ago, based on national average prices. A mix of seasonal factors and more oil moving out of the Middle East are to thank, according to analysts.</p>]]></description>
-         <pubDate>Thu, 19 Nov 2026 04:00:00 EST</pubDate>
-         <category>News/Business</category>
-         <guid isPermaLink="false">9.7426928</guid>
          <dc:creator>Abby Hughes</dc:creator>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>

@@ -6,7 +6,7 @@
       <link>https://www.cbc.ca/news/business/?cmp=rss</link>
       <copyright><![CDATA[Copyright: (C) Canadian Broadcasting Corporation, http://www.cbc.ca/aboutcbc/discover/termsofuse.html#Rss]]></copyright>
       <docs><![CDATA[https://www.cbc.ca/rss]]></docs>
-      <lastBuildDate>Thu, 26 Nov 2026 07:35:15 EST</lastBuildDate>
+      <lastBuildDate>Thu, 26 Nov 2026 15:39:00 EST</lastBuildDate>
       <atom:link href="https://www.cbc.ca/webfeed/rss/rss-business" rel="self" type="application/rss+xml"/>
       <image>
          <title><![CDATA[CBC | Business News]]></title>
@@ -25,6 +25,28 @@
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
       <item>
+         <title><![CDATA[So, your personal info was hacked in a breach. Here's how scammers use it against you]]></title>
+         <link>https://www.cbc.ca/news/canada/hackers-data-breaches-personal-information-9.7434363?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/e7b39601-44d6-4bdf-ba56-3425c899eba9,1795547044582/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C627%2C5981%2C3364%29%3B' alt='Hands type on a laptop keyboard' width='620' height='349' title='A man uses a computer keyboard in Toronto, Monday, Oct. 9, 2023 in this photo illustration.'/><p>While it may come as a relief when a breached company says financial information wasn't accessed, that doesn't mean your bank accounts are safe.</p>]]></description>
+         <pubDate>Thu, 26 Nov 2026 11:04:20 EST</pubDate>
+         <category>News/Canada</category>
+         <guid isPermaLink="false">9.7434363</guid>
+         <dc:creator>Natalie Stechyson</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Ford, Unifor call on Ottawa to exempt Canadian automakers from exhaust pollution penalties]]></title>
+         <link>https://www.cbc.ca/news/canada/toronto/doug-ford-unifor-exhaust-penalties-ottawa-9.7437680?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/83a10ccf-6789-4710-9a92-6039b64f8950,1795723434723/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C21%2C4800%2C2700%29%3B' alt='A man speaks at a podium with a microphone, gesturing to the crowd wearing a navy suit with a white dress shirt and blue patterned tie.' width='620' height='349' title='Ontario Premier Doug Ford speaks to the media regarding the federal governments decision to allow Chinese EV&apos;s into Canada at Queen&apos;s Park in Toronto on Wednesday, January 21, 2026.'/><p>Ontario Premier Doug Ford and Unifor president Lana Payne are calling on Ottawa to exempt automakers from penalties for failing to comply with the government's tailpipe emission standards.</p>]]></description>
+         <pubDate>Thu, 26 Nov 2026 15:31:24 EST</pubDate>
+         <category>News/Canada/Toronto</category>
+         <guid isPermaLink="false">9.7437680</guid>
+         <dc:creator>Nick Murray</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
          <title><![CDATA[The threat of Starlink looms over Quebecor's Telus bid. But are Canadian telecoms actually vulnerable?]]></title>
          <link>https://www.cbc.ca/news/business/quebecor-starlink-threat-9.7435712?cmp=rss</link>
          <description><![CDATA[<img src='https://i.cbc.ca/ais/aa163c6c-a045-4062-95e6-f5058fac4127,1795632296873/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C183%2C3500%2C1968%29%3B' alt='The silhouette of Elon Musk and Starlink logo are seen in this illustration taken June 11, 2026.' width='620' height='349' title='The silhouette of Elon Musk and Starlink logo are seen in this illustration taken June 11, 2026.'/><p>In Quebecor’s $31-billion bid to take over Telus, the theme of Canadian sovereignty is emerging front and centre as the Montreal company pitches a merger, in part, to battle the threat of American satellite companies like Elon Musk's SpaceX.</p>]]></description>
@@ -32,6 +54,16 @@
          <category>News/Business</category>
          <guid isPermaLink="false">9.7435712</guid>
          <dc:creator>Rukhsar Ali</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[China, U.S. allies push back on latest round of White House tariffs]]></title>
+         <link>https://www.cbc.ca/news/world/us-excess-capacity-tariffs-reaction-9.7436782?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/5ba7c8bf-094e-4bda-9772-2db6e68e6564,1795694610939/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C450%2C8640%2C4860%29%3B' alt='A shipping port is shown, with ships and large containers of all shapes and sizes and colors.' width='620' height='349' title='A container ship sits in front of the Manhattan skyline as seen from Bayonne, N.J., on Tuesday. (AP Photo/Seth Wenig)'/><p>China, Japan and other U.S. trading partners protested planned tariff hikes by Donald Trump's administration and hit back at allegations they have excess manufacturing capacity.</p>]]></description>
+         <pubDate>Thu, 26 Nov 2026 08:05:29 EST</pubDate>
+         <category>News/World</category>
+         <guid isPermaLink="false">9.7436782</guid>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
@@ -192,39 +224,6 @@
          <category>News/Business</category>
          <guid isPermaLink="false">9.7428367</guid>
          <dc:creator>Jeff Lagerquist</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Rancher says Alberta well cleanup fund a positive step, but litany of concerns remain]]></title>
-         <link>https://www.cbc.ca/news/canada/calgary/alberta-well-clean-up-9.7429047?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/3bc8e886-5713-4f87-9707-e3e91dc637cd,1795128385866/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C365%2C5999%2C3374%29%3B' alt='The Reid family harvest their wheat crop as pumpjacks draw oil from well heads.' width='620' height='349' title='The Reid family harvest their wheat crop as pumpjacks draw oil from well heads near Cremona, Alta., Tuesday, Sept. 19, 2023.'/><p>Alberta legislation that would require oil and gas companies to pay upfront for the eventual cleanup of each well seems positive on the surface, but much will depend on how it's implemented and enforced, says a rancher and landowner advocate.</p>]]></description>
-         <pubDate>Thu, 19 Nov 2026 19:10:45 EST</pubDate>
-         <category>News/Canada/Calgary</category>
-         <guid isPermaLink="false">9.7429047</guid>
-         <dc:creator>Lauren Krugel</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Reaching interim U.S. trade agreement would kickstart new CUSMA talks, minister says]]></title>
-         <link>https://www.cbc.ca/news/politics/canada-seeking-interim-trade-arrangment-9.7428540?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/16d3b3d3-9946-4196-9946-fa4fdde33cd3,1795114459825/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C412%2C7526%2C4233%29%3B' alt='A man in a suit walks past a row of cameras.' width='620' height='349' title='Canada-U.S. Trade Minister Dominic LeBlanc makes his way to a meeting of the Liberal caucus on Parliament Hill in Ottawa, on Wednesday, Nov. 18, 2026.'/><p>Canada-U.S. Trade Minister Dominic LeBlanc says if Canada can reach an interim agreement with the Trump administration, then that would likely kickstart formal talks around reviewing the trilateral trade pact with the U.S. and Mexico.</p>]]></description>
-         <pubDate>Thu, 19 Nov 2026 14:04:59 EST</pubDate>
-         <category>News/Politics</category>
-         <guid isPermaLink="false">9.7428540</guid>
-         <dc:creator>Darren Major, Kate McKenna</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Ubisoft cuts 166 jobs at Montreal and Quebec City video game studios]]></title>
-         <link>https://www.cbc.ca/news/business/ubisoft-layoffs-166-montreal-quebec-city-9.7428473?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/ca552ad8-2840-4809-8abb-f017e108440f,1795112282135/full/max/0/default.jpg?im=Crop%2Crect%3D%281874%2C0%2C2682%2C1508%29%3B' alt='Ubisoft&apos;s name and logo are pictured on the facade of a grey building' width='620' height='349' title='The Ubisoft building, Tuesday, May 7, 2024 in Quebec City. The company said Thursday it was laying off 166 employees at its Montreal and Quebec City offices.'/><p>Ubisoft's head of public relations told Radio-Canada that the cuts impacted production teams as well as some workers who support production. The cuts aren't the first this year for Ubisoft's Canadian workforce — nor for the broader video game industry.</p>]]></description>
-         <pubDate>Thu, 19 Nov 2026 14:04:08 EST</pubDate>
-         <category>News/Business</category>
-         <guid isPermaLink="false">9.7428473</guid>
-         <dc:creator>Abby Hughes</dc:creator>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>

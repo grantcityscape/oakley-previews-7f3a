@@ -6,7 +6,7 @@
       <link>https://www.cbc.ca/news/canada/ottawa/?cmp=rss</link>
       <copyright><![CDATA[Copyright: (C) Canadian Broadcasting Corporation, http://www.cbc.ca/aboutcbc/discover/termsofuse.html#Rss]]></copyright>
       <docs><![CDATA[https://www.cbc.ca/rss]]></docs>
-      <lastBuildDate>Fri, 27 Nov 2026 08:48:08 EST</lastBuildDate>
+      <lastBuildDate>Fri, 27 Nov 2026 17:31:36 EST</lastBuildDate>
       <atom:link href="https://www.cbc.ca/webfeed/rss/rss-canada-ottawa" rel="self" type="application/rss+xml"/>
       <image>
          <title><![CDATA[CBC | Ottawa News]]></title>
@@ -14,9 +14,70 @@
          <link>https://www.cbc.ca/news/canada/ottawa/?cmp=rss</link>
       </image>
       <item>
-         <title><![CDATA[Man in AI deepfake case admits to stalking women and more]]></title>
+         <title><![CDATA[High-risk sex offender arrested in Ottawa]]></title>
+         <link>https://www.cbc.ca/news/canada/ottawa/ottawa-sexual-offender-9.7439490?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/c77e79be-687a-4dc2-8707-211ce09bdaad,1780697697808/full/max/0/default.jpg?im=Crop%2Crect%3D%2834%2C0%2C1281%2C720%29%3B' alt='A man with short hair and stubble on his face is being sought by police.' width='620' height='349' title='Montreal police said Christopher Watts was in the Montreal area at the time he violated the conditions of his Correctional Service Canada supervision.'/><p>A high-risk sex offender has been arrested in Ottawa after failing to comply with the conditions of his release, according to local police.</p>]]></description>
+         <pubDate>Fri, 27 Nov 2026 16:26:49 EST</pubDate>
+         <category>News/Canada/Ottawa</category>
+         <guid isPermaLink="false">9.7439490</guid>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Canada's top court upholds Quebec law banning some workers from wearing religious symbols]]></title>
+         <link>https://www.cbc.ca/news/canada/montreal/livestory/quebec-bill-21-supreme-court-of-canada-ruling-9.7434446?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/1bd01f4f-7a86-4ddb-a62c-592ebb8abbbb,1795809885183/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1920%2C1080%29%3B' alt='Man speaking at a microphone podium' width='620' height='349' title='Following Friday&apos;s Supreme Court of Canada decision to uphold most of Quebec&apos;s controversial secularism law, Prime Minister Mark Carney said the federal government&apos;s job is to defend the Charter of Rights and Freedoms. &apos;The benefit of constitutionally protected rights is most important for minorities, those most vulnerable in our society,&apos; Carney said.'/><p></p>]]></description>
+         <pubDate>Fri, 27 Nov 2026 05:48:20 EST</pubDate>
+         <category>News</category>
+         <guid isPermaLink="false">9.7438370</guid>
+         <dc:type>contentpackage</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Top court's decision on Quebec secularism law met with concern, criticism in National Capital Region]]></title>
+         <link>https://www.cbc.ca/news/canada/ottawa/bill-21-local-reaction-ottawa-gatineau-secularism-law-9.7439261?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/d4817769-a830-4d3c-96d1-c15571f0f4b7,1795812385320/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1920%2C1080%29%3B' alt='Greg Fergus MP November 27, 2026' width='620' height='349' title='Greg Fergus MP November 27, 2026'/><p>People in the Ottawa-Gatineau region are reacting with a mix of concern and disappointment to the Supreme Court of Canada's decision to uphold the Quebec provincial government's controversial ban barring public servants in positions of authority from wearing religious symbols while on the job.</p>]]></description>
+         <pubDate>Fri, 27 Nov 2026 16:17:09 EST</pubDate>
+         <category>News/Canada/Ottawa</category>
+         <guid isPermaLink="false">9.7439261</guid>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Ottawa police urge people to drive sober as impaired numbers rise]]></title>
+         <link>https://www.cbc.ca/news/canada/ottawa/ottawa-police-urge-people-to-drive-sober-as-impaired-numbers-rise-9.7439290?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/40b26d4f-924a-4050-a802-1f0d449cbf96,1795816632970/full/max/0/default.jpg?im=Crop%2Crect%3D%281%2C0%2C4238%2C2383%29%3B' alt='in the foreground, the &quot;RIDE&quot; logo on a police vehicle while in the background, a police officer talks to the driver of a stopped vehicle' width='620' height='349' title='As Ottawa police kicked off its annual Festive RIDE (Reduce Impaired Driving Everywhere) campaign, they say 823 drivers have been charged with impaired driving-related offences so far this year.'/><p>As the holiday season approaches and as impaired driving numbers rise in Ottawa, police are again urging people not to drink and drive.</p>]]></description>
+         <pubDate>Fri, 27 Nov 2026 17:00:13 EST</pubDate>
+         <category>News/Canada/Ottawa</category>
+         <guid isPermaLink="false">9.7439290</guid>
+         <dc:creator>Nathan Fung</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Ottawa flyer business apologizes for its part in spreading 'known romance scam']]></title>
+         <link>https://www.cbc.ca/news/canada/ottawa/ottawa-romance-scam-flyers-apology-9.7438302?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/533176f2-ece2-4b8b-849f-ef0c58b46f29,1795794612035/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C58%2C359%2C201%29%3B' alt='A flyer asking for an older woman to marry with a big red &apos;SCAM&apos; stamp on it.' width='620' height='349' title='An eastern Ontario flyering business is apologizing for distributing what it says is a &apos;known romance scam.&apos;'/><p>An eastern Ontario flyer business is apologizing for delivering door hangers it now says are part of a "known romance scam."</p>]]></description>
+         <pubDate>Fri, 27 Nov 2026 14:25:18 EST</pubDate>
+         <category>News/Canada/Ottawa</category>
+         <guid isPermaLink="false">9.7438302</guid>
+         <dc:creator>Jenna Legge</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[How can speed cameras return to Ottawa? This former police chief has a pitch]]></title>
+         <link>https://www.cbc.ca/player/play/9.7439204?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/2ce749a1-9fb0-4e6f-9c22-5965b36c3702,1795806934379/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1920%2C1080%29%3B' alt='Former police chief Charles Bordeleau.' width='620' height='349' title='Former Ottawa police chief Charles Bordeleau is suggesting several new rules that could help encourage the provincial government to reintroduce speed cameras — punishing drivers rather than vehicle owners and ensuring speed camera revenue is spent on road safety measures.'/><p>Former Ottawa police chief Charles Bordeleau is suggesting several new rules that could help encourage the provincial government to reintroduce speed cameras — punishing drivers rather than vehicle owners and ensuring speed camera revenue is spent on road safety measures.</p>]]></description>
+         <pubDate>Fri, 27 Nov 2026 14:20:34 EST</pubDate>
+         <guid isPermaLink="false">9.7439204</guid>
+         <dc:type>video</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Man in AI deepfake case admits to stalking women, voyeurism and more]]></title>
          <link>https://www.cbc.ca/news/canada/ottawa/gregry-peter-joseph-van-beek-ottawa-west-nipissing-ai-deepfake-9.7432791?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/2cf5004b-771e-4f9c-8d85-ab07632f4134,1795719462209/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C4800%2C2700%29%3B' alt='man in blue sweater poses for camera' width='620' height='349' title='Gregry Peter Joseph Van Beek (who goes by Peter Van Beek according to his lawyer) had been facing seven charges prior to his guilty plea earlier this week, including harassment by watching and besetting, conspiracy to commit an indictable offence and publishing intimate images without consent.'/><p></p>]]></description>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/f7cde9dd-c89d-4323-87db-1a751fb86b09,1795817724250/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1920%2C1080%29%3B' alt='Reporter Kristy Nease and host Natalia Goodwin.' width='620' height='349' title='Gregry Peter Joseph Van Beek is one of two men accused in an AI deepfake case involving 45 alleged victims in Canada. The CBC’s Kirsty Nease reports.'/><p></p>]]></description>
          <pubDate>Fri, 27 Nov 2026 07:21:13 EST</pubDate>
          <category>News/Canada/Ottawa</category>
          <guid isPermaLink="false">9.7438402</guid>
@@ -24,13 +85,56 @@
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
       <item>
-         <title><![CDATA[Supreme Court set to deliver ruling on Quebec's secularism law]]></title>
-         <link>https://www.cbc.ca/news/canada/montreal/livestory/quebec-bill-21-supreme-court-of-canada-ruling-9.7434446?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/4b1e08fc-9a68-4b1e-a135-0c12f04593de,1795740772866/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C459%2C4513%2C2538%29%3B' alt='A group of women protest Quebec&apos;s new Bill 21' width='620' height='349' title='A group of women protest Quebec&apos;s new Bill 21, which will ban teachers, police, government lawyers and others in positions of authority from wearing religious symbols such as Muslim head coverings and Sikh turbans, in Montreal, Quebec, Canada, June 17, 2019.  REUTERS/Christinne Muschi'/><p></p>]]></description>
-         <pubDate>Fri, 27 Nov 2026 05:48:20 EST</pubDate>
-         <category>News</category>
-         <guid isPermaLink="false">9.7438370</guid>
-         <dc:type>contentpackage</dc:type>
+         <title><![CDATA[Rogers service disrupted in Ottawa after attempted copper theft]]></title>
+         <link>https://www.cbc.ca/news/canada/ottawa/ottawa-rogers-outage-vandalism-9.7438288?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/1.3752871,1741316953000/full/max/0/default.jpg?im=Crop%2Crect%3D%2840%2C347%2C1559%2C876%29%3B' alt='Cross cut of large copper wires' width='620' height='349' title='Copper wire at Federal Metals, a recycling company in Calgary, has been targeted by thieves two weekends in a row, says owner Dan Klufas.'/><p>Damage to fibre optic lines caused by what Rogers said was an attempted copper theft left some of its customers in Ottawa without internet, phone and TV service on Thursday.</p>]]></description>
+         <pubDate>Thu, 26 Nov 2026 22:35:00 EST</pubDate>
+         <category>News/Canada/Ottawa</category>
+         <guid isPermaLink="false">9.7438288</guid>
+         <dc:creator>Jenna Legge</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Government reveals contractor shortlist for 24 Sussex overhaul]]></title>
+         <link>https://www.cbc.ca/news/politics/contractor-shortlist-24-sussex-renovation-9.7439108?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/9e507151-5853-4649-a50a-12ceb7e0d86c,1795804436036/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C5765%2C3242%29%3B' alt='A building is seen through some foiliage.' width='620' height='349' title='The official residence of the Prime Minister of Canada at 24 Sussex Dr. is seen in Ottawa, Friday, June 26, 2026.'/><p>The federal government has made a shortlist of seven contractors it is considering to renovate 24 Sussex Drive into a habitable residence once again.</p>]]></description>
+         <pubDate>Fri, 27 Nov 2026 13:57:58 EST</pubDate>
+         <category>News/Politics</category>
+         <guid isPermaLink="false">9.7439108</guid>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[These married playwrights made a ‘Métis Big Fat Greek Wedding’]]></title>
+         <link>https://www.cbc.ca/arts/q/these-married-playwrights-made-a-metis-big-fat-greek-wedding-9.7434466?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/365b135b-7a09-4c97-a3e2-dd4c782fc81d,1795795210466/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C120%2C1280%2C720%29%3B' alt='A selfie of Trish Cooper and Sam Vint.' width='620' height='349' title='A selfie of married playwrights Trish Cooper and Sam Vint.'/><p>Winnipeg couple Trish Cooper and Sam Vint join Q's Tom Power to talk about turning their in-law culture shock into a hit play., which is currently being staged at the National Arts Centre in Ottawa.</p>]]></description>
+         <pubDate>Fri, 27 Nov 2026 11:04:04 EST</pubDate>
+         <category>Arts/Q</category>
+         <guid isPermaLink="false">9.7434466</guid>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Ontario urges Canada to strengthen self-defence rules around home invasions]]></title>
+         <link>https://www.cbc.ca/news/canada/toronto/attorney-general-self-defence-home-invasion-9.7438545?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/116c305a-4868-412c-90d4-6e36f6237303,1731432895567/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1920%2C1080%29%3B' alt='A man speaks at a microphone.' width='620' height='349' title=''/><p>Ontario's attorney general and solicitor general have penned a letter to the federal government calling for clarified rules and stronger protections for home owners who protect themselves against home invasions. The letter comes amid an multiple violent home invasions in Toronto this fall, including one this week that left a man dead.</p>]]></description>
+         <pubDate>Fri, 27 Nov 2026 10:34:23 EST</pubDate>
+         <category>News/Canada/Toronto</category>
+         <guid isPermaLink="false">9.7438545</guid>
+         <dc:creator>Linus Mulherin</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Court to rule Monday on whether Quebec MNAs can sit without swearing oath to King]]></title>
+         <link>https://www.cbc.ca/news/canada/montreal/oath-to-king-appeal-quebec-court-national-assembly-9.7437797?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/3caed756-b1e3-4f86-b88a-929d59a27619,1795729639875/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C263%2C4500%2C2531%29%3B' alt='Quebec Premier Paul St-Pierre Plamondon speaks to government members at a pre-session caucus meeting in Quebec City, on Thursday, November 26, 2026.' width='620' height='349' title='Quebec Premier Paul St-Pierre Plamondon speaks to government members at a pre-session caucus meeting in Quebec City, on Thursday, November 26, 2026.'/><p>Earlier this week, a judge ruled that members of Quebec's provincial legislature must swear allegiance to the Crown before sitting at the National Assembly. He warned that any laws passed could be rendered invalid if members do not take the oath.</p>]]></description>
+         <pubDate>Fri, 27 Nov 2026 04:00:00 EST</pubDate>
+         <category>News/Canada/Montreal</category>
+         <guid isPermaLink="false">9.7437797</guid>
+         <dc:creator>Patricia Kozicka</dc:creator>
+         <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
       <item>
@@ -40,17 +144,6 @@
          <pubDate>Thu, 26 Nov 2026 18:10:46 EST</pubDate>
          <guid isPermaLink="false">9.7438009</guid>
          <dc:type>video</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Some Ottawans hit by Rogers service disruption after vandalism-related outage, city says]]></title>
-         <link>https://www.cbc.ca/news/canada/ottawa/ottawa-rogers-outage-vandalism-9.7438288?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/1.3752871,1741316953000/full/max/0/default.jpg?im=Crop%2Crect%3D%2840%2C347%2C1559%2C876%29%3B' alt='Cross cut of large copper wires' width='620' height='349' title='Copper wire at Federal Metals, a recycling company in Calgary, has been targeted by thieves two weekends in a row, says owner Dan Klufas.'/><p>Damage to fibre optic lines caused by vandalism has left some Rogers customers in Ottawa  without internet, phone and TV services.</p>]]></description>
-         <pubDate>Thu, 26 Nov 2026 22:35:00 EST</pubDate>
-         <category>News/Canada/Ottawa</category>
-         <guid isPermaLink="false">9.7438288</guid>
-         <dc:creator>Jenna Legge</dc:creator>
-         <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
       <item>
@@ -96,17 +189,6 @@
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
       <item>
-         <title><![CDATA[Ford says he wouldn't hesitate to shoot a home invader, encourages Ontarians to 'fight back']]></title>
-         <link>https://www.cbc.ca/news/canada/toronto/ford-home-invasion-ontario-9.7437456?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/adf7e008-a596-4407-aa8f-2d13fc52e697,1795717379207/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C7282%2C4096%29%3B' alt='A man with blond hair and blue tie and a suit holds up his right hand and looks to his right.' width='620' height='349' title='Premier Doug Ford addresses the U.S.-Canada trade war while calling U.S. President Donald Trump a ‘loser’ during a news conference in Hamilton, Ont., on Aug. 24, 2026.'/><p>Premier says he wants to see legal changes to address a spate of home invasions, and in the meantime is advising people to "use anything you can to protect your family."</p>]]></description>
-         <pubDate>Thu, 26 Nov 2026 14:14:36 EST</pubDate>
-         <category>News/Canada/Toronto</category>
-         <guid isPermaLink="false">9.7437456</guid>
-         <dc:creator>Allison Jones, Sadeen Mohsen</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
          <title><![CDATA['We have to talk about it': Campaign sheds light on violence against women in Quebec]]></title>
          <link>https://www.cbc.ca/news/canada/montreal/12-days-of-action-domestic-violence-9.7436502?cmp=rss</link>
          <description><![CDATA[<img src='https://i.cbc.ca/ais/7c71098b-9e7e-4cb3-be21-b9c0144581bf,1795650049339/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C212%2C4032%2C2268%29%3B' alt='A white ribbon projection on the outside wall of the provincial police headquarters in Montreal' width='620' height='349' title='A massive white ribbon has lit up the outside wall of the provincial police headquarters in Montreal, as part of the 12 Days of Action Against Violence Against Women campaign. The ribbon projection will shine until Dec. 6, which is the anniversary of the anti-feminist attack at École Polytechnique in 1989.'/><p>The goal of the initiative is to raise public awareness around gender-based violence, and let people know about the resources for victims.</p>]]></description>
@@ -135,90 +217,6 @@
          <pubDate>Wed, 25 Nov 2026 16:00:53 EST</pubDate>
          <category>News/Canada/Ottawa</category>
          <guid isPermaLink="false">9.7436148</guid>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[OC Transpo readies for winter weather with heated LRT cables, new bus tires]]></title>
-         <link>https://www.cbc.ca/news/canada/ottawa/oc-transpo-winter-plan-strategy-bus-train-9.7437146?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/de8d5253-a071-4ef9-9561-d60f1402daa3,1795711778763/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C621%2C6048%2C3402%29%3B' alt='An immobile red-and-white train, with several trucks parked next to it.' width='620' height='349' title='A stalled LRT train is seen near Lees station in Ottawa, on Friday, Jan. 6, 2023. Freezing rain partially shut down train service earlier in the week.'/><p>OC Transpo says it will try out new equipment and a new strategy in an attempt to improve service during challenging winter weather conditions.</p>]]></description>
-         <pubDate>Thu, 26 Nov 2026 12:13:39 EST</pubDate>
-         <category>News/Canada/Ottawa</category>
-         <guid isPermaLink="false">9.7437146</guid>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Jury acquits man of murder, attempted murder of trio of 16-year-old boys]]></title>
-         <link>https://www.cbc.ca/news/canada/ottawa/jury-acquits-man-of-murder-attempted-murder-of-trio-of-16-year-old-boys-9.7435745?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/1.6851529,1684791325000/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C4032%2C2268%29%3B' alt='A police vehicle is parked on a residential street, with an orange barrier in the foreground.' width='620' height='349' title='Ontario Provincial Police investigate a double homicide in Pembroke, Ont., on May 22, 2023.'/><p>More than three years after two boys were shot to death and another boy's throat was slashed in a Pembroke, Ont., apartment, a jury has acquitted an Ottawa man of first-degree murder and attempted murder. Earlier this month, jurors agreed with the defence that the drug dealer might not have known of any plan to kill anyone.</p>]]></description>
-         <pubDate>Thu, 26 Nov 2026 04:00:00 EST</pubDate>
-         <category>News/Canada/Ottawa</category>
-         <guid isPermaLink="false">9.7435745</guid>
-         <dc:creator>Kristy Nease</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Loss of paramedic killed in crash 'felt throughout the organization,' chief says]]></title>
-         <link>https://www.cbc.ca/news/canada/ottawa/ottawa-paramedic-crash-death-news-conference-9.7435893?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/2b22b228-2542-4c01-bc2d-e0c637c43bb4,1795646210034/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C40%2C512%2C288%29%3B' alt='A picture of Paramedic Mel Borthwick.' width='620' height='349' title='Ottawa Mayor Mark Sutcliffe expressed his condolences on social media after Paramedic Mel Borthwick was killed in a crash in Cumberland Tuesday morning.'/><p>The chief of the Ottawa Paramedic Service says its members are in grief after the death of one of their own in a crash Tuesday morning.</p>]]></description>
-         <pubDate>Wed, 25 Nov 2026 18:00:16 EST</pubDate>
-         <category>News/Canada/Ottawa</category>
-         <guid isPermaLink="false">9.7435893</guid>
-         <dc:creator>Jenna Legge, Andrew Foote</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Council votes to save built heritage committee, backs Sutcliffe on deputy mayors]]></title>
-         <link>https://www.cbc.ca/news/canada/ottawa/council-votes-to-save-built-heritage-committee-backs-sutcliffe-on-deputy-mayors-9.7436407?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/2555b634-b43a-4976-b467-1294d4cd8863,1795648677463/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C342%2C6558%2C3688%29%3B' alt='Council' width='620' height='349' title='A view of Ottawa city council chambers when the new crop of councillors was sworn in on Nov. 16. On Wednesday, they held their first meeting.'/><p>In its first meeting of a new term, council rejected a proposal to axe a committee that protects heritage buildings and opted to appoint deputy mayors for four-year terms.</p>]]></description>
-         <pubDate>Wed, 25 Nov 2026 18:19:49 EST</pubDate>
-         <category>News/Canada/Ottawa</category>
-         <guid isPermaLink="false">9.7436407</guid>
-         <dc:creator>Arthur White-Crummey</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Buster the hamster home safe after hitching ride in Halloween pumpkin]]></title>
-         <link>https://www.cbc.ca/news/canada/ottawa/buster-the-hamster-home-safe-after-hitching-ride-in-halloween-pumpkin-9.7435959?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/71842113-5276-4f71-b45f-9614d71a77ce,1795634942425/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C306%2C684%2C384%29%3B' alt='Orange hamster being held' width='620' height='349' title='Covered in orange pumpkin juice, one family’s pet hamster, Buster, turned up inside a donated pumpkin that was left for over 21 days.'/><p>An adventurous hamster named Buster is back home in Arnprior, Ont., three weeks after hitching a ride inside a discarded Halloween pumpkin and ending up on a farm about 20 kilometres away.</p>]]></description>
-         <pubDate>Wed, 25 Nov 2026 15:39:33 EST</pubDate>
-         <category>News/Canada/Ottawa</category>
-         <guid isPermaLink="false">9.7435959</guid>
-         <dc:creator>Cassandra Bellefeuille</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Santa's helpers working on replacing Kemptville's missing sled]]></title>
-         <link>https://www.cbc.ca/news/canada/ottawa/kemptville-ontario-santa-sled-missing-replacement-9.7434355?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/1f845d1e-35ef-4bac-8724-51ae36f96df5,1794331899772/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C756%2C1536%2C864%29%3B' alt='Santa sits in a sled in a park on a sunny late autumn day.' width='620' height='349' title='Kemptville&apos;s Santa sled, which was featured prominently in the eastern Ontario community&apos;s Rotary Park, is missing.'/><p>It looks like the holiday spirit is coming to the rescue of the eastern Ontario community that lost its vintage Santa's sled.</p>]]></description>
-         <pubDate>Wed, 25 Nov 2026 13:08:21 EST</pubDate>
-         <category>News/Canada/Ottawa</category>
-         <guid isPermaLink="false">9.7434355</guid>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[99-year-old woman assaulted, robbed in Lowertown home]]></title>
-         <link>https://www.cbc.ca/news/canada/ottawa/ottawa-assault-senior-elderly-9.7435422?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/a3bf35ac-a3bb-4d5f-b3dd-e135f868e9be,1795626491327/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1920%2C1080%29%3B' alt='A quiet residential street in a city with a line of rowhomes.' width='620' height='349' title='A 99-year-old woman living on Michel Riel Private was seriously injured in a violent robbery at her home Nov. 24, 2026, according to Ottawa police.'/><p>Ottawa police say a 99-year-old woman was seriously injured in a violent robbery at her Lowertown home Tuesday evening.</p>]]></description>
-         <pubDate>Wed, 25 Nov 2026 10:33:16 EST</pubDate>
-         <category>News/Canada/Ottawa</category>
-         <guid isPermaLink="false">9.7435422</guid>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[1 badly hurt, 1 charged after crash near St-Albert]]></title>
-         <link>https://www.cbc.ca/news/canada/ottawa/county-road-13-6-crash-north-stormont-9.7435247?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/1.5998041,1691508804000/full/max/0/default.jpg?im=Crop%2Crect%3D%281%2C0%2C869%2C488%29%3B' alt='Killaloe OPP are investigating a second drowning in Madawaska Valley township since late July.' width='620' height='349' title='Killaloe OPP are investigating a second drowning in Madawaska Valley township since late July. '/><p>Ontario Provincial Police say one driver was airlifted to hospital and the other arrested and charged after a crash in North Stormont Tuesday evening.</p>]]></description>
-         <pubDate>Wed, 25 Nov 2026 09:03:36 EST</pubDate>
-         <category>News/Canada/Ottawa</category>
-         <guid isPermaLink="false">9.7435247</guid>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>

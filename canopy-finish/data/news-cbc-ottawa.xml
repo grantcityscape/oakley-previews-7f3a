@@ -6,7 +6,7 @@
       <link>https://www.cbc.ca/news/canada/ottawa/?cmp=rss</link>
       <copyright><![CDATA[Copyright: (C) Canadian Broadcasting Corporation, http://www.cbc.ca/aboutcbc/discover/termsofuse.html#Rss]]></copyright>
       <docs><![CDATA[https://www.cbc.ca/rss]]></docs>
-      <lastBuildDate>Thu, 26 Nov 2026 22:57:10 EST</lastBuildDate>
+      <lastBuildDate>Fri, 27 Nov 2026 08:48:08 EST</lastBuildDate>
       <atom:link href="https://www.cbc.ca/webfeed/rss/rss-canada-ottawa" rel="self" type="application/rss+xml"/>
       <image>
          <title><![CDATA[CBC | Ottawa News]]></title>
@@ -14,14 +14,23 @@
          <link>https://www.cbc.ca/news/canada/ottawa/?cmp=rss</link>
       </image>
       <item>
-         <title><![CDATA[Some Ottawans hit by Rogers service disruption after vandalism-related outage, city says]]></title>
-         <link>https://www.cbc.ca/news/canada/ottawa/ottawa-rogers-outage-vandalism-9.7438288?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/1.3752871,1741316953000/full/max/0/default.jpg?im=Crop%2Crect%3D%2840%2C347%2C1559%2C876%29%3B' alt='Cross cut of large copper wires' width='620' height='349' title='Copper wire at Federal Metals, a recycling company in Calgary, has been targeted by thieves two weekends in a row, says owner Dan Klufas.'/><p>Damage to fibre optic lines caused by vandalism has left some Rogers customers in Ottawa  without internet, phone and TV services.</p>]]></description>
-         <pubDate>Thu, 26 Nov 2026 22:35:00 EST</pubDate>
+         <title><![CDATA[Man in AI deepfake case admits to stalking women and more]]></title>
+         <link>https://www.cbc.ca/news/canada/ottawa/gregry-peter-joseph-van-beek-ottawa-west-nipissing-ai-deepfake-9.7432791?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/2cf5004b-771e-4f9c-8d85-ab07632f4134,1795719462209/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C4800%2C2700%29%3B' alt='man in blue sweater poses for camera' width='620' height='349' title='Gregry Peter Joseph Van Beek (who goes by Peter Van Beek according to his lawyer) had been facing seven charges prior to his guilty plea earlier this week, including harassment by watching and besetting, conspiracy to commit an indictable offence and publishing intimate images without consent.'/><p></p>]]></description>
+         <pubDate>Fri, 27 Nov 2026 07:21:13 EST</pubDate>
          <category>News/Canada/Ottawa</category>
-         <guid isPermaLink="false">9.7438288</guid>
-         <dc:creator>Jenna Legge</dc:creator>
-         <dc:type>story</dc:type>
+         <guid isPermaLink="false">9.7438402</guid>
+         <dc:type>contentpackage</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Supreme Court set to deliver ruling on Quebec's secularism law]]></title>
+         <link>https://www.cbc.ca/news/canada/montreal/livestory/quebec-bill-21-supreme-court-of-canada-ruling-9.7434446?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/4b1e08fc-9a68-4b1e-a135-0c12f04593de,1795740772866/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C459%2C4513%2C2538%29%3B' alt='A group of women protest Quebec&apos;s new Bill 21' width='620' height='349' title='A group of women protest Quebec&apos;s new Bill 21, which will ban teachers, police, government lawyers and others in positions of authority from wearing religious symbols such as Muslim head coverings and Sikh turbans, in Montreal, Quebec, Canada, June 17, 2019.  REUTERS/Christinne Muschi'/><p></p>]]></description>
+         <pubDate>Fri, 27 Nov 2026 05:48:20 EST</pubDate>
+         <category>News</category>
+         <guid isPermaLink="false">9.7438370</guid>
+         <dc:type>contentpackage</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
       <item>
@@ -31,6 +40,17 @@
          <pubDate>Thu, 26 Nov 2026 18:10:46 EST</pubDate>
          <guid isPermaLink="false">9.7438009</guid>
          <dc:type>video</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Some Ottawans hit by Rogers service disruption after vandalism-related outage, city says]]></title>
+         <link>https://www.cbc.ca/news/canada/ottawa/ottawa-rogers-outage-vandalism-9.7438288?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/1.3752871,1741316953000/full/max/0/default.jpg?im=Crop%2Crect%3D%2840%2C347%2C1559%2C876%29%3B' alt='Cross cut of large copper wires' width='620' height='349' title='Copper wire at Federal Metals, a recycling company in Calgary, has been targeted by thieves two weekends in a row, says owner Dan Klufas.'/><p>Damage to fibre optic lines caused by vandalism has left some Rogers customers in Ottawa  without internet, phone and TV services.</p>]]></description>
+         <pubDate>Thu, 26 Nov 2026 22:35:00 EST</pubDate>
+         <category>News/Canada/Ottawa</category>
+         <guid isPermaLink="false">9.7438288</guid>
+         <dc:creator>Jenna Legge</dc:creator>
+         <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
       <item>
@@ -51,6 +71,16 @@
          <pubDate>Thu, 26 Nov 2026 14:43:51 EST</pubDate>
          <category>News/Canada/Ottawa</category>
          <guid isPermaLink="false">9.7437578</guid>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Ottawa Redblacks fire coach, GM Ryan Dinwiddie after 1 season]]></title>
+         <link>https://www.cbc.ca/news/canada/ottawa/ottawa-redblacks-ryan-dinwiddie-fired-cfl-9.7436854?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/45a2b7c4-6cfd-4c6f-9699-e2cec7a2f290,1795698887625/full/max/0/default.jpg?im=Crop%2Crect%3D%28312%2C179%2C5139%2C2890%29%3B' alt='A football coach watches a game on a summer afternoon.' width='620' height='349' title='Ottawa Redblacks head coach Ryan Dinwiddie during a home game against the Toronto Argonauts on June 20, 2026.'/><p>The Ottawa Redblacks have fired head coach and general manager Ryan Dinwiddie after one season and one win.</p>]]></description>
+         <pubDate>Thu, 26 Nov 2026 08:11:57 EST</pubDate>
+         <category>News/Canada/Ottawa</category>
+         <guid isPermaLink="false">9.7436854</guid>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
@@ -77,22 +107,24 @@
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
       <item>
-         <title><![CDATA[Freezing rain expected Thursday night across most of Ottawa-Gatineau region]]></title>
-         <link>https://www.cbc.ca/news/canada/ottawa/freezing-rain-weather-ottawa-gatineau-outaouais-thursday-friday-9.7435216?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/1.6286405,1639566915000/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C415%2C3895%2C2190%29%3B' alt='' width='620' height='349' title='Freezing rain coats Christmas lights on an Ottawa home Dec. 11, 2021.'/><p>Hours of freezing rain could start around midnight for most of the region, according to Environment Canada.</p>]]></description>
-         <pubDate>Wed, 25 Nov 2026 08:14:42 EST</pubDate>
-         <category>News/Canada/Ottawa</category>
-         <guid isPermaLink="false">9.7435216</guid>
+         <title><![CDATA['We have to talk about it': Campaign sheds light on violence against women in Quebec]]></title>
+         <link>https://www.cbc.ca/news/canada/montreal/12-days-of-action-domestic-violence-9.7436502?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/7c71098b-9e7e-4cb3-be21-b9c0144581bf,1795650049339/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C212%2C4032%2C2268%29%3B' alt='A white ribbon projection on the outside wall of the provincial police headquarters in Montreal' width='620' height='349' title='A massive white ribbon has lit up the outside wall of the provincial police headquarters in Montreal, as part of the 12 Days of Action Against Violence Against Women campaign. The ribbon projection will shine until Dec. 6, which is the anniversary of the anti-feminist attack at École Polytechnique in 1989.'/><p>The goal of the initiative is to raise public awareness around gender-based violence, and let people know about the resources for victims.</p>]]></description>
+         <pubDate>Thu, 26 Nov 2026 13:45:22 EST</pubDate>
+         <category>News/Canada/Montreal</category>
+         <guid isPermaLink="false">9.7436502</guid>
+         <dc:creator>Patricia Kozicka</dc:creator>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
       <item>
-         <title><![CDATA[Ottawa Redblacks fire coach, GM Ryan Dinwiddie after 1 season]]></title>
-         <link>https://www.cbc.ca/news/canada/ottawa/ottawa-redblacks-ryan-dinwiddie-fired-cfl-9.7436854?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/45a2b7c4-6cfd-4c6f-9699-e2cec7a2f290,1795698887625/full/max/0/default.jpg?im=Crop%2Crect%3D%28312%2C179%2C5139%2C2890%29%3B' alt='A football coach watches a game on a summer afternoon.' width='620' height='349' title='Ottawa Redblacks head coach Ryan Dinwiddie during a home game against the Toronto Argonauts on June 20, 2026.'/><p>The Ottawa Redblacks have fired head coach and general manager Ryan Dinwiddie after one season and one win.</p>]]></description>
-         <pubDate>Thu, 26 Nov 2026 08:11:57 EST</pubDate>
-         <category>News/Canada/Ottawa</category>
-         <guid isPermaLink="false">9.7436854</guid>
+         <title><![CDATA[Ontario will soon require licence, registration, insurance for some e-bikes]]></title>
+         <link>https://www.cbc.ca/news/canada/toronto/ontario-ebike-sarkaria-restriction-9.7436932?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/da9f3897-707e-407e-ac00-f08ba2153577,1795714730840/full/max/0/default.jpg?im=Crop%2Crect%3D%284%2C0%2C4920%2C2767%29%3B' alt='A man rides on an e-bike with snow in the back.' width='620' height='349' title='Generic Montreal during Covid on 12 Feb 2021. See person with large knapsack on scooter or e-bike.'/><p>Some e-bike drivers will soon have to get a driver’s licence, vehicle registration and insurance to ride on Ontario's roads, Transportation Minister Prabmeet Sarkaria announced Wednesday.</p>]]></description>
+         <pubDate>Thu, 26 Nov 2026 12:41:32 EST</pubDate>
+         <category>News/Canada/Toronto</category>
+         <guid isPermaLink="false">9.7436932</guid>
+         <dc:creator>Eleanor Yuneun Park</dc:creator>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
@@ -124,39 +156,6 @@
          <category>News/Canada/Ottawa</category>
          <guid isPermaLink="false">9.7435745</guid>
          <dc:creator>Kristy Nease</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Ontario will soon require licence, registration, insurance for some e-bikes]]></title>
-         <link>https://www.cbc.ca/news/canada/toronto/ontario-ebike-sarkaria-restriction-9.7436932?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/da9f3897-707e-407e-ac00-f08ba2153577,1795714730840/full/max/0/default.jpg?im=Crop%2Crect%3D%284%2C0%2C4920%2C2767%29%3B' alt='A man rides on an e-bike with snow in the back.' width='620' height='349' title='Generic Montreal during Covid on 12 Feb 2021. See person with large knapsack on scooter or e-bike.'/><p>Some e-bike drivers will soon have to get a driver’s licence, vehicle registration and insurance to ride on Ontario's roads, Transportation Minister Prabmeet Sarkaria announced Wednesday.</p>]]></description>
-         <pubDate>Thu, 26 Nov 2026 12:41:32 EST</pubDate>
-         <category>News/Canada/Toronto</category>
-         <guid isPermaLink="false">9.7436932</guid>
-         <dc:creator>Eleanor Yuneun Park</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA['We have to talk about it': Campaign sheds light on violence against women in Quebec]]></title>
-         <link>https://www.cbc.ca/news/canada/montreal/12-days-of-action-domestic-violence-9.7436502?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/7c71098b-9e7e-4cb3-be21-b9c0144581bf,1795650049339/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C212%2C4032%2C2268%29%3B' alt='A white ribbon projection on the outside wall of the provincial police headquarters in Montreal' width='620' height='349' title='A massive white ribbon has lit up the outside wall of the provincial police headquarters in Montreal, as part of the 12 Days of Action Against Violence Against Women campaign. The ribbon projection will shine until Dec. 6, which is the anniversary of the anti-feminist attack at École Polytechnique in 1989.'/><p>The goal of the initiative is to raise public awareness around gender-based violence, and let people know about the resources for victims.</p>]]></description>
-         <pubDate>Thu, 26 Nov 2026 13:45:22 EST</pubDate>
-         <category>News/Canada/Montreal</category>
-         <guid isPermaLink="false">9.7436502</guid>
-         <dc:creator>Patricia Kozicka</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[What's at stake as Canada's top court ruling on Quebec secularism law looms]]></title>
-         <link>https://www.cbc.ca/news/canada/montreal/supreme-court-bill-21-quebec-9.7436487?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/1.5601799,1599944785000/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C267%2C5184%2C2916%29%3B' alt='' width='620' height='349' title='Supreme Court of Canada, in Ottawa.'/><p>Ahead of Friday's highly anticipated Supreme Court of Canada ruling on Quebec's controversial secularism law, which bars some public sector workers from wearing religious symbols on the job, there is optimism on both sides of the debate.</p>]]></description>
-         <pubDate>Thu, 26 Nov 2026 04:00:00 EST</pubDate>
-         <category>News/Canada/Montreal</category>
-         <guid isPermaLink="false">9.7436487</guid>
-         <dc:creator>Isaac Olson</dc:creator>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>

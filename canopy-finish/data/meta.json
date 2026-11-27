@@ -1,89 +1,89 @@
 {
- "generated_at": "2026-11-27T04:08:28Z",
+ "generated_at": "2026-11-27T13:53:24Z",
  "feeds": {
   "news-cbc-ottawa.xml": {
    "source": "https://www.cbc.ca/webfeed/rss/rss-canada-ottawa",
-   "fetched_at": "2026-11-27T04:08:23Z",
+   "fetched_at": "2026-11-27T13:53:18Z",
    "status": 200,
-   "bytes": 23709
+   "bytes": 23934
   },
   "news-bbc-world.xml": {
    "source": "https://feeds.bbci.co.uk/news/world/rss.xml",
-   "fetched_at": "2026-11-27T04:08:24Z",
+   "fetched_at": "2026-11-27T13:53:18Z",
    "status": 200,
-   "bytes": 24026
+   "bytes": 21124
   },
   "news-cbc-business.xml": {
    "source": "https://www.cbc.ca/webfeed/rss/rss-business",
-   "fetched_at": "2026-11-27T04:08:24Z",
+   "fetched_at": "2026-11-27T13:53:19Z",
    "status": 200,
-   "bytes": 25872
+   "bytes": 25947
   },
   "news-bbc-business.xml": {
    "source": "https://feeds.bbci.co.uk/news/business/rss.xml",
-   "fetched_at": "2026-11-27T04:08:24Z",
+   "fetched_at": "2026-11-27T13:53:19Z",
    "status": 200,
-   "bytes": 37958
+   "bytes": 38618
   },
   "tsunami-pheb.xml": {
    "source": "https://www.tsunami.gov/events/xml/PHEBAtom.xml",
-   "fetched_at": "2026-11-27T04:08:24Z",
+   "fetched_at": "2026-11-27T13:53:19Z",
    "status": 200,
    "bytes": 1953
   },
   "tsunami-paaq.xml": {
    "source": "https://www.tsunami.gov/events/xml/PAAQAtom.xml",
-   "fetched_at": "2026-11-27T04:08:24Z",
+   "fetched_at": "2026-11-27T13:53:19Z",
    "status": 200,
    "bytes": 1976
   },
   "gdacs.xml": {
    "source": "https://www.gdacs.org/xml/rss.xml",
-   "fetched_at": "2026-11-27T04:08:27Z",
+   "fetched_at": "2026-11-27T13:53:21Z",
    "status": 200,
-   "bytes": 527710
+   "bytes": 552056
   },
   "osiris-conflicts.json": {
    "source": "https://osirisai.live/api/conflicts",
-   "fetched_at": "2026-11-27T04:08:27Z",
+   "fetched_at": "2026-11-27T13:53:22Z",
    "status": 200,
-   "bytes": 5254
+   "bytes": 6095
   },
   "osiris-fires.json": {
    "source": "https://osirisai.live/api/fires",
-   "fetched_at": "2026-11-27T04:08:27Z",
+   "fetched_at": "2026-11-27T13:53:22Z",
    "status": 200,
-   "bytes": 253403
+   "bytes": 225967
   },
   "osiris-gdelt-events.json": {
    "source": "https://osirisai.live/api/gdelt-events",
-   "fetched_at": "2026-11-27T04:08:27Z",
+   "fetched_at": "2026-11-27T13:53:22Z",
    "status": 200,
-   "bytes": 218592
+   "bytes": 225330
   },
   "osiris-earthquakes.json": {
    "source": "https://osirisai.live/api/earthquakes",
-   "fetched_at": "2026-11-27T04:08:28Z",
+   "fetched_at": "2026-11-27T13:53:23Z",
    "status": 200,
-   "bytes": 8666
+   "bytes": 7890
   },
   "osiris-health.json": {
    "source": "https://osirisai.live/api/health",
-   "fetched_at": "2026-11-27T04:08:28Z",
+   "fetched_at": "2026-11-27T13:53:23Z",
    "status": 200,
    "bytes": 489
   },
   "osiris-stats.json": {
    "source": "https://osirisai.live/api/stats",
-   "fetched_at": "2026-11-27T04:08:28Z",
+   "fetched_at": "2026-11-27T13:53:23Z",
    "status": 200,
    "bytes": 132
   },
   "yow-flights.json": {
    "source": "https://www.yow.ca/api/flights/get",
-   "fetched_at": "2026-11-27T04:08:28Z",
+   "fetched_at": "2026-11-27T13:53:24Z",
    "status": 200,
-   "bytes": 145305
+   "bytes": 142988
   }
  }
 }

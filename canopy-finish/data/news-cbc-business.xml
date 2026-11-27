@@ -6,13 +6,35 @@
       <link>https://www.cbc.ca/news/business/?cmp=rss</link>
       <copyright><![CDATA[Copyright: (C) Canadian Broadcasting Corporation, http://www.cbc.ca/aboutcbc/discover/termsofuse.html#Rss]]></copyright>
       <docs><![CDATA[https://www.cbc.ca/rss]]></docs>
-      <lastBuildDate>Thu, 26 Nov 2026 19:04:33 EST</lastBuildDate>
+      <lastBuildDate>Fri, 27 Nov 2026 07:28:26 EST</lastBuildDate>
       <atom:link href="https://www.cbc.ca/webfeed/rss/rss-business" rel="self" type="application/rss+xml"/>
       <image>
          <title><![CDATA[CBC | Business News]]></title>
          <url>https://www.cbc.ca/rss/image/cbc_144.gif</url>
          <link>https://www.cbc.ca/news/business/?cmp=rss</link>
       </image>
+      <item>
+         <title><![CDATA[Small businesses worry potential consumer pullback could cut into critical holiday sales]]></title>
+         <link>https://www.cbc.ca/news/business/small-businesses-holiday-shopping-9.7437827?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/2435acc2-6bf0-4358-9ca0-453d67d7058f,1795730024726/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C676%2C6499%2C3655%29%3B' alt='shoppers cross the street with bags in hand on a dreary day' width='620' height='349' title='Shoppers hunt for holiday deals in Vancouver, B.C., on Dec. 24, 2025. As the busy holiday shopping season gets underway, small business owners are worried consumers might cut back on spending this year, denting their sales.'/><p>The holiday shopping season is a critical money-making time for lots of retailers. But as retail sales point to a dip in consumer spending, small business owners worry a pullback by shoppers could dent their sales.</p>]]></description>
+         <pubDate>Fri, 27 Nov 2026 04:00:00 EST</pubDate>
+         <category>News/Business</category>
+         <guid isPermaLink="false">9.7437827</guid>
+         <dc:creator>Abby Hughes</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Niagara family business says $500K weekly in Trump tariffs is forcing production to U.S.]]></title>
+         <link>https://www.cbc.ca/news/canada/hamilton/stanpac-us-canada-tariffs-trade-9.7435346?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/2a63b0c4-d19b-4e17-92b4-6d38ed516aac,1795618555985/full/max/0/default.jpg?im=Crop%2Crect%3D%281%2C0%2C3531%2C1986%29%3B' alt='manufacturing workers at a factory' width='620' height='349' title='Food packaging company Stanpac says it&apos;ll have to cut 70 per cent of its staff at its Smithville, Ont. production plant if left with no government support to alleviate steep U.S. tariffs.'/><p>The company that manufactures packaging for ice cream brands Chapman’s, Baskin-Robbins and Van Leeuwen says it will shift production from its headquarters in West Lincoln, Ont., to the U.S. due to steep tariffs on Canadian-made exports.</p>]]></description>
+         <pubDate>Fri, 27 Nov 2026 04:00:00 EST</pubDate>
+         <category>News/Canada/Hamilton</category>
+         <guid isPermaLink="false">9.7435346</guid>
+         <dc:creator>Diona Macalinga</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
       <item>
          <title><![CDATA[Data breaches are coming fast and furious. Are businesses doing enough to protect your data?]]></title>
          <link>https://www.cbc.ca/news/business/data-breaches-ai-data-protection-9.7436341?cmp=rss</link>
@@ -202,28 +224,6 @@
          <pubDate>Fri, 20 Nov 2026 16:54:02 EST</pubDate>
          <category>News/Business</category>
          <guid isPermaLink="false">9.7430468</guid>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Large AI companies 'desperate for compute' are crowding out Canadian startups at home]]></title>
-         <link>https://www.cbc.ca/news/business/compute-canada-sovereignty-ai-9.7428523?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/bf337caa-b480-4c8b-8d88-5a28f9b09f94,1795116901062/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C208%2C4000%2C2250%29%3B' alt='Wiring sits inside of the Data Hall of the Microsoft data center campus in Mount Pleasant, Wisconsin, U.S. on Sept. 18, 2025.' width='620' height='349' title='Wiring sits inside of the Data Hall of the Microsoft data center campus in Mount Pleasant, Wisconsin, U.S. on Sept. 18, 2025.'/><p>Ottawa's new budget promises to help Canadian AI companies access AI processing power on home soil — something that's been a challenge as smaller startups face fierce competition from larger AI companies that are "desperate for compute."</p>]]></description>
-         <pubDate>Fri, 20 Nov 2026 04:00:00 EST</pubDate>
-         <category>News/Business</category>
-         <guid isPermaLink="false">9.7428523</guid>
-         <dc:creator>Rukhsar Ali</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Anthropic stock soars by double-digits, a 'big near-term win' for a 'very nervous' tech sector]]></title>
-         <link>https://www.cbc.ca/news/business/anthropic-first-day-trading-9.7428367?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/c40bb9fb-692d-4d72-8fc2-bc88a8873d67,1795121319517/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C656%2C3000%2C1687%29%3B' alt='Robotic hand rests on phone screen with Open AI and Anthropic logos against a white background.' width='620' height='349' title='Anthropic priced its initial public offering at $83 US per share late Wednesday, above the $70 to $78 US range stated by the company in recent regulatory filings.'/><p>Shares of Anthropic rose on their first day of trading, as investors weighted AI enthusiasm against a massive valuation and uncertain path to profitability.</p>]]></description>
-         <pubDate>Thu, 19 Nov 2026 12:37:14 EST</pubDate>
-         <category>News/Business</category>
-         <guid isPermaLink="false">9.7428367</guid>
-         <dc:creator>Jeff Lagerquist</dc:creator>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>

@@ -6,13 +6,22 @@
       <link>https://www.cbc.ca/news/canada/ottawa/?cmp=rss</link>
       <copyright><![CDATA[Copyright: (C) Canadian Broadcasting Corporation, http://www.cbc.ca/aboutcbc/discover/termsofuse.html#Rss]]></copyright>
       <docs><![CDATA[https://www.cbc.ca/rss]]></docs>
-      <lastBuildDate>Fri, 27 Nov 2026 17:31:36 EST</lastBuildDate>
+      <lastBuildDate>Fri, 27 Nov 2026 20:54:43 EST</lastBuildDate>
       <atom:link href="https://www.cbc.ca/webfeed/rss/rss-canada-ottawa" rel="self" type="application/rss+xml"/>
       <image>
          <title><![CDATA[CBC | Ottawa News]]></title>
          <url>https://www.cbc.ca/rss/image/cbc_144.gif</url>
          <link>https://www.cbc.ca/news/canada/ottawa/?cmp=rss</link>
       </image>
+      <item>
+         <title><![CDATA[Ottawa Charge captain proud to give representation to Métis athletes]]></title>
+         <link>https://www.cbc.ca/player/play/9.7439968?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/6bfe5a6d-65f8-4113-9928-616c39444138,1795827702070/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1920%2C1080%29%3B' alt='A hockey player looks out at the ice.' width='620' height='349' title=''/><p>The Ottawa Charge open their season next weekend and veteran defender Jocelyne Larocque —  a member of the Red River Métis — will lead the team as captain. Natalia Goodwin caught up with her on CBC's All In A Day.</p>]]></description>
+         <pubDate>Fri, 27 Nov 2026 20:03:32 EST</pubDate>
+         <guid isPermaLink="false">9.7439968</guid>
+         <dc:type>video</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
       <item>
          <title><![CDATA[High-risk sex offender arrested in Ottawa]]></title>
          <link>https://www.cbc.ca/news/canada/ottawa/ottawa-sexual-offender-9.7439490?cmp=rss</link>
@@ -21,16 +30,6 @@
          <category>News/Canada/Ottawa</category>
          <guid isPermaLink="false">9.7439490</guid>
          <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Canada's top court upholds Quebec law banning some workers from wearing religious symbols]]></title>
-         <link>https://www.cbc.ca/news/canada/montreal/livestory/quebec-bill-21-supreme-court-of-canada-ruling-9.7434446?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/1bd01f4f-7a86-4ddb-a62c-592ebb8abbbb,1795809885183/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1920%2C1080%29%3B' alt='Man speaking at a microphone podium' width='620' height='349' title='Following Friday&apos;s Supreme Court of Canada decision to uphold most of Quebec&apos;s controversial secularism law, Prime Minister Mark Carney said the federal government&apos;s job is to defend the Charter of Rights and Freedoms. &apos;The benefit of constitutionally protected rights is most important for minorities, those most vulnerable in our society,&apos; Carney said.'/><p></p>]]></description>
-         <pubDate>Fri, 27 Nov 2026 05:48:20 EST</pubDate>
-         <category>News</category>
-         <guid isPermaLink="false">9.7438370</guid>
-         <dc:type>contentpackage</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
       <item>
@@ -52,6 +51,16 @@
          <guid isPermaLink="false">9.7439290</guid>
          <dc:creator>Nathan Fung</dc:creator>
          <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Canada's top court upholds Quebec law banning some workers from wearing religious symbols]]></title>
+         <link>https://www.cbc.ca/news/canada/montreal/livestory/quebec-bill-21-supreme-court-of-canada-ruling-9.7434446?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/1bd01f4f-7a86-4ddb-a62c-592ebb8abbbb,1795809885183/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C0%2C1920%2C1080%29%3B' alt='Man speaking at a microphone podium' width='620' height='349' title='Following Friday&apos;s Supreme Court of Canada decision to uphold most of Quebec&apos;s controversial secularism law, Prime Minister Mark Carney said the federal government&apos;s job is to defend the Charter of Rights and Freedoms. &apos;The benefit of constitutionally protected rights is most important for minorities, those most vulnerable in our society,&apos; Carney said.'/><p></p>]]></description>
+         <pubDate>Fri, 27 Nov 2026 05:48:20 EST</pubDate>
+         <category>News</category>
+         <guid isPermaLink="false">9.7438370</guid>
+         <dc:type>contentpackage</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
       <item>
@@ -207,16 +216,6 @@
          <category>News/Canada/Toronto</category>
          <guid isPermaLink="false">9.7436932</guid>
          <dc:creator>Eleanor Yuneun Park</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Major fire extinguished at south Ottawa lumber business]]></title>
-         <link>https://www.cbc.ca/news/canada/ottawa/woodsource-mitch-owens-ottawa-fire-9.7436148?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/ea477d75-cb0a-47b5-a672-5f80c49f8513,1795714202061/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C28%2C559%2C314%29%3B' alt='A building fire.' width='620' height='349' title='Flames engulf a building at The WoodSource on Mitch Owens Road on Wednesday.'/><p>A major fire at a lumber business sent a giant plume of smoke over south Ottawa and closed Mitch Owens Road Wednesday afternoon and into the evening.</p>]]></description>
-         <pubDate>Wed, 25 Nov 2026 16:00:53 EST</pubDate>
-         <category>News/Canada/Ottawa</category>
-         <guid isPermaLink="false">9.7436148</guid>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>

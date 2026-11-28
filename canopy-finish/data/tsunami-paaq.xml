@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
     <feed xmlns="http://www.w3.org/2005/Atom" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:georss="http://www.georss.org/georss">
-    <id>urn:uuid:f23e0c12-b128-4c6c-aac1-a049ffcfb8d8</id><title>Tsunami Information Statement Number 1</title>
-    <updated>2026-11-24T16:43:10Z</updated>
+    <id>urn:uuid:19bdbc94-1ea8-4490-981f-7860ca8d2c2d</id><title>Tsunami Information Statement Number 1</title>
+    <updated>2026-11-28T06:19:30Z</updated>
     <author>
       <name>NWS National Tsunami Warning Center Palmer AK</name>
 <uri>https://www.tsunami.gov/</uri>
@@ -12,12 +12,12 @@
   
    <entry>
 
-    <title>40 miles SW of Palmer, Alaska</title><updated>2026-11-24T16:43:10Z</updated>
-<geo:lat>61.300</geo:lat>
-<geo:long>-150.100</geo:long>
+    <title>40 miles SW of Palmer, Alaska</title><updated>2026-11-28T06:19:30Z</updated>
+<geo:lat>61.346</geo:lat>
+<geo:long>-150.127</geo:long>
 <summary type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
-     <strong>Category:</strong> Information<br/><strong>Bulletin Issue Time: </strong> 2026.11.24 16:43:10 UTC <br/><strong>Preliminary Magnitude: </strong>4.1(Mwp)<br/><strong>Lat/Lon: </strong>61.300 / -150.100<br/><strong>Affected Region: </strong>40 miles SW of Palmer, Alaska<br/><b>Note:</b>  * There is NO tsunami danger from this earthquake.<br/><strong>Definition: </strong>An information statement indicates that an earthquake has occurred, but does not pose a tsunami threat, or that a tsunami warning, advisory, or watch has been issued for another section of the ocean. <a href="https://www.tsunami.gov/events/PAAQ/2026/11/24/tp0m6e/1/WEAK53/WEAK53.txt">View bulletin</a>  </div></summary>
-    <id>urn:uuid:f1542e41-d857-462d-bf67-f078ce25ee4b</id><link rel="related" title="CapXML document" href="https://www.tsunami.gov/events/PAAQ/2026/11/24/tp0m6e/1/WEAK53/PAAQCAP.xml" type="application/cap+xml" />
-<link rel="alternate" title="Bulletin" href="https://www.tsunami.gov/events/PAAQ/2026/11/24/tp0m6e/1/WEAK53/WEAK53.txt" type="application/xml" />
+     <strong>Category:</strong> Information<br/><strong>Bulletin Issue Time: </strong> 2026.11.28 06:19:30 UTC <br/><strong>Preliminary Magnitude: </strong>4.0(Ml)<br/><strong>Lat/Lon: </strong>61.346 / -150.127<br/><strong>Affected Region: </strong>40 miles SW of Palmer, Alaska<br/><b>Note:</b>  * There is NO tsunami danger from this earthquake.<br/><strong>Definition: </strong>An information statement indicates that an earthquake has occurred, but does not pose a tsunami threat, or that a tsunami warning, advisory, or watch has been issued for another section of the ocean. <a href="https://www.tsunami.gov/events/PAAQ/2026/11/28/tp77vh/1/WEAK53/WEAK53.txt">View bulletin</a>  </div></summary>
+    <id>urn:uuid:7059c5c5-179b-4a73-af52-0f6a7791a9d7</id><link rel="related" title="CapXML document" href="https://www.tsunami.gov/events/PAAQ/2026/11/28/tp77vh/1/WEAK53/PAAQCAP.xml" type="application/cap+xml" />
+<link rel="alternate" title="Bulletin" href="https://www.tsunami.gov/events/PAAQ/2026/11/28/tp77vh/1/WEAK53/WEAK53.txt" type="application/xml" />
 </entry>
 </feed>

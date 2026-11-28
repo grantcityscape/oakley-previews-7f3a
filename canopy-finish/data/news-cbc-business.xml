@@ -6,13 +6,35 @@
       <link>https://www.cbc.ca/news/business/?cmp=rss</link>
       <copyright><![CDATA[Copyright: (C) Canadian Broadcasting Corporation, http://www.cbc.ca/aboutcbc/discover/termsofuse.html#Rss]]></copyright>
       <docs><![CDATA[https://www.cbc.ca/rss]]></docs>
-      <lastBuildDate>Fri, 27 Nov 2026 19:06:16 EST</lastBuildDate>
+      <lastBuildDate>Sat, 28 Nov 2026 04:00:00 EST</lastBuildDate>
       <atom:link href="https://www.cbc.ca/webfeed/rss/rss-business" rel="self" type="application/rss+xml"/>
       <image>
          <title><![CDATA[CBC | Business News]]></title>
          <url>https://www.cbc.ca/rss/image/cbc_144.gif</url>
          <link>https://www.cbc.ca/news/business/?cmp=rss</link>
       </image>
+      <item>
+         <title><![CDATA[Did that tip seem steep? The math might have included the tax]]></title>
+         <link>https://www.cbc.ca/radio/costofliving/tipping-on-tax-9.7430587?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/991770b4-1b72-43a2-83fc-4ca86d49e1b6,1795536366240/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C300%2C5760%2C3240%29%3B' alt='A person at a restaurant table pays their server using their phone.' width='620' height='349' title='When leaving a tip meant having to do some mental or back-of-the-napkin math, the custom was to look at the subtotal before taxes and calculate from there. But with point-of-sale terminals spitting out numbers quickly, it&apos;s hard to get a handle on how tipping equations are being calculated.'/><p>You've heard of "tipflation" and "tip creep." But what may not be clear when you're prompted to tip your barista, hairdresser or even your mechanic is that you're often tipping on the total — tax included.</p>]]></description>
+         <pubDate>Sat, 28 Nov 2026 04:00:00 EST</pubDate>
+         <category>Radio/Cost of Living</category>
+         <guid isPermaLink="false">9.7430587</guid>
+         <dc:creator>Brandie Weikle</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
+      <item>
+         <title><![CDATA[Trump has outsized influence in stock markets, but investors grow wary]]></title>
+         <link>https://www.cbc.ca/news/business/armstrong-trump-markets-nvidia-9.7439269?cmp=rss</link>
+         <description><![CDATA[<img src='https://i.cbc.ca/ais/3181b0c7-0ead-40c5-841b-8f40c5ebcce7,1795815795020/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C450%2C8640%2C4860%29%3B' alt='Donald Trump in Florida last week' width='620' height='349' title='President Donald Trump signs a major disaster declaration for Florida at his Mar-a-Lago club on Thanksgiving, Thursday, Nov. 26, 2026, in Palm Beach, Fla. (AP Photo/Julia Demaree Nikhinson)'/><p>Stock markets wrapped up a head-spinning week of trading on a positive note Friday, with tech stocks rallying after taking a beating earlier on.</p>]]></description>
+         <pubDate>Sat, 28 Nov 2026 04:00:00 EST</pubDate>
+         <category>News/Business</category>
+         <guid isPermaLink="false">9.7439269</guid>
+         <dc:creator>Peter Armstrong</dc:creator>
+         <dc:type>story</dc:type>
+         <dc:rights>Syndication Allowed</dc:rights>
+      </item>
       <item>
          <title><![CDATA[CRTC orders Bell, Rogers, Telus to stop charging prohibited wireless fees by Dec. 27]]></title>
          <link>https://www.cbc.ca/news/business/bell-rogers-telus-fees-9.7438448?cmp=rss</link>
@@ -202,28 +224,6 @@
          <pubDate>Mon, 23 Nov 2026 09:02:18 EST</pubDate>
          <category>News/Business</category>
          <guid isPermaLink="false">9.7432277</guid>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Etsy faces backlash over including AI model training in new policy update]]></title>
-         <link>https://www.cbc.ca/news/canada/british-columbia/etsy-ai-model-training-backlash-9.7431142?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/a45acf27-0545-43c5-8988-078833aed0d6,1795288309177/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C187%2C2000%2C1125%29%3B' alt='An orange square says &quot;Etsy.&quot;' width='620' height='349' title='This Jan. 6, 2015, file photo shows an Etsy mobile credit card reader, in New York. The online company is facing criticism after introducing AI model training in a recent policy change.'/><p>Some Etsy sellers across Canada are removing products from the platform amid criticism for introducing AI model training as part of a policy change.</p>]]></description>
-         <pubDate>Sat, 21 Nov 2026 14:30:46 EST</pubDate>
-         <category>News/Canada/British Columbia</category>
-         <guid isPermaLink="false">9.7431142</guid>
-         <dc:creator>Arden McLeod</dc:creator>
-         <dc:type>story</dc:type>
-         <dc:rights>Syndication Allowed</dc:rights>
-      </item>
-      <item>
-         <title><![CDATA[Quebecor CEO defends Telus bid, cites falling wireless prices and Canada's sovereignty]]></title>
-         <link>https://www.cbc.ca/news/politics/pierre-karl-peladeau-quebecor-telus-bid-9.7431320?cmp=rss</link>
-         <description><![CDATA[<img src='https://i.cbc.ca/ais/026b960f-a838-446c-bc5b-544c5b612d8f,1795281794767/full/max/0/default.jpg?im=Crop%2Crect%3D%280%2C354%2C6500%2C3656%29%3B' alt='Quebecor President and CEO Pierre Karl Peladeau waits to speak at the Freedom Mobile Arch concert venue ahead of its inaugural event at the Pacific National Exhibition grounds, in Vancouver, on Friday, June 5, 2026' width='620' height='349' title='Quebecor President and CEO Pierre Karl Peladeau waits to speak at the Freedom Mobile Arch concert venue ahead of its inaugural event at the Pacific National Exhibition grounds, in Vancouver, on Friday, June 5, 2026. The amphitheatre holds up to 10,000 people and will host live match broadcasts, entertainment and music during the FIFA World Cup. Freedom Mobile is owned by Quebecor Inc. THE CANADIAN PRESS/Darryl Dyck'/><p>Quebecor CEO Pierre Karl Péladeau is defending his company's $31-billion bid to buy Telus amid concerns over competition in Canada's telecom sector, arguing the cost of wireless plans is dropping and non-Canadian companies are trying to expand.</p>]]></description>
-         <pubDate>Sun, 22 Nov 2026 04:00:00 EST</pubDate>
-         <category>News/Politics</category>
-         <guid isPermaLink="false">9.7431320</guid>
-         <dc:creator>Benjamin Lopez Steven</dc:creator>
          <dc:type>story</dc:type>
          <dc:rights>Syndication Allowed</dc:rights>
       </item>
